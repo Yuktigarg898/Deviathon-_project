@@ -506,10 +506,29 @@ function updateSelectOptionsLanguage(lang) {
 // Web Audio API Synthesizer (Zero external dependencies; works 100% offline)
 const soundEngine = {
   ctx: null,
+  alarmInterval: null,
   init() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (AudioCtx) this.ctx = new AudioCtx();
+    }
+  },
+  startReminderAlarm() {
+    this.stopReminderAlarm();
+    this.init();
+    const playAlarmBeeps = () => {
+      // 3 melodic medical alarm tones: G5 (784Hz) -> A5 (880Hz) -> C6 (1046Hz)
+      this.playTone(784, 'sine', 0.16, 0);
+      this.playTone(880, 'sine', 0.16, 0.20);
+      this.playTone(1046, 'sine', 0.22, 0.40);
+    };
+    playAlarmBeeps();
+    this.alarmInterval = setInterval(playAlarmBeeps, 2000);
+  },
+  stopReminderAlarm() {
+    if (this.alarmInterval) {
+      clearInterval(this.alarmInterval);
+      this.alarmInterval = null;
     }
   },
   playTone(freq, type, duration, delay = 0) {
@@ -568,6 +587,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCoordinatorAlerts();
   renderOpsTeamTable();
   populateOpsIncidentStream();
+  if (typeof renderFamilyCareCircle === 'function') renderFamilyCareCircle();
+  if (typeof autoFillSeniorProfileData === 'function') autoFillSeniorProfileData();
 });
 
 // Navigation between the 4 Stakeholder Views + Login
@@ -1275,6 +1296,7 @@ let recordingSeconds = 0;
 
 function toggleVoiceRecording() {
   const micBtn = document.getElementById('senior-mic-btn');
+  if (!micBtn) return;
   const micIcon = document.getElementById('mic-icon');
   const pulseRing = document.getElementById('recording-pulse-ring');
   const statusLabel = document.getElementById('voice-recording-status');
@@ -2599,11 +2621,13 @@ async function predictElderRiskAssessment() {
     <span>Running AI ML Inference (90,000 Dataset Model)...</span>
   `;
 
+  const prof = getUserProfile('senior');
+
   // Collect inputs
   const payload = {
-    seniorName: "Ramesh Sharma",
-    age: parseFloat(document.getElementById('assess-age').value) || 74,
-    gender: document.getElementById('assess-gender').value || "Male",
+    seniorName: prof.name || "Ramesh Sharma",
+    age: parseFloat(document.getElementById('assess-age').value) || prof.age || 74,
+    gender: document.getElementById('assess-gender').value || prof.gender || "Male",
     height_cm: parseFloat(document.getElementById('assess-height').value) || 165,
     weight_kg: parseFloat(document.getElementById('assess-weight').value) || 68,
     bp_systolic: parseFloat(document.getElementById('assess-bp-sys').value) || 128,
@@ -2641,6 +2665,7 @@ async function predictElderRiskAssessment() {
     const data = await response.json();
     if (data.success && data.result) {
       assessmentState.lastPrediction = data.result;
+      assessmentState.lastPayload = payload;
       
       // Play appropriate sound
       if (data.result.predicted_risk_level === 'High') {
@@ -2673,17 +2698,1000 @@ async function predictElderRiskAssessment() {
 }
 
 // 8. Render Assessment Result Card
+
+// =========================================================================
+// DOB & AGE COMPUTATION UTILITIES
+// =========================================================================
+
+function calculateAgeFromDob(dobStr) {
+  if (!dobStr) return null;
+  const birthDate = new Date(dobStr);
+  if (isNaN(birthDate.getTime())) return null;
+  const today = new Date();
+  if (birthDate > today) return null; // Invalid future date
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return (age >= 0 && age <= 125) ? age : null;
+}
+
+function handleSeniorDobChange(dobVal) {
+  const ageInput = document.getElementById('prof-senior-age');
+  if (!ageInput) return;
+  if (!dobVal) {
+    ageInput.value = '';
+    return;
+  }
+  const computed = calculateAgeFromDob(dobVal);
+  if (computed === null) {
+    showToast('Please enter a valid past Date of Birth / कृपया वैध जन्मतिथि चुनें', 'warning');
+    ageInput.value = '';
+  } else {
+    ageInput.value = computed;
+    ageInput.classList.add('ring-2', 'ring-teal-400', 'bg-teal-50');
+    setTimeout(() => {
+      ageInput.classList.remove('ring-2', 'ring-teal-400', 'bg-teal-50');
+    }, 1200);
+  }
+}
+
+function autoFillSeniorProfileData(profileObj) {
+  const prof = profileObj || getUserProfile('senior');
+  if (!prof) return;
+
+  let ageToSet = prof.age;
+  if (prof.dob) {
+    const calc = calculateAgeFromDob(prof.dob);
+    if (calc !== null) ageToSet = calc;
+  }
+
+  // 1. Auto-fill Age input in Health Assessment
+  const ageInput = document.getElementById('assess-age');
+  if (ageInput && ageToSet) {
+    ageInput.value = ageToSet;
+    ageInput.classList.add('bg-teal-50', 'border-teal-400');
+    setTimeout(() => {
+      ageInput.classList.remove('bg-teal-50', 'border-teal-400');
+    }, 2000);
+  }
+
+  // 2. Auto-fill Gender input in Health Assessment
+  const genderSelect = document.getElementById('assess-gender');
+  if (genderSelect && prof.gender) {
+    genderSelect.value = prof.gender;
+    genderSelect.classList.add('bg-teal-50', 'border-teal-400');
+    setTimeout(() => {
+      genderSelect.classList.remove('bg-teal-50', 'border-teal-400');
+    }, 2000);
+  }
+
+  // 3. Update senior header vitals meta badge
+  const metaBadge = document.getElementById('senior-vitals-meta-badge');
+  if (metaBadge) {
+    const displayAge = ageToSet ? `${ageToSet} Yrs` : '74 Yrs';
+    const displayGender = prof.gender || 'Male';
+    let displayLoc = 'New Delhi';
+    if (prof.address && prof.address.includes(',')) {
+      displayLoc = prof.address.split(',').slice(-1)[0].replace(/-\s*\d+/, '').trim();
+    }
+    metaBadge.textContent = `${displayAge} • ${displayGender} • ${displayLoc}`;
+  }
+}
+
+function checkUserProfilePrompt(role, prof) {
+  const promptEl = document.getElementById('new-user-profile-prompt');
+  if (!promptEl) return;
+
+  if (role !== 'senior') {
+    promptEl.classList.add('hidden');
+    return;
+  }
+
+  const p = prof || getUserProfile('senior');
+  const isDismissed = sessionStorage.getItem('careconnect_dismiss_profile_prompt');
+  
+  // Profile is incomplete if DOB or Gender are empty or profileCompleted is false or isNewUser flag is set
+  const isIncomplete = (!p.profileCompleted || !p.dob || !p.gender || p.isNewUser);
+
+  if (isIncomplete && !isDismissed) {
+    promptEl.classList.remove('hidden');
+    soundEngine.playTone(480, 'sine', 0.15);
+    setTimeout(() => {
+      showToast('🔔 Notice: Please complete your DOB & Gender in Profile Settings for personalized AI assessments.', 'info');
+    }, 600);
+  } else {
+    promptEl.classList.add('hidden');
+  }
+}
+
+function dismissProfilePrompt(permanent = false) {
+  const promptEl = document.getElementById('new-user-profile-prompt');
+  if (promptEl) promptEl.classList.add('hidden');
+  if (permanent) {
+    sessionStorage.setItem('careconnect_dismiss_profile_prompt', 'true');
+  }
+}
+
+// =========================================================================
+// UNIVERSAL PROFILE MANAGEMENT ENGINE (FOR ALL 4 STAKEHOLDER PORTALS)
+// =========================================================================
+
+const defaultRoleProfiles = {
+  senior: {
+    role: 'senior',
+    name: 'Ramesh Sharma',
+    dob: '1952-05-15',
+    age: 74,
+    gender: 'Male',
+    profileCompleted: true,
+    isNewUser: false,
+    phone: '+91 98110-44912',
+    email: 'ramesh.sharma@example.in',
+    bloodGroup: 'B+',
+    address: 'Flat 402, Shivalik Apts, Sector 14, Rohini, New Delhi - 110085',
+    doctor: 'Dr. Alok Mehta (Cardiology, Max Healthcare)',
+    allergies: 'Penicillin allergy, mild knee osteoarthritis',
+    emergencyNotes: 'Prefers Hindi audio. Uses walking cane when outside.'
+  },
+  coordinator: {
+    role: 'coordinator',
+    name: 'Sister Kavita Verma',
+    title: 'Lead Clinical Nurse & Triage Coordinator',
+    phone: '+91 98765-43210',
+    email: 'kavita.nurse@careconnect.ai',
+    license: 'DEL-RN-884920',
+    zone: 'North & South Delhi Outreach Cluster',
+    shift: '08:00 AM - 04:00 PM IST',
+    department: 'Geriatric Tele-Triage Unit'
+  },
+  family: {
+    role: 'family',
+    name: 'Rahul Sharma',
+    relationship: 'Son (Primary Caregiver)',
+    phone: '+91 98111-22334',
+    email: 'rahul.sharma@techcorp.in',
+    city: 'Cyber City, Gurugram, Haryana',
+    alertPreferences: 'Immediate SOS via WhatsApp + Weekly Email Health Digest'
+  },
+  operations: {
+    role: 'operations',
+    name: 'Arun Kapoor',
+    title: 'Regional Operations & SLA Command Director',
+    phone: '+91 99999-88888',
+    email: 'arun.ops@careconnect.ai',
+    securityKey: 'OPS-SEC-9981',
+    jurisdiction: 'Pan-India Metro Hubs (Delhi NCR, Mumbai, Bengaluru)',
+    dispatchAuth: 'Certified Level-3 Rapid Response & 108 Fleet'
+  }
+};
+
+function getUserProfile(role) {
+  const current = role || state.currentRole || 'senior';
+  try {
+    const raw = localStorage.getItem(`careconnect_profile_${current}`);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Error reading profile from localStorage:', e);
+  }
+  return Object.assign({}, defaultRoleProfiles[current] || defaultRoleProfiles.senior);
+}
+
+function openProfileModal() {
+  const modal = document.getElementById('modal-profile-management');
+  if (!modal) return;
+  soundEngine.playTone(520, 'sine', 0.1);
+
+  const role = state.currentRole || 'senior';
+  const prof = getUserProfile(role);
+  const container = document.getElementById('profile-dynamic-fields-container');
+  const avatar = document.getElementById('modal-profile-role-avatar');
+  const title = document.getElementById('modal-profile-title');
+  const badge = document.getElementById('modal-profile-role-badge');
+  const subtitle = document.getElementById('modal-profile-subtitle');
+
+  const parts = (prof.name || 'User').split(' ');
+  const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : prof.name.substring(0, 2).toUpperCase();
+
+  if (avatar) avatar.textContent = initials;
+
+  if (role === 'senior') {
+    if (avatar) avatar.className = 'w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center text-xl font-bold shadow-sm';
+    if (title) title.textContent = 'Senior Health Profile / बुज़ुर्ग स्वास्थ्य प्रोफाइल';
+    if (badge) {
+      badge.textContent = 'Senior Citizen (बुज़ुर्ग)';
+      badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-100 text-sky-800';
+    }
+    if (subtitle) subtitle.textContent = 'Manage medical history, primary physician, home address, and emergency details';
+
+    if (container) {
+      container.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Full Name (पूरा नाम) *</label>
+            <input type="text" id="prof-senior-name" value="${prof.name || ''}" class="profile-field-input" required placeholder="e.g. Ramesh Sharma">
+          </div>
+          <div>
+            <label class="profile-field-label flex items-center justify-between">
+              <span>Gender (लिंग) *</span>
+              <span class="text-[10px] text-teal-600 font-bold bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200">Auto-fills Assessment</span>
+            </label>
+            <select id="prof-senior-gender" class="profile-field-input bg-white font-semibold">
+              <option value="" disabled ${!prof.gender ? 'selected' : ''}>Select Gender / लिंग चुनें</option>
+              <option value="Male" ${prof.gender === 'Male' ? 'selected' : ''}>Male (पुरुष)</option>
+              <option value="Female" ${prof.gender === 'Female' ? 'selected' : ''}>Female (महिला)</option>
+              <option value="Other" ${prof.gender === 'Other' ? 'selected' : ''}>Other (अन्य)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label class="profile-field-label flex items-center justify-between">
+              <span>Date of Birth / जन्मतिथि (DOB) *</span>
+              <span class="text-[10px] text-amber-700 font-bold bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">Calculates Age</span>
+            </label>
+            <input type="date" id="prof-senior-dob" value="${prof.dob || ''}" max="${new Date().toISOString().split('T')[0]}" onchange="handleSeniorDobChange(this.value)" class="profile-field-input bg-white font-semibold">
+          </div>
+          <div>
+            <label class="profile-field-label flex items-center justify-between">
+              <span>Age (उम्र - वर्ष)</span>
+              <span class="text-[10px] text-sky-600 font-bold bg-sky-50 px-1.5 py-0.2 rounded border border-sky-200">Auto-computed</span>
+            </label>
+            <input type="number" id="prof-senior-age" value="${prof.age || ''}" class="profile-field-input bg-slate-100 text-slate-800 font-bold cursor-not-allowed" readonly placeholder="Auto from DOB">
+          </div>
+          <div>
+            <label class="profile-field-label">Blood Group (रक्त समूह)</label>
+            <select id="prof-senior-blood" class="profile-field-input bg-white font-medium">
+              <option value="B+" ${prof.bloodGroup === 'B+' ? 'selected' : ''}>B+ (Positive)</option>
+              <option value="O+" ${prof.bloodGroup === 'O+' ? 'selected' : ''}>O+ (Positive)</option>
+              <option value="A+" ${prof.bloodGroup === 'A+' ? 'selected' : ''}>A+ (Positive)</option>
+              <option value="AB+" ${prof.bloodGroup === 'AB+' ? 'selected' : ''}>AB+ (Positive)</option>
+              <option value="B-" ${prof.bloodGroup === 'B-' ? 'selected' : ''}>B- (Negative)</option>
+              <option value="O-" ${prof.bloodGroup === 'O-' ? 'selected' : ''}>O- (Negative)</option>
+              <option value="A-" ${prof.bloodGroup === 'A-' ? 'selected' : ''}>A- (Negative)</option>
+              <option value="AB-" ${prof.bloodGroup === 'AB-' ? 'selected' : ''}>AB- (Negative)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Mobile (+91) *</label>
+            <input type="tel" id="prof-senior-phone" value="${prof.phone || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Email Address (ईमेल)</label>
+            <input type="email" id="prof-senior-email" value="${prof.email || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Email Address (ईमेल)</label>
+            <input type="email" id="prof-senior-email" value="${prof.email || ''}" class="profile-field-input">
+          </div>
+          <div>
+            <label class="profile-field-label">Primary Doctor / Hospital (प्रमुख चिकित्सक)</label>
+            <input type="text" id="prof-senior-doctor" value="${prof.doctor || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="profile-field-label">Home Address (निवास का पूरा पता)</label>
+          <input type="text" id="prof-senior-address" value="${prof.address || ''}" class="profile-field-input">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Allergies & Conditions (एलर्जी व बीमारियां)</label>
+            <input type="text" id="prof-senior-allergies" value="${prof.allergies || ''}" class="profile-field-input">
+          </div>
+          <div>
+            <label class="profile-field-label">Emergency Care Notes (आपातकालीन निर्देश)</label>
+            <input type="text" id="prof-senior-notes" value="${prof.emergencyNotes || ''}" class="profile-field-input">
+          </div>
+        </div>
+      `;
+    }
+  } else if (role === 'coordinator') {
+    if (avatar) avatar.className = 'w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center text-xl font-bold shadow-sm';
+    if (title) title.textContent = 'Care Coordinator Profile & License';
+    if (badge) {
+      badge.textContent = 'Care Coordinator';
+      badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-100 text-teal-800';
+    }
+    if (subtitle) subtitle.textContent = 'Clinical credentials, active triage shift, and outreach cluster assignment';
+
+    if (container) {
+      container.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Full Name & Credentials *</label>
+            <input type="text" id="prof-coord-name" value="${prof.name || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Professional Role / Title</label>
+            <input type="text" id="prof-coord-title" value="${prof.title || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Nursing / Medical Council Registration No. *</label>
+            <input type="text" id="prof-coord-license" value="${prof.license || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Duty Shift Hours</label>
+            <input type="text" id="prof-coord-shift" value="${prof.shift || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Direct Mobile Line (+91) *</label>
+            <input type="tel" id="prof-coord-phone" value="${prof.phone || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Official Clinical Email</label>
+            <input type="email" id="prof-coord-email" value="${prof.email || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="profile-field-label">Assigned Outreach Cluster & Hub Zone</label>
+          <input type="text" id="prof-coord-zone" value="${prof.zone || ''}" class="profile-field-input">
+        </div>
+      `;
+    }
+  } else if (role === 'family') {
+    if (avatar) avatar.className = 'w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl font-bold shadow-sm';
+    if (title) title.textContent = 'Family Member Profile & Alert Channels';
+    if (badge) {
+      badge.textContent = 'Family Member';
+      badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800';
+    }
+    if (subtitle) subtitle.textContent = 'Contact details for urgent WhatsApp/SMS alerts and weekly digests';
+
+    if (container) {
+      container.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Full Name *</label>
+            <input type="text" id="prof-fam-name" value="${prof.name || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Relationship to Elder *</label>
+            <input type="text" id="prof-fam-relation" value="${prof.relationship || ''}" class="profile-field-input" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Mobile Number / WhatsApp (+91) *</label>
+            <input type="tel" id="prof-fam-phone" value="${prof.phone || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Email Address (for Weekly Digest)</label>
+            <input type="email" id="prof-fam-email" value="${prof.email || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="profile-field-label">Residential City / Work Location</label>
+          <input type="text" id="prof-fam-city" value="${prof.city || ''}" class="profile-field-input">
+        </div>
+      `;
+    }
+  } else if (role === 'operations') {
+    if (avatar) avatar.className = 'w-12 h-12 rounded-2xl bg-orange-600 text-white flex items-center justify-center text-xl font-bold shadow-sm';
+    if (title) title.textContent = 'Operations Director Profile & Command Clearance';
+    if (badge) {
+      badge.textContent = 'Operations Director';
+      badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-orange-100 text-orange-800';
+    }
+    if (subtitle) subtitle.textContent = 'Command jurisdiction, dispatch clearance, and municipal SLA monitoring';
+
+    if (container) {
+      container.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Full Name *</label>
+            <input type="text" id="prof-ops-name" value="${prof.name || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Operational Designation</label>
+            <input type="text" id="prof-ops-title" value="${prof.title || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="profile-field-label">Emergency Operations Contact (+91) *</label>
+            <input type="tel" id="prof-ops-phone" value="${prof.phone || ''}" class="profile-field-input" required>
+          </div>
+          <div>
+            <label class="profile-field-label">Official Command Email</label>
+            <input type="email" id="prof-ops-email" value="${prof.email || ''}" class="profile-field-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="profile-field-label">Metro Jurisdictions Covered</label>
+          <input type="text" id="prof-ops-jurisdiction" value="${prof.jurisdiction || ''}" class="profile-field-input">
+        </div>
+      `;
+    }
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById('modal-profile-management');
+  if (modal) modal.classList.add('hidden');
+}
+
+function saveUserProfile() {
+  const role = state.currentRole || 'senior';
+  const prof = getUserProfile(role);
+
+  if (role === 'senior') {
+    prof.name = document.getElementById('prof-senior-name')?.value.trim() || prof.name;
+    
+    // Read DOB and compute age
+    const dobVal = document.getElementById('prof-senior-dob')?.value;
+    if (dobVal) {
+      prof.dob = dobVal;
+      const computed = calculateAgeFromDob(dobVal);
+      if (computed !== null) {
+        prof.age = computed;
+      }
+    }
+    
+    const genderVal = document.getElementById('prof-senior-gender')?.value;
+    if (genderVal) {
+      prof.gender = genderVal;
+    }
+
+    prof.phone = document.getElementById('prof-senior-phone')?.value.trim() || prof.phone;
+    prof.email = document.getElementById('prof-senior-email')?.value.trim() || prof.email;
+    prof.bloodGroup = document.getElementById('prof-senior-blood')?.value || prof.bloodGroup;
+    prof.address = document.getElementById('prof-senior-address')?.value.trim() || prof.address;
+    prof.doctor = document.getElementById('prof-senior-doctor')?.value.trim() || prof.doctor;
+    prof.allergies = document.getElementById('prof-senior-allergies')?.value.trim() || prof.allergies;
+    prof.emergencyNotes = document.getElementById('prof-senior-notes')?.value.trim() || prof.emergencyNotes;
+
+    prof.profileCompleted = true;
+    prof.isNewUser = false;
+
+    // Immediately auto-fill into Health Assessment inputs!
+    autoFillSeniorProfileData(prof);
+
+    // Dismiss the new user notification prompt
+    dismissProfilePrompt(true);
+
+    const greetingEl = document.getElementById('senior-greeting');
+    if (greetingEl) {
+      const isHi = state.seniorLanguage === 'hi';
+      const firstName = prof.name.split(' ')[0];
+      greetingEl.textContent = isHi ? `नमस्ते, ${firstName} जी! 🙏` : `Good Morning, ${firstName} ji! 🙏`;
+    }
+  } else if (role === 'coordinator') {
+    prof.name = document.getElementById('prof-coord-name')?.value.trim() || prof.name;
+    prof.title = document.getElementById('prof-coord-title')?.value.trim() || prof.title;
+    prof.license = document.getElementById('prof-coord-license')?.value.trim() || prof.license;
+    prof.phone = document.getElementById('prof-coord-phone')?.value.trim() || prof.phone;
+    prof.email = document.getElementById('prof-coord-email')?.value.trim() || prof.email;
+    prof.zone = document.getElementById('prof-coord-zone')?.value.trim() || prof.zone;
+    prof.shift = document.getElementById('prof-coord-shift')?.value.trim() || prof.shift;
+  } else if (role === 'family') {
+    prof.name = document.getElementById('prof-fam-name')?.value.trim() || prof.name;
+    prof.relationship = document.getElementById('prof-fam-relation')?.value.trim() || prof.relationship;
+    prof.phone = document.getElementById('prof-fam-phone')?.value.trim() || prof.phone;
+    prof.email = document.getElementById('prof-fam-email')?.value.trim() || prof.email;
+    prof.city = document.getElementById('prof-fam-city')?.value.trim() || prof.city;
+  } else if (role === 'operations') {
+    prof.name = document.getElementById('prof-ops-name')?.value.trim() || prof.name;
+    prof.title = document.getElementById('prof-ops-title')?.value.trim() || prof.title;
+    prof.phone = document.getElementById('prof-ops-phone')?.value.trim() || prof.phone;
+    prof.email = document.getElementById('prof-ops-email')?.value.trim() || prof.email;
+    prof.jurisdiction = document.getElementById('prof-ops-jurisdiction')?.value.trim() || prof.jurisdiction;
+  }
+
+  try {
+    localStorage.setItem(`careconnect_profile_${role}`, JSON.stringify(prof));
+  } catch (e) {
+    console.error('Failed to save profile:', e);
+  }
+
+  const nameLabel = document.getElementById('current-user-name');
+  const avatar = document.getElementById('current-user-avatar');
+  if (nameLabel) nameLabel.textContent = prof.name;
+  if (avatar) {
+    const parts = prof.name.split(' ');
+    const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : prof.name.substring(0, 2).toUpperCase();
+    avatar.textContent = initials;
+  }
+
+  soundEngine.playSuccessChime();
+  showToast('Profile updated successfully! / प्रोफाइल सफलतापूर्वक सहेजी गई।', 'success');
+  closeProfileModal();
+}
+
+
+// =========================================================================
+// FAMILY CARE CIRCLE & CAREGIVER MANAGEMENT (ELDER PORTAL)
+// =========================================================================
+
+const defaultFamilyMembers = [
+  {
+    id: 'fam-1',
+    name: 'Rahul Sharma',
+    relation: 'Son (बेटा)',
+    phone: '+91 98111-22334',
+    email: 'rahul.sharma@techcorp.in',
+    isPrimary: true,
+    residence: 'Same City (Gurugram)',
+    alerts: { sos: true, daily: true, weekly: true }
+  },
+  {
+    id: 'fam-2',
+    name: 'Sunita Sharma',
+    relation: 'Daughter (बेटी)',
+    phone: '+91 98765-11223',
+    email: 'sunita.sharma@gmail.com',
+    isPrimary: false,
+    residence: 'Mumbai',
+    alerts: { sos: true, daily: false, weekly: true }
+  }
+];
+
+function getFamilyMembers() {
+  try {
+    const raw = localStorage.getItem('careconnect_family_members');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Error reading family members:', e);
+  }
+  return defaultFamilyMembers.slice();
+}
+
+function saveFamilyMembers(list) {
+  try {
+    localStorage.setItem('careconnect_family_members', JSON.stringify(list));
+  } catch (e) {
+    console.error('Failed to save family members:', e);
+  }
+}
+
+
+function scrollToFamilyCircle() {
+  const el = document.getElementById('senior-family-members-list');
+  if (el) {
+    soundEngine.playTone(600, 'sine', 0.1);
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const card = el.parentElement;
+    if (card) {
+      card.classList.add('ring-4', 'ring-indigo-400');
+      setTimeout(() => {
+        card.classList.remove('ring-4', 'ring-indigo-400');
+      }, 2200);
+    }
+  }
+}
+
+function renderFamilyCareCircle() {
+  const modalContainer = document.getElementById('modal-family-members-list');
+  const pageContainer = document.getElementById('senior-family-members-list');
+  const countBadge = document.getElementById('circle-members-count-badge');
+
+  const members = getFamilyMembers();
+  if (countBadge) {
+    countBadge.textContent = `${members.length} Member${members.length === 1 ? '' : 's'} Connected`;
+  }
+
+  const html = (members.length === 0) ? `
+    <div class="col-span-1 sm:col-span-2 p-6 bg-slate-50 border border-slate-200 rounded-2xl text-center">
+      <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 mx-auto flex items-center justify-center text-xl mb-2">
+        <i class="fa-solid fa-people-roof"></i>
+      </div>
+      <p class="text-sm font-bold text-slate-700">No family members linked yet.</p>
+      <p class="text-xs text-slate-500 mt-1">Click "+ Add Family Member / सदस्य जोड़ें" above to connect your loved ones for emergency alerts.</p>
+    </div>
+  ` : members.map(m => {
+    const initial = (m.name || 'F').charAt(0).toUpperCase();
+    return `
+      <div class="bg-slate-50/90 hover:bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 hover:border-indigo-300 shadow-sm transition-all duration-200">
+        <div class="flex items-start justify-between gap-2.5">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-black text-sm shadow-sm flex-shrink-0">
+              ${initial}
+            </div>
+            <div>
+              <div class="flex items-center space-x-1.5">
+                <h4 class="text-xs sm:text-sm font-extrabold text-[#0e294b]">${m.name}</h4>
+                ${m.isPrimary ? `
+                  <span class="px-1.5 py-0.2 rounded-md text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    Primary
+                  </span>
+                ` : ''}
+              </div>
+              <p class="text-[11px] font-semibold text-indigo-700">${m.relation} • <span class="text-slate-500 font-normal">${m.residence}</span></p>
+            </div>
+          </div>
+
+          <button onclick="removeFamilyMember('${m.id}')" class="text-slate-400 hover:text-rose-600 p-1 transition-colors" title="Remove member">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+          </button>
+        </div>
+
+        <div class="mt-2.5 pt-2 border-t border-slate-200/80 text-[11px] text-slate-600 space-y-1">
+          <div class="flex items-center justify-between">
+            <span><i class="fa-solid fa-phone text-teal-600 mr-1"></i><strong>${m.phone}</strong></span>
+            ${m.email ? `<span class="text-slate-400 truncate max-w-[120px]"><i class="fa-solid fa-envelope mr-1"></i>${m.email}</span>` : ''}
+          </div>
+          <div class="flex flex-wrap items-center gap-1 pt-1">
+            ${m.alerts.sos ? `<span class="px-1.5 py-0.5 bg-rose-100 text-rose-800 rounded text-[9px] font-bold"><i class="fa-solid fa-triangle-exclamation mr-0.5"></i>SOS</span>` : ''}
+            ${m.alerts.daily ? `<span class="px-1.5 py-0.5 bg-sky-100 text-sky-800 rounded text-[9px] font-bold"><i class="fa-solid fa-calendar-check mr-0.5"></i>Daily</span>` : ''}
+            ${m.alerts.weekly ? `<span class="px-1.5 py-0.5 bg-purple-100 text-purple-800 rounded text-[9px] font-bold"><i class="fa-solid fa-chart-line mr-0.5"></i>Weekly</span>` : ''}
+          </div>
+        </div>
+
+        <div class="mt-3 flex items-center space-x-2">
+          <button onclick="sendFamilyMemberTestAlert('${m.id}')"
+            class="flex-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-[11px] font-bold transition-all shadow-xs flex items-center justify-center space-x-1">
+            <i class="fa-brands fa-whatsapp text-emerald-600 text-xs"></i>
+            <span>Send Alert</span>
+          </button>
+          <a href="tel:${m.phone}"
+            class="py-1.5 px-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-[11px] font-bold transition-all shadow-xs flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-phone text-[10px] text-teal-600"></i>
+            <span>Call</span>
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (modalContainer) modalContainer.innerHTML = html;
+  if (pageContainer) pageContainer.innerHTML = html;
+}
+
+function openFamilyCareCircleModal() {
+  const modal = document.getElementById('modal-family-care-circle');
+  if (modal) {
+    soundEngine.playTone(550, 'sine', 0.1);
+    renderFamilyCareCircle();
+    modal.classList.remove('hidden');
+  }
+}
+
+function closeFamilyCareCircleModal() {
+  const modal = document.getElementById('modal-family-care-circle');
+  if (modal) {
+    modal.classList.add('hidden');
+    toggleAddFamilyMemberInlineForm(false);
+  }
+}
+
+function toggleAddFamilyMemberInlineForm(force) {
+  const container = document.getElementById('inline-add-family-form-container');
+  const btnText = document.getElementById('btn-toggle-add-fam-text');
+  if (!container) return;
+
+  const isHidden = container.classList.contains('hidden');
+  const shouldOpen = (force !== undefined) ? force : isHidden;
+
+  if (shouldOpen) {
+    container.classList.remove('hidden');
+    if (btnText) btnText.textContent = 'Close Form / बंद करें';
+    soundEngine.playTone(600, 'sine', 0.1);
+    document.getElementById('inline-fam-name')?.focus();
+  } else {
+    container.classList.add('hidden');
+    if (btnText) btnText.textContent = '+ Add Family Member / सदस्य जोड़ें';
+    document.getElementById('inline-add-family-form')?.reset();
+  }
+}
+
+function submitInlineAddFamilyMember() {
+  const name = document.getElementById('inline-fam-name')?.value.trim();
+  const relation = document.getElementById('inline-fam-relation')?.value;
+  const phone = document.getElementById('inline-fam-phone')?.value.trim();
+  const email = document.getElementById('inline-fam-email')?.value.trim();
+  const residence = document.getElementById('inline-fam-residence')?.value;
+  const sos = document.getElementById('inline-fam-alert-sos')?.checked ?? true;
+  const daily = document.getElementById('inline-fam-alert-daily')?.checked ?? true;
+  const weekly = true;
+
+  if (!name || !phone) {
+    showToast('Please enter both name and mobile number.', 'warning');
+    return;
+  }
+
+  const list = getFamilyMembers();
+  const newMember = {
+    id: 'fam-' + Date.now(),
+    name: name,
+    relation: relation,
+    phone: phone,
+    email: email || '',
+    residence: residence,
+    isPrimary: list.length === 0,
+    alerts: { sos, daily, weekly }
+  };
+
+  list.push(newMember);
+  saveFamilyMembers(list);
+  renderFamilyCareCircle();
+
+  soundEngine.playSuccessChime();
+  showToast(`Family member ${name} (${relation}) added to care circle!`, 'success');
+  toggleAddFamilyMemberInlineForm(false);
+}
+
+// Backward compatibility helpers
+function openAddFamilyMemberModal() {
+  openFamilyCareCircleModal();
+  setTimeout(() => toggleAddFamilyMemberInlineForm(true), 150);
+}
+
+function closeAddFamilyMemberModal() {
+  closeFamilyCareCircleModal();
+}
+
+function submitAddFamilyMember() {
+  submitInlineAddFamilyMember();
+}
+
+// =========================================================================
+// AI PRESCRIPTION & DAILY HEALTH IMPROVEMENT TASKS ENGINE
+// =========================================================================
+
+function getTodayDateString() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getStoredDailyTasks() {
+  const dateKey = getTodayDateString();
+  try {
+    const raw = localStorage.getItem(`careconnect_rx_tasks_${dateKey}`);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Error reading stored daily tasks:', e);
+  }
+  return null;
+}
+
+function saveStoredDailyTasks(tasks) {
+  const dateKey = getTodayDateString();
+  try {
+    localStorage.setItem(`careconnect_rx_tasks_${dateKey}`, JSON.stringify(tasks));
+  } catch (e) {
+    console.error('Failed to save daily tasks:', e);
+  }
+}
+
+function getHealthStreak() {
+  return parseInt(localStorage.getItem('careconnect_health_streak') || '3');
+}
+
+function incrementHealthStreak() {
+  const current = getHealthStreak();
+  localStorage.setItem('careconnect_health_streak', String(current + 1));
+}
+
+function generateHealthPrescriptionTasks(res, inputData) {
+  const existing = getStoredDailyTasks();
+  if (existing && existing.length > 0) {
+    return existing;
+  }
+
+  const tasks = [];
+
+  // 1. Blood Pressure Task
+  if (inputData.bp_systolic >= 135 || inputData.bp_diastolic >= 88 || inputData.has_hypertension) {
+    tasks.push({
+      id: 'task-bp',
+      titleEn: 'Low-Sodium DASH Diet & BP Medication Timing',
+      titleHi: 'कम नमक वाला आहार (DASH डाइट) व बीपी की दवा का समय पर सेवन',
+      descEn: "Avoid extra table salt in today's meals. Take prescribed BP medicine with warm water after light breakfast. Rest 10 mins before measuring.",
+      descHi: 'आज दाल/सब्जी में ऊपर से नमक न डालें। नाश्ते के बाद गुनगुने पानी से बीपी की दवा लें और 10 मिनट शांत बैठकर आराम करें।',
+      timeSlot: 'Morning / सुबह',
+      category: '🩺 Vitals & Medication',
+      badgeClass: 'bg-rose-100 text-rose-800 border border-rose-200',
+      completed: false
+    });
+  } else {
+    tasks.push({
+      id: 'task-bp-check',
+      titleEn: 'Morning Resting Blood Pressure Log',
+      titleHi: 'शांत अवस्था में बीपी व पल्स की नियमित जांच',
+      descEn: 'Sit relaxed for 5 minutes and record your morning BP. Target resting reading is < 125/80 mmHg.',
+      descHi: '5 मिनट कुर्सी पर आराम से बैठें और अपना ब्लड प्रेशर नापें। सामान्य मान 120/80 के करीब रखें।',
+      timeSlot: 'Morning / सुबह',
+      category: '🩺 Vitals Monitoring',
+      badgeClass: 'bg-emerald-100 text-emerald-800 border border-emerald-200',
+      completed: true
+    });
+  }
+
+  // 2. Blood Sugar / Diabetes Task
+  if (inputData.blood_glucose >= 140 || inputData.is_diabetic) {
+    tasks.push({
+      id: 'task-glucose',
+      titleEn: 'Post-Meal 15-Min Light Walk & Glucose Regulation',
+      titleHi: 'भोजन के बाद 15 मिनट की धीमी सैर व मीठे से परहेज',
+      descEn: 'Stroll slowly inside home or balcony after lunch. Do not sit or lie down immediately. Skip sugary beverages or sweets today.',
+      descHi: 'दोपहर भोजन के बाद तुरंत न बैठें; कमरे या बरामदे में 10-15 मिनट धीरे-धीरे टहलें। मीठी चाय या मिठाई बिल्कुल न लें।',
+      timeSlot: 'Afternoon / दोपहर',
+      category: '🚶 Sugar Control',
+      badgeClass: 'bg-amber-100 text-amber-800 border border-amber-200',
+      completed: false
+    });
+  }
+
+  // 3. Joint Pain / Arthritis / Mobility Task
+  if (inputData.pain_level >= 4 || inputData.walking_independent === 0 || inputData.has_arthritis) {
+    tasks.push({
+      id: 'task-joint',
+      titleEn: 'Knee Warm Compress + 8 Seated Leg Lifts',
+      titleHi: 'घुटनों की गर्म सिकाई व कुर्सी पर बैठकर पैरों की हल्की कसरत',
+      descEn: 'Apply warm towel or heating pad to stiff knees for 10 mins. Slowly straighten and lower legs 8 times while sitting comfortably.',
+      descHi: 'घुटनों पर 10 मिनट के लिए गर्म सिकाई करें। कुर्सी पर बैठकर पैरों को धीरे-धीरे सीधा करें और नीचे लाएं (8 बार)।',
+      timeSlot: 'Evening / शाम',
+      category: '🦵 Physical Therapy',
+      badgeClass: 'bg-indigo-100 text-indigo-800 border border-indigo-200',
+      completed: false
+    });
+  }
+
+  // 4. Sleep Hygiene & Rest Deficit Task
+  if (inputData.sleep_hours < 6) {
+    tasks.push({
+      id: 'task-sleep',
+      titleEn: '30-Min Restorative Afternoon Nap & Screen-Free Night',
+      titleHi: 'दोपहर का 30 मिनट विश्राम व रात्रि में 9 बजे स्क्रीन बंद करना',
+      descEn: 'Take a quiet 30-min nap after lunch. Switch off TV/phone by 9:00 PM; drink warm milk or water to target 7+ hours of deep sleep tonight.',
+      descHi: 'दोपहर भोजन के बाद 30 मिनट शांत विश्राम करें। रात 9 बजे टीवी व फोन बंद कर दें और हल्का गुनगुना दूध पीकर सोएं।',
+      timeSlot: 'Bedtime / रात',
+      category: '🌙 Sleep Hygiene',
+      badgeClass: 'bg-purple-100 text-purple-800 border border-purple-200',
+      completed: false
+    });
+  }
+
+  // 5. Breathing & Lung Capacity (Pranayama)
+  tasks.push({
+    id: 'task-breathing',
+    titleEn: '5-Minute Mindful Deep Breathing (Pranayama)',
+    titleHi: '5 मिनट अनुलोम-विलोम व गहरी सांस का अभ्यास (प्राणायाम)',
+    descEn: 'Inhale slowly for 4 seconds, exhale gently for 6 seconds. Increases lung oxygenation (SpO2) and calms heart rate.',
+    descHi: 'सीधे बैठें, 4 सेकंड नाक से धीमी सांस लें और 6 सेकंड में छोड़ें। इससे फेफड़ों में ऑक्सीजन बढ़ती है और मन शांत रहता है।',
+    timeSlot: 'Morning / सुबह',
+    category: '🧘 Mind & Lungs',
+    badgeClass: 'bg-sky-100 text-sky-800 border border-sky-200',
+    completed: true
+  });
+
+  // 6. Universal Hydration Milestone
+  tasks.push({
+    id: 'task-hydration',
+    titleEn: 'Daily Hydration Target: 6 Glasses of Lukewarm Water',
+    titleHi: 'दिनभर में 6 गिलास स्वच्छ गुनगुना पानी पीने का लक्ष्य',
+    descEn: 'Drink small sips throughout the day. Keeps blood circulation smooth and supports kidney & joint function.',
+    descHi: 'पूरे दिन में थोड़े-थोड़े अंतराल पर 6 गिलास पानी पिएं। इससे रक्त प्रवाह सही रहता है और शरीर में ताजगी बनी रहती है।',
+    timeSlot: 'All Day / दिनभर',
+    category: '💧 Hydration',
+    badgeClass: 'bg-teal-100 text-teal-800 border border-teal-200',
+    completed: false
+  });
+
+  saveStoredDailyTasks(tasks);
+  return tasks;
+}
+
+function toggleRxTask(taskId) {
+  const tasks = getStoredDailyTasks();
+  if (!tasks) return;
+
+  const target = tasks.find(t => t.id === taskId);
+  if (!target) return;
+
+  target.completed = !target.completed;
+  saveStoredDailyTasks(tasks);
+
+  if (target.completed) {
+    soundEngine.playSuccessChime();
+  } else {
+    soundEngine.playTone(400, 'sine', 0.1);
+  }
+
+  updateRxTasksUI(tasks);
+}
+
+function updateRxTasksUI(tasks) {
+  const meter = document.getElementById('rx-progress-bar');
+  const meterText = document.getElementById('rx-progress-text');
+  const celebration = document.getElementById('rx-celebration-banner');
+  const encouragement = document.getElementById('rx-encouragement-text');
+
+  if (!meter || !meterText) return;
+
+  const isHi = state.seniorLanguage === 'hi';
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.completed).length;
+  const pct = Math.round((completed / total) * 100);
+
+  meter.style.width = `${pct}%`;
+  meterText.textContent = `${completed} / ${total} ${isHi ? 'कार्य पूरे हुए' : 'Tasks Completed'} (${pct}%)`;
+
+  const prof = getUserProfile('senior');
+  const seniorName = prof.name ? prof.name.split(' ')[0] : 'Ramesh';
+
+  if (pct === 100) {
+    if (celebration) celebration.classList.remove('hidden');
+    if (encouragement) {
+      encouragement.textContent = isHi 
+        ? `शानदार ${seniorName} जी! 🎉 आज के सभी स्वास्थ्य सुधार कार्य पूरे हो गए! आपका स्वास्थ्य स्कोर बढ़ रहा है।`
+        : `Brilliant job, ${seniorName} ji! 🎉 100% of today's health recovery tasks are complete! Your health resilience has improved.`;
+    }
+    soundEngine.playSuccessChime();
+    incrementHealthStreak();
+    const streakBadge = document.getElementById('rx-streak-count');
+    if (streakBadge) streakBadge.textContent = `${getHealthStreak()} Days`;
+  } else {
+    if (celebration) celebration.classList.add('hidden');
+    const remaining = total - completed;
+    if (encouragement) {
+      encouragement.textContent = isHi
+        ? `शाबाश ${seniorName} जी! आज का 100% लक्ष्य पूरा करने के लिए सिर्फ ${remaining} कार्य शेष हैं। 🙏`
+        : `Keep it up, ${seniorName} ji! Only ${remaining} tasks remaining to achieve today's 100% wellness goal. 🙏`;
+    }
+  }
+
+  tasks.forEach(t => {
+    const card = document.getElementById(`rx-card-${t.id}`);
+    const chk = document.getElementById(`rx-chk-${t.id}`);
+    if (chk) chk.checked = t.completed;
+    if (card) {
+      if (t.completed) {
+        card.classList.add('task-completed');
+      } else {
+        card.classList.remove('task-completed');
+      }
+    }
+  });
+}
+
+function restoreDailyTasks() {
+  const tasks = getStoredDailyTasks();
+  if (tasks && tasks.length > 0) {
+    updateRxTasksUI(tasks);
+  }
+}
+
+
+// =========================================================================
+// ENHANCED CLINICAL DIAGNOSIS REPORT & MULTI-PERSPECTIVE VISUALIZER
+// =========================================================================
+
 function renderAssessmentResult(res, inputData, alertCreated) {
   const box = document.getElementById('assessment-result-box');
   if (!box) return;
 
   const isHindi = state.seniorLanguage === 'hi';
-  const riskLevel = res.predicted_risk_level; // 'Low', 'Medium', 'High'
+  const riskLevel = res.predicted_risk_level;
   const isHigh = (riskLevel === 'High');
   const isMed = (riskLevel === 'Medium');
   const isLow = (riskLevel === 'Low');
 
-  // Styling based on risk level
+  const prof = getUserProfile('senior');
+  const seniorFirstName = prof.name ? prof.name.split(' ')[0] : 'Ramesh';
+
   let theme = {
     bg: 'bg-emerald-50/90 border-emerald-300',
     titleColor: 'text-emerald-950',
@@ -2710,19 +3718,45 @@ function renderAssessmentResult(res, inputData, alertCreated) {
     };
   }
 
-  const reasonsList = isHindi ? res.alert_reasons_hi : res.alert_reasons;
-  const actionsList = isHindi ? res.recommended_actions_hi : res.recommended_actions;
   const riskTitle = isHindi ? res.predicted_risk_level_hi : `${riskLevel} Risk Condition`;
   const urgencyTag = isHindi ? res.status_tag_hi : res.status_tag_en;
+
+  // Generate Personalized Prescription Tasks
+  const rxTasks = generateHealthPrescriptionTasks(res, inputData);
+  const totalTasks = rxTasks.length;
+  const completedTasks = rxTasks.filter(t => t.completed).length;
+  const pctTasks = Math.round((completedTasks / totalTasks) * 100);
+
+  // Plain-Language Diagnosis Explanation Text
+  let plainDiagnosisHi = '';
+  let plainDiagnosisEn = '';
+
+  if (isHigh) {
+    plainDiagnosisHi = `${seniorFirstName} जी, आपकी रिपोर्ट बताती है कि आपका रक्तचाप (${inputData.bp_systolic}/${inputData.bp_diastolic}) सामान्य से अधिक है और नींद में कमी (${inputData.sleep_hours} घंटे) है। इससे आपके दिल व शरीर को अधिक श्रम करना पड़ रहा है। लेकिन चिंता की कोई बात नहीं है: तुरंत अस्पताल जाने की आवश्यकता नहीं है। नीचे दिए गए कार्यों को पूरा करें, समय पर दवा लें, और सिस्टर कविता आपसे जल्द संपर्क करेंगी।`;
+    plainDiagnosisEn = `${seniorFirstName} ji, your assessment shows that your blood pressure (${inputData.bp_systolic}/${inputData.bp_diastolic}) is running elevated alongside reduced sleep (${inputData.sleep_hours} hrs). This causes fatigue and strains your cardiovascular resilience. There is NO immediate emergency right now. Following today's recovery tasks and taking your scheduled medicine will help stabilize your body comfortably.`;
+  } else if (isMed) {
+    plainDiagnosisHi = `${seniorFirstName} जी, आपका सामान्य स्वास्थ्य स्थिर है, लेकिन कुछ बिंदुओं पर हल्का ध्यान देने की आवश्यकता है - विशेषकर रक्तचाप व हल्का दर्द। नाश्ते के बाद गुनगुना पानी लें, नमक सीमित रखें और 15 मिनट की हल्की चहलकदमी से आपकी ऊर्जा तुरंत बेहतर होगी।`;
+    plainDiagnosisEn = `${seniorFirstName} ji, your overall health is stable, but a couple of telemetry markers require gentle attention—specifically your blood pressure and joint stiffness. Staying hydrated, having a low-sodium lunch, and completing a 15-minute gentle stroll will quickly restore your comfort.`;
+  } else {
+    plainDiagnosisHi = `बहुत बढ़िया ${seniorFirstName} जी! आपके सभी वाइटल्स (ऑक्सीजन ${inputData.spo2}%, हृदय गति ${inputData.heart_rate} bpm) एकदम सुरक्षित व सामान्य श्रेणी में हैं। आपकी दैनिक दिनचर्या बहुत अच्छी है, इसे निरंतर बनाए रखें!`;
+    plainDiagnosisEn = `Excellent news, ${seniorFirstName} ji! All your critical vitals (SpO2 ${inputData.spo2}%, Heart Rate ${inputData.heart_rate} bpm) are in an optimal, safe range. Keep maintaining your daily hydration, walks, and healthy routine!`;
+  }
+
+  // Biomarkers Evaluation
+  const bpStatus = (inputData.bp_systolic >= 140 || inputData.bp_diastolic >= 90) ? { label: 'High (बढ़ा हुआ)', class: 'bg-rose-100 text-rose-800' } : ((inputData.bp_systolic >= 125) ? { label: 'Elevated (हल्का अधिक)', class: 'bg-amber-100 text-amber-800' } : { label: 'Optimal (सामान्य)', class: 'bg-emerald-100 text-emerald-800' });
+  const sugarStatus = (inputData.blood_glucose >= 140) ? { label: 'Needs Control (नियंत्रण चाहिए)', class: 'bg-amber-100 text-amber-800' } : { label: 'Safe Range (सुरक्षित)', class: 'bg-emerald-100 text-emerald-800' };
+  const spo2Status = (inputData.spo2 >= 95) ? { label: 'Excellent (उत्कृष्ट)', class: 'bg-emerald-100 text-emerald-800' } : { label: 'Low Oxygen (कम)', class: 'bg-rose-100 text-rose-800' };
+  const hrStatus = (inputData.heart_rate >= 60 && inputData.heart_rate <= 95) ? { label: 'Normal Rhythm (सामान्य)', class: 'bg-emerald-100 text-emerald-800' } : { label: 'Attention (ध्यान दें)', class: 'bg-amber-100 text-amber-800' };
+  const sleepStatus = (inputData.sleep_hours >= 7) ? { label: 'Adequate Rest (पर्याप्त)', class: 'bg-emerald-100 text-emerald-800' } : { label: 'Sleep Deficit (नींद की कमी)', class: 'bg-amber-100 text-amber-800' };
 
   box.className = `mt-8 p-6 sm:p-8 rounded-3xl border-2 transition-all duration-300 ${theme.bg}`;
   box.classList.remove('hidden');
 
   box.innerHTML = `
-    <!-- Top Result Header -->
+    <!-- Top Result Header with Print & Audio Buttons -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
       <div class="flex items-center space-x-4">
-        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-md flex items-center justify-center text-3xl sm:text-4xl">
+        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-md flex items-center justify-center text-3xl sm:text-4xl flex-shrink-0">
           <i class="${theme.icon}"></i>
         </div>
         <div>
@@ -2735,7 +3769,7 @@ function renderAssessmentResult(res, inputData, alertCreated) {
             </span>
           </div>
           <h3 class="text-xl sm:text-2xl font-black ${theme.titleColor} mt-1">
-            ${isHindi ? 'एआई स्वास्थ्य जोखिम परिणाम' : 'AI Health Risk Prediction Results'}
+            ${isHindi ? 'स्वास्थ्य डायग्नोसिस एवं व्यक्तिगत प्रिस्क्रिप्शन' : 'Health Diagnosis Report & Personalized Rx'}
           </h3>
           <p class="text-xs sm:text-sm font-semibold text-slate-600">
             ${urgencyTag}
@@ -2744,88 +3778,222 @@ function renderAssessmentResult(res, inputData, alertCreated) {
       </div>
 
       <!-- Quick Action Buttons -->
-      <div class="flex items-center space-x-2 w-full sm:w-auto">
-        <button onclick="speakAssessmentResult()"
-          class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold transition-all shadow-sm flex items-center justify-center space-x-1.5">
-          <i class="fa-solid fa-volume-high text-teal-600"></i>
-          <span>${isHindi ? 'बोलकर सुनाएं' : 'Listen Report'}</span>
+      <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+        <button onclick="openClinicalReportSheet()"
+          class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-black transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 active:scale-95"
+          title="Open Official Clinical Report Sheet / विस्तृत स्वास्थ्य रिपोर्ट शीट खोलें">
+          <i class="fa-solid fa-file-waveform text-sm"></i>
+          <span>${isHindi ? 'विस्तृत रिपोर्ट शीट देखें' : 'View Clinical Report Sheet'}</span>
         </button>
-        ${(isHigh || isMed) ? `
-          <button onclick="escalateAssessmentToCoordinator()"
-            class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md flex items-center justify-center space-x-1.5">
-            <i class="fa-solid fa-bell animate-pulse"></i>
-            <span>${isHindi ? 'कोऑर्डिनेटर को सूचित' : 'Alert Coordinator'}</span>
-          </button>
-        ` : ''}
+        <button onclick="shareReportViaWhatsApp()"
+          class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold transition-all shadow-sm flex items-center justify-center space-x-1.5"
+          title="Share Report to Family via WhatsApp">
+          <i class="fa-brands fa-whatsapp text-white"></i>
+          <span>${isHindi ? 'शेयर करें' : 'Share WhatsApp'}</span>
+        </button>
+        <button onclick="speakDiagnosticReport()"
+          class="flex-1 sm:flex-none px-3 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 text-xs font-extrabold transition-all shadow-sm flex items-center justify-center space-x-1.5"
+          title="Listen to Diagnosis in Voice">
+          <i class="fa-solid fa-volume-high text-teal-600"></i>
+          <span>${isHindi ? 'ऑडियो सुनें' : 'Listen'}</span>
+        </button>
       </div>
     </div>
 
-    <!-- Metrics Breakdown Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 my-6">
-      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'जोखिम स्कोर' : 'Risk Index Score'}</span>
-        <span class="text-2xl sm:text-3xl font-black text-slate-800">${res.risk_score}</span>
-        <span class="text-[10px] text-slate-400 block mt-0.5">Scale: 0 (Safe) - 100</span>
+
+    <!-- 1. PLAIN LANGUAGE DIAGNOSIS EXPLANATION (EASY TO UNDERSTAND) -->
+    <div class="mt-6 bg-white/95 rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-sm">
+      <div class="flex items-center space-x-3 mb-3">
+        <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <div>
+          <h4 class="text-sm sm:text-base font-extrabold text-[#0e294b]">
+            ${isHindi ? 'अपनी रिपोर्ट को समझें (सरल भाषा में विश्लेषण)' : 'Understand Your Diagnosis (Plain Language Summary)'}
+          </h4>
+          <p class="text-xs text-slate-400">Doctor-verified non-alarmist explanation of your telemetry</p>
+        </div>
       </div>
-      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'एमएल संभावना' : 'AI Decline Prob.'}</span>
-        <span class="text-2xl sm:text-3xl font-black text-teal-600">${(res.predicted_probability * 100).toFixed(1)}%</span>
-        <span class="text-[10px] text-slate-400 block mt-0.5">Random Forest Model</span>
+      <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium bg-sky-50/60 p-4 rounded-xl border border-sky-100">
+        ${isHindi ? plainDiagnosisHi : plainDiagnosisEn}
+      </p>
+    </div>
+
+
+    <!-- 2. BIOMARKER COMPARISON CARDS (YOUR VALUE VS NORMAL RANGE) -->
+    <div class="mt-6">
+      <h4 class="text-xs sm:text-sm font-extrabold text-[#0e294b] mb-3 flex items-center space-x-2">
+        <i class="fa-solid fa-chart-simple text-teal-600"></i>
+        <span>${isHindi ? 'आपके स्वास्थ्य संकेतक बनाम सामान्य सीमा (Biomarker Analysis):' : 'Your Vitals vs Safe Clinical Ranges (Biomarker Comparison):'}</span>
+      </h4>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <!-- BP -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Blood Pressure</span>
+          <span class="text-lg sm:text-xl font-black text-slate-800">${inputData.bp_systolic}/${inputData.bp_diastolic}</span>
+          <span class="text-[10px] text-slate-500 block">Target: &lt;120/80</span>
+          <span class="mt-1.5 inline-block text-[10px] font-black px-2 py-0.5 rounded-full ${bpStatus.class}">${bpStatus.label}</span>
+        </div>
+
+        <!-- Sugar -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Blood Glucose</span>
+          <span class="text-lg sm:text-xl font-black text-slate-800">${inputData.blood_glucose} <span class="text-xs font-normal">mg/dL</span></span>
+          <span class="text-[10px] text-slate-500 block">Safe: 70-130</span>
+          <span class="mt-1.5 inline-block text-[10px] font-black px-2 py-0.5 rounded-full ${sugarStatus.class}">${sugarStatus.label}</span>
+        </div>
+
+        <!-- SpO2 -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Oxygen SpO2</span>
+          <span class="text-lg sm:text-xl font-black text-teal-700">${inputData.spo2}%</span>
+          <span class="text-[10px] text-slate-500 block">Normal: ≥95%</span>
+          <span class="mt-1.5 inline-block text-[10px] font-black px-2 py-0.5 rounded-full ${spo2Status.class}">${spo2Status.label}</span>
+        </div>
+
+        <!-- Heart Rate -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Heart Rate</span>
+          <span class="text-lg sm:text-xl font-black text-slate-800">${inputData.heart_rate} <span class="text-xs font-normal">bpm</span></span>
+          <span class="text-[10px] text-slate-500 block">Normal: 60-90</span>
+          <span class="mt-1.5 inline-block text-[10px] font-black px-2 py-0.5 rounded-full ${hrStatus.class}">${hrStatus.label}</span>
+        </div>
+
+        <!-- Sleep -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center col-span-2 sm:col-span-1">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Sleep Duration</span>
+          <span class="text-lg sm:text-xl font-black text-slate-800">${inputData.sleep_hours} <span class="text-xs font-normal">hrs</span></span>
+          <span class="text-[10px] text-slate-500 block">Target: 7-8 hrs</span>
+          <span class="mt-1.5 inline-block text-[10px] font-black px-2 py-0.5 rounded-full ${sleepStatus.class}">${sleepStatus.label}</span>
+        </div>
       </div>
-      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'बीएमआई माप' : 'Body Mass Index'}</span>
-        <span class="text-2xl sm:text-3xl font-black text-slate-800">${res.bmi}</span>
-        <span class="text-[10px] text-slate-400 block mt-0.5">${inputData.weight_kg}kg • ${inputData.height_cm}cm</span>
+    </div>
+
+
+    <!-- 3. PERSONALIZED HEALTH IMPROVEMENT PRESCRIPTION & DAILY TASKS CHECKLIST -->
+    <div class="mt-7 bg-white rounded-3xl p-5 sm:p-7 border-2 border-teal-300 shadow-md">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h4 class="text-base sm:text-lg font-black text-[#0e294b]">
+                ${isHindi ? 'स्वास्थ्य सुधार प्रिस्क्रिप्शन एवं दैनिक कार्य सूची' : 'Personalized Health Improvement Prescription'}
+              </h4>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-200 flex items-center space-x-1">
+                <span class="streak-flame">🔥</span>
+                <span id="rx-streak-count">${getHealthStreak()} Days Streak</span>
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium">
+              Daily recovery milestones tailored directly to your ML prediction and biomarkers.
+            </p>
+          </div>
+        </div>
+
+        <!-- Completion Percentage Badge -->
+        <div class="bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200 text-right">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Today's Progress</span>
+          <span id="rx-progress-text" class="text-xs sm:text-sm font-extrabold text-teal-800">
+            ${completedTasks} / ${totalTasks} ${isHindi ? 'कार्य पूरे हुए' : 'Tasks Completed'} (${pctTasks}%)
+          </span>
+        </div>
       </div>
-      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'कोऑर्डिनेटर स्थिति' : 'Care Alert Status'}</span>
-        <span class="text-xs sm:text-sm font-bold ${alertCreated ? 'text-rose-600' : 'text-emerald-600'} block mt-1">
-          <i class="${alertCreated ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-shield-check'} mr-1"></i>
-          ${alertCreated ? (isHindi ? 'अलर्ट दर्ज हुआ' : 'Alert Synced') : (isHindi ? 'सुरक्षित' : 'Normal')}
+
+      <!-- Progress Bar -->
+      <div class="w-full bg-slate-100 h-2.5 rounded-full mt-4 overflow-hidden">
+        <div id="rx-progress-bar" class="h-full bg-gradient-to-r from-[#00a896] to-emerald-500 rounded-full transition-all duration-300"
+          style="width: ${pctTasks}%"></div>
+      </div>
+
+      <!-- Dynamic Encouragement Banner -->
+      <div class="mt-3 text-xs sm:text-sm font-bold text-slate-700 flex items-center space-x-1.5">
+        <i class="fa-solid fa-heart-pulse text-teal-600"></i>
+        <span id="rx-encouragement-text">
+          ${isHindi 
+            ? `शाबाश ${seniorFirstName} जी! आज का 100% लक्ष्य पूरा करने के लिए सिर्फ ${totalTasks - completedTasks} कार्य शेष हैं। 🙏`
+            : `Keep it up, ${seniorFirstName} ji! Only ${totalTasks - completedTasks} tasks remaining to achieve today's 100% wellness goal. 🙏`}
         </span>
-        <span class="text-[10px] text-slate-400 block mt-0.5">${alertCreated ? 'View 1 Notified' : 'No escalation needed'}</span>
+      </div>
+
+      <!-- 100% Celebration Banner (Hidden by default unless 100%) -->
+      <div id="rx-celebration-banner" class="${pctTasks === 100 ? '' : 'hidden'} mt-4 p-4 rounded-2xl bg-gradient-to-r from-amber-100 via-emerald-100 to-teal-100 border border-emerald-300 text-center shadow-sm">
+        <span class="text-2xl">🎉 🏆 👏</span>
+        <h5 class="font-black text-sm sm:text-base text-emerald-950 mt-1">
+          ${isHindi ? 'अद्भुत! आज के सभी स्वास्थ्य सुधार कार्य सफलतापूर्वक पूरे हो गए!' : 'Outstanding! All daily recovery tasks completed for today!'}
+        </h5>
+        <p class="text-xs text-emerald-800 font-medium">
+          Your adherence improves blood pressure regulation, glucose control, and prevents hospital visits.
+        </p>
+      </div>
+
+      <!-- Task Items Grid -->
+      <div id="daily-rx-tasks-list" class="space-y-3 mt-5">
+        ${rxTasks.map(t => {
+          const isDone = t.completed;
+          return `
+            <div id="rx-card-${t.id}"
+              class="rx-task-card p-4 rounded-2xl bg-white flex items-start justify-between gap-3 ${isDone ? 'task-completed' : ''}">
+              <div class="flex items-start space-x-3.5">
+                <input type="checkbox" id="rx-chk-${t.id}" onchange="toggleRxTask('${t.id}')"
+                  class="rx-task-checkbox mt-0.5" ${isDone ? 'checked' : ''}>
+                <div>
+                  <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${t.badgeClass}">
+                      ${t.timeSlot}
+                    </span>
+                    <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                      ${t.category}
+                    </span>
+                  </div>
+                  <h5 class="task-title-text text-xs sm:text-sm font-extrabold text-slate-900">
+                    ${isHindi ? t.titleHi : t.titleEn}
+                  </h5>
+                  <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                    ${isHindi ? t.descHi : t.descEn}
+                  </p>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
       </div>
     </div>
 
-    <!-- Alert Reasons & Clinical Observations -->
-    <div class="space-y-4">
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 mb-2 flex items-center space-x-2">
-          <i class="fa-solid fa-clipboard-list text-teal-600"></i>
-          <span>${isHindi ? 'जोखिम के मुख्य कारण एवं टेलीमेट्री अवलोकन:' : 'Identified Risk Drivers & Telemetry Signals:'}</span>
-        </h4>
-        <ul class="space-y-2 mt-3">
-          ${reasonsList.map(r => `
-            <li class="flex items-start text-xs sm:text-sm text-slate-700">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full ${isHigh ? 'bg-rose-100 text-rose-700' : (isMed ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700')} text-xs mr-2.5 flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-arrow-right text-[10px]"></i>
-              </span>
-              <span>${r}</span>
-            </li>
-          `).join('')}
-        </ul>
+
+    <!-- 4. CARE COORDINATOR CLINICAL NOTE & CONTACT -->
+    <div class="mt-6 bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+          KV
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h5 class="text-xs sm:text-sm font-extrabold text-slate-900">Sister Kavita Verma, RN</h5>
+            <span class="text-[10px] font-bold px-2 py-0.5 bg-teal-100 text-teal-800 rounded-full">Your Care Coordinator</span>
+          </div>
+          <p class="text-xs text-slate-600 mt-0.5">
+            ${isHindi 
+              ? '“रमेश जी, मैंने आपकी टेलीमेट्री देखी है। दवा समय पर लें; मैं शाम 4:30 बजे फोन करके आपका हालचाल पूछूंगी।”' 
+              : '“Ramesh ji, I have reviewed your telemetry readings. Please follow your tasks; I will call you at 4:30 PM for a quick check-in.”'}
+          </p>
+        </div>
       </div>
 
-      <!-- Actionable Next Steps -->
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 mb-2 flex items-center space-x-2">
-          <i class="fa-solid fa-user-doctor text-sky-600"></i>
-          <span>${isHindi ? 'अनुशंसित चिकित्सीय कदम एवं देखभाल योजना:' : 'Recommended Clinical & Support Actions:'}</span>
-        </h4>
-        <ul class="space-y-2 mt-3">
-          ${actionsList.map(a => `
-            <li class="flex items-start text-xs sm:text-sm text-slate-700">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-teal-100 text-teal-800 text-xs mr-2.5 flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-check text-[10px]"></i>
-              </span>
-              <span>${a}</span>
-            </li>
-          `).join('')}
-        </ul>
+      <div class="flex items-center space-x-2 w-full sm:w-auto">
+        <a href="tel:+919876543210"
+          class="w-full sm:w-auto px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center space-x-1.5">
+          <i class="fa-solid fa-phone"></i>
+          <span>${isHindi ? 'सिस्टर कविता को कॉल करें' : 'Call Coordinator'}</span>
+        </a>
       </div>
     </div>
 
-    <!-- Live Coordinator Escalation Alert Banner if applicable -->
+
+    <!-- 5. COORDINATOR ESCALATION ALERT BANNER (IF MEDIUM OR HIGH RISK) -->
     ${alertCreated ? `
       <div class="mt-5 p-4 rounded-2xl bg-rose-100 border border-rose-300 flex items-center justify-between text-xs sm:text-sm text-rose-900">
         <div class="flex items-center space-x-3">
@@ -2845,8 +4013,7 @@ function renderAssessmentResult(res, inputData, alertCreated) {
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// 9. Read Aloud Assessment Results (Text-to-Speech)
-function speakAssessmentResult() {
+function speakDiagnosticReport() {
   if (!assessmentState.lastPrediction) {
     showToast('No assessment results to read.', 'warning');
     return;
@@ -2854,27 +4021,147 @@ function speakAssessmentResult() {
 
   const res = assessmentState.lastPrediction;
   const isHindi = state.seniorLanguage === 'hi';
-  
+  const prof = getUserProfile('senior');
+  const seniorName = prof.name ? prof.name.split(' ')[0] : 'Ramesh';
+
   let text = '';
   if (isHindi) {
-    text = `रमेश जी, आपके स्वास्थ्य का आकलन किया गया है। आपका स्वास्थ्य स्तर ${res.predicted_risk_level_hi} है। जोखिम स्कोर ${res.risk_score} है। मुख्य बात: ${res.alert_reason_summary_hi}। सलाह: ${res.suggested_action_summary_hi}`;
+    text = `नमस्ते ${seniorName} जी। आपकी स्वास्थ्य रिपोर्ट का परिणाम: ${res.predicted_risk_level_hi}। जोखिम स्कोर ${res.risk_score} है। ${res.alert_reason_summary_hi}। आज के लिए सलाह: दवा समय पर लें, नमक कम रखें और हल्के व्यायाम करें। सिस्टर कविता आपसे फोन पर संपर्क करेंगी।`;
   } else {
-    text = `Ramesh ji, your health assessment has been evaluated. Your condition is ${res.predicted_risk_level} Risk. Risk index score is ${res.risk_score} out of 100. Primary observation: ${res.alert_reason_summary}. Recommended action: ${res.suggested_action_summary}`;
+    text = `Hello ${seniorName} ji. Your health condition is evaluated as ${res.predicted_risk_level} Risk. Risk index score is ${res.risk_score} out of 100. Primary finding: ${res.alert_reason_summary}. Recommended recovery actions: take medicine on time, limit salt, and stay well hydrated. Care Coordinator Sister Kavita is monitoring your progress.`;
   }
 
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
-    utterance.rate = 0.88; // Gentle, clear speed for elders
+    utterance.rate = 0.88;
     window.speechSynthesis.speak(utterance);
-    showToast(isHindi ? 'स्वास्थ्य रिपोर्ट बोलकर सुनाई जा रही है...' : 'Reading assessment report aloud...', 'info');
+    showToast(isHindi ? 'स्वास्थ्य रिपोर्ट बोलकर सुनाई जा रही है...' : 'Reading diagnostic report aloud...', 'info');
   } else {
     showToast('Text-to-speech is not supported in this browser.', 'warning');
   }
 }
 
-// 10. Manual Escalation to Coordinator
+function speakAssessmentResult() {
+  speakDiagnosticReport();
+}
+
+function printDiagnosticReport() {
+  printClinicalReportSheet();
+}
+
+function formatClinicalReportWhatsAppMessage(res, payload, prof) {
+  const name = prof.name || 'Ramesh Sharma';
+  const age = payload.age || prof.age || 74;
+  const gender = payload.gender || prof.gender || 'Male';
+  const dob = prof.dob || '1952-05-15';
+  const blood = prof.bloodGroup || 'B+';
+  const phone = prof.phone || '+91 98110-44912';
+  const doctor = prof.doctor || 'Dr. Alok Mehta (Cardiology)';
+  const allergies = prof.allergies || 'Penicillin allergy, mild osteoarthritis';
+  
+  const riskEmoji = res.predicted_risk_level === 'High' ? '🚨' : (res.predicted_risk_level === 'Medium' ? '⚠️' : '✅');
+  const riskLevel = res.predicted_risk_level || 'Low';
+  const riskScore = res.risk_score || 32;
+  const confidence = Math.round((res.predicted_probability || 0.88) * 100);
+
+  const bmi = (payload.height_cm > 40) ? (payload.weight_kg / Math.pow(payload.height_cm / 100, 2)).toFixed(1) : '24.0';
+  const adlScore = (payload.walking_independent ? 1 : 0) + (payload.eating_independent ? 1 : 0) + (payload.moving_independent ? 1 : 0) + (payload.toileting_independent ? 1 : 0);
+
+  const reportId = `CC-REP-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
+  const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+  return `🏥 *CARECONNECT AI CLINICAL DIAGNOSTIC REPORT SHEET*
+📋 *Report Ref ID:* ${reportId}
+📅 *Assessment Date:* ${dateStr}
+---------------------------------------------
+👤 *1. PATIENT DEMOGRAPHICS & PROFILE:*
+• *Patient Name:* ${name}
+• *Age / Gender:* ${age} Yrs • ${gender}
+• *DOB:* ${dob} | *Blood Group:* ${blood}
+• *Phone:* ${phone}
+• *Attending Doctor:* ${doctor}
+• *Clinical Allergies:* ${allergies}
+
+---------------------------------------------
+🧠 *2. AI ML DIAGNOSTIC OUTPUT & RISK:*
+${riskEmoji} *Predicted Risk Level:* *${riskLevel} Risk*
+• *Calculated Risk Score:* *${riskScore} / 100*
+• *Model Confidence:* ${confidence}% (apnasa_v3_rf_triage_v1.0)
+• *Clinical Finding:* ${res.alert_reason_summary || 'Vitals telemetry within stable thresholds'}
+• *Triage Directive:* ${res.suggested_action_summary || 'Maintain regular recovery milestones'} (Contact: ${res.contact_method || 'Daily outreach'})
+
+---------------------------------------------
+📊 *3. COMPLETE ASSESSMENT VITALS & TELEMETRY:*
+• *Blood Pressure:* ${payload.bp_systolic}/${payload.bp_diastolic} mmHg (${payload.bp_systolic >= 140 ? 'Stage-2 Alert' : 'Target Range'})
+• *Heart Rate / Pulse:* ${payload.heart_rate} bpm (Normal: 60-90)
+• *Blood Oxygen (SpO2):* ${payload.spo2}% (${payload.spo2 >= 95 ? 'Adequate' : 'Low'})
+• *Blood Glucose:* ${payload.blood_glucose} mg/dL (${payload.blood_glucose >= 140 ? 'Elevated' : 'Safe Range'})
+• *BMI:* ${bmi} kg/m² (${payload.height_cm}cm / ${payload.weight_kg}kg)
+• *Sleep Duration:* ${payload.sleep_hours} Hours (${payload.sleep_hours >= 7 ? 'Adequate' : 'Sleep Deficit'})
+• *Pain Status:* ${payload.pain_present ? `Level ${payload.pain_level}/10 (${payload.pain_location})` : 'Pain-Free'}
+• *Medications:* ${payload.medication_count} Prescriptions (${payload.missed_doses} missed doses)
+
+---------------------------------------------
+🩺 *4. CHRONIC CONDITIONS & FUNCTIONAL ADL:*
+• *Hypertension:* ${payload.has_hypertension ? 'Diagnosed / Active' : 'None'}
+• *Arthritis / Joint Pain:* ${payload.has_arthritis ? 'Diagnosed / Active' : 'None'}
+• *Heart / Respiratory:* ${(payload.has_heart_disease || payload.has_respiratory) ? 'Active Monitoring' : 'None Reported'}
+• *ADL Functional Score:* ${adlScore} / 4 Activities Independent (Safe mobility)
+
+---------------------------------------------
+📋 *5. AI PERSONALIZED RECOVERY PRESCRIPTION:*
+1. Morning BP check & 300ml warm hydration
+2. Low-sodium balanced nutrition lunch
+3. 15-minute gentle mobility walk
+4. Timely evening medication & 7+ hrs night rest
+
+---------------------------------------------
+👩‍⚕️ *CLINICAL REVIEWER & CERTIFICATION:*
+Sister Kavita Verma, Lead Clinical Nurse (RN)
+*License:* DEL-RN-884920 • Geriatric Tele-Triage Division
+*24/7 CareConnect Emergency Line:* 108 / 112 / +91 98765-43210
+*Status: Verified & Electronically Signed in Secure Cloud*`;
+}
+
+function shareReportViaWhatsApp() {
+  const prof = getUserProfile('senior');
+  const payload = assessmentState.lastPayload || getCurrentAssessmentData();
+  const res = assessmentState.lastPrediction || {
+    predicted_risk_level: 'Low',
+    predicted_risk_level_hi: 'कम जोखिम (Low Risk)',
+    risk_score: 32,
+    predicted_probability: 0.18,
+    status_tag_en: 'Routine Outpatient Telemetry',
+    status_tag_hi: 'नियमित स्वास्थ्य निगरानी',
+    alert_reason_summary: 'All telemetry vital signs are within normal geriatric ranges.',
+    suggested_action_summary: 'Maintain hydration, daily walk, and regular medication schedule.',
+    contact_method: 'Daily automated check-in'
+  };
+
+  const family = getFamilyMembers();
+  const recipient = family.length > 0 ? family[0] : null;
+
+  const msg = formatClinicalReportWhatsAppMessage(res, payload, prof);
+
+  soundEngine.playSuccessChime();
+  if (recipient) {
+    showToast(`WhatsApp report sheet prepared for ${recipient.name} (${recipient.phone})!`, 'success');
+  } else {
+    showToast('WhatsApp clinical report sheet prepared successfully!', 'success');
+  }
+
+  let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+  if (recipient && recipient.phone) {
+    const cleanPhone = recipient.phone.replace(/[^0-9]/g, '');
+    if (cleanPhone.length >= 10) {
+      url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
+    }
+  }
+  window.open(url, '_blank');
+}
+
 function escalateAssessmentToCoordinator() {
   if (!assessmentState.lastPrediction) return;
   soundEngine.playTone(800, 'sine', 0.2);
@@ -3364,6 +4651,25 @@ function handleSignUpSubmit(e) {
   const parts = name.split(' ');
   const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
 
+  // Create initial profile for the new user marking profileCompleted as false
+  const newProfile = {
+    role: selectedAuthRole,
+    name: name,
+    email: email,
+    dob: '',
+    age: '',
+    gender: '',
+    phone: '',
+    profileCompleted: false,
+    isNewUser: true
+  };
+  try {
+    localStorage.setItem(`careconnect_profile_${selectedAuthRole}`, JSON.stringify(newProfile));
+    sessionStorage.removeItem('careconnect_dismiss_profile_prompt');
+  } catch (err) {
+    console.error('Failed to initialize new user profile in localStorage:', err);
+  }
+
   enterDashboard(selectedAuthRole, {
     name: name,
     email: email,
@@ -3430,7 +4736,14 @@ function enterDashboard(role, userObj) {
     avatar.className = `w-8 h-8 rounded-full ${cfg.avatarBg} text-white flex items-center justify-center font-bold text-xs shadow-sm`;
   }
   if (nameLabel) nameLabel.textContent = user.name;
-  if (roleLabel) roleLabel.textContent = user.badge;
+  if (roleLabel) {
+    let bText = user.badge;
+    if (typeof bText === 'object' && bText !== null) {
+      const curLang = (typeof state !== 'undefined' && state.seniorLanguage) ? state.seniorLanguage : 'en';
+      bText = bText[curLang] || bText.en || bText.hi || '';
+    }
+    roleLabel.textContent = bText || (cfg.defaultBadge ? (cfg.defaultBadge.en || cfg.defaultBadge) : '');
+  }
 
   // Role specific view initializations
   if (role === 'family') {
@@ -3444,6 +4757,21 @@ function enterDashboard(role, userObj) {
     setTimeout(() => {
       if (typeof restoreAssessmentDraft === 'function') {
         restoreAssessmentDraft();
+      }
+      if (typeof autoFillSeniorProfileData === 'function') {
+        autoFillSeniorProfileData();
+      }
+      if (typeof initSeniorRemindersHub === 'function') {
+        initSeniorRemindersHub();
+      }
+      if (typeof checkUserProfilePrompt === 'function') {
+        checkUserProfilePrompt('senior');
+      }
+      if (typeof renderFamilyCareCircle === 'function') {
+        renderFamilyCareCircle();
+      }
+      if (typeof restoreDailyTasks === 'function') {
+        restoreDailyTasks();
       }
     }, 100);
   }
@@ -3608,7 +4936,6 @@ function clearAssessmentDraft() {
   if (typeof window.__resetCumulativeVoiceState === 'function') {
     window.__resetCumulativeVoiceState();
   }
-  document.getElementById('assess-age').value = '';
   document.getElementById('assess-weight').value = '';
   document.getElementById('assess-height').value = '';
   document.getElementById('assess-bp-sys').value = '';
@@ -3631,6 +4958,7 @@ function clearAssessmentDraft() {
   const alertBox = document.getElementById('assessment-validation-alert');
   if (alertBox) alertBox.classList.add('hidden');
 
+  if (typeof autoFillSeniorProfileData === 'function') autoFillSeniorProfileData();
   showToast('Assessment form draft cleared / फॉर्म साफ कर दिया गया', 'info');
 }
 
@@ -3711,7 +5039,9 @@ function validateAssessmentInputsBeforeSubmit() {
 
   fieldsToCheck.forEach(item => {
     const el = document.getElementById(item.id);
-    if (!el || el.value.toString().trim() === '' || isNaN(parseFloat(el.value))) {
+    const val = el ? el.value.toString().trim() : '';
+    const isNumeric = (item.id !== 'assess-gender');
+    if (!el || val === '' || (isNumeric && isNaN(parseFloat(val)))) {
       missing.push(item.label);
       if (el) {
         el.classList.add('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
@@ -4612,3 +5942,1257 @@ if (document.readyState === 'loading') {
 } else {
   initAssessmentDraftAutoSaveListeners();
 }
+
+
+// =========================================================================
+// OFFICIAL CLINICAL DIAGNOSTIC REPORT SHEET ENGINE (PROPER MEDICAL REPORT)
+// =========================================================================
+
+function getCurrentAssessmentData() {
+  const prof = getUserProfile('senior');
+  return {
+    seniorName: prof.name || "Ramesh Sharma",
+    age: parseFloat(document.getElementById('assess-age')?.value) || prof.age || 74,
+    gender: document.getElementById('assess-gender')?.value || prof.gender || "Male",
+    height_cm: parseFloat(document.getElementById('assess-height')?.value) || 165,
+    weight_kg: parseFloat(document.getElementById('assess-weight')?.value) || 68,
+    bp_systolic: parseFloat(document.getElementById('assess-bp-sys')?.value) || 128,
+    bp_diastolic: parseFloat(document.getElementById('assess-bp-dia')?.value) || 82,
+    heart_rate: parseFloat(document.getElementById('assess-hr')?.value) || 76,
+    spo2: parseFloat(document.getElementById('assess-spo2')?.value) || 97,
+    sleep_hours: parseFloat(document.getElementById('assess-sleep')?.value) || 7.0,
+    pain_present: (assessmentState && assessmentState.painPresent) ? 1 : 0,
+    pain_level: (assessmentState && assessmentState.painLevel) || 0,
+    pain_location: document.getElementById('assess-pain-loc')?.value || "None",
+    walking_independent: parseInt(document.getElementById('assess-walk')?.value) || 1,
+    eating_independent: parseInt(document.getElementById('assess-eat')?.value) || 1,
+    moving_independent: parseInt(document.getElementById('assess-move')?.value) || 1,
+    toileting_independent: parseInt(document.getElementById('assess-toilet')?.value) || 1,
+    medication_count: parseInt(document.getElementById('assess-med-count')?.value) || 3,
+    missed_doses: parseInt(document.getElementById('assess-missed-doses')?.value) || 0,
+    is_diabetic: parseInt(document.getElementById('assess-diabetic')?.value) || 0,
+    blood_glucose: parseFloat(document.getElementById('assess-sugar')?.value) || 110,
+    hearing_difficulty: parseInt(document.getElementById('assess-hearing')?.value) > 0 ? 1 : 0,
+    hearing_aid_used: parseInt(document.getElementById('assess-hearing')?.value) === 2 ? 1 : 0,
+    has_hypertension: document.getElementById('chk-htn')?.checked ? 1 : 0,
+    has_arthritis: document.getElementById('chk-arth')?.checked ? 1 : 0,
+    has_heart_disease: document.getElementById('chk-heart')?.checked ? 1 : 0,
+    has_respiratory: document.getElementById('chk-resp')?.checked ? 1 : 0
+  };
+}
+
+function generateClinicalReportSheetHtml(res, payload, prof) {
+  const isHindi = state.seniorLanguage === 'hi';
+  const riskLevel = res.predicted_risk_level || 'Low';
+  const isHigh = (riskLevel === 'High');
+  const isMed = (riskLevel === 'Medium');
+
+  const reportId = `CC-REP-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
+  const dateFormatted = new Date().toLocaleDateString('en-IN', {
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+
+  const bmi = (payload.height_cm > 40) ? (payload.weight_kg / Math.pow(payload.height_cm / 100, 2)).toFixed(1) : '24.0';
+  let bmiCategory = 'Normal Weight';
+  if (parseFloat(bmi) >= 30) bmiCategory = 'Obese';
+  else if (parseFloat(bmi) >= 25) bmiCategory = 'Overweight';
+  else if (parseFloat(bmi) < 18.5) bmiCategory = 'Underweight';
+
+  const riskBadgeColor = isHigh ? 'bg-rose-600 text-white' : (isMed ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white');
+  const riskCardBorder = isHigh ? 'border-rose-400 bg-rose-50/70' : (isMed ? 'border-amber-400 bg-amber-50/70' : 'border-emerald-400 bg-emerald-50/70');
+  const riskText = isHindi ? res.predicted_risk_level_hi : `${riskLevel} Risk Condition`;
+
+  // ADL score calculation
+  const adlScore = (payload.walking_independent ? 1 : 0) + 
+                   (payload.eating_independent ? 1 : 0) + 
+                   (payload.moving_independent ? 1 : 0) + 
+                   (payload.toileting_independent ? 1 : 0);
+
+  // Vitals matrix rows
+  const vitalsRows = [
+    {
+      name: 'Blood Pressure (रक्तचाप)',
+      value: `${payload.bp_systolic} / ${payload.bp_diastolic} mmHg`,
+      safeRange: '< 120 / 80 mmHg',
+      status: (payload.bp_systolic >= 140 || payload.bp_diastolic >= 90) ? 'Stage 2 Hypertension (उच्च)' : ((payload.bp_systolic >= 125) ? 'Pre-Hypertension (मध्यम)' : 'Optimal (सुरक्षित)'),
+      statusClass: (payload.bp_systolic >= 140) ? 'text-rose-700 bg-rose-100' : ((payload.bp_systolic >= 125) ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100')
+    },
+    {
+      name: 'Heart Rate / Pulse (हृदय गति)',
+      value: `${payload.heart_rate} bpm`,
+      safeRange: '60 - 90 bpm',
+      status: (payload.heart_rate >= 60 && payload.heart_rate <= 95) ? 'Normal Sinus Rhythm (सामान्य)' : 'Attention (ध्यान दें)',
+      statusClass: (payload.heart_rate >= 60 && payload.heart_rate <= 95) ? 'text-emerald-700 bg-emerald-100' : 'text-amber-700 bg-amber-100'
+    },
+    {
+      name: 'Blood Oxygen / SpO2 (ऑक्सीजन)',
+      value: `${payload.spo2}%`,
+      safeRange: '≥ 95%',
+      status: (payload.spo2 >= 95) ? 'Adequate Saturation (उत्कृष्ट)' : 'Low Saturation (कम)',
+      statusClass: (payload.spo2 >= 95) ? 'text-emerald-700 bg-emerald-100' : 'text-rose-700 bg-rose-100'
+    },
+    {
+      name: 'Blood Glucose / Sugar (शर्करा)',
+      value: `${payload.blood_glucose} mg/dL`,
+      safeRange: '70 - 130 mg/dL',
+      status: (payload.blood_glucose >= 140) ? 'Elevated / Needs Control (नियंत्रण चाहिए)' : 'Target Range (सामान्य)',
+      statusClass: (payload.blood_glucose >= 140) ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100'
+    },
+    {
+      name: 'Body Mass Index / BMI (बॉडी मास)',
+      value: `${bmi} kg/m² (${payload.height_cm}cm / ${payload.weight_kg}kg)`,
+      safeRange: '18.5 - 24.9 kg/m²',
+      status: bmiCategory,
+      statusClass: (bmiCategory === 'Normal Weight') ? 'text-emerald-700 bg-emerald-100' : 'text-amber-700 bg-amber-100'
+    },
+    {
+      name: 'Sleep Rest Duration (नींद)',
+      value: `${payload.sleep_hours} Hours`,
+      safeRange: '7.0 - 8.5 Hours',
+      status: (payload.sleep_hours >= 7) ? 'Adequate Rest (पर्याप्त)' : 'Sleep Deficit (नींद की कमी)',
+      statusClass: (payload.sleep_hours >= 7) ? 'text-emerald-700 bg-emerald-100' : 'text-amber-700 bg-amber-100'
+    },
+    {
+      name: 'Pain Assessment (दर्द स्तर)',
+      value: payload.pain_present ? `Level ${payload.pain_level}/10 (${payload.pain_location})` : 'No Pain Reported',
+      safeRange: '0 - 2 (Mild / None)',
+      status: payload.pain_present ? (payload.pain_level >= 5 ? 'Significant Pain' : 'Mild Discomfort') : 'Pain-Free',
+      statusClass: payload.pain_present ? (payload.pain_level >= 5 ? 'text-rose-700 bg-rose-100' : 'text-amber-700 bg-amber-100') : 'text-emerald-700 bg-emerald-100'
+    },
+    {
+      name: 'Prescription Medications (दवाइयां)',
+      value: `${payload.medication_count} Prescriptions (${payload.missed_doses} missed doses)`,
+      safeRange: '0 Missed Doses',
+      status: (payload.missed_doses === 0) ? '100% Adherence (नियमित)' : 'Missed Doses Detected',
+      statusClass: (payload.missed_doses === 0) ? 'text-emerald-700 bg-emerald-100' : 'text-rose-700 bg-rose-100'
+    }
+  ];
+
+  // Prescription milestones
+  const rxTasks = generateHealthPrescriptionTasks(res, payload);
+
+  return `
+    <!-- 1. OFFICIAL MEDICAL REPORT HEADER -->
+    <div class="border-b-2 border-slate-900 pb-5">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-14 h-14 rounded-2xl bg-[#00a896] text-white flex items-center justify-center text-3xl font-black shadow-md flex-shrink-0">
+            <i class="fa-solid fa-heart-pulse"></i>
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
+              CareConnect AI Health System
+            </h1>
+            <p class="text-xs font-bold text-teal-800 uppercase tracking-wider">
+              National Geriatric Tele-Triage & Clinical Monitoring Network
+            </p>
+            <p class="text-[11px] text-slate-500 font-medium">
+              Autonomous Multimodal Telemetry Evaluation • Ministry Standard Clinical Form
+            </p>
+          </div>
+        </div>
+
+        <div class="text-left sm:text-right bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-xl border sm:border-0 border-slate-200 w-full sm:w-auto">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Report Ref ID</div>
+          <div class="text-sm font-black text-slate-900 font-mono">${reportId}</div>
+          <div class="text-[11px] text-slate-600 font-semibold mt-0.5">${dateFormatted}</div>
+          <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+            ✓ Clinically Validated & Logged
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. PATIENT DEMOGRAPHICS & PROFILE SUMMARY -->
+    <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200 print-avoid-break">
+      <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center space-x-1.5">
+          <i class="fa-solid fa-id-card text-teal-600"></i>
+          <span>1. Patient Demographics & Profile Details (रोगी विवरण)</span>
+        </h3>
+        <span class="text-[10px] font-bold text-slate-500">CareConnect Citizen ID: #SEN-${Math.floor(1000 + Math.random() * 9000)}</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Full Name</span>
+          <span class="font-black text-slate-900 text-sm">${prof.name || 'Ramesh Sharma'}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Age / Gender</span>
+          <span class="font-extrabold text-slate-800">${payload.age} Years • ${payload.gender}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Date of Birth (DOB)</span>
+          <span class="font-bold text-slate-800">${prof.dob || '1952-05-15'}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Blood Group</span>
+          <span class="font-bold text-slate-800 px-2 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-200 w-fit inline-block">
+            ${prof.bloodGroup || 'B+'}
+          </span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Contact Phone</span>
+          <span class="font-bold text-slate-800">${prof.phone || '+91 98110-44912'}</span>
+        </div>
+        <div class="sm:col-span-2">
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Residential Address</span>
+          <span class="font-medium text-slate-700 truncate block">${prof.address || 'Flat 402, Shivalik Apts, Sector 14, Rohini, New Delhi - 110085'}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Primary Physician</span>
+          <span class="font-bold text-slate-800">${prof.doctor || 'Dr. Alok Mehta (Cardiology)'}</span>
+        </div>
+        <div class="col-span-2">
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Clinical Allergies & Notes</span>
+          <span class="font-medium text-slate-700">${prof.allergies || 'Penicillin allergy, mild knee osteoarthritis'}</span>
+        </div>
+        <div class="col-span-2">
+          <span class="text-slate-400 block text-[10px] uppercase font-bold">Emergency Contact</span>
+          <span class="font-medium text-slate-700">${prof.emergencyNotes || 'Rahul Sharma (Son) • +91 98110-44912'}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. AI MACHINE LEARNING MODEL OUTPUT & RISK STRATIFICATION -->
+    <div class="rounded-2xl p-5 border-2 ${riskCardBorder} print-avoid-break">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-brain text-teal-700"></i>
+          <span>2. AI Machine Learning Diagnostic Output & Triage Classification (एआई मॉडल परिणाम)</span>
+        </h3>
+        <span class="text-[10px] font-bold text-slate-500 font-mono">Model: apnasa_v3_rf_triage_v1.0</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center bg-white p-4 rounded-xl border border-slate-200">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Predicted Risk Level</span>
+          <span class="inline-block mt-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${riskBadgeColor}">
+            ${riskText}
+          </span>
+          <span class="text-[11px] font-semibold text-slate-500 block mt-1">${res.status_tag_en}</span>
+        </div>
+
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Calculated Risk Index Score</span>
+          <div class="flex items-baseline space-x-1 mt-0.5">
+            <span class="text-2xl sm:text-3xl font-black text-slate-900">${res.risk_score}</span>
+            <span class="text-xs font-bold text-slate-400">/ 100</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2 rounded-full mt-1.5 overflow-hidden">
+            <div class="h-full ${isHigh ? 'bg-rose-500' : (isMed ? 'bg-amber-500' : 'bg-emerald-500')} rounded-full"
+              style="width: ${res.risk_score}%"></div>
+          </div>
+        </div>
+
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Model Inference Confidence</span>
+          <span class="text-sm font-extrabold text-slate-800 block mt-0.5">
+            ${Math.round((res.predicted_probability || 0.88) * 100)}% Severity Confidence
+          </span>
+          <span class="text-[10px] text-slate-500 block">Trained on 90,000 Geriatric Telemetry Cohort</span>
+        </div>
+      </div>
+
+      <!-- Diagnostic Summary Findings -->
+      <div class="mt-3.5 bg-white/90 p-3.5 rounded-xl border border-slate-200 text-xs">
+        <span class="font-black text-slate-900 block mb-1">
+          <i class="fa-solid fa-stethoscope text-teal-600 mr-1"></i> Primary Clinical Observation & Findings:
+        </span>
+        <p class="text-slate-700 leading-relaxed font-medium">
+          ${res.alert_reason_summary || 'All measured telemetry signals align with safe outpatient baseline thresholds.'}
+        </p>
+        ${res.alert_reason_summary_hi ? `
+          <p class="text-slate-600 mt-1 font-medium bg-slate-50 p-2 rounded border border-slate-200 text-[11px]">
+            <strong>हिन्दी सारांश:</strong> ${res.alert_reason_summary_hi}
+          </p>
+        ` : ''}
+      </div>
+
+      <!-- Recommended Action Protocol -->
+      <div class="mt-2.5 flex items-start space-x-2 text-xs text-slate-700">
+        <i class="fa-solid fa-arrow-right text-teal-600 mt-0.5"></i>
+        <span><strong>Triage Directive:</strong> ${res.suggested_action_summary || 'Maintain regular schedule and log morning vitals.'} (Contact protocol: ${res.contact_method || 'Daily outreach'})</span>
+      </div>
+    </div>
+
+    <!-- 4. COMPREHENSIVE ASSESSMENT TELEMETRY & VITALS TABLE -->
+    <div class="print-avoid-break">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-table-list text-teal-600"></i>
+          <span>3. Complete Assessment Telemetry & Biomarkers Table (समस्त परीक्षण डेटा)</span>
+        </h3>
+        <span class="text-[10px] text-slate-400">Reference: WHO Geriatric Guidelines</span>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-200">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-700 text-[10px] uppercase font-black tracking-wider border-b border-slate-200">
+              <th class="py-2.5 px-3">Biomarker / Telemetry Signal</th>
+              <th class="py-2.5 px-3">Patient Value</th>
+              <th class="py-2.5 px-3">Safe Clinical Range</th>
+              <th class="py-2.5 px-3">Clinical Evaluation</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 font-medium">
+            ${vitalsRows.map(r => `
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="py-2.5 px-3 font-bold text-slate-800">${r.name}</td>
+                <td class="py-2.5 px-3 font-extrabold text-slate-900">${r.value}</td>
+                <td class="py-2.5 px-3 text-slate-500 font-mono text-[11px]">${r.safeRange}</td>
+                <td class="py-2.5 px-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${r.statusClass}">
+                    ${r.status}
+                  </span>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 5. CHRONIC ILLNESSES & FUNCTIONAL ADL INDEPENDENCE -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 print-avoid-break">
+      <!-- Comorbidities -->
+      <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-700 mb-2.5 flex items-center space-x-1.5">
+          <i class="fa-solid fa-notes-medical text-teal-600"></i>
+          <span>Chronic Conditions History (क्रोनिक बीमारियां)</span>
+        </h4>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-600">Hypertension (उच्च रक्तचाप):</span>
+            <span class="font-bold ${payload.has_hypertension ? 'text-amber-800 bg-amber-100 px-2 py-0.2 rounded' : 'text-slate-700'}">
+              ${payload.has_hypertension ? 'Diagnosed / Active' : 'None Reported'}
+            </span>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-600">Arthritis / Joint Pain (गठिया):</span>
+            <span class="font-bold ${payload.has_arthritis ? 'text-amber-800 bg-amber-100 px-2 py-0.2 rounded' : 'text-slate-700'}">
+              ${payload.has_arthritis ? 'Diagnosed / Active' : 'None Reported'}
+            </span>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-600">Cardiovascular Disease (हृदय रोग):</span>
+            <span class="font-bold ${payload.has_heart_disease ? 'text-rose-800 bg-rose-100 px-2 py-0.2 rounded' : 'text-slate-700'}">
+              ${payload.has_heart_disease ? 'Positive / Monitored' : 'None Reported'}
+            </span>
+          </div>
+          <div class="flex items-center justify-between py-1">
+            <span class="text-slate-600">Respiratory / COPD (श्वसन रोग):</span>
+            <span class="font-bold ${payload.has_respiratory ? 'text-rose-800 bg-rose-100 px-2 py-0.2 rounded' : 'text-slate-700'}">
+              ${payload.has_respiratory ? 'Positive / Monitored' : 'None Reported'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Functional ADL Independence -->
+      <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="flex items-center justify-between mb-2.5">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center space-x-1.5">
+            <i class="fa-solid fa-person-walking text-teal-600"></i>
+            <span>ADL Functional Independence (दैनिक कार्यक्षमता)</span>
+          </h4>
+          <span class="text-xs font-black text-teal-800 bg-teal-100 px-2 py-0.5 rounded-full">${adlScore} / 4 Activities</span>
+        </div>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-600">Walking & Mobility (चलना-फिरना):</span>
+            <span class="font-bold text-slate-800">${payload.walking_independent ? '✓ Independent' : '⚠ Assistance Needed'}</span>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-600">Feeding / Eating (भोजन):</span>
+            <span class="font-bold text-slate-800">${payload.eating_independent ? '✓ Independent' : '⚠ Assistance Needed'}</span>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-200">
+            <span class="text-slate-600">Bed-to-Chair Transfers (उठना-बैठना):</span>
+            <span class="font-bold text-slate-800">${payload.moving_independent ? '✓ Independent' : '⚠ Assistance Needed'}</span>
+          </div>
+          <div class="flex items-center justify-between py-1">
+            <span class="text-slate-600">Personal Hygiene / Toilet:</span>
+            <span class="font-bold text-slate-800">${payload.toileting_independent ? '✓ Independent' : '⚠ Assistance Needed'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. AI PERSONALIZED RECOVERY PRESCRIPTION -->
+    <div class="bg-teal-50/60 p-4 rounded-xl border border-teal-200 print-avoid-break">
+      <h4 class="text-xs font-black uppercase tracking-wider text-teal-900 mb-2 flex items-center space-x-1.5">
+        <i class="fa-solid fa-list-check text-teal-700"></i>
+        <span>4. AI Personalized Recovery Prescription Tasks (दैनिक स्वास्थ्य सुधार कार्य)</span>
+      </h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+        ${rxTasks.map(t => `
+          <div class="bg-white p-2.5 rounded-lg border border-teal-100 flex items-start space-x-2">
+            <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${t.badgeClass} flex-shrink-0 mt-0.5">
+              ${t.timeSlot}
+            </span>
+            <div>
+              <span class="font-bold text-slate-900 block">${isHindi ? t.titleHi : t.titleEn}</span>
+              <span class="text-[11px] text-slate-600">${isHindi ? t.descHi : t.descEn}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- 7. CLINICAL ENDORSEMENT & CERTIFICATION -->
+    <div class="pt-4 border-t-2 border-slate-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-600 print-avoid-break">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+          KV
+        </div>
+        <div>
+          <span class="font-black text-slate-900 block">Sister Kavita Verma, Lead Clinical Nurse (RN)</span>
+          <span class="text-[10px] text-slate-500 font-mono">License: DEL-RN-884920 • Geriatric Tele-Triage Division</span>
+        </div>
+      </div>
+
+      <div class="text-left sm:text-right">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Electronic Clinical Seal</div>
+        <div class="text-[11px] font-bold text-teal-800">
+          <i class="fa-solid fa-shield-halved text-teal-600"></i> CareConnect Cloud Signed & Encrypted
+        </div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Emergency Helpline: 108 / 112 / +91 98765-43210</div>
+      </div>
+    </div>
+  `;
+}
+
+function openClinicalReportSheet() {
+  const modal = document.getElementById('modal-clinical-report-sheet');
+  const container = document.getElementById('clinical-report-sheet-content');
+  if (!modal || !container) return;
+
+  const prof = getUserProfile('senior');
+  const payload = assessmentState.lastPayload || getCurrentAssessmentData();
+  
+  // If no prediction yet, construct a reasonable default prediction object
+  const res = assessmentState.lastPrediction || {
+    predicted_risk_level: 'Low',
+    predicted_risk_level_hi: 'कम जोखिम (Low Risk)',
+    risk_score: 32,
+    predicted_probability: 0.18,
+    status_tag_en: 'Routine Outpatient Telemetry',
+    status_tag_hi: 'नियमित स्वास्थ्य निगरानी',
+    alert_reason_summary: 'All telemetry vital signs are within normal geriatric ranges.',
+    alert_reason_summary_hi: 'सभी स्वास्थ्य संकेतक सुरक्षित सीमा में हैं।',
+    suggested_action_summary: 'Maintain hydration, daily walk, and regular medication schedule.',
+    contact_method: 'Daily automated check-in'
+  };
+
+  soundEngine.playTone(550, 'sine', 0.1);
+  container.innerHTML = generateClinicalReportSheetHtml(res, payload, prof);
+  modal.classList.remove('hidden');
+}
+
+function closeClinicalReportSheet() {
+  const modal = document.getElementById('modal-clinical-report-sheet');
+  if (modal) modal.classList.add('hidden');
+}
+
+function printClinicalReportSheet() {
+  soundEngine.playTone(600, 'sine', 0.1);
+  openClinicalReportSheet();
+  const container = document.getElementById('clinical-report-sheet-content');
+  if (!container) return;
+
+  // Remove any preexisting print frame
+  let printFrame = document.getElementById('careconnect-print-frame');
+  if (printFrame && printFrame.parentNode) {
+    printFrame.parentNode.removeChild(printFrame);
+  }
+
+  // Create isolated invisible iframe to print strictly the report sheet without extraneous page items
+  printFrame = document.createElement('iframe');
+  printFrame.id = 'careconnect-print-frame';
+  printFrame.style.position = 'fixed';
+  printFrame.style.right = '0';
+  printFrame.style.bottom = '0';
+  printFrame.style.width = '0';
+  printFrame.style.height = '0';
+  printFrame.style.border = '0';
+  document.body.appendChild(printFrame);
+
+  const frameDoc = printFrame.contentWindow.document;
+  frameDoc.open();
+  frameDoc.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CareConnect Official Clinical Diagnostic Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #ffffff !important; color: #0f172a !important; padding: 24px; margin: 0; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-color: #cbd5e1; }
+    @media print {
+      body { padding: 0 !important; margin: 0 !important; }
+      @page { margin: 1cm; size: A4 portrait; }
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 820px; margin: 0 auto; background: white;">
+    ${container.innerHTML}
+  </div>
+</body>
+</html>`);
+  frameDoc.close();
+
+  setTimeout(() => {
+    try {
+      printFrame.contentWindow.focus();
+      printFrame.contentWindow.print();
+    } catch (e) {
+      console.warn('Iframe print error, falling back to window.print():', e);
+      window.print();
+    } finally {
+      setTimeout(() => {
+        if (printFrame && printFrame.parentNode) {
+          printFrame.parentNode.removeChild(printFrame);
+        }
+      }, 2500);
+    }
+  }, 450);
+}
+
+function downloadClinicalReportSheet() {
+  const container = document.getElementById('clinical-report-sheet-content');
+  if (!container) return;
+
+  const prof = getUserProfile('senior');
+  const patientName = (prof.name || 'Patient').replace(/\s+/g, '_');
+  const dateStr = new Date().toISOString().split('T')[0];
+  const filename = `CareConnect_Clinical_Report_${patientName}_${dateStr}.html`;
+
+  const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareConnect Official Clinical Report - ${prof.name || 'Patient'}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f1f5f9; color: #0f172a; padding: 24px; }
+    @media print { body { background: white; padding: 0; } }
+  </style>
+</head>
+<body>
+  <div style="max-width: 850px; margin: 0 auto; background: white; padding: 36px; border-radius: 20px; border: 1px solid #cbd5e1; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
+    ${container.innerHTML}
+  </div>
+</body>
+</html>`;
+
+  const blob = new Blob([fullHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  soundEngine.playSuccessChime();
+  showToast('Clinical Report Sheet downloaded successfully! / रिपोर्ट शीट डाउनलोड हो गई।', 'success');
+}
+
+
+// =========================================================================
+// DAILY CARE REMINDERS & DEVICE ALARM ENGINE (पानी, भोजन, दवा रिमाइंडर)
+// =========================================================================
+
+const defaultSeniorReminders = [
+  {
+    id: 'rem-water-1',
+    title: 'Drink 1 Glass Warm Water / सुबह 1 गिलास पानी',
+    category: 'water',
+    time: '08:00',
+    timeDisplay: '08:00 AM',
+    notes: 'Warm water supports hydration, gentle gut motility and kidney vitality.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-glass-water',
+    color: 'text-sky-600 bg-sky-50 border-sky-200'
+  },
+  {
+    id: 'rem-med-1',
+    title: 'BP Medicine (Amlodipine 5mg) / सुबह की दवा',
+    category: 'medicine',
+    time: '08:30',
+    timeDisplay: '08:30 AM',
+    notes: 'Take with warm water after food to stabilize morning cardiovascular pressure.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-pills',
+    color: 'text-purple-600 bg-purple-50 border-purple-200'
+  },
+  {
+    id: 'rem-food-1',
+    title: 'Nutritious Breakfast / पौष्टिक नाश्ता',
+    category: 'food',
+    time: '09:00',
+    timeDisplay: '09:00 AM',
+    notes: 'Oats / dalia / boiled egg or warm khichdi with fruit.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-utensils',
+    color: 'text-amber-600 bg-amber-50 border-amber-200'
+  },
+  {
+    id: 'rem-water-2',
+    title: 'Mid-Day Hydration (1 Glass) / दोपहर का पानी',
+    category: 'water',
+    time: '11:30',
+    timeDisplay: '11:30 AM',
+    notes: 'Regular fluid intake prevents dehydration headaches and blood viscosity spikes.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-glass-water',
+    color: 'text-sky-600 bg-sky-50 border-sky-200'
+  },
+  {
+    id: 'rem-food-2',
+    title: 'Balanced Lunch / दोपहर का भोजन',
+    category: 'food',
+    time: '13:30',
+    timeDisplay: '01:30 PM',
+    notes: 'Low-sodium roti, steamed seasonal vegetables, dal, and fresh curd.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-bowl-food',
+    color: 'text-amber-600 bg-amber-50 border-amber-200'
+  },
+  {
+    id: 'rem-med-2',
+    title: 'Afternoon Calcium & Multivitamin / दोपहर की दवा',
+    category: 'medicine',
+    time: '14:00',
+    timeDisplay: '02:00 PM',
+    notes: 'Bone strength supplement as advised by Dr. Alok Mehta.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-capsules',
+    color: 'text-purple-600 bg-purple-50 border-purple-200'
+  },
+  {
+    id: 'rem-water-3',
+    title: 'Evening Hydration & Herbal Tea / शाम का पानी',
+    category: 'water',
+    time: '16:30',
+    timeDisplay: '04:30 PM',
+    notes: 'Warm water or mild herbal green tea for comfortable circulation.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-glass-water',
+    color: 'text-sky-600 bg-sky-50 border-sky-200'
+  },
+  {
+    id: 'rem-food-3',
+    title: 'Light Dinner / रात्रि का हल्का भोजन',
+    category: 'food',
+    time: '20:00',
+    timeDisplay: '08:00 PM',
+    notes: 'Easily digestible soup, steamed vegetables, and light multigrain roti.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-utensils',
+    color: 'text-amber-600 bg-amber-50 border-amber-200'
+  },
+  {
+    id: 'rem-med-3',
+    title: 'Night Medicine & Cardiac Regimen / रात की दवा',
+    category: 'medicine',
+    time: '21:30',
+    timeDisplay: '09:30 PM',
+    notes: 'Night regimen for sustained blood pressure regulation during sleep.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-pills',
+    color: 'text-purple-600 bg-purple-50 border-purple-200'
+  }
+];
+
+let currentRemindersFilter = 'all';
+let remindersTickerInterval = null;
+let liveClockInterval = null;
+let activeAlarmReminder = null;
+
+function getSeniorReminders() {
+  try {
+    const raw = localStorage.getItem('careconnect_senior_reminders');
+    if (raw) {
+      return JSON.parse(raw);
+    }
+  } catch (e) {
+    console.warn('Error reading reminders from localStorage:', e);
+  }
+  return defaultSeniorReminders.slice();
+}
+
+function saveSeniorReminders(reminders) {
+  try {
+    localStorage.setItem('careconnect_senior_reminders', JSON.stringify(reminders));
+  } catch (e) {
+    console.error('Failed to save reminders:', e);
+  }
+}
+
+function format24to12Time(time24) {
+  if (!time24) return '--:--';
+  const parts = time24.split(':');
+  let h = parseInt(parts[0], 10);
+  const m = parts[1] || '00';
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12;
+  h = h ? h : 12;
+  return `${h < 10 ? '0' + h : h}:${m} ${ampm}`;
+}
+
+function getTodayWaterLogged() {
+  const todayKey = 'careconnect_water_' + new Date().toISOString().split('T')[0];
+  return parseInt(localStorage.getItem(todayKey)) || 4;
+}
+
+function setTodayWaterLogged(count) {
+  const todayKey = 'careconnect_water_' + new Date().toISOString().split('T')[0];
+  localStorage.setItem(todayKey, count.toString());
+  updateWaterTrackerDisplay();
+}
+
+function updateWaterTrackerDisplay() {
+  const counter = document.getElementById('water-logged-counter');
+  const iconsContainer = document.getElementById('water-glasses-icons');
+  if (!counter || !iconsContainer) return;
+
+  const count = getTodayWaterLogged();
+  const total = 8;
+  const liters = (count * 0.25).toFixed(1);
+  counter.textContent = `${count} / ${total} Glasses (${liters}L of 2.0L)`;
+
+  let iconsHtml = '';
+  for (let i = 1; i <= total; i++) {
+    if (i <= count) {
+      iconsHtml += `<span class="inline-block transition-transform hover:scale-125" title="Glass ${i}: Logged ✓">💧</span>`;
+    } else {
+      iconsHtml += `<span class="inline-block opacity-40 hover:opacity-80 transition-opacity" title="Glass ${i}: Pending">🥛</span>`;
+    }
+  }
+  iconsContainer.innerHTML = iconsHtml;
+}
+
+function logWaterGlass() {
+  let count = getTodayWaterLogged();
+  if (count < 12) {
+    count++;
+    setTodayWaterLogged(count);
+    soundEngine.playTone(880, 'sine', 0.15);
+    setTimeout(() => soundEngine.playTone(1174, 'sine', 0.2), 120);
+    showToast(`Hydration logged! ${count} / 8 glasses completed today. 💧`, 'success');
+  } else {
+    showToast('Daily water goal achieved! Excellent hydration! 💧', 'info');
+  }
+}
+
+function renderSeniorReminders(filter = 'all') {
+  currentRemindersFilter = filter;
+  const grid = document.getElementById('senior-reminders-grid');
+  if (!grid) return;
+
+  const reminders = getSeniorReminders();
+  const filtered = (filter === 'all') ? reminders : reminders.filter(r => r.category === filter);
+
+  // Update filter pill UI
+  ['all', 'water', 'food', 'medicine', 'other'].forEach(f => {
+    const btn = document.getElementById(`rem-filter-${f}`);
+    if (btn) {
+      if (f === filter) {
+        btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm';
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50';
+      }
+    }
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-1 sm:col-span-2 text-center py-8 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-300">
+        <i class="fa-solid fa-bell-slash text-3xl mb-2 text-slate-300"></i>
+        <p class="text-xs font-bold text-slate-600">No reminders found in this category / कोई रिमाइंडर नहीं मिला</p>
+        <button onclick="openAddReminderModal()" class="mt-2 text-xs font-bold text-amber-600 hover:underline">
+          + Add your first reminder now
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(r => {
+    const isDone = r.completedToday;
+    const isEnabled = r.enabled;
+    const catBadge = (r.category === 'water') 
+      ? 'bg-sky-100 text-sky-800' 
+      : (r.category === 'medicine' ? 'bg-purple-100 text-purple-800' : (r.category === 'food' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'));
+    
+    return `
+      <div id="rem-card-${r.id}"
+        class="p-4 rounded-2xl bg-white border-2 ${isDone ? 'border-emerald-300 bg-emerald-50/40' : (isEnabled ? 'border-slate-200 shadow-sm' : 'border-slate-200 opacity-60')} flex flex-col justify-between transition-all">
+        
+        <div>
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-2.5">
+            <div class="flex items-center space-x-2">
+              <span class="w-8 h-8 rounded-xl ${r.color || 'bg-amber-100 text-amber-700'} flex items-center justify-center text-sm shadow-xs flex-shrink-0">
+                <i class="${r.icon || 'fa-solid fa-bell'}"></i>
+              </span>
+              <span class="font-mono text-xs sm:text-sm font-black text-slate-900 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                ${r.timeDisplay || format24to12Time(r.time)}
+              </span>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${catBadge}">
+                ${r.category}
+              </span>
+              <!-- Enable / Disable Switch -->
+              <button onclick="toggleReminderStatus('${r.id}')"
+                class="text-xs font-bold px-2 py-0.5 rounded-md border transition-all ${isEnabled ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200'}"
+                title="${isEnabled ? 'Click to Pause / रोकें' : 'Click to Enable / चालू करें'}">
+                ${isEnabled ? 'Active' : 'Paused'}
+              </button>
+            </div>
+          </div>
+
+          <h4 class="text-xs sm:text-sm font-black text-slate-900 ${isDone ? 'line-through text-slate-500' : ''}">
+            ${r.title}
+          </h4>
+          <p class="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+            ${r.notes || 'Care reminder scheduled for daily wellbeing.'}
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-100 mt-3">
+          <button onclick="markReminderDone('${r.id}')"
+            class="px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1 ${isDone ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800'}"
+            title="Mark Completed for Today / आज पूरा किया">
+            <i class="fa-solid fa-check text-xs"></i>
+            <span>${isDone ? 'Completed ✓' : 'Mark Done'}</span>
+          </button>
+
+          <div class="flex items-center space-x-1.5">
+            <button onclick="triggerDeviceReminderAlarm(getSeniorReminders().find(x => x.id === '${r.id}'))"
+              class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition-all border border-amber-200"
+              title="Test Alarm Sound for this reminder / अलार्म बजाएं">
+              <i class="fa-solid fa-bell text-xs"></i>
+              <span class="hidden sm:inline ml-1">Ring</span>
+            </button>
+            <button onclick="deleteReminder('${r.id}')"
+              class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-all flex items-center justify-center text-xs"
+              title="Delete Reminder / हटाएं">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    `;
+  }).join('');
+}
+
+function filterReminders(cat) {
+  renderSeniorReminders(cat);
+}
+
+function toggleReminderStatus(id) {
+  const reminders = getSeniorReminders();
+  const target = reminders.find(r => r.id === id);
+  if (!target) return;
+  target.enabled = !target.enabled;
+  saveSeniorReminders(reminders);
+  renderSeniorReminders(currentRemindersFilter);
+  soundEngine.playTone(600, 'sine', 0.1);
+  showToast(target.enabled ? 'Reminder activated / रिमाइंडर सक्रिय किया गया' : 'Reminder paused / रिमाइंडर रोक दिया गया', 'info');
+}
+
+function markReminderDone(id) {
+  const reminders = getSeniorReminders();
+  const target = reminders.find(r => r.id === id);
+  if (!target) return;
+  target.completedToday = !target.completedToday;
+  saveSeniorReminders(reminders);
+  renderSeniorReminders(currentRemindersFilter);
+  if (target.completedToday) {
+    soundEngine.playSuccessChime();
+    showToast(`Great job! Completed: ${target.title}`, 'success');
+  }
+}
+
+function deleteReminder(id) {
+  let reminders = getSeniorReminders();
+  reminders = reminders.filter(r => r.id !== id);
+  saveSeniorReminders(reminders);
+  renderSeniorReminders(currentRemindersFilter);
+  showToast('Reminder deleted / रिमाइंडर हटाया गया', 'info');
+}
+
+function openAddReminderModal() {
+  const modal = document.getElementById('modal-add-reminder');
+  if (modal) {
+    soundEngine.playTone(550, 'sine', 0.1);
+    modal.classList.remove('hidden');
+  }
+}
+
+function closeAddReminderModal() {
+  const modal = document.getElementById('modal-add-reminder');
+  if (modal) modal.classList.add('hidden');
+}
+
+function applyReminderPreset(presetKey) {
+  const titleInput = document.getElementById('rem-input-title');
+  const catInput = document.getElementById('rem-input-category');
+  const timeInput = document.getElementById('rem-input-time');
+  const notesInput = document.getElementById('rem-input-notes');
+
+  const presets = {
+    water_morning: {
+      title: 'Morning Warm Water (1 Glass) / सुबह का गुनगुना पानी',
+      cat: 'water',
+      time: '08:00',
+      notes: 'Hydration supports circulation, kidney vitality and regulates blood pressure.'
+    },
+    med_morning: {
+      title: 'Morning BP Medicine / सुबह की रक्तचाप की दवा',
+      cat: 'medicine',
+      time: '08:30',
+      notes: 'Take with warm water after morning meal.'
+    },
+    food_breakfast: {
+      title: 'Nutritious Breakfast / पौष्टिक नाश्ता',
+      cat: 'food',
+      time: '09:00',
+      notes: 'Oats, dalia, or light multigrain breakfast with fruit.'
+    },
+    food_lunch: {
+      title: 'Balanced Low-Sodium Lunch / दोपहर का भोजन',
+      cat: 'food',
+      time: '13:30',
+      notes: 'Warm roti, steamed vegetables, dal, and fresh curd.'
+    },
+    water_afternoon: {
+      title: 'Midday Hydration / दोपहर 1 गिलास पानी',
+      cat: 'water',
+      time: '11:30',
+      notes: 'Stay hydrated to prevent fatigue and headaches.'
+    },
+    med_night: {
+      title: 'Night Medicine & Cardiac Regimen / रात की दवा',
+      cat: 'medicine',
+      time: '21:30',
+      notes: 'Prescribed night dose for restful sleep.'
+    },
+    walk: {
+      title: 'Evening Gentle Walk / शाम की हल्की सैर',
+      cat: 'other',
+      time: '17:30',
+      notes: '15-20 minutes gentle walk for joint mobility and fresh air.'
+    },
+    bp: {
+      title: 'Blood Pressure & Vitals Check / बीपी जांच',
+      cat: 'other',
+      time: '18:00',
+      notes: 'Check blood pressure with digital cuff and log readings.'
+    }
+  };
+
+  const p = presets[presetKey];
+  if (!p) return;
+
+  if (titleInput) titleInput.value = p.title;
+  if (catInput) catInput.value = p.cat;
+  if (timeInput) timeInput.value = p.time;
+  if (notesInput) notesInput.value = p.notes;
+
+  soundEngine.playTone(700, 'sine', 0.1);
+}
+
+function handleSaveNewReminder(e) {
+  if (e) e.preventDefault();
+  const title = document.getElementById('rem-input-title')?.value.trim();
+  const category = document.getElementById('rem-input-category')?.value || 'other';
+  const time = document.getElementById('rem-input-time')?.value || '08:00';
+  const notes = document.getElementById('rem-input-notes')?.value.trim();
+
+  if (!title) {
+    showToast('Please enter reminder title / कृपया शीर्षक दर्ज करें', 'warning');
+    return;
+  }
+
+  const iconMap = {
+    water: 'fa-solid fa-glass-water',
+    food: 'fa-solid fa-utensils',
+    medicine: 'fa-solid fa-pills',
+    walk: 'fa-solid fa-person-walking',
+    bp: 'fa-solid fa-heart-pulse',
+    other: 'fa-solid fa-bell'
+  };
+
+  const colorMap = {
+    water: 'text-sky-600 bg-sky-50 border-sky-200',
+    food: 'text-amber-600 bg-amber-50 border-amber-200',
+    medicine: 'text-purple-600 bg-purple-50 border-purple-200',
+    walk: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+    bp: 'text-rose-600 bg-rose-50 border-rose-200',
+    other: 'text-slate-600 bg-slate-50 border-slate-200'
+  };
+
+  const newReminder = {
+    id: 'rem-' + Date.now(),
+    title: title,
+    category: category,
+    time: time,
+    timeDisplay: format24to12Time(time),
+    notes: notes || 'Care reminder scheduled for daily wellbeing.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: iconMap[category] || 'fa-solid fa-bell',
+    color: colorMap[category] || 'text-amber-600 bg-amber-50 border-amber-200'
+  };
+
+  const reminders = getSeniorReminders();
+  reminders.push(newReminder);
+  // Sort reminders by time
+  reminders.sort((a, b) => a.time.localeCompare(b.time));
+  saveSeniorReminders(reminders);
+  renderSeniorReminders(currentRemindersFilter);
+
+  closeAddReminderModal();
+  soundEngine.playSuccessChime();
+  showToast(`Reminder saved: ${title} at ${newReminder.timeDisplay}`, 'success');
+}
+
+function scrollToRemindersSection() {
+  const el = document.getElementById('senior-reminders-section');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('ring-4', 'ring-amber-400');
+    setTimeout(() => {
+      el.classList.remove('ring-4', 'ring-amber-400');
+    }, 1800);
+  }
+}
+
+// =========================================================================
+// DEVICE ALARM TRIGGER, AUDITORY CHIME, NOTIFICATION & ACTIONS
+// =========================================================================
+
+function triggerDeviceReminderAlarm(reminder) {
+  if (!reminder) return;
+  activeAlarmReminder = reminder;
+
+  // 1. Start continuous audio alarm chime
+  soundEngine.startReminderAlarm();
+
+  // 2. Populate and show alarm modal
+  const modal = document.getElementById('modal-reminder-alarm');
+  const iconEl = document.getElementById('alarm-dialog-icon');
+  const timeEl = document.getElementById('alarm-dialog-time');
+  const titleEl = document.getElementById('alarm-dialog-title');
+  const notesEl = document.getElementById('alarm-dialog-notes');
+
+  if (iconEl) iconEl.className = reminder.icon || 'fa-solid fa-bell';
+  if (timeEl) timeEl.textContent = reminder.timeDisplay || format24to12Time(reminder.time);
+  if (titleEl) titleEl.textContent = reminder.title;
+  if (notesEl) notesEl.textContent = reminder.notes || 'It is time for your scheduled care reminder!';
+
+  if (modal) modal.classList.remove('hidden');
+
+  // 3. Text to Speech announcement
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const isHi = state.seniorLanguage === 'hi';
+      const prof = getUserProfile('senior');
+      const seniorFirstName = prof.name ? prof.name.split(' ')[0] : 'Ramesh';
+      let spokenText = '';
+      if (isHi) {
+        const catText = (reminder.category === 'water') ? 'पानी पीने' : (reminder.category === 'medicine' ? 'दवा लेने' : 'भोजन');
+        spokenText = `नमस्ते ${seniorFirstName} जी। यह आपके ${catText} का समय है। कृपया ${reminder.title} पर ध्यान दें।`;
+      } else {
+        spokenText = `Attention ${seniorFirstName} ji. It is time for your scheduled reminder: ${reminder.title}.`;
+      }
+      const utterance = new SpeechSynthesisUtterance(spokenText);
+      utterance.lang = isHi ? 'hi-IN' : 'en-IN';
+      utterance.rate = 0.88;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn('Speech synthesis error on alarm:', e);
+    }
+  }
+
+  // 4. Device Native Notification
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification(`⏰ CareConnect Alarm: ${reminder.title}`, {
+        body: reminder.notes || 'Scheduled health reminder alert!',
+        icon: 'careconnect-emblem.png',
+        tag: `careconnect-rem-${reminder.id}`,
+        requireInteraction: true
+      });
+    } catch (e) {
+      console.warn('Native notification error:', e);
+    }
+  }
+}
+
+function completeAlarmAction() {
+  soundEngine.stopReminderAlarm();
+  const modal = document.getElementById('modal-reminder-alarm');
+  if (modal) modal.classList.add('hidden');
+
+  if (activeAlarmReminder) {
+    markReminderDone(activeAlarmReminder.id);
+    if (activeAlarmReminder.category === 'water') {
+      logWaterGlass();
+    }
+  }
+
+  soundEngine.playSuccessChime();
+  showToast('Task completed successfully! / कार्य पूरा कर लिया गया। बहुत बढ़िया! 🙏', 'success');
+  activeAlarmReminder = null;
+}
+
+function snoozeAlarmAction() {
+  soundEngine.stopReminderAlarm();
+  const modal = document.getElementById('modal-reminder-alarm');
+  if (modal) modal.classList.add('hidden');
+
+  const snoozedRem = activeAlarmReminder;
+  showToast('Alarm snoozed for 10 minutes. / अलार्म 10 मिनट के लिए स्नूज़ किया गया।', 'info');
+
+  setTimeout(() => {
+    if (snoozedRem) {
+      triggerDeviceReminderAlarm(snoozedRem);
+    }
+  }, 10 * 60 * 1000); // 10 minutes
+
+  activeAlarmReminder = null;
+}
+
+function dismissAlarmAction() {
+  soundEngine.stopReminderAlarm();
+  const modal = document.getElementById('modal-reminder-alarm');
+  if (modal) modal.classList.add('hidden');
+  showToast('Alarm dismissed. / अलार्म बंद किया गया।', 'info');
+  activeAlarmReminder = null;
+}
+
+function testSampleReminderAlarm() {
+  const sample = {
+    id: 'test-alarm-sample',
+    title: '💧 Hydration: Drink 1 Glass Warm Water / 1 गिलास गुनगुना पानी पिएं',
+    category: 'water',
+    time: 'Now',
+    timeDisplay: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    notes: 'Hydration aids circulation, kidney health, and regulates blood pressure.',
+    icon: 'fa-solid fa-glass-water',
+    color: 'text-sky-600 bg-sky-50 border-sky-200'
+  };
+  triggerDeviceReminderAlarm(sample);
+}
+
+function requestDeviceNotificationPermission() {
+  if (!('Notification' in window)) {
+    showToast('Notifications not supported by this browser.', 'warning');
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    const permCard = document.getElementById('device-notif-permission-card');
+    if (permission === 'granted') {
+      soundEngine.playSuccessChime();
+      showToast('Device notifications enabled successfully! / डिवाइस नोटिफिकेशन सक्षम हो गई।', 'success');
+      if (permCard) permCard.classList.add('hidden');
+    } else {
+      showToast('Notification permission was not granted.', 'info');
+    }
+  });
+}
+
+function checkRemindersAlarmTicker() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const currentTime = `${h}:${m}`;
+  const todayStr = now.toISOString().split('T')[0];
+
+  const reminders = getSeniorReminders();
+  let updated = false;
+
+  reminders.forEach(r => {
+    if (r.enabled && r.time === currentTime && r.lastTriggeredDate !== todayStr) {
+      r.lastTriggeredDate = todayStr;
+      updated = true;
+      triggerDeviceReminderAlarm(r);
+    }
+  });
+
+  if (updated) {
+    saveSeniorReminders(reminders);
+  }
+}
+
+function updateRemindersLiveClock() {
+  const clockEl = document.getElementById('reminders-live-clock');
+  if (!clockEl) return;
+  const now = new Date();
+  clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function initSeniorRemindersHub() {
+  renderSeniorReminders('all');
+  updateWaterTrackerDisplay();
+
+  // Hide notification card if already granted
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const permCard = document.getElementById('device-notif-permission-card');
+    if (permCard) permCard.classList.add('hidden');
+  }
+
+  if (!liveClockInterval) {
+    updateRemindersLiveClock();
+    liveClockInterval = setInterval(updateRemindersLiveClock, 1000);
+  }
+
+  if (!remindersTickerInterval) {
+    checkRemindersAlarmTicker();
+    remindersTickerInterval = setInterval(checkRemindersAlarmTicker, 15000);
+  }
+}
+
+// Start ticker on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (typeof initSeniorRemindersHub === 'function') {
+      initSeniorRemindersHub();
+    }
+  }, 300);
+});

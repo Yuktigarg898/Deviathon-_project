@@ -74,7 +74,7 @@
           </span>
         </div>
 
-        <!-- Right Side: Current Persona Badge & Audio Toggle & Switch Role -->
+        <!-- Right Side: Top Taskbar Actions, Persona Badge & Audio Toggle -->
         <div class="flex items-center space-x-2 sm:space-x-3">
           <!-- Global Language Switcher in Header -->
           <div class="inline-flex p-0.5 bg-slate-100 rounded-xl border border-slate-200">
@@ -88,16 +88,41 @@
             </button>
           </div>
 
+          <!-- TOP TASKBAR: Care Reminders & Alarm Quick Button -->
+          <button id="header-reminders-btn" onclick="scrollToRemindersSection()"
+            class="inline-flex items-center px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-black transition-all shadow-sm active:scale-95"
+            title="Water, Food & Medicine Reminders / दैनिक रिमाइंडर व अलार्म">
+            <i class="fa-solid fa-bell text-amber-600 mr-1.5 text-xs animate-bounce"></i>
+            <span>Reminders / अलार्म</span>
+          </button>
+
+          <!-- TOP TASKBAR: Family Care Circle (With Add Family Option Inside) -->
+          <button id="header-family-circle-btn" onclick="openFamilyCareCircleModal()"
+            class="inline-flex items-center px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 text-xs font-extrabold transition-all shadow-sm active:scale-95"
+            title="Family Care Circle & Caregivers / परिवार केयर सर्किल">
+            <i class="fa-solid fa-people-roof mr-1.5 text-indigo-600 text-sm"></i>
+            <span>Family Care Circle / परिवार</span>
+          </button>
+
+          <!-- TOP TASKBAR: Emergency SOS Button -->
+          <button id="header-sos-btn" onclick="triggerEmergencySOS()"
+            class="inline-flex items-center px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-xs font-black shadow-md shadow-rose-600/30 active:scale-95 transition-all border border-rose-400 animate-pulse"
+            title="Emergency SOS Assistance / आपातकालीन सहायता">
+            <i class="fa-solid fa-triangle-exclamation mr-1.5 text-xs animate-bounce"></i>
+            <span>SOS (मदद)</span>
+          </button>
           <!-- Audio Effect Toggle -->
           <button id="sound-toggle-btn" onclick="toggleAudioEffects()" title="Toggle Interface Audio & Chimes"
             class="p-2 text-slate-500 hover:text-teal-600 rounded-lg hover:bg-slate-100 transition-colors">
             <i id="sound-icon" class="fa-solid fa-volume-high text-sm"></i>
           </button>
 
-          <!-- Current Logged User Profile -->
-          <div class="flex items-center pl-2 border-l border-slate-200 space-x-2.5">
+          <!-- Current Logged User Profile (Clickable to Manage Profile) -->
+          <div onclick="openProfileModal()"
+            class="flex items-center pl-2 border-l border-slate-200 space-x-2.5 cursor-pointer hover:bg-slate-100/80 px-2 py-1 rounded-xl transition-all"
+            title="Click to view and edit profile / प्रोफाइल प्रबंधित करें">
             <div id="current-user-avatar"
-              class="w-8 h-8 rounded-full bg-teal-100 border border-teal-300 text-teal-800 flex items-center justify-center font-bold text-xs">
+              class="w-8 h-8 rounded-full bg-teal-100 border border-teal-300 text-teal-800 flex items-center justify-center font-bold text-xs shadow-sm">
               CC
             </div>
             <div class="hidden lg:block text-left">
@@ -106,6 +131,14 @@
                 class="text-[10px] text-[#00a896] font-semibold uppercase tracking-wider">Care Coordinator</div>
             </div>
           </div>
+
+          <!-- Dedicated Profile Management Button in Header -->
+          <button onclick="openProfileModal()"
+            class="inline-flex items-center px-2.5 py-1.5 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition-all shadow-sm"
+            title="Manage Profile / प्रोफाइल प्रबंधित करें">
+            <i class="fa-solid fa-user-pen mr-1 text-teal-600"></i>
+            <span class="hidden sm:inline">Profile</span>
+          </button>
 
           <!-- Sign Out Button -->
           <button onclick="logout()"
@@ -617,6 +650,12 @@
             <i class="fa-solid fa-arrows-rotate mr-1.5 text-slate-400"></i>
             <span>Sync</span>
           </button>
+          <button onclick="openProfileModal()"
+            class="inline-flex items-center px-3 py-2 border border-teal-200 text-xs font-bold rounded-xl text-teal-800 bg-teal-50 hover:bg-teal-100 transition-all shadow-sm"
+            title="Manage Coordinator Profile & Credentials">
+            <i class="fa-solid fa-user-nurse mr-1.5 text-teal-600"></i>
+            <span>Coordinator Profile</span>
+          </button>
         </div>
       </div>
 
@@ -708,6 +747,45 @@
     <!-- call check-in or a one-tap reply, in Hindi or English                     -->
     <!-- ========================================================================= -->
     <section id="view-senior" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full">
+      <!-- NEW USER PROFILE COMPLETION NOTICE BANNER -->
+      <div id="new-user-profile-prompt"
+        class="hidden mb-6 p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-50 via-sky-50 to-teal-50 border-2 border-amber-300 shadow-md transition-all">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-start sm:items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-md shadow-amber-500/20 flex-shrink-0 animate-bounce">
+              <i class="fa-solid fa-id-card-clip"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900 uppercase tracking-wider">
+                  Profile Notice / प्रोफाइल सूचना
+                </span>
+                <span class="text-xs font-bold text-slate-500">Action Recommended</span>
+              </div>
+              <h4 class="text-sm sm:text-base font-black text-slate-900 mt-0.5">
+                Welcome! Please update your Profile (DOB & Gender)
+              </h4>
+              <p class="text-xs text-slate-600 mt-0.5">
+                नमस्ते! सटीक एआई स्वास्थ्य आकलन व ऑटो-फिल के लिए कृपया अपनी प्रोफाइल सेटिंग में जन्मतिथि (DOB) और लिंग दर्ज करें।
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 w-full sm:w-auto">
+            <button onclick="openProfileModal()"
+              class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-black shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-1.5 active:scale-95">
+              <i class="fa-solid fa-user-pen"></i>
+              <span>Profile Settings / जानकारी जोड़ें</span>
+            </button>
+            <button onclick="dismissProfilePrompt()"
+              class="px-3 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-700 border border-slate-300 text-xs font-bold transition-all shadow-xs"
+              title="Dismiss Notice / बंद करें">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Senior Accessible Header with Language Switcher -->
       <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-sky-200/80 shadow-md mb-6">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
@@ -725,7 +803,7 @@
               <div class="inline-flex items-center space-x-2">
                 <span class="text-xs font-bold text-sky-700 bg-sky-100 px-2.5 py-0.5 rounded-full"
                   data-i18n="senior_badge">Senior Companion View</span>
-                <span class="text-xs text-slate-400">74 Yrs • New Delhi</span>
+                <span id="senior-vitals-meta-badge" class="text-xs text-slate-400 font-semibold">74 Yrs • Male • New Delhi</span>
               </div>
               <h2 id="senior-greeting" class="text-2xl sm:text-3xl font-extrabold text-[#0e294b] mt-1 font-sans"
                 data-i18n="senior_greeting">
@@ -738,19 +816,58 @@
             </div>
           </div>
 
-          <!-- Bilingual Language Switcher (Hindi / English) -->
-          <div class="flex flex-col items-center sm:items-end">
-            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5" data-i18n="lbl_choose_language">Choose Language</span>
-            <div class="inline-flex rounded-2xl border-2 border-[#00a896] p-1 bg-teal-50">
-              <button onclick="setAppLanguage(\'en\')" id="lang-btn-en"
-                class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-[#00a896] text-white shadow-sm">
-                English 🇬🇧
-              </button>
-              <button onclick="setAppLanguage(\'hi\')" id="lang-btn-hi"
-                class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-teal-800 hover:bg-teal-100">
-                हिन्दी
-              </button>
+          <!-- Bilingual Language Switcher & Profile Button -->
+          <div class="flex flex-col sm:flex-row items-center sm:items-end gap-2.5">
+            <div class="flex flex-col items-center sm:items-end">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">भाषा चुनें / Choose Language</span>
+              <div class="inline-flex rounded-2xl border-2 border-[#00a896] p-1 bg-teal-50">
+                <button onclick="setSeniorLanguage('en')" id="lang-btn-en"
+                  class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-[#00a896] text-white shadow-sm">
+                  English 🇬🇧
+                </button>
+                <button onclick="setSeniorLanguage('hi')" id="lang-btn-hi"
+                  class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-teal-800 hover:bg-teal-100">
+                  हिन्दी 🇮🇳
+                </button>
+              </div>
             </div>
+          </div>
+            </div>
+            <button onclick="openProfileModal()"
+              class="inline-flex items-center px-3.5 py-2 rounded-2xl border-2 border-sky-300 text-xs sm:text-sm font-extrabold text-sky-800 bg-sky-50 hover:bg-sky-100 shadow-sm transition-all"
+              title="View and Edit Health Profile">
+              <i class="fa-solid fa-address-card mr-1.5 text-sky-600 text-base"></i>
+              <span>My Profile / मेरी प्रोफाइल</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Senior Quick-Action Taskbar (Emergency SOS & Family Member Add) -->
+        <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 bg-gradient-to-r from-sky-50 via-indigo-50/70 to-rose-50/70 p-3.5 sm:p-4 rounded-2xl border-2 border-sky-200/90 shadow-sm">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-rose-500 text-white flex items-center justify-center text-sm font-bold shadow-sm">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+              <div class="text-xs font-black text-slate-800 uppercase tracking-wider">Quick Actions Taskbar (तुरंत सहायता)</div>
+              <div class="text-[11px] text-slate-600 font-medium">1-Click Emergency SOS & Family Circle Management</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+            <!-- Family Care Circle Button (Contains Add Family Option Inside) -->
+            <button onclick="openFamilyCareCircleModal()"
+              class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white hover:bg-indigo-50 text-indigo-900 border-2 border-indigo-300 text-xs font-black shadow-sm hover:shadow transition-all flex items-center justify-center space-x-2 active:scale-95">
+              <i class="fa-solid fa-people-roof text-indigo-600 text-sm"></i>
+              <span>Family Care Circle / परिवार (+ जोड़ें)</span>
+            </button>
+
+            <!-- Top Emergency SOS Button -->
+            <button onclick="triggerEmergencySOS()"
+              class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-xs font-black shadow-lg shadow-rose-600/30 hover:shadow-rose-600/40 border-2 border-rose-300 active:scale-95 transition-all flex items-center justify-center space-x-2 animate-pulse">
+              <i class="fa-solid fa-triangle-exclamation text-sm animate-bounce"></i>
+              <span>PRESS FOR SOS (मदद)</span>
+            </button>
           </div>
         </div>
 
@@ -788,7 +905,7 @@
         </div>
       </div>
 
-      <!-- THREE ACCESSIBLE WAYS TO SHARE FEELINGS (Required 3 methods) -->
+      <!-- ACCESSIBLE WAYS TO SHARE FEELINGS (One-Tap & Zero-Cost Check-in) -->
       <div class="space-y-6">
 
         <!-- METHOD 1: ONE-TAP REPLY (एक टैप से बताएं) -->
@@ -845,87 +962,16 @@
         </div>
 
 
-        <!-- METHOD 2: VOICE NOTE (आवाज़ संदेश भेजें) -->
+
+
+
+        <!-- METHOD 2: MISSED-CALL CHECK-IN (मिस्ड कॉल चेक-इन) -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-2">
               <span
                 class="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-xs">2</span>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#0e294b]" data-i18n="way2_title">2. Voice Note</h3>
-            </div>
-            <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded"
-              data-i18n="ai_transcription_pill">AI Voice Sentiment Active</span>
-          </div>
-
-          <p class="text-xs sm:text-sm text-slate-600 mb-5" data-i18n="voice_desc">
-            Press the big microphone button, speak naturally in Hindi or English, and we will update your care team
-            immediately.
-          </p>
-
-          <div
-            class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col items-center justify-center text-center">
-
-            <!-- Big Mic Button -->
-            <button id="senior-mic-btn" onclick="toggleVoiceRecording()"
-              class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-[#00a896] to-emerald-500 text-white flex flex-col items-center justify-center text-3xl sm:text-4xl shadow-xl shadow-teal-500/30 hover:scale-105 active:scale-95 transition-all relative">
-              <i id="mic-icon" class="fa-solid fa-microphone"></i>
-              <span id="recording-pulse-ring"
-                class="hidden absolute inset-0 rounded-full border-4 border-rose-500 animate-ping"></span>
-            </button>
-
-            <!-- Recording Status Label -->
-            <div id="voice-recording-status" class="mt-4 text-sm font-bold text-slate-700" data-i18n="mic_instruction">
-              Tap to Start Speaking
-            </div>
-
-            <!-- Waveform Animation Simulation -->
-            <div id="waveform-container" class="hidden my-4 flex items-center justify-center space-x-1.5 h-10">
-              <span class="wave-bar h-3 w-1.5 bg-rose-500 rounded-full animate-wave1"></span>
-              <span class="wave-bar h-8 w-1.5 bg-rose-500 rounded-full animate-wave2"></span>
-              <span class="wave-bar h-6 w-1.5 bg-rose-500 rounded-full animate-wave3"></span>
-              <span class="wave-bar h-10 w-1.5 bg-rose-500 rounded-full animate-wave4"></span>
-              <span class="wave-bar h-5 w-1.5 bg-rose-500 rounded-full animate-wave2"></span>
-              <span class="wave-bar h-9 w-1.5 bg-rose-500 rounded-full animate-wave3"></span>
-              <span class="wave-bar h-4 w-1.5 bg-rose-500 rounded-full animate-wave1"></span>
-            </div>
-
-            <!-- Simulated Speech-to-Text Transcription Box (Appears after recording) -->
-            <div id="voice-transcript-card"
-              class="hidden mt-4 w-full max-w-lg bg-white rounded-xl p-4 border border-teal-200 text-left shadow-sm">
-              <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span class="font-bold text-teal-700 flex items-center"><i
-                    class="fa-solid fa-wand-magic-sparkles mr-1"></i> <span data-i18n="transcript_title">Transcribed
-                    Voice Note:</span></span>
-                <span id="voice-duration-label" class="font-mono text-slate-400">0:06</span>
-              </div>
-              <p id="voice-transcript-text" class="text-xs sm:text-sm font-medium text-slate-800 italic">
-                "नमस्ते, आज सुबह थोड़ा चक्कर आ रहा था और कमजोरी लग रही है..."
-              </p>
-
-              <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
-                <span id="voice-sentiment-tag"
-                  class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                  Mood: Tired / Attention Needed
-                </span>
-                <button onclick="dispatchVoiceNote()"
-                  class="px-3 py-1.5 bg-[#00a896] hover:bg-[#008779] text-white rounded-lg text-xs font-bold transition-all flex items-center space-x-1 shadow-sm">
-                  <i class="fa-solid fa-paper-plane mr-1"></i>
-                  <span data-i18n="send_voice_btn">Send to Coordinator</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-
-        <!-- METHOD 3: MISSED-CALL CHECK-IN (मिस्ड कॉल चेक-इन) -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 shadow-sm">
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center space-x-2">
-              <span
-                class="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-xs">3</span>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#0e294b]" data-i18n="way3_title">3. Missed-Call Check-in</h3>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#0e294b]" data-i18n="way3_title">Missed-Call Check-in / मिस्ड कॉल चेक-इन</h3>
             </div>
             <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded"
               data-i18n="free_pill">100% Free Toll-Free</span>
@@ -955,7 +1001,124 @@
 
 
 
-        <!-- METHOD 4: COMPREHENSIVE ELDER HEALTH & RISK ASSESSMENT (AI ML PREDICTOR) -->
+
+        <!-- ========================================================================= -->
+        <!-- DAILY CARE REMINDERS & DEVICE ALARM HUB (पानी, भोजन, दवा रिमाइंडर व अलार्म) -->
+        <!-- ========================================================================= -->
+        <div id="senior-reminders-section" class="bg-gradient-to-b from-white via-amber-50/20 to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-sm mt-6">
+          
+          <!-- Section Header -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-amber-200">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-md shadow-amber-500/25 flex-shrink-0 animate-bounce">
+                <i class="fa-solid fa-bell"></i>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <h3 class="text-lg sm:text-xl font-black text-slate-900">
+                    Daily Care Reminders & Alarm / दैनिक रिमाइंडर व अलार्म
+                  </h3>
+                  <span id="reminders-live-clock" class="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg bg-amber-200 text-amber-950 border border-amber-300 shadow-2xs">
+                    --:-- --
+                  </span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">
+                  Water intake, nutritious meals, and timely medication alerts with device alarm sounds & speech
+                </p>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <button onclick="testSampleReminderAlarm()"
+                class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs transition-all flex items-center justify-center space-x-1.5 border border-amber-300 active:scale-95 shadow-sm"
+                title="Test Alarm Sound, Screen Alert & Voice Announcement">
+                <i class="fa-solid fa-volume-high text-amber-700"></i>
+                <span>Test Alarm / अलार्म टेस्ट</span>
+              </button>
+              <button onclick="openAddReminderModal()"
+                class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-1.5 active:scale-95"
+                title="Add New Water, Food, or Medicine Reminder">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Reminder / नया जोड़ें</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Notification Permission Banner (if not yet granted) -->
+          <div id="device-notif-permission-card" class="mt-4 p-3.5 rounded-2xl bg-sky-50 border border-sky-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+            <div class="flex items-center space-x-2.5">
+              <i class="fa-solid fa-mobile-screen-button text-sky-600 text-lg"></i>
+              <div>
+                <span class="font-extrabold text-sky-950">Device Alarm Notifications:</span>
+                <span class="text-sky-800 ml-1">Receive ringing pop-up alarms even when the screen is locked or browser is in background.</span>
+              </div>
+            </div>
+            <button onclick="requestDeviceNotificationPermission()"
+              class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition-all shadow-sm flex items-center space-x-1.5 flex-shrink-0">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Enable Device Alarm / अनुमति दें</span>
+            </button>
+          </div>
+
+          <!-- Daily Hydration Quick Tracker Card -->
+          <div class="mt-5 p-4 rounded-2xl bg-white border border-sky-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl flex-shrink-0">
+                <i class="fa-solid fa-glass-water"></i>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs sm:text-sm font-extrabold text-slate-900">Today's Water Intake (जल सेवन लक्ष्य):</span>
+                  <span id="water-logged-counter" class="text-xs font-black text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">
+                    4 / 8 Glasses (1.0L)
+                  </span>
+                </div>
+                <div id="water-glasses-icons" class="text-base sm:text-lg mt-1 space-x-1">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <button onclick="logWaterGlass()"
+              class="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-sm flex items-center justify-center space-x-1.5 transition-all active:scale-95">
+              <i class="fa-solid fa-plus text-sm"></i>
+              <span>Drank 1 Glass / 1 गिलास पिया</span>
+            </button>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="flex flex-wrap items-center gap-1.5 mt-5">
+            <button onclick="filterReminders('all')" id="rem-filter-all"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm">
+              All (सभी)
+            </button>
+            <button onclick="filterReminders('water')" id="rem-filter-water"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+              💧 Water (पानी)
+            </button>
+            <button onclick="filterReminders('food')" id="rem-filter-food"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+              🍲 Food / Meals (भोजन)
+            </button>
+            <button onclick="filterReminders('medicine')" id="rem-filter-medicine"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+              💊 Medicine (दवा)
+            </button>
+            <button onclick="filterReminders('other')" id="rem-filter-other"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+              🏃 Others (अन्य)
+            </button>
+          </div>
+
+          <!-- Dynamic Reminders Grid -->
+          <div id="senior-reminders-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-4">
+            <!-- Populated by renderSeniorReminders() -->
+          </div>
+        </div>
+
+
+                <!-- METHOD 4: COMPREHENSIVE ELDER HEALTH & RISK ASSESSMENT (AI ML PREDICTOR) -->
         <div id="senior-assessment-section" class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-teal-200/90 shadow-md">
           <!-- Section Header -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
@@ -1263,12 +1426,18 @@
               </div>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div>
-                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_age">Age (Years)</label>
+                  <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_age">Age (उम्र)</label>
+                    <span class="text-[10px] text-teal-600 font-bold bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200" title="Auto-filled from Profile DOB">Auto</span>
+                  </div>
                   <input type="number" id="assess-age" value="74" min="50" max="110" required
                     class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_gender">Gender</label>
+                  <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_gender">Gender (लिंग)</label>
+                    <span class="text-[10px] text-teal-600 font-bold bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200" title="Auto-filled from Profile">Auto</span>
+                  </div>
                   <select id="assess-gender" class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
                     <option value="Female">Female</option>
                     <option value="Male" selected>Male</option>
@@ -1578,29 +1747,8 @@
         </div>
 
 
-        <!-- SENIOR EMERGENCY SOS SECTION (Peace of Mind) -->
-        <div
-          class="bg-rose-50 rounded-3xl p-6 sm:p-8 border-2 border-rose-300 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="flex items-center space-x-4">
-            <div
-              class="w-14 h-14 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-rose-600/30">
-              <i class="fa-solid fa-bell-concierge"></i>
-            </div>
-            <div>
-              <h4 class="text-lg font-extrabold text-rose-900" data-i18n="sos_title">Emergency SOS Assistance</h4>
-              <p class="text-xs sm:text-sm text-rose-700" data-i18n="sos_desc">
-                Feel severe chest pain, fall, or sudden distress? Press this to alert your Care Coordinator and son
-                Rahul immediately.
-              </p>
-            </div>
-          </div>
 
-          <button onclick="triggerEmergencySOS()"
-            class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-xl shadow-rose-600/30 active:scale-95 transition-all flex items-center justify-center space-x-2">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span data-i18n="sos_btn">PRESS FOR SOS</span>
-          </button>
-        </div>
+
 
       </div>
     </section>
@@ -1638,6 +1786,12 @@
             <i class="fa-solid fa-filter text-purple-600 mr-1.5"></i> Serious Alerts Only: <strong
               class="ml-1 text-emerald-600">Active</strong>
           </span>
+          <button onclick="openProfileModal()"
+            class="inline-flex items-center px-3 py-1.5 border border-purple-300 text-xs font-bold rounded-xl text-purple-800 bg-purple-50 hover:bg-purple-100 transition-all shadow-sm"
+            title="Manage Family Member Profile & Alert Channels">
+            <i class="fa-solid fa-user-gear mr-1.5 text-purple-600"></i>
+            <span>Family Profile</span>
+          </button>
         </div>
       </div>
 
@@ -1950,7 +2104,7 @@
         </div>
       </aside>
 
-      <!-- ================= MAIN CONTENT AREA ================= -->
+<!-- ================= MAIN CONTENT AREA ================= -->
       <div class="flex-1 flex flex-col min-w-0 bg-[#f8fafc] overflow-x-hidden">
 
         <!-- TOP BAR -->
@@ -1961,6 +2115,32 @@
             <input type="text" id="ops-global-search" oninput="handleOpsGlobalSearch(this.value)"
               placeholder="Search seniors, alerts, coordinators..."
               class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 placeholder-slate-400">
+          </div>
+
+          <!-- City and Team Dropdown Filters -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openProfileModal()"
+              class="inline-flex items-center px-3 py-1.5 border border-orange-300 text-xs font-bold rounded-xl text-orange-800 bg-orange-50 hover:bg-orange-100 transition-all shadow-sm"
+              title="Operations Director Profile & Security Clearance">
+              <i class="fa-solid fa-shield-halved mr-1.5 text-orange-600"></i>
+              <span>Ops Profile</span>
+            </button>
+
+            <!-- City Filter -->
+            <div class="flex items-center space-x-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 shadow-sm text-xs">
+              <i class="fa-solid fa-city text-slate-400"></i>
+              <span class="font-semibold text-slate-500">City:</span>
+              <select id="ops-city-filter" onchange="updateOpsDashboard()"
+                class="bg-transparent font-bold text-slate-800 focus:outline-none">
+                <option value="all">All Metros (Pan-India)</option>
+                <option value="delhi" selected>Delhi NCR</option>
+                <option value="mumbai">Mumbai Metro</option>
+                <option value="bengaluru">Bengaluru Urban</option>
+                <option value="hyderabad">Hyderabad</option>
+              </select>
+            </div>
+          </div>
+        </header>a15fe87 (Update project)
           </div>
 
           <!-- Right side items: Lang toggle, Notification Bell, User chip -->
@@ -4058,6 +4238,429 @@
 
   <!-- App Logic & Bilingual Audio Engine -->
   <script src="app.js"></script>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: UNIVERSAL PROFILE MANAGEMENT (FOR ALL 4 PORTALS)                   -->
+  <!-- ========================================================================= -->
+  <div id="modal-profile-management"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-slate-200 my-8 transition-all">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+        <div class="flex items-center space-x-3">
+          <div id="modal-profile-role-avatar" class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center text-xl font-bold shadow-sm">
+            RS
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 id="modal-profile-title" class="text-xl font-extrabold text-[#0e294b]">Manage Profile</h3>
+              <span id="modal-profile-role-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-100 text-sky-800">
+                Senior Citizen
+              </span>
+            </div>
+            <p id="modal-profile-subtitle" class="text-xs text-slate-500 font-medium">
+              Update personal details, contact information, and preferences
+            </p>
+          </div>
+        </div>
+        <button onclick="closeProfileModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Dynamic Profile Form Container -->
+      <form id="profile-management-form" onsubmit="event.preventDefault(); saveUserProfile();" class="space-y-4">
+        <div id="profile-dynamic-fields-container" class="space-y-4">
+          <!-- Injected dynamically by renderProfileFields() based on activeRole -->
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end space-x-3 pt-5 border-t border-slate-200 mt-6">
+          <button type="button" onclick="closeProfileModal()"
+            class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+            Cancel / रद्द करें
+          </button>
+          <button type="submit"
+            class="px-6 py-2.5 text-xs font-extrabold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md transition-all flex items-center space-x-2">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save Profile / प्रोफाइल सहेजें</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: FAMILY CARE CIRCLE (WITH INLINE ADD FAMILY MEMBER FEATURE)         -->
+  <!-- ========================================================================= -->
+  <div id="modal-family-care-circle"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-slate-200 my-8 transition-all">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl shadow-sm flex-shrink-0">
+            <i class="fa-solid fa-people-roof"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#0e294b]">Family Care Circle / परिवार केयर सर्किल</h3>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-800">
+                <i class="fa-solid fa-shield-heart mr-1"></i> Connected
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium">
+              Connected family members receive instant SOS emergency alerts, weekly digests, and vitals updates.
+            </p>
+          </div>
+        </div>
+        <button onclick="closeFamilyCareCircleModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Action Toolbar Inside Modal: Count Badge & Add Member Button -->
+      <div class="flex items-center justify-between bg-slate-50 p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-4">
+        <div class="text-xs font-bold text-slate-700 flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="circle-members-count-badge">2 Members Connected</span>
+        </div>
+        <button id="btn-toggle-add-fam" onclick="toggleAddFamilyMemberInlineForm()"
+          class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-md transition-all flex items-center space-x-1.5 active:scale-95">
+          <i class="fa-solid fa-user-plus text-xs"></i>
+          <span id="btn-toggle-add-fam-text">+ Add Family Member / सदस्य जोड़ें</span>
+        </button>
+      </div>
+
+      <!-- Inline Add Family Member Form (Expands inside modal) -->
+      <div id="inline-add-family-form-container" class="hidden mb-5 p-4 sm:p-5 bg-indigo-50/80 rounded-2xl border-2 border-indigo-200 transition-all">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-indigo-200">
+          <h4 class="text-xs font-black text-indigo-950 uppercase tracking-wider flex items-center">
+            <i class="fa-solid fa-user-plus mr-1.5"></i> Add New Care Circle Member (नया परिवार सदस्य)
+          </h4>
+          <button type="button" onclick="toggleAddFamilyMemberInlineForm(false)" class="text-xs text-indigo-700 hover:text-indigo-900 font-bold">
+            <i class="fa-solid fa-xmark mr-1"></i> Close Form
+          </button>
+        </div>
+
+        <form id="inline-add-family-form" onsubmit="event.preventDefault(); submitInlineAddFamilyMember();" class="space-y-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Full Name (पूरा नाम) *</label>
+              <input type="text" id="inline-fam-name" required placeholder="e.g. Rahul Sharma"
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Relationship (रिश्ता) *</label>
+              <select id="inline-fam-relation" required
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-indigo-500">
+                <option value="Son (बेटा)">Son (बेटा)</option>
+                <option value="Daughter (बेटी)">Daughter (बेटी)</option>
+                <option value="Spouse (जीवनसाथी)">Spouse (जीवनसाथी)</option>
+                <option value="Grandchild (पोता / पोती)">Grandchild (पोता / पोती)</option>
+                <option value="Daughter-in-law (बहू)">Daughter-in-law (बहू)</option>
+                <option value="Son-in-law (दामाद)">Son-in-law (दामाद)</option>
+                <option value="Primary Caregiver (देखभालकर्ता)">Primary Caregiver (देखभालकर्ता)</option>
+                <option value="Other Relative (अन्य रिश्तेदार)">Other Relative (अन्य)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mobile / WhatsApp No. (+91) *</label>
+              <input type="tel" id="inline-fam-phone" required placeholder="+91 98111-XXXXX"
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Email Address (ईमेल)</label>
+              <input type="email" id="inline-fam-email" placeholder="name@example.com"
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Living Situation (रहने की स्थिति)</label>
+            <select id="inline-fam-residence"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-indigo-500">
+              <option value="Lives with elder (साथ रहते हैं)">Lives in same house (साथ रहते हैं)</option>
+              <option value="Same city (उसी शहर में)">Same city / Nearby (उसी शहर में)</option>
+              <option value="Different city / Metro (दूसरे शहर में)">Different city / Outstation (दूसरे शहर में)</option>
+              <option value="Overseas / NRI (विदेश में)">Overseas / NRI (विदेश में)</option>
+            </select>
+          </div>
+
+          <div class="bg-white p-3 rounded-xl border border-indigo-200 space-y-1.5">
+            <label class="block text-xs font-bold text-slate-800 mb-0.5">Notification Permissions:</label>
+            <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+              <input type="checkbox" id="inline-fam-alert-sos" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+              <span><strong>Immediate SOS Alerts:</strong> Instant WhatsApp/SMS on chest pain, fall, or distress</span>
+            </label>
+            <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+              <input type="checkbox" id="inline-fam-alert-daily" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+              <span><strong>Daily Check-in Digest:</strong> Morning check-in status and vitals telemetry</span>
+            </label>
+          </div>
+
+          <div class="flex items-center justify-end space-x-2 pt-2 border-t border-indigo-200">
+            <button type="button" onclick="toggleAddFamilyMemberInlineForm(false)"
+              class="px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 rounded-xl">Cancel</button>
+            <button type="submit"
+              class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md flex items-center space-x-1.5">
+              <i class="fa-solid fa-check"></i>
+              <span>Save Member / सदस्य जोड़ें</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Members Grid Inside Modal -->
+      <div id="modal-family-members-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-[50vh] overflow-y-auto pr-1">
+        <!-- Rendered dynamically by renderFamilyCareCircle() -->
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: OFFICIAL CLINICAL DIAGNOSTIC REPORT SHEET (PROPER MEDICAL REPORT) -->
+  <!-- ========================================================================= -->
+  <div id="modal-clinical-report-sheet"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-2 sm:p-4 md:p-6 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-300 overflow-hidden my-auto max-h-[94vh] flex flex-col transition-all">
+      
+      <!-- Top Modal Control Action Bar (Sticky, hidden when printed) -->
+      <div class="px-5 py-3.5 bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white flex flex-wrap items-center justify-between gap-3 no-print flex-shrink-0 border-b border-slate-700">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-teal-500 text-white flex items-center justify-center text-base font-black shadow-md shadow-teal-500/20">
+            <i class="fa-solid fa-file-waveform"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs sm:text-sm font-black tracking-wide text-white">
+                CareConnect AI • Official Diagnostic Report Sheet
+              </span>
+              <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                Validated Telemetry
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">
+              Comprehensive Geriatric Assessment, ML Risk Output & Clinical Recommendations
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center space-x-2">
+          <button onclick="printClinicalReportSheet()"
+            class="px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-black transition-all flex items-center space-x-1.5 shadow-sm active:scale-95"
+            title="Print or Save as PDF Document">
+            <i class="fa-solid fa-print"></i>
+            <span>Print / PDF</span>
+          </button>
+          <button onclick="downloadClinicalReportSheet()"
+            class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm active:scale-95"
+            title="Download Standalone Medical HTML Sheet">
+            <i class="fa-solid fa-download text-teal-400"></i>
+            <span class="hidden sm:inline">Download</span>
+          </button>
+          <button onclick="shareReportViaWhatsApp()"
+            class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm active:scale-95"
+            title="Send Summary to Family via WhatsApp">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span class="hidden sm:inline">WhatsApp</span>
+          </button>
+          <button onclick="speakDiagnosticReport()"
+            class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-400 border border-slate-700 text-xs font-bold transition-all active:scale-95"
+            title="Listen to Report in Voice">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          <button onclick="closeClinicalReportSheet()"
+            class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white transition-all flex items-center justify-center text-sm font-bold shadow-sm"
+            title="Close Report Sheet">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Sheet Container -->
+      <div id="clinical-report-sheet-scroll" class="overflow-y-auto p-3 sm:p-6 lg:p-8 flex-grow bg-slate-100">
+        <!-- Printable White Sheet -->
+        <div id="clinical-report-sheet-content"
+          class="bg-white p-6 sm:p-10 rounded-2xl border border-slate-300 shadow-sm max-w-3xl mx-auto space-y-6 text-slate-800 font-sans">
+          <!-- Rendered dynamically by generateClinicalReportSheetHtml() -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: HIGH-PRIORITY REMINDER ALARM DIALOG (अलार्म स्क्रीन व टोन) -->
+  <!-- ========================================================================= -->
+  <div id="modal-reminder-alarm"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 transition-all animate-fade-in">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border-4 border-amber-400 overflow-hidden text-center p-6 sm:p-8 animate-scale-up">
+      
+      <!-- Ringing Alarm Icon with Pulses -->
+      <div class="relative w-20 h-20 mx-auto flex items-center justify-center mb-4">
+        <div class="absolute inset-0 rounded-full bg-amber-400/30 animate-ping"></div>
+        <div class="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center text-3xl shadow-xl shadow-amber-500/40 z-10 animate-bounce">
+          <i id="alarm-dialog-icon" class="fa-solid fa-bell"></i>
+        </div>
+      </div>
+
+      <!-- Alarm Header -->
+      <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-black uppercase tracking-wider mb-2">
+        <span class="animate-pulse">🔔</span>
+        <span>CareConnect Alarm / अनुस्मारक अलार्म</span>
+      </div>
+
+      <h3 id="alarm-dialog-time" class="text-3xl font-black text-slate-900 font-mono tracking-tight">
+        08:30 AM
+      </h3>
+
+      <h4 id="alarm-dialog-title" class="text-lg sm:text-xl font-black text-slate-900 mt-2">
+        Drink 1 Glass Warm Water (1 गिलास गुनगुना पानी पिएं)
+      </h4>
+
+      <p id="alarm-dialog-notes" class="text-xs sm:text-sm text-slate-600 font-medium mt-1.5 bg-amber-50 p-3 rounded-xl border border-amber-200">
+        Hydration supports circulation, kidney vitality and regulates blood pressure.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+        <button onclick="completeAlarmAction()"
+          class="col-span-1 sm:col-span-2 py-3.5 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center space-x-2 active:scale-95">
+          <i class="fa-solid fa-circle-check text-lg"></i>
+          <span>I Have Done It / मैंने पूरा कर लिया ✅</span>
+        </button>
+
+        <button onclick="snoozeAlarmAction()"
+          class="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs transition-all flex items-center justify-center space-x-1.5 border border-slate-300">
+          <i class="fa-solid fa-clock-rotate-left text-amber-600"></i>
+          <span>Snooze 10m / 10 मिनट बाद</span>
+        </button>
+
+        <button onclick="dismissAlarmAction()"
+          class="py-3 px-4 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-800 font-extrabold text-xs transition-all flex items-center justify-center space-x-1.5 border border-slate-300">
+          <i class="fa-solid fa-xmark"></i>
+          <span>Dismiss / बंद करें</span>
+        </button>
+      </div>
+
+      <!-- Speaking Audio indicator -->
+      <div class="mt-4 flex items-center justify-center space-x-2 text-[11px] font-bold text-slate-400">
+        <i class="fa-solid fa-volume-high text-amber-600 animate-pulse"></i>
+        <span>Audio Alarm & Speech Active • अलार्म बज रहा है</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ADD / EDIT CARE REMINDER (नया रिमाइंडर जोड़ें) -->
+  <!-- ========================================================================= -->
+  <div id="modal-add-reminder"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden my-auto p-6 sm:p-7">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <div>
+            <h4 class="text-base font-black text-slate-900">Add Care Reminder / नया रिमाइंडर</h4>
+            <p class="text-xs text-slate-500">Set water, food, or medication alerts with device alarm</p>
+          </div>
+        </div>
+        <button onclick="closeAddReminderModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Quick 1-Click Preset Buttons -->
+      <div class="mt-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Quick Presets (त्वरित चयन):</span>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="applyReminderPreset('water_morning')" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 text-[11px] font-bold border border-sky-200">
+            💧 Morning Water (8 AM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('med_morning')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 text-[11px] font-bold border border-purple-200">
+            💊 BP Medicine (8:30 AM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('food_breakfast')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-bold border border-amber-200">
+            🍲 Breakfast (9 AM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('food_lunch')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-bold border border-amber-200">
+            🍲 Lunch (1:30 PM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('water_afternoon')" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 text-[11px] font-bold border border-sky-200">
+            💧 Midday Water (11:30 AM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('med_night')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 text-[11px] font-bold border border-purple-200">
+            💊 Night Medicine (9:30 PM)
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Form -->
+      <form onsubmit="handleSaveNewReminder(event)" class="mt-4 space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Reminder Title (रिमाइंडर का नाम) *</label>
+          <input type="text" id="rem-input-title" required placeholder="e.g. Drink 1 Glass Warm Water / पानी पिएं"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category (श्रेणी) *</label>
+            <select id="rem-input-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white focus:ring-2 focus:ring-amber-500">
+              <option value="water">💧 Water Intake (पानी)</option>
+              <option value="food">🍲 Food / Meal (भोजन)</option>
+              <option value="medicine">💊 Medicine (दवा)</option>
+              <option value="walk">🏃 Walk / Exercise (सैर)</option>
+              <option value="bp">🩺 BP / Vitals Check (जांच)</option>
+              <option value="other">🔔 Other Custom (अन्य)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Alarm Time (अलार्म समय) *</label>
+            <input type="time" id="rem-input-time" required value="08:00"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Notes / Instructions (निर्देश या खुराक)</label>
+          <input type="text" id="rem-input-notes" placeholder="e.g. Take with warm water after food"
+            class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div class="flex items-center justify-end space-x-2.5 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeAddReminderModal()"
+            class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">
+            Cancel
+          </button>
+          <button type="submit"
+            class="px-5 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-md transition-all active:scale-95 flex items-center space-x-1.5">
+            <i class="fa-solid fa-check"></i>
+            <span>Save Reminder / रिमाइंडर सहेजें</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
 </body>
 
 </html>

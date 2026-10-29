@@ -602,6 +602,13 @@ function navigateRole(role) {
     if (header) header.classList.add('hidden');
     if (mobileNav) mobileNav.classList.add('hidden');
     document.title = "CareConnect - Connected Healthcare & Elder Support";
+  } else if (role === 'operations') {
+    if (header) header.classList.add('hidden');
+    if (mobileNav) mobileNav.classList.add('hidden');
+    document.title = "CareConnect Operations Manager Command Center";
+    switchOpsTab('dashboard');
+    setTimeout(initOpsCharts, 120);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     if (header) header.classList.remove('hidden');
     if (mobileNav) mobileNav.classList.remove('hidden');
@@ -611,8 +618,6 @@ function navigateRole(role) {
     // View-specific initializations
     if (role === 'family') {
       setTimeout(initFamilyVitalsChart, 100);
-    } else if (role === 'operations') {
-      setTimeout(initOpsCharts, 100);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -1159,6 +1164,19 @@ function updateLanguageSwitcherButtons(lang) {
     }
   }
 
+  // Operations Manager Topbar Buttons
+  const opsEn = document.getElementById('ops-top-lang-en');
+  const opsHi = document.getElementById('ops-top-lang-hi');
+  if (opsEn && opsHi) {
+    if (lang === 'en') {
+      opsEn.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
+      opsHi.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
+    } else {
+      opsHi.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
+      opsEn.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
+    }
+  }
+
   // Senior portal buttons
   const btnEn = document.getElementById('lang-btn-en');
   const btnHi = document.getElementById('lang-btn-hi');
@@ -1614,29 +1632,503 @@ function renderOpsTeamTable() {
   `).join('');
 }
 
-function initOpsCharts() {
-  const canvasVolume = document.getElementById('opsVolumeChart');
-  const canvasOutcomes = document.getElementById('opsOutcomesChart');
+// =============================================================================
+// OPERATIONS MANAGER COMMAND CENTER LOGIC (7-VIEW DASHBOARD & CONTROLS)
+// =============================================================================
 
-  if (canvasVolume) {
-    if (state.charts.opsVolume) state.charts.opsVolume.destroy();
-    const ctxVol = canvasVolume.getContext('2d');
-    state.charts.opsVolume = new Chart(ctxVol, {
-      type: 'bar',
+let currentAssignTargetSenior = null;
+
+// 1. Switch between Sidebar Tabs (Dashboard, Risk, Alerts, Team, Area, Reports, Audit, Profile)
+function switchOpsTab(tabId) {
+  // If target is settings, open profile subview and select settings tab
+  if (tabId === 'settings') {
+    switchOpsTab('profile');
+    switchOpsProfileTab('settings');
+    return;
+  }
+
+  // Hide all subviews
+  const allSubviews = document.querySelectorAll('.ops-subview');
+  allSubviews.forEach(view => view.classList.add('hidden'));
+
+  // Show active subview
+  const activeView = document.getElementById(`ops-subview-${tabId}`);
+  if (activeView) {
+    activeView.classList.remove('hidden');
+  }
+
+  // Update navigation buttons
+  const allNavBtns = document.querySelectorAll('.ops-nav-btn');
+  allNavBtns.forEach(btn => {
+    btn.className = 'ops-nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all border border-transparent';
+  });
+
+  const activeBtn = document.getElementById(`ops-nav-${tabId}`);
+  if (activeBtn) {
+    activeBtn.className = 'ops-nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all bg-[#ecfdf5] text-[#008779] shadow-sm border border-[#a7f3d0]';
+  }
+
+  // Trigger chart re-render / resize when entering tabs with charts
+  if (['dashboard', 'risk', 'team', 'reports'].includes(tabId)) {
+    setTimeout(initOpsCharts, 80);
+  }
+
+  // Close any popups
+  const userDropdown = document.getElementById('ops-user-dropdown');
+  if (userDropdown) userDropdown.classList.add('hidden');
+  const notifPopup = document.getElementById('ops-notification-popup');
+  if (notifPopup) notifPopup.classList.add('hidden');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 2. Profile Sub-Tabs Navigation (Profile vs Settings vs Notifications vs Help)
+function switchOpsProfileTab(subTab) {
+  const profilePane = document.getElementById('ops-pane-profile');
+  const settingsPane = document.getElementById('ops-pane-settings');
+  const btnProfile = document.getElementById('btn-ops-ptab-profile');
+  const btnSettings = document.getElementById('btn-ops-ptab-settings');
+  const btnNotifs = document.getElementById('btn-ops-ptab-notifications');
+  const btnHelp = document.getElementById('btn-ops-ptab-help');
+
+  const inactiveBtnClass = 'ops-ptab-btn px-4 py-2 text-slate-500 hover:text-slate-800 font-bold text-xs border-b-2 border-transparent transition-all';
+  const activeBtnClass = 'ops-ptab-btn px-4 py-2 border-b-2 border-teal-600 text-teal-800 font-extrabold text-xs transition-all';
+
+  [btnProfile, btnSettings, btnNotifs, btnHelp].forEach(btn => {
+    if (btn) btn.className = inactiveBtnClass;
+  });
+
+  if (subTab === 'profile') {
+    if (profilePane) profilePane.classList.remove('hidden');
+    if (settingsPane) settingsPane.classList.add('hidden');
+    if (btnProfile) btnProfile.className = activeBtnClass;
+  } else if (subTab === 'settings') {
+    if (profilePane) profilePane.classList.add('hidden');
+    if (settingsPane) settingsPane.classList.remove('hidden');
+    if (btnSettings) btnSettings.className = activeBtnClass;
+  } else if (subTab === 'notifications') {
+    if (btnNotifs) btnNotifs.className = activeBtnClass;
+    toggleOpsNotificationPopup();
+  } else if (subTab === 'help') {
+    if (btnHelp) btnHelp.className = activeBtnClass;
+    showHelpModal();
+  }
+}
+
+// 3. User Dropdown & Notifications Popups
+function toggleOpsUserDropdown() {
+  const d = document.getElementById('ops-user-dropdown');
+  if (d) d.classList.toggle('hidden');
+}
+
+function toggleOpsNotificationPopup() {
+  const p = document.getElementById('ops-notification-popup');
+  if (p) p.classList.toggle('hidden');
+}
+
+// 4. Global Search Handler
+function handleOpsGlobalSearch(query) {
+  const q = (query || '').toLowerCase().trim();
+  // Filter case rows if search is typed
+  const rows = document.querySelectorAll('#ops-alerts-table-body tr.ops-case-row');
+  rows.forEach(r => {
+    const text = r.textContent.toLowerCase();
+    if (!q || text.includes(q)) {
+      r.style.display = '';
+    } else {
+      r.style.display = 'none';
+    }
+  });
+}
+
+// 5. Alerts & Cases Filtering
+function filterOpsAlertsTable(status) {
+  const tabs = {
+    'all': document.getElementById('tab-ops-filter-all'),
+    'Pending': document.getElementById('tab-ops-filter-pending'),
+    'In Progress': document.getElementById('tab-ops-filter-progress'),
+    'Resolved': document.getElementById('tab-ops-filter-resolved')
+  };
+
+  Object.keys(tabs).forEach(k => {
+    if (tabs[k]) {
+      if (k === status) {
+        tabs[k].className = 'ops-cases-tab px-3.5 py-2 border-b-2 border-teal-600 text-teal-800 font-extrabold';
+      } else {
+        tabs[k].className = 'ops-cases-tab px-3.5 py-2 text-slate-500 hover:text-slate-800 font-bold border-b-2 border-transparent';
+      }
+    }
+  });
+
+  const rows = document.querySelectorAll('#ops-alerts-table-body tr.ops-case-row');
+  rows.forEach(r => {
+    const rowStatus = r.getAttribute('data-status');
+    if (status === 'all' || rowStatus === status) {
+      r.style.display = '';
+    } else {
+      r.style.display = 'none';
+    }
+  });
+}
+
+function filterOpsCasesSearch(query) {
+  handleOpsGlobalSearch(query);
+}
+
+function filterOpsAlertsBySelect() {
+  const riskSelect = document.getElementById('ops-filter-risk');
+  const issueSelect = document.getElementById('ops-filter-issue');
+  const risk = riskSelect ? riskSelect.value : 'all';
+  const issue = issueSelect ? issueSelect.value : 'all';
+
+  const rows = document.querySelectorAll('#ops-alerts-table-body tr.ops-case-row');
+  rows.forEach(r => {
+    const rRisk = r.getAttribute('data-risk');
+    const rIssue = r.getAttribute('data-issue');
+
+    const matchRisk = (risk === 'all' || rRisk === risk);
+    const matchIssue = (issue === 'all' || (rIssue && rIssue.includes(issue)));
+
+    if (matchRisk && matchIssue) {
+      r.style.display = '';
+    } else {
+      r.style.display = 'none';
+    }
+  });
+}
+
+// 6. Manual Assign Modal Controls
+function openOpsAssignModal(seniorName, riskLevel, issue, currentAssignee) {
+  currentAssignTargetSenior = seniorName;
+  const modal = document.getElementById('modal-ops-assign');
+  if (!modal) return;
+
+  const seniorEl = document.getElementById('ops-assign-senior-name');
+  const riskEl = document.getElementById('ops-assign-risk-badge');
+  const issueEl = document.getElementById('ops-assign-issue');
+  const coordEl = document.getElementById('ops-assign-coordinator-select');
+
+  if (seniorEl) seniorEl.textContent = seniorName;
+  if (issueEl) issueEl.textContent = `Issue: ${issue}`;
+  if (coordEl && currentAssignee) coordEl.value = currentAssignee;
+
+  if (riskEl) {
+    riskEl.textContent = `${riskLevel} Risk`;
+    if (riskLevel === 'High') {
+      riskEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-700';
+    } else if (riskLevel === 'Moderate') {
+      riskEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-700';
+    } else {
+      riskEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700';
+    }
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function closeOpsAssignModal() {
+  const modal = document.getElementById('modal-ops-assign');
+  if (modal) modal.classList.add('hidden');
+}
+
+function confirmOpsAssignModal() {
+  const coordSelect = document.getElementById('ops-assign-coordinator-select');
+  const chosenCoord = coordSelect ? coordSelect.value : 'Ananya';
+
+  if (currentAssignTargetSenior) {
+    const rows = document.querySelectorAll('#ops-alerts-table-body tr');
+    rows.forEach(r => {
+      if (r.getAttribute('data-senior') === currentAssignTargetSenior) {
+        r.setAttribute('data-status', 'In Progress');
+        r.setAttribute('data-coord', chosenCoord);
+        const cells = r.querySelectorAll('td');
+        if (cells.length >= 7) {
+          cells[5].innerHTML = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">In Progress</span>';
+          cells[6].textContent = chosenCoord;
+        }
+      }
+    });
+  }
+
+  closeOpsAssignModal();
+  showToast(`Case assigned to ${chosenCoord} successfully!`, 'success');
+}
+
+// 7. New Alert Modal Controls
+function openOpsNewAlertModal() {
+  const m = document.getElementById('modal-ops-new-alert');
+  if (m) m.classList.remove('hidden');
+}
+
+function closeOpsNewAlertModal() {
+  const m = document.getElementById('modal-ops-new-alert');
+  if (m) m.classList.add('hidden');
+}
+
+function submitOpsNewAlert(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const senior = document.getElementById('ops-new-alert-senior').value;
+  const risk = document.getElementById('ops-new-alert-risk').value;
+  const issue = document.getElementById('ops-new-alert-issue').value;
+  const coord = document.getElementById('ops-new-alert-coord').value;
+
+  const tbody = document.getElementById('ops-alerts-table-body');
+  if (tbody) {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-slate-50/80 transition-colors ops-case-row';
+    tr.setAttribute('data-senior', senior);
+    tr.setAttribute('data-risk', risk);
+    tr.setAttribute('data-issue', issue);
+    tr.setAttribute('data-status', 'Pending');
+    tr.setAttribute('data-coord', coord);
+
+    const riskBadge = risk === 'High'
+      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700">High</span>'
+      : risk === 'Moderate'
+      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700">Moderate</span>'
+      : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Low</span>';
+
+    tr.innerHTML = `
+      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
+      <td class="p-3.5 font-bold text-slate-900">${senior}</td>
+      <td class="p-3.5">${riskBadge}</td>
+      <td class="p-3.5 text-slate-600 font-medium">${issue}</td>
+      <td class="p-3.5 text-slate-500 font-mono text-[11px]">Just now</td>
+      <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-700">Pending</span></td>
+      <td class="p-3.5 font-bold text-slate-800">${coord}</td>
+      <td class="p-3.5 text-center">
+        <button type="button" onclick="openOpsAssignModal('${senior}', '${risk}', '${issue}', '${coord}')" class="px-3 py-1 bg-[#00a896] hover:bg-[#008779] text-white rounded-lg text-xs font-bold transition-all shadow-sm">Assign</button>
+      </td>
+    `;
+    tbody.prepend(tr);
+  }
+
+  closeOpsNewAlertModal();
+  showToast(`New alert logged for ${senior} & assigned to ${coord}`, 'success');
+}
+
+// 8. Add Coordinator Controls
+function openOpsAddCoordinatorModal() {
+  const m = document.getElementById('modal-ops-add-coordinator');
+  if (m) m.classList.remove('hidden');
+}
+
+function closeOpsAddCoordinatorModal() {
+  const m = document.getElementById('modal-ops-add-coordinator');
+  if (m) m.classList.add('hidden');
+}
+
+function submitOpsAddCoordinator(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const name = document.getElementById('ops-coord-name').value;
+  closeOpsAddCoordinatorModal();
+  showToast(`Coordinator ${name} added to care team!`, 'success');
+}
+
+// 9. Alert Diagnostics & Detail Modal
+function openOpsAlertDetail(senior, risk, issue, status, assignee) {
+  const modal = document.getElementById('modal-ops-alert-detail');
+  if (!modal) return;
+
+  const nameEl = document.getElementById('ops-detail-senior');
+  const avatarEl = document.getElementById('ops-detail-avatar');
+  const statusEl = document.getElementById('ops-detail-status-bar');
+  const riskEl = document.getElementById('ops-detail-risk-badge');
+  const issueEl = document.getElementById('ops-detail-issue');
+
+  if (nameEl) nameEl.textContent = senior;
+  if (avatarEl) {
+    const initials = senior.split(' ').map(w => w[0]).join('').substring(0, 2);
+    avatarEl.textContent = initials || 'SJ';
+  }
+  if (statusEl) statusEl.textContent = `Status: ${status} • Assigned: ${assignee}`;
+  if (issueEl) issueEl.textContent = issue;
+
+  if (riskEl) {
+    riskEl.textContent = `${risk} Risk`;
+    if (risk === 'High') {
+      riskEl.className = 'px-2.5 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-700';
+    } else if (risk === 'Moderate') {
+      riskEl.className = 'px-2.5 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-700';
+    } else {
+      riskEl.className = 'px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-700';
+    }
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function closeOpsAlertDetail() {
+  const modal = document.getElementById('modal-ops-alert-detail');
+  if (modal) modal.classList.add('hidden');
+}
+
+// 10. Help Modal Controls
+function showHelpModal() {
+  const m = document.getElementById('modal-ops-help');
+  if (m) m.classList.remove('hidden');
+}
+
+function closeHelpModal() {
+  const m = document.getElementById('modal-ops-help');
+  if (m) m.classList.add('hidden');
+}
+
+// 11. Map Mode Toggle (Map vs Satellite)
+function toggleMapMode(mode) {
+  const mapContainer = document.getElementById('ops-city-map');
+  const btnStreet = document.getElementById('map-mode-street');
+  const btnSat = document.getElementById('map-mode-sat');
+
+  if (mode === 'sat') {
+    if (mapContainer) {
+      mapContainer.className = 'relative w-full h-80 sm:h-96 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-900 border border-slate-700 overflow-hidden flex items-center justify-center';
+    }
+    if (btnSat) btnSat.className = 'px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm';
+    if (btnStreet) btnStreet.className = 'px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+  } else {
+    if (mapContainer) {
+      mapContainer.className = 'relative w-full h-80 sm:h-96 rounded-2xl bg-gradient-to-tr from-[#eef7f6] via-[#f4faf9] to-[#e8f4f2] border border-teal-100 overflow-hidden flex items-center justify-center';
+    }
+    if (btnStreet) btnStreet.className = 'px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm';
+    if (btnSat) btnSat.className = 'px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+  }
+}
+
+// 12. Export Functions
+function exportOpsReports() {
+  const csvContent = "data:text/csv;charset=utf-8,"
+    + "Metric,Value,Period,Status\n"
+    + "Total Active Seniors,200,Last 30 Days,Normal\n"
+    + "High Risk Alerts,24,Last 30 Days,Action Required\n"
+    + "Moderate Risk Alerts,68,Last 30 Days,Monitoring\n"
+    + "Low Risk Alerts,108,Last 30 Days,Normal\n"
+    + "Resolution Rate,92%,Last 30 Days,Target Met\n"
+    + "Avg Response Time,2.8 hrs,Last 30 Days,Target Met\n";
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "CareConnect_Operations_Report.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast("Operations report exported as CSV successfully!", "success");
+}
+
+function exportOpsAuditLogs() {
+  const csvContent = "data:text/csv;charset=utf-8,"
+    + "Timestamp,User,Role,Action,Details,Related Senior,IP Address\n"
+    + "28 Oct 2026 10:24 AM,Ananya,Coordinator,Assigned to Rishabh,Missed medication,Sharma Ji,192.168.1.12\n"
+    + "28 Oct 2026 09:15 AM,OM (You),Operations Manager,Marked as In Progress,Reduced activity,Verma Ji,192.168.1.15\n"
+    + "27 Oct 2026 08:40 AM,Rishabh,Coordinator,Added follow-up note,Pain reported,Kapoor Ji,192.168.1.18\n"
+    + "27 Oct 2026 11:20 AM,Megha,Coordinator,Changed priority,Sleep issues,Iyer Ji,192.168.1.21\n"
+    + "26 Oct 2026 04:15 PM,Karan,Coordinator,Marked as Resolved,Mood changes,Singh Ji,192.168.1.19\n"
+    + "26 Oct 2026 02:30 PM,OM (You),Operations Manager,Generated team report,System analytics,-,192.168.1.15\n"
+    + "25 Oct 2026 10:45 AM,Amrita,Coordinator,Assigned to Ananya,Fall risk detected,Patel Ji,192.168.1.14\n"
+    + "25 Oct 2026 09:32 AM,Rishabh,Coordinator,Added medication details,Irregular vitals,Rao Ji,192.168.1.18\n";
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "CareConnect_Audit_Trail.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast("Audit logs exported as CSV successfully!", "success");
+}
+
+// 13. Team Management Form Task Assignment Handler
+function handleOpsAssignTaskSubmit(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const seniorSelect = document.getElementById('ops-task-senior-select') || document.querySelector('#ops-subview-team select');
+  const coordSelect = document.getElementById('ops-task-coord-select');
+  const senior = seniorSelect ? seniorSelect.value : 'Senior';
+  const coord = coordSelect ? coordSelect.value : 'Coordinator';
+  showToast(`Task assigned to ${coord} for ${senior} successfully!`, 'success');
+  if (e && e.target && typeof e.target.reset === 'function') {
+    e.target.reset();
+  }
+}
+
+// 14. Initialize All Operations Manager Charts (Chart.js)
+function initOpsCharts() {
+  if (typeof Chart === 'undefined') return;
+
+  // 1. Tab 2: Risk Distribution Doughnut Chart (High 24, Moderate 68, Low 108)
+  const canvasRiskDist = document.getElementById('chart-ops-risk-distribution');
+  if (canvasRiskDist) {
+    if (state.charts && state.charts.opsRiskDist) state.charts.opsRiskDist.destroy();
+    const ctx = canvasRiskDist.getContext('2d');
+    if (!state.charts) state.charts = {};
+    state.charts.opsRiskDist = new Chart(ctx, {
+      type: 'doughnut',
       data: {
-        labels: ['06:00', '08:00', '10:00', '12:00', '14:00 (Now)', '16:00', '18:00', '20:00'],
+        labels: ['High Risk', 'Moderate Risk', 'Low Risk'],
+        datasets: [{
+          data: [24, 68, 108],
+          backgroundColor: ['#f43f5e', '#f59e0b', '#10b981'],
+          borderWidth: 2,
+          borderColor: '#ffffff',
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${Math.round((ctx.raw / 200) * 100)}%)`
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // 2. Tab 2: Risk Trend Over Time (Line chart: 1 Oct - 28 Oct)
+  const canvasRiskTrend = document.getElementById('chart-ops-risk-trend');
+  if (canvasRiskTrend) {
+    if (state.charts && state.charts.opsRiskTrend) state.charts.opsRiskTrend.destroy();
+    const ctx = canvasRiskTrend.getContext('2d');
+    if (!state.charts) state.charts = {};
+    state.charts.opsRiskTrend = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['1 Oct', '7 Oct', '14 Oct', '21 Oct', '28 Oct'],
         datasets: [
           {
-            label: 'Alerts Received',
-            data: [28, 86, 74, 52, 64, 42, 38, 22],
-            backgroundColor: '#3b82f6',
-            borderRadius: 6
+            label: 'High Risk',
+            data: [18, 22, 28, 26, 24],
+            borderColor: '#f43f5e',
+            backgroundColor: 'rgba(244, 63, 94, 0.08)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3
           },
           {
-            label: 'Alerts Resolved Within SLA',
-            data: [27, 82, 70, 50, 61, 40, 37, 21],
-            backgroundColor: '#14b8a6',
-            borderRadius: 6
+            label: 'Moderate Risk',
+            data: [54, 58, 62, 65, 68],
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.06)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3
+          },
+          {
+            label: 'Low Risk',
+            data: [128, 120, 110, 109, 108],
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.06)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3
           }
         ]
       },
@@ -1644,75 +2136,188 @@ function initOpsCharts() {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false }
+          legend: {
+            position: 'top',
+            labels: { boxWidth: 10, font: { size: 10, weight: 'bold' } }
+          }
         },
         scales: {
-          y: { grid: { color: 'rgba(226, 232, 240, 0.6)' } },
-          x: { grid: { display: false } }
+          y: { grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
         }
       }
     });
   }
 
-  if (canvasOutcomes) {
-    if (state.charts.opsOutcomes) state.charts.opsOutcomes.destroy();
-    const ctxOut = canvasOutcomes.getContext('2d');
-    state.charts.opsOutcomes = new Chart(ctxOut, {
+  // 3. Tab 2: Alert Trends (Last 30 Days) Bar Chart
+  const canvasAlertTrends = document.getElementById('chart-ops-alert-trends');
+  if (canvasAlertTrends) {
+    if (state.charts && state.charts.opsAlertTrends) state.charts.opsAlertTrends.destroy();
+    const ctx = canvasAlertTrends.getContext('2d');
+    const dataVals = [18, 24, 22, 28, 42, 31, 35, 29, 32];
+    const bgColors = dataVals.map(v => v === 42 ? '#0f766e' : '#00a896');
+    if (!state.charts) state.charts = {};
+    state.charts.opsAlertTrends = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['1 Oct', '4 Oct', '7 Oct', '10 Oct', '14 Oct', '18 Oct', '21 Oct', '25 Oct', '28 Oct'],
+        datasets: [{
+          label: 'Alert Volume',
+          data: dataVals,
+          backgroundColor: bgColors,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+      }
+    });
+  }
+
+  // 4. Tab 4: Team Workload Distribution Doughnut Chart (50 Cases)
+  const canvasTeamWorkload = document.getElementById('chart-ops-team-workload');
+  if (canvasTeamWorkload) {
+    if (state.charts && state.charts.opsTeamWorkload) state.charts.opsTeamWorkload.destroy();
+    const ctx = canvasTeamWorkload.getContext('2d');
+    if (!state.charts) state.charts = {};
+    state.charts.opsTeamWorkload = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Tele-Triage Resolved', 'Field Nurse Visited', 'Family Handled', 'Emergency ER Transfer'],
+        labels: ['Ananya (28%)', 'Rishabh (24%)', 'Amrita (20%)', 'Megha (16%)', 'Karan (12%)'],
         datasets: [{
-          data: [58, 26, 12, 4],
-          backgroundColor: ['#14b8a6', '#6366f1', '#f59e0b', '#ef4444'],
+          data: [14, 12, 10, 8, 6],
+          backgroundColor: ['#00a896', '#3b82f6', '#f59e0b', '#a855f7', '#f43f5e'],
           borderWidth: 2,
-          borderColor: '#ffffff'
+          borderColor: '#ffffff',
+          hoverOffset: 4
         }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  }
+
+  // 5. Tab 6: Reports Alerts by Risk Level (Bar Chart)
+  const canvasRepRisk = document.getElementById('chart-reports-risk-bar');
+  if (canvasRepRisk) {
+    if (state.charts && state.charts.reportsRisk) state.charts.reportsRisk.destroy();
+    const ctx = canvasRepRisk.getContext('2d');
+    if (!state.charts) state.charts = {};
+    state.charts.reportsRisk = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['High', 'Moderate', 'Low'],
+        datasets: [{
+          label: 'Seniors',
+          data: [24, 68, 108],
+          backgroundColor: ['#f43f5e', '#f59e0b', '#10b981'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' } } }
+        }
+      }
+    });
+  }
+
+  // 6. Tab 6: Reports Alert Resolution Rate (Gauge Doughnut Chart 92%)
+  const canvasRepGauge = document.getElementById('chart-reports-resolution-gauge');
+  if (canvasRepGauge) {
+    if (state.charts && state.charts.reportsGauge) state.charts.reportsGauge.destroy();
+    const ctx = canvasRepGauge.getContext('2d');
+    if (!state.charts) state.charts = {};
+    state.charts.reportsGauge = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Resolved (92%)', 'Pending (8%)'],
+        datasets: [{
+          data: [92, 8],
+          backgroundColor: ['#00a896', '#e2e8f0'],
+          borderWidth: 0,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '76%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 10, font: { size: 10 } }
+          }
+        }
+      }
+    });
+  }
+
+  // 7. Tab 6: Reports Monthly Alert Trend (Line Chart)
+  const canvasRepTrend = document.getElementById('chart-reports-monthly-trend');
+  if (canvasRepTrend) {
+    if (state.charts && state.charts.reportsMonthly) state.charts.reportsMonthly.destroy();
+    const ctx = canvasRepTrend.getContext('2d');
+    if (!state.charts) state.charts = {};
+    state.charts.reportsMonthly = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+          {
+            label: 'Total Alerts',
+            data: [45, 62, 78, 94, 88, 102],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.08)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointRadius: 3
+          },
+          {
+            label: 'Resolved Alerts',
+            data: [42, 58, 72, 86, 82, 94],
+            borderColor: '#00a896',
+            backgroundColor: 'rgba(0, 168, 150, 0.08)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointRadius: 3
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'bottom',
-            labels: { boxWidth: 10, font: { size: 9, family: 'Inter' } }
+            position: 'top',
+            labels: { boxWidth: 10, font: { size: 10 } }
           }
         },
-        cutout: '65%'
+        scales: {
+          y: { grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
       }
     });
   }
-}
-
-function populateOpsIncidentStream() {
-  const container = document.getElementById('ops-incident-stream');
-  if (!container) return;
-
-  const initialLogs = [
-    '14:44:12 [South Delhi] Nurse Kavita dispatched to Ramesh Sharma (BP spike alert)',
-    '14:41:05 [Hauz Khas] Paramedic Amit arrived at Savitri Devi residence (Fall assessment complete)',
-    '14:38:22 [Saket] Insulin intake verified for Anand Verma via Buddy Rajesh',
-    '14:32:19 [Indiranagar] Toll-free missed call safety check-in logged for 14 seniors',
-    '14:26:02 [Mumbai West] Alert #1072 marked resolved; Senior reported feeling well'
-  ];
-
-  container.innerHTML = initialLogs.map(log => `
-    <div class="flex items-center space-x-2 text-slate-300">
-      <span class="text-teal-400">&gt;</span>
-      <span>${log}</span>
-    </div>
-  `).join('');
-}
-
-function addOpsIncidentLog(message) {
-  const container = document.getElementById('ops-incident-stream');
-  if (!container) return;
-
-  const now = new Date();
-  const timeStr = now.toTimeString().split(' ')[0];
-  const newRow = document.createElement('div');
-  newRow.className = 'flex items-center space-x-2 text-emerald-300 font-bold';
-  newRow.innerHTML = `<span class="text-teal-400">&gt;</span><span>${timeStr} ${message}</span>`;
-  container.prepend(newRow);
 }
 
 // Toast Notification Utility
@@ -2799,9 +3404,15 @@ function enterDashboard(role, userObj) {
     }
   });
 
-  // Reveal Global Header
+  // Reveal Global Header (hidden for Operations Manager which has its own command center top bar & sidebar)
   const header = document.getElementById('global-header');
-  if (header) header.classList.remove('hidden');
+  if (header) {
+    if (role === 'operations') {
+      header.classList.add('hidden');
+    } else {
+      header.classList.remove('hidden');
+    }
+  }
 
   // Update Active Portal Badge in Header
   const headerIcon = document.getElementById('header-active-portal-icon');
@@ -2825,7 +3436,8 @@ function enterDashboard(role, userObj) {
   if (role === 'family') {
     setTimeout(initFamilyVitalsChart, 100);
   } else if (role === 'operations') {
-    setTimeout(initOpsCharts, 100);
+    switchOpsTab('dashboard');
+    setTimeout(initOpsCharts, 120);
   } else if (role === 'coordinator') {
     renderCoordinatorAlerts();
   } else if (role === 'senior') {

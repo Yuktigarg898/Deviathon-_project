@@ -169,9 +169,58 @@ const state = {
   }
 };
 
-// Bilingual Localization Dictionary for Senior View (English & Hindi)
+// Bilingual Localization Dictionary (Zero parallel text: 100% English or 100% Hindi)
 const translations = {
   en: {
+    // Header & Navigation
+    nav_sign_out: "Sign Out",
+    nav_live_system: "Live System",
+    nav_authenticated: "Authenticated Session",
+    lang_select_label: "Language:",
+
+    // Role Selection Hub (Login)
+    role_select_badge: "Role-Based Access Control • AI Telemetry",
+    role_select_title: "Welcome to CareConnect AI",
+    role_select_subtitle: "Select your role to open your dedicated companion portal",
+    
+    role_coordinator_title: "Care Coordinator",
+    role_coordinator_badge: "Clinical Queue",
+    role_coordinator_desc: "Ranked daily triage queue, priority alerts & nurse dispatch actions.",
+
+    role_senior_title: "Senior Companion",
+    role_senior_badge: "Voice Companion",
+    role_senior_desc: "AI Health Assessment, voice note check-ins & emergency assistance.",
+
+    role_family_title: "Family Member",
+    role_family_badge: "Wellbeing Hub",
+    role_family_desc: "Weekly health summaries, routine notifications & critical alerts.",
+
+    role_ops_title: "Operations Manager",
+    role_ops_badge: "Command Center",
+    role_ops_desc: "Fleet response metrics, alert volumes, and citywide SLAs.",
+
+    // Dedicated Auth Portal (Step 2)
+    btn_choose_another_role: "Choose Another Role",
+    tab_signin: "Sign In",
+    tab_signup: "Create Account",
+    lbl_signin_email: "Email or Mobile Number",
+    lbl_password: "Password",
+    btn_forgot_password: "Forgot Password?",
+    lbl_remember_device: "Remember this device",
+    btn_signin_submit: "Sign In to Dashboard",
+    divider_or: "OR",
+    btn_continue_google: "Continue with Google",
+    otp_title: "Two-Factor OTP Verification",
+    btn_verify_otp: "Verify OTP & Access Portal",
+    lbl_full_name: "Full Name",
+    lbl_email_mobile: "Email or Mobile Number",
+    lbl_create_password: "Create Password",
+    btn_signup_submit: "Create Account & Enter Portal",
+    msg_already_account: "Already have an account?",
+    btn_signin_here: "Sign In here",
+    lbl_choose_language: "Choose Language",
+
+    // Senior Companion View
     senior_badge: "Senior Companion View",
     senior_greeting: "Good Morning, Ramesh ji! 🙏",
     senior_subgreeting: "How are you feeling today? Tap, talk, or give a missed call.",
@@ -183,20 +232,20 @@ const translations = {
     status_done_unwell: "Alert Sent: Feeling Unwell 🤒 (Priority Coordinator Calling)",
     status_done_missed_call: "Missed Call Check-in Logged! 📞 Safe & Sound",
     status_done_voice: "Voice Note Sent to Care Team 🎙️ (Transcribed)",
-    read_aloud_btn: "Listen Aloud / बोलकर सुनाएं",
+    read_aloud_btn: "Listen Aloud",
     way1_title: "1. One-Tap Reply",
     way1_subtitle: "Tap how you feel right now",
     status_btn_great: "Feeling Great!",
-    status_btn_great_sub: "Sab badhiya hai",
+    status_btn_great_sub: "All is good & energized",
     status_btn_tired: "A Bit Tired",
-    status_btn_tired_sub: "Thoda thaka hua",
+    status_btn_tired_sub: "Resting, mild fatigue",
     status_btn_meds: "Took Medicine",
-    status_btn_meds_sub: "Dawa le li hai",
+    status_btn_meds_sub: "All doses taken on time",
     status_btn_unwell: "Feeling Unwell",
-    status_btn_unwell_sub: "Tabiyat theek nahi",
+    status_btn_unwell_sub: "Need nurse or doctor assistance",
     way2_title: "2. Voice Note",
     ai_transcription_pill: "AI Voice Sentiment Active",
-    voice_desc: "Press the big microphone button, speak naturally in Hindi or English, and we will update your care team immediately.",
+    voice_desc: "Press the big microphone button, speak naturally in English, and we will update your care team immediately.",
     mic_instruction: "Tap to Start Speaking",
     mic_recording: "Listening... speak freely (Tap to Stop)",
     transcript_title: "Transcribed Voice Note:",
@@ -207,54 +256,106 @@ const translations = {
     missed_call_action: "Simulate Missed Call Now",
     sos_title: "Emergency SOS Assistance",
     sos_desc: "Feel severe chest pain, fall, or sudden distress? Press this to alert your Care Coordinator and son Rahul immediately.",
-    sos_btn: "PRESS FOR SOS (मदद)",
-        jump_assess_btn: "AI Health Assessment / स्वास्थ्य जांच",
+    sos_btn: "PRESS FOR SOS",
+    jump_assess_btn: "AI Health Assessment",
     assess_title: "Comprehensive Health & Risk Assessment",
     assess_subtitle: "Trained on 90,000 multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.",
     assess_presets_label: "Quick Samples:",
     preset_healthy: "Healthy Senior",
     preset_moderate: "Moderate Risk",
     preset_critical: "High Risk Alert",
-    grp_demographics: "1. Personal & Body Metrics / व्यक्तिगत जानकारी",
-    lbl_age: "Age (उम्र)",
-    lbl_gender: "Gender (लिंग)",
-    lbl_height: "Height (लंबाई cm)",
-    lbl_weight: "Weight (वजन kg)",
-    grp_vitals: "2. Vital Signs Telemetry / जीवन संकेत",
+    btn_clear_draft: "Clear Draft",
+    assess_req_hint: "All Health Parameters Required",
+    try_voice_examples: "Try Voice Examples:",
+    grp_demographics: "1. Personal & Body Metrics",
+    lbl_age: "Age (Years)",
+    lbl_gender: "Gender",
+    lbl_height: "Height (cm)",
+    lbl_weight: "Weight (kg)",
+    grp_vitals: "2. Vital Signs Telemetry",
     vitals_hint: "BP • Pulse • Blood Oxygen",
-    lbl_bp_sys: "BP Systolic (ऊपर का BP)",
-    lbl_bp_dia: "BP Diastolic (नीचे का BP)",
-    lbl_heart_rate: "Heart Rate / Pulse (धड़कन)",
-    lbl_spo2: "Oxygen SpO2 (ऑक्सीजन)",
-    grp_pain_sleep: "3. Pain & Sleep Hours / दर्द एवं नींद",
-    lbl_pain_present: "Any Pain or Discomfort? (क्या दर्द है?)",
-    opt_no_pain: "No / नहीं",
-    opt_yes_pain: "Yes / हाँ",
-    lbl_pain_loc: "Pain Location (दर्द की जगह)",
+    lbl_bp_sys: "BP Systolic (mmHg)",
+    lbl_bp_dia: "BP Diastolic (mmHg)",
+    lbl_heart_rate: "Heart Rate / Pulse (bpm)",
+    lbl_spo2: "Oxygen SpO2 (%)",
+    grp_pain_sleep: "3. Pain & Sleep Hours",
+    lbl_pain_present: "Any Pain or Discomfort?",
+    opt_no_pain: "No Pain",
+    opt_yes_pain: "Yes, Pain Present",
+    lbl_pain_loc: "Pain Location",
     lbl_pain_scale: "Pain Severity Scale (0 to 10)",
-    lbl_sleep: "Sleep Hours (नींद के घंटे)",
+    lbl_sleep: "Sleep Duration (Hours)",
     sleep_hint: "Normal: 6 to 8 hrs",
-    grp_adl: "4. Daily Activities & Independence / दिनचर्या में आत्मनिर्भरता",
+    grp_adl: "4. Daily Activities & Independence",
     adl_desc: "Can they perform these essential daily living activities by themselves without human assistance?",
-    adl_walk: "Able to Walk (चलना)",
-    adl_eat: "Eat Themselves (खाना)",
-    adl_move: "Move / Transfer (उठना)",
-    adl_toilet: "Toilet (शौचालय)",
-    grp_meds_diabetes: "5. Medication Adherence & Diabetes / दवाइयां और शुगर",
+    adl_walk: "Able to Walk Independently",
+    adl_eat: "Eat Themselves",
+    adl_move: "Move / Transfer (Sit & Stand)",
+    adl_toilet: "Use Toilet Independently",
+    grp_meds_diabetes: "5. Medication Adherence & Diabetes",
     meds_hint: "Prescriptions & Glycemic Check",
-    lbl_med_count: "Daily Medicines (दवा संख्या)",
-    lbl_missed_doses: "Doses Taken Today? (दवा ली?)",
-    lbl_diabetic: "Diabetic? (मधुमेह / शुगर है?)",
-    lbl_sugar: "Blood Glucose (शुगर mg/dL)",
-    grp_hearing_diseases: "6. Hearing Ability & Chronic Conditions / श्रवण क्षमता व बीमारियां",
+    lbl_med_count: "Daily Prescription Count",
+    lbl_missed_doses: "Doses Taken Today?",
+    lbl_diabetic: "Diabetic Condition?",
+    lbl_sugar: "Blood Glucose Level (mg/dL)",
+    grp_hearing_diseases: "6. Hearing Ability & Chronic Conditions",
     hearing_hint: "Accessibility & Comorbidities",
-    lbl_hearing: "Hearing Level (सुनने की क्षमता)",
-    lbl_chronic: "Existing Diagnosed Conditions (पुरानी बीमारियां):",
+    lbl_hearing: "Hearing Level",
+    lbl_chronic: "Existing Diagnosed Conditions:",
     assess_disclaimer: "Instant ML inference • Predicts Risk Condition (Low / Medium / High)",
-    btn_predict_risk: "Predict Health Risk (AI Analysis) / जोखिम जांचें",
-    spoken_greeting: "Namaste Ramesh ji. We are here with you. Please tap how you feel, speak a voice note, or give a missed call.",
+    btn_predict_risk: "Predict Health Risk (AI Analysis)",
+    spoken_greeting: "Namaste Ramesh ji. We are here with you. Please tap how you feel, speak a voice note, or give a missed call."
   },
   hi: {
+    // Header & Navigation
+    nav_sign_out: "लॉग आउट",
+    nav_live_system: "सक्रिय सिस्टम",
+    nav_authenticated: "प्रमाणित सत्र",
+    lang_select_label: "भाषा चुनें:",
+
+    // Role Selection Hub (Login)
+    role_select_badge: "रोल-आधारित एक्सेस कंट्रोल • एआई टेलीमेट्री",
+    role_select_title: "केयरकनेक्ट एआई में आपका स्वागत है",
+    role_select_subtitle: "अपने समर्पित पोर्टल में प्रवेश करने के लिए अपना रोल चुनें",
+    
+    role_coordinator_title: "केयर कोऑर्डिनेटर",
+    role_coordinator_badge: "क्लिनिकल कतार",
+    role_coordinator_desc: "दैनिक प्राथमिकता सूची, गंभीर अलर्ट एवं नर्स प्रेषण प्रबंधन।",
+
+    role_senior_title: "बुज़ुर्ग साथी",
+    role_senior_badge: "आवाज़ साथी",
+    role_senior_desc: "एआई स्वास्थ्य जांच, आवाज़ संदेश चेक-इन और आपातकालीन सहायता।",
+
+    role_family_title: "परिवारजन",
+    role_family_badge: "कल्याण केंद्र",
+    role_family_desc: "साप्ताहिक स्वास्थ्य सारांश, नियमित सूचनाएं एवं गंभीर अलर्ट।",
+
+    role_ops_title: "ऑपरेशंस मैनेजर",
+    role_ops_badge: "कमांड सेंटर",
+    role_ops_desc: "प्रतिक्रिया समय, अलर्ट संख्या और शहर-स्तरीय सेवा मानक।",
+
+    // Dedicated Auth Portal (Step 2)
+    btn_choose_another_role: "दूसरा रोल चुनें",
+    tab_signin: "लॉगिन",
+    tab_signup: "नया खाता",
+    lbl_signin_email: "ईमेल या मोबाइल नंबर",
+    lbl_password: "पासवर्ड",
+    btn_forgot_password: "पासवर्ड भूल गए?",
+    lbl_remember_device: "इस डिवाइस को याद रखें",
+    btn_signin_submit: "डैशबोर्ड में लॉगिन करें",
+    divider_or: "या",
+    btn_continue_google: "गूगल से जारी रखें",
+    otp_title: "दो-चरणीय ओटीपी सत्यापन",
+    btn_verify_otp: "सत्यापित करें और प्रवेश करें",
+    lbl_full_name: "पूरा नाम",
+    lbl_email_mobile: "ईमेल या मोबाइल नंबर",
+    lbl_create_password: "नया पासवर्ड बनाएं",
+    btn_signup_submit: "खाता बनाएं और प्रवेश करें",
+    msg_already_account: "क्या आपका पहले से खाता है?",
+    btn_signin_here: "यहाँ लॉगिन करें",
+    lbl_choose_language: "भाषा चुनें",
+
+    // Senior Companion View
     senior_badge: "वरिष्ठ साथी सेवा (बुज़ुर्ग व्यू)",
     senior_greeting: "सुप्रभात रमेश जी! 🙏",
     senior_subgreeting: "आज आप कैसा महसूस कर रहे हैं? टैप करें, बोलें या मिस्ड कॉल दें।",
@@ -266,7 +367,7 @@ const translations = {
     status_done_unwell: "सहायता अलर्ट भेजा गया: स्वास्थ्य ठीक नहीं 🤒",
     status_done_missed_call: "मिस्ड कॉल चेक-इन दर्ज हुआ! 📞 आप सुरक्षित हैं",
     status_done_voice: "आवाज़ संदेश केयर टीम को भेज दिया गया 🎙️",
-    read_aloud_btn: "बोलकर सुनाएं (आवाज़ में सुनें)",
+    read_aloud_btn: "बोलकर सुनाएं",
     way1_title: "१. एक टैप से बताएं",
     way1_subtitle: "बस एक बटन दबाकर अपनी स्थिति बताएं",
     status_btn_great: "सब बढ़िया है!",
@@ -279,7 +380,7 @@ const translations = {
     status_btn_unwell_sub: "डॉक्टर / नर्स की जरूरत है",
     way2_title: "२. आवाज़ संदेश भेजें",
     ai_transcription_pill: "आर्टिफिशियल इंटेलिजेंस आवाज़ पहचान",
-    voice_desc: "माइक बटन दबाएं और हिंदी या अंग्रेजी में बेझिझक बोलें। हम आपकी बात तुरंत केयर कोऑर्डिनेटर तक पहुंचाएंगे।",
+    voice_desc: "माइक बटन दबाएं और हिंदी में बेझिझक बोलें। हम आपकी बात तुरंत केयर कोऑर्डिनेटर तक पहुंचाएंगे।",
     mic_instruction: "बोलने के लिए माइक दबाएं",
     mic_recording: "सुन रहे हैं... बोलिए (रोकने के लिए दोबारा दबाएं)",
     transcript_title: "लिखा हुआ आवाज़ संदेश:",
@@ -291,17 +392,20 @@ const translations = {
     sos_title: "आपातकालीन एसओएस सहायता",
     sos_desc: "गंभीर छाती में दर्द, चक्कर, गिरने या बेचैनी में तुरंत यह लाल बटन दबाएं। नर्स और बेटे राहुल को तुरंत सायरन अलर्ट पहुंचेगा।",
     sos_btn: "आपातकालीन मदद (SOS)",
-        jump_assess_btn: "एआई स्वास्थ्य जांच / हेल्थ असेसमेंट",
+    jump_assess_btn: "एआई स्वास्थ्य जांच",
     assess_title: "संपूर्ण स्वास्थ्य एवं जोखिम मूल्यांकन (AI)",
     assess_subtitle: "९०,००० बुज़ुर्ग स्वास्थ्य डेटा पर प्रशिक्षित। स्वास्थ्य जोखिम की जांच: कम, मध्यम या गंभीर।",
     assess_presets_label: "उदाहरण चुनें:",
     preset_healthy: "स्वस्थ बुज़ुर्ग (सामान्य)",
     preset_moderate: "मध्यम जोखिम (चिंता)",
     preset_critical: "गंभीर अलर्ट (इमरजेंसी)",
+    btn_clear_draft: "फॉर्म साफ करें",
+    assess_req_hint: "सभी स्वास्थ्य संकेत अनिवार्य हैं",
+    try_voice_examples: "उदाहरण बोलें:",
     grp_demographics: "१. व्यक्तिगत जानकारी एवं शरीर माप",
     lbl_age: "उम्र (वर्ष)",
     lbl_gender: "लिंग",
-    lbl_height: "कद / लंबाई (cm)",
+    lbl_height: "लंबाई (cm)",
     lbl_weight: "वजन (kg)",
     grp_vitals: "२. जीवन संकेत (वाइटल्स)",
     vitals_hint: "बीपी • धड़कन • ऑक्सीजन",
@@ -333,11 +437,71 @@ const translations = {
     hearing_hint: "श्रवण क्षमता एवं रोग",
     lbl_hearing: "सुनने की स्थिति",
     lbl_chronic: "पुरानी ज्ञात बीमारियां:",
-    assess_disclaimer: "तुरंत एआई विश्लेषण • स्वास्थ्य जोखिम का सटीक अनुमान (कम / मध्यम / गंभीर)",
+    assess_disclaimer: "तुरंत एआई विश्लेषण • स्वास्थ्य जोखिम का सटीक अनुमान",
     btn_predict_risk: "स्वास्थ्य जोखिम जांचें (AI Analysis)",
-    spoken_greeting: "नमस्ते रमेश जी। हम हमेशा आपके साथ हैं। कृपया बताएं आज आप कैसा महसूस कर रहे हैं, या एक मिस्ड कॉल दें।",
+    spoken_greeting: "नमस्ते रमेश जी। हम हमेशा आपके साथ हैं। कृपया बताएं आज आप कैसा महसूस कर रहे हैं, या एक मिस्ड कॉल दें।"
   }
 };
+
+
+// Clean Dropdown Option Translations (Zero Parallel Slashes)
+const optionTranslations = {
+  gender: {
+    Male: { en: "Male", hi: "पुरुष" },
+    Female: { en: "Female", hi: "महिला" },
+    Other: { en: "Other", hi: "अन्य" }
+  },
+  painLoc: {
+    None: { en: "None", hi: "कहीं नहीं" },
+    Knee: { en: "Knee", hi: "घुटना" },
+    Back: { en: "Lower Back", hi: "कमर" },
+    Shoulder: { en: "Shoulder", hi: "कंधा" },
+    Joints: { en: "Joints", hi: "जोड़" },
+    Chest: { en: "Chest (Critical)", hi: "छाती (गंभीर)" },
+    Other: { en: "Other", hi: "अन्य" }
+  },
+  adl: {
+    "1": { en: "✅ Independent", hi: "✅ आत्मनिर्भर (खुद)" },
+    "0": { en: "⚠️ Needs Help / Dependent", hi: "⚠️ सहारा / निर्भर" }
+  },
+  missedDoses: {
+    "0": { en: "✅ All Taken Today", hi: "✅ आज की सभी दवाइयाँ लीं" },
+    "1": { en: "⚠️ Missed 1 Dose", hi: "⚠️ १ खुराक छूटी" },
+    "2": { en: "❌ Missed 2+ Doses", hi: "❌ २ या अधिक खुराक छूटी" }
+  },
+  yesNo: {
+    "0": { en: "No", hi: "नहीं" },
+    "1": { en: "Yes", hi: "हाँ" }
+  },
+  hearing: {
+    "0": { en: "👂 Normal / Perfect", hi: "👂 सामान्य (बिल्कुल सही)" },
+    "1": { en: "🦻 Mild Difficulty", hi: "🦻 थोड़ा कम सुनाई देता है" },
+    "2": { en: "📢 Uses Hearing Aid / Severe", hi: "📢 हियरिंग एड आवश्यक" }
+  }
+};
+
+function updateSelectOptionsLanguage(lang) {
+  const updateSelect = (selectId, map) => {
+    const el = document.getElementById(selectId);
+    if (!el) return;
+    Array.from(el.options).forEach(opt => {
+      const trans = map[opt.value];
+      if (trans && trans[lang]) {
+        opt.textContent = trans[lang];
+      }
+    });
+  };
+
+  updateSelect('assess-gender', optionTranslations.gender);
+  updateSelect('assess-pain-loc', optionTranslations.painLoc);
+  updateSelect('assess-adl-walk', optionTranslations.adl);
+  updateSelect('assess-adl-eat', optionTranslations.adl);
+  updateSelect('assess-adl-move', optionTranslations.adl);
+  updateSelect('assess-adl-toilet', optionTranslations.adl);
+  updateSelect('assess-missed-doses', optionTranslations.missedDoses);
+  updateSelect('assess-diabetic', optionTranslations.yesNo);
+  updateSelect('assess-hearing', optionTranslations.hearing);
+}
 
 // Web Audio API Synthesizer (Zero external dependencies; works 100% offline)
 const soundEngine = {
@@ -395,6 +559,10 @@ const soundEngine = {
 // APPLICATION INITIALIZATION
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize clean language state from saved preference or English default
+  const savedLang = localStorage.getItem('careconnect_lang') || 'en';
+  setAppLanguage(savedLang);
+
   // Start on the Login / Role Selection Page
   navigateRole('login');
   renderCoordinatorAlerts();
@@ -471,13 +639,23 @@ function logout() {
   showToast('Logged out to Role Selector', 'info');
 }
 
-function getRoleDisplayName(role) {
-  switch (role) {
-    case 'coordinator': return 'Care Coordinator';
-    case 'senior': return 'Senior Companion';
-    case 'family': return 'Family Member';
-    case 'operations': return 'Operations Manager';
-    default: return 'User';
+function getRoleDisplayName(role, lang = (state && state.currentLanguage) || 'en') {
+  if (lang === 'hi') {
+    switch (role) {
+      case 'coordinator': return 'केयर कोऑर्डिनेटर';
+      case 'senior': return 'बुज़ुर्ग साथी';
+      case 'family': return 'परिवारजन';
+      case 'operations': return 'ऑपरेशंस मैनेजर';
+      default: return 'उपयोगकर्ता';
+    }
+  } else {
+    switch (role) {
+      case 'coordinator': return 'Care Coordinator';
+      case 'senior': return 'Senior Companion';
+      case 'family': return 'Family Member';
+      case 'operations': return 'Operations Manager';
+      default: return 'User';
+    }
   }
 }
 
@@ -906,33 +1084,95 @@ function simulateIncomingAlert() {
 // call check-in or a one-tap reply, in Hindi or English.
 // =========================================================================
 
-// Bilingual Language Switcher for Senior
-function setSeniorLanguage(lang) {
+// Unified Global Language Switcher (Zero Parallel Slashes)
+function setAppLanguage(lang) {
+  if (!state) return;
+  state.currentLanguage = lang;
   state.seniorLanguage = lang;
-  soundEngine.playTone(500, 'sine', 0.1);
+  try {
+    localStorage.setItem('careconnect_lang', lang);
+  } catch (e) {}
 
-  // Update button active state
-  const btnEn = document.getElementById('lang-btn-en');
-  const btnHi = document.getElementById('lang-btn-hi');
-  if (lang === 'en') {
-    btnEn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-teal-600 text-white shadow-sm';
-    btnHi.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-teal-800 hover:bg-teal-100';
-  } else {
-    btnHi.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-teal-600 text-white shadow-sm';
-    btnEn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-teal-800 hover:bg-teal-100';
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(520, 'sine', 0.08);
   }
 
-  // Update DOM strings with data-i18n attributes
-  const dict = translations[lang];
+  // 1. Update UI Language Switcher Active States
+  updateLanguageSwitcherButtons(lang);
+
+  // 2. Update all DOM elements with data-i18n
+  const dict = translations[lang] || translations.en;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (dict[key]) {
+    if (dict[key] !== undefined) {
       el.textContent = dict[key];
     }
   });
 
-  showToast(lang === 'hi' ? 'भाषा बदलकर हिंदी कर दी गई है' : 'Language set to English', 'info');
+  // 3. Update all dropdown select options
+  if (typeof updateSelectOptionsLanguage === 'function') {
+    updateSelectOptionsLanguage(lang);
+  }
+
+  // 4. Update Auth Step 2 Portal if active
+  if (typeof updateAuthBannerForLanguage === 'function') {
+    updateAuthBannerForLanguage(lang);
+  }
+
+  // 5. Update active role navigation titles & header
+  if (typeof updateHeaderUserBadge === 'function' && state.currentRole && state.currentRole !== 'login') {
+    updateHeaderUserBadge(state.currentRole);
+  }
+
+  showToast(lang === 'hi' ? 'भाषा बदलकर हिन्दी कर दी गई है' : 'Language set to English', 'info');
 }
+
+// Backwards compatibility alias for Senior Portal
+function setSeniorLanguage(lang) {
+  setAppLanguage(lang);
+}
+
+function updateLanguageSwitcherButtons(lang) {
+  // Login / Role hub buttons
+  const loginEn = document.getElementById('login-lang-en');
+  const loginHi = document.getElementById('login-lang-hi');
+  if (loginEn && loginHi) {
+    if (lang === 'en') {
+      loginEn.className = 'px-3 py-1 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
+      loginHi.className = 'px-3 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
+    } else {
+      loginHi.className = 'px-3 py-1 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
+      loginEn.className = 'px-3 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
+    }
+  }
+
+  // Header buttons
+  const hdrEn = document.getElementById('header-lang-en');
+  const hdrHi = document.getElementById('header-lang-hi');
+  if (hdrEn && hdrHi) {
+    if (lang === 'en') {
+      hdrEn.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
+      hdrHi.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
+    } else {
+      hdrHi.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
+      hdrEn.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
+    }
+  }
+
+  // Senior portal buttons
+  const btnEn = document.getElementById('lang-btn-en');
+  const btnHi = document.getElementById('lang-btn-hi');
+  if (btnEn && btnHi) {
+    if (lang === 'en') {
+      btnEn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-teal-600 text-white shadow-sm';
+      btnHi.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-teal-800 hover:bg-teal-100';
+    } else {
+      btnHi.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-teal-600 text-white shadow-sm';
+      btnEn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-teal-800 hover:bg-teal-100';
+    }
+  }
+}
+
 
 // Web Speech Synthesis (Read aloud in Hindi or English)
 function speakSeniorInstructions() {
@@ -2051,124 +2291,230 @@ let otpTimerInterval = null;
 const authRoleConfigs = {
   senior: {
     roleId: 'senior',
-    portalTitle: 'Senior Companion Portal / बुज़ुर्ग लॉगिन',
-    portalDesc: 'Check-in, voice notes, health reminders & AI health assessment',
+    portalTitle: { en: 'Senior Companion Portal', hi: 'बुज़ुर्ग साथी पोर्टल' },
+    portalDesc: {
+      en: 'Check-in, voice notes, health reminders & AI health assessment',
+      hi: 'दैनिक चेक-इन, आवाज़ संदेश, स्वास्थ्य रिमाइंडर एवं एआई जांच'
+    },
     icon: 'fa-solid fa-person-walking-with-cane',
     bg: 'bg-sky-50 border-sky-200',
     avatarBg: 'bg-sky-600',
-    emailLabel: 'Senior ID, Mobile or Email (आईडी / फोन / ईमेल)',
+    emailLabel: { en: 'Senior ID, Mobile or Email', hi: 'आईडी, मोबाइल नंबर या ईमेल' },
     defaultEmail: 'ramesh.senior@careconnect.in',
     defaultPass: 'password123',
     defaultName: 'Ramesh Sharma',
-    defaultBadge: 'Senior (74 Yrs)',
+    defaultBadge: { en: 'Senior (74 Yrs)', hi: 'वरिष्ठ नागरिक (७४ वर्ष)' },
     avatarInitials: 'RS',
-    signupFieldsHtml: `
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Age (उम्र)</label>
-          <input id="signup-age" type="number" value="74" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+    signupFieldsHtml: {
+      en: `
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Age (Years)</label>
+            <input id="signup-age" type="number" value="74" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Gender</label>
+            <select id="signup-gender" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Gender (लिंग)</label>
-          <select id="signup-gender" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-            <option value="Male">Male / पुरुष</option>
-            <option value="Female">Female / महिला</option>
-          </select>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Emergency Family Contact</label>
+          <input id="signup-contact" type="text" value="Rahul Sharma (Son) - +91 98110-44912" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
         </div>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Emergency Family Contact (आपातकालीन संपर्क)</label>
-        <input id="signup-contact" type="text" value="Rahul Sharma (Son) - +91 98110-44912" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
-      </div>
-    `
+      `,
+      hi: `
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">उम्र (वर्ष)</label>
+            <input id="signup-age" type="number" value="74" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">लिंग</label>
+            <select id="signup-gender" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+              <option value="Male">पुरुष</option>
+              <option value="Female">महिला</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">आपातकालीन पारिवारिक संपर्क</label>
+          <input id="signup-contact" type="text" value="Rahul Sharma (Son) - +91 98110-44912" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `
+    }
   },
   coordinator: {
     roleId: 'coordinator',
-    portalTitle: 'Care Coordinator Secure Gateway',
-    portalDesc: 'Prioritized daily triage queue, alert management & clinical dispatch',
+    portalTitle: { en: 'Care Coordinator Gateway', hi: 'केयर कोऑर्डिनेटर पोर्टल' },
+    portalDesc: {
+      en: 'Prioritized daily triage queue, alert management & clinical dispatch',
+      hi: 'दैनिक प्राथमिकता सूची, गंभीर अलर्ट एवं नर्स प्रेषण प्रबंधन'
+    },
     icon: 'fa-solid fa-user-doctor',
     bg: 'bg-emerald-50 border-emerald-200',
     avatarBg: 'bg-emerald-600',
-    emailLabel: 'Hospital Staff Email (अस्पताल स्टाफ ईमेल)',
+    emailLabel: { en: 'Hospital Staff Email', hi: 'अस्पताल स्टाफ ईमेल' },
     defaultEmail: 'kavita.nurse@careconnect.org',
     defaultPass: 'password123',
     defaultName: 'Sister Kavita, RN',
-    defaultBadge: 'Care Coordinator',
+    defaultBadge: { en: 'Care Coordinator', hi: 'केयर कोऑर्डिनेटर' },
     avatarInitials: 'NK',
-    signupFieldsHtml: `
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Clinical Designation (पद)</label>
-        <select id="signup-designation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-          <option value="Registered Nurse (RN)">Registered Nurse (RN)</option>
-          <option value="Paramedic Specialist">Paramedic Specialist</option>
-          <option value="Medical Officer">Medical Officer / Physician</option>
-          <option value="Community Health Buddy">Community Health Buddy</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Staff ID / Medical License (स्टाफ आईडी)</label>
-        <input id="signup-license" type="text" value="RN-DL-49201" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
-      </div>
-    `
+    signupFieldsHtml: {
+      en: `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Clinical Designation</label>
+          <select id="signup-designation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Registered Nurse (RN)">Registered Nurse (RN)</option>
+            <option value="Paramedic Specialist">Paramedic Specialist</option>
+            <option value="Medical Officer">Medical Officer / Physician</option>
+            <option value="Community Health Buddy">Community Health Buddy</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Staff ID / License</label>
+          <input id="signup-license" type="text" value="RN-DL-49201" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `,
+      hi: `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">क्लिनिकल पद</label>
+          <select id="signup-designation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Registered Nurse (RN)">पंजीकृत नर्स (RN)</option>
+            <option value="Paramedic Specialist">पैरामेडिक विशेषज्ञ</option>
+            <option value="Medical Officer">चिकित्सा अधिकारी</option>
+            <option value="Community Health Buddy">कम्युनिटी हेल्थ बडी</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">स्टाफ आईडी / लाइसेंस</label>
+          <input id="signup-license" type="text" value="RN-DL-49201" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `
+    }
   },
   family: {
     roleId: 'family',
-    portalTitle: 'Family Member Wellbeing Access',
-    portalDesc: 'Stay informed with weekly health summaries, vitals & emergency alerts',
+    portalTitle: { en: 'Family Member Wellbeing Access', hi: 'परिवारजन कल्याण पोर्टल' },
+    portalDesc: {
+      en: 'Stay informed with weekly health summaries, vitals & emergency alerts',
+      hi: 'साप्ताहिक स्वास्थ्य सारांश, वाइटल्स एवं आपातकालीन अलर्ट'
+    },
     icon: 'fa-solid fa-people-roof',
     bg: 'bg-purple-50 border-purple-200',
     avatarBg: 'bg-purple-600',
-    emailLabel: 'Family Email or Mobile (पारिवारिक ईमेल / फोन)',
+    emailLabel: { en: 'Family Email or Mobile', hi: 'पारिवारिक ईमेल या मोबाइल' },
     defaultEmail: 'rahul.family@gmail.com',
     defaultPass: 'password123',
     defaultName: 'Rahul Sharma',
-    defaultBadge: 'Son / Family Member',
+    defaultBadge: { en: 'Son / Family Member', hi: 'पुत्र / परिवारजन' },
     avatarInitials: 'RS',
-    signupFieldsHtml: `
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Relationship to Senior (संबंध)</label>
-        <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-          <option value="Son">Son (पुत्र)</option>
-          <option value="Daughter">Daughter (पुत्री)</option>
-          <option value="Spouse">Spouse (पति / पत्नी)</option>
-          <option value="Guardian">Primary Guardian / Caregiver</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Linked Senior's Name (वरिष्ठ परिजन का नाम)</label>
-        <input id="signup-linked-senior" type="text" value="Ramesh Sharma (Father)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
-      </div>
-    `
+    signupFieldsHtml: {
+      en: `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Relationship to Senior</label>
+          <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Son">Son</option>
+            <option value="Daughter">Daughter</option>
+            <option value="Spouse">Spouse</option>
+            <option value="Guardian">Primary Guardian</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Linked Senior's Name</label>
+          <input id="signup-linked-senior" type="text" value="Ramesh Sharma (Father)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `,
+      hi: `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">बुज़ुर्ग से संबंध</label>
+          <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Son">पुत्र</option>
+            <option value="Daughter">पुत्री</option>
+            <option value="Spouse">पति / पत्नी</option>
+            <option value="Guardian">अभिभावक</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">जुड़े हुए बुज़ुर्ग परिजन का नाम</label>
+          <input id="signup-linked-senior" type="text" value="Ramesh Sharma (Father)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `
+    }
   },
   operations: {
     roleId: 'operations',
-    portalTitle: 'Operations Command Center',
-    portalDesc: 'Monitor alert volumes, response times, city SLAs and fleet analytics',
+    portalTitle: { en: 'Operations Command Center', hi: 'ऑपरेशंस कमांड सेंटर' },
+    portalDesc: {
+      en: 'Monitor alert volumes, response times, city SLAs and fleet analytics',
+      hi: 'अलर्ट संख्या, प्रतिक्रिया समय, शहर के एसएलए एवं टीम मेट्रिक्स'
+    },
     icon: 'fa-solid fa-chart-line',
     bg: 'bg-orange-50 border-orange-200',
     avatarBg: 'bg-orange-600',
-    emailLabel: 'Enterprise Admin Email (एडमिन ईमेल)',
+    emailLabel: { en: 'Enterprise Admin Email', hi: 'एडमिन ईमेल' },
     defaultEmail: 'arun.ops@careconnect.org',
     defaultPass: 'password123',
     defaultName: 'Arun Kapoor',
-    defaultBadge: 'Operations Director',
+    defaultBadge: { en: 'Operations Director', hi: 'ऑपरेशंस डायरेक्टर' },
     avatarInitials: 'AK',
-    signupFieldsHtml: `
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">City Operations Hub (शहर / क्षेत्र)</label>
-        <select id="signup-city" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-          <option value="Delhi NCR">Delhi NCR Central Hub</option>
-          <option value="Mumbai Metropolitan">Mumbai Metropolitan Hub</option>
-          <option value="Bengaluru Urban">Bengaluru Urban Hub</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Operations Security Key (सुरक्षा कोड)</label>
-        <input id="signup-seckey" type="text" value="OPS-SEC-9981" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
-      </div>
-    `
+    signupFieldsHtml: {
+      en: `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">City Operations Hub</label>
+          <select id="signup-city" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Delhi NCR">Delhi NCR Central Hub</option>
+            <option value="Mumbai Metropolitan">Mumbai Metropolitan Hub</option>
+            <option value="Bengaluru Urban">Bengaluru Urban Hub</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Operations Security Key</label>
+          <input id="signup-seckey" type="text" value="OPS-SEC-9981" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `,
+      hi: `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">शहर ऑपरेशंस केंद्र</label>
+          <select id="signup-city" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Delhi NCR">दिल्ली एनसीआर केंद्रीय केंद्र</option>
+            <option value="Mumbai Metropolitan">मुंबई महानगरीय केंद्र</option>
+            <option value="Bengaluru Urban">बेंगलुरु शहरी केंद्र</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ऑपरेशंस सुरक्षा कोड</label>
+          <input id="signup-seckey" type="text" value="OPS-SEC-9981" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+      `
+    }
   }
 };
+
+function updateAuthBannerForLanguage(lang = (state && state.currentLanguage) || 'en') {
+  const role = selectedAuthRole || 'senior';
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+  const title = document.getElementById('auth-portal-title');
+  const desc = document.getElementById('auth-portal-desc');
+  const emailLabel = document.getElementById('lbl-signin-email');
+  const submitBtnLabel = document.getElementById('btn-signin-label');
+  const roleFieldsContainer = document.getElementById('signup-role-specific-fields');
+
+  if (title) title.textContent = typeof cfg.portalTitle === 'object' ? cfg.portalTitle[lang] : cfg.portalTitle;
+  if (desc) desc.textContent = typeof cfg.portalDesc === 'object' ? cfg.portalDesc[lang] : cfg.portalDesc;
+  if (emailLabel) emailLabel.textContent = typeof cfg.emailLabel === 'object' ? cfg.emailLabel[lang] : cfg.emailLabel;
+  if (submitBtnLabel) {
+    submitBtnLabel.textContent = lang === 'hi'
+      ? `${getRoleDisplayName(role, 'hi')} के रूप में लॉगिन करें`
+      : `Sign In as ${getRoleDisplayName(role, 'en')}`;
+  }
+  if (roleFieldsContainer && cfg.signupFieldsHtml) {
+    roleFieldsContainer.innerHTML = typeof cfg.signupFieldsHtml === 'object' ? cfg.signupFieldsHtml[lang] : cfg.signupFieldsHtml;
+  }
+}
+
 
 // 1. User selects role card -> open dedicated authentication portal
 function selectRoleForAuth(role) {
@@ -2193,12 +2539,7 @@ function selectRoleForAuth(role) {
   if (banner) banner.className = `p-4 rounded-2xl border mb-5 flex items-center space-x-3.5 ${cfg.bg} shadow-sm`;
   if (avatar) avatar.className = `w-12 h-12 rounded-xl ${cfg.avatarBg} text-white flex items-center justify-center text-2xl shadow-sm flex-shrink-0`;
   if (icon) icon.className = cfg.icon;
-  if (title) title.textContent = cfg.portalTitle;
-  if (desc) desc.textContent = cfg.portalDesc;
-  if (emailLabel) emailLabel.textContent = cfg.emailLabel;
-  if (emailInput) emailInput.value = cfg.defaultEmail;
-  if (passInput) passInput.value = cfg.defaultPass;
-  if (submitBtnLabel) submitBtnLabel.textContent = `Sign In as ${getRoleDisplayName(role)} / लॉगिन करें`;
+  updateAuthBannerForLanguage(state.currentLanguage || "en");
   if (demoBtnLabel) demoBtnLabel.textContent = `1-Click Quick Demo Sign In (${getRoleDisplayName(role)})`;
 
   // Render role-specific signup fields

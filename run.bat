@@ -6,6 +6,7 @@ echo =======================================================================
 echo Launching local server and opening web browser...
 echo.
 
+<<<<<<< Updated upstream
 REM Try to launch python server using py launcher, python in PATH, or local Python directory
 where py >nul 2>nul
 if %ERRORLEVEL% EQU 0 (
@@ -25,6 +26,21 @@ if %ERRORLEVEL% EQU 0 (
             "%LOCALAPPDATA%\Python\bin\python.exe" server.py
         ) else (
             echo Python not found. Opening index.html directly in browser...
+=======
+REM Try local AppData Python first, then py launcher, then python
+if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
+    "%LOCALAPPDATA%\Python\bin\python.exe" server.py
+) else (
+    where py >nul 2>nul
+    if %ERRORLEVEL% EQU 0 (
+        py server.py
+    ) else (
+        where python >nul 2>nul
+        if %ERRORLEVEL% EQU 0 (
+            python server.py
+        ) else (
+            echo Python not found in PATH. Opening index.html directly in browser...
+>>>>>>> Stashed changes
             start index.html
         )
     )

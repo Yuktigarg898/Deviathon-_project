@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CareConnect - Connected Healthcare & Elder Support System
 
 > **Better Signals • Safer Tomorrows**  
@@ -159,3 +160,7 @@ c:\Users\krish\OneDrive\Desktop\Deviathon\
 ├── leaf-bottom-right.png    # Botanical corner accent
 └── README.md                # Full technical & user guide documentation
 ```
+=======
+# Deviathon-_project
+Early Warning for Seniors Living at Home
+>>>>>>> 1d017627ab1122cb85051809160649f445c91008

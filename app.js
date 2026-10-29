@@ -208,6 +208,50 @@ const translations = {
     sos_title: "Emergency SOS Assistance",
     sos_desc: "Feel severe chest pain, fall, or sudden distress? Press this to alert your Care Coordinator and son Rahul immediately.",
     sos_btn: "PRESS FOR SOS (मदद)",
+        jump_assess_btn: "AI Health Assessment / स्वास्थ्य जांच",
+    assess_title: "Comprehensive Health & Risk Assessment",
+    assess_subtitle: "Trained on 90,000 multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.",
+    assess_presets_label: "Quick Samples:",
+    preset_healthy: "Healthy Senior",
+    preset_moderate: "Moderate Risk",
+    preset_critical: "High Risk Alert",
+    grp_demographics: "1. Personal & Body Metrics / व्यक्तिगत जानकारी",
+    lbl_age: "Age (उम्र)",
+    lbl_gender: "Gender (लिंग)",
+    lbl_height: "Height (लंबाई cm)",
+    lbl_weight: "Weight (वजन kg)",
+    grp_vitals: "2. Vital Signs Telemetry / जीवन संकेत",
+    vitals_hint: "BP • Pulse • Blood Oxygen",
+    lbl_bp_sys: "BP Systolic (ऊपर का BP)",
+    lbl_bp_dia: "BP Diastolic (नीचे का BP)",
+    lbl_heart_rate: "Heart Rate / Pulse (धड़कन)",
+    lbl_spo2: "Oxygen SpO2 (ऑक्सीजन)",
+    grp_pain_sleep: "3. Pain & Sleep Hours / दर्द एवं नींद",
+    lbl_pain_present: "Any Pain or Discomfort? (क्या दर्द है?)",
+    opt_no_pain: "No / नहीं",
+    opt_yes_pain: "Yes / हाँ",
+    lbl_pain_loc: "Pain Location (दर्द की जगह)",
+    lbl_pain_scale: "Pain Severity Scale (0 to 10)",
+    lbl_sleep: "Sleep Hours (नींद के घंटे)",
+    sleep_hint: "Normal: 6 to 8 hrs",
+    grp_adl: "4. Daily Activities & Independence / दिनचर्या में आत्मनिर्भरता",
+    adl_desc: "Can they perform these essential daily living activities by themselves without human assistance?",
+    adl_walk: "Able to Walk (चलना)",
+    adl_eat: "Eat Themselves (खाना)",
+    adl_move: "Move / Transfer (उठना)",
+    adl_toilet: "Toilet (शौचालय)",
+    grp_meds_diabetes: "5. Medication Adherence & Diabetes / दवाइयां और शुगर",
+    meds_hint: "Prescriptions & Glycemic Check",
+    lbl_med_count: "Daily Medicines (दवा संख्या)",
+    lbl_missed_doses: "Doses Taken Today? (दवा ली?)",
+    lbl_diabetic: "Diabetic? (मधुमेह / शुगर है?)",
+    lbl_sugar: "Blood Glucose (शुगर mg/dL)",
+    grp_hearing_diseases: "6. Hearing Ability & Chronic Conditions / श्रवण क्षमता व बीमारियां",
+    hearing_hint: "Accessibility & Comorbidities",
+    lbl_hearing: "Hearing Level (सुनने की क्षमता)",
+    lbl_chronic: "Existing Diagnosed Conditions (पुरानी बीमारियां):",
+    assess_disclaimer: "Instant ML inference • Predicts Risk Condition (Low / Medium / High)",
+    btn_predict_risk: "Predict Health Risk (AI Analysis) / जोखिम जांचें",
     spoken_greeting: "Namaste Ramesh ji. We are here with you. Please tap how you feel, speak a voice note, or give a missed call.",
   },
   hi: {
@@ -247,6 +291,50 @@ const translations = {
     sos_title: "आपातकालीन एसओएस सहायता",
     sos_desc: "गंभीर छाती में दर्द, चक्कर, गिरने या बेचैनी में तुरंत यह लाल बटन दबाएं। नर्स और बेटे राहुल को तुरंत सायरन अलर्ट पहुंचेगा।",
     sos_btn: "आपातकालीन मदद (SOS)",
+        jump_assess_btn: "एआई स्वास्थ्य जांच / हेल्थ असेसमेंट",
+    assess_title: "संपूर्ण स्वास्थ्य एवं जोखिम मूल्यांकन (AI)",
+    assess_subtitle: "९०,००० बुज़ुर्ग स्वास्थ्य डेटा पर प्रशिक्षित। स्वास्थ्य जोखिम की जांच: कम, मध्यम या गंभीर।",
+    assess_presets_label: "उदाहरण चुनें:",
+    preset_healthy: "स्वस्थ बुज़ुर्ग (सामान्य)",
+    preset_moderate: "मध्यम जोखिम (चिंता)",
+    preset_critical: "गंभीर अलर्ट (इमरजेंसी)",
+    grp_demographics: "१. व्यक्तिगत जानकारी एवं शरीर माप",
+    lbl_age: "उम्र (वर्ष)",
+    lbl_gender: "लिंग",
+    lbl_height: "कद / लंबाई (cm)",
+    lbl_weight: "वजन (kg)",
+    grp_vitals: "२. जीवन संकेत (वाइटल्स)",
+    vitals_hint: "बीपी • धड़कन • ऑक्सीजन",
+    lbl_bp_sys: "बीपी सिस्टोलिक (ऊपर)",
+    lbl_bp_dia: "बीपी डायस्टोलिक (नीचे)",
+    lbl_heart_rate: "हृदय गति / पल्स (bpm)",
+    lbl_spo2: "ऑक्सीजन स्तर SpO2 (%)",
+    grp_pain_sleep: "३. दर्द एवं नींद का स्तर",
+    lbl_pain_present: "क्या कहीं दर्द या तकलीफ है?",
+    opt_no_pain: "नहीं (कोई दर्द नहीं)",
+    opt_yes_pain: "हाँ (दर्द है)",
+    lbl_pain_loc: "दर्द का स्थान",
+    lbl_pain_scale: "दर्द की तीव्रता (० से १०)",
+    lbl_sleep: "नींद के घंटे",
+    sleep_hint: "सामान्य: ६ से ८ घंटे",
+    grp_adl: "४. दिनचर्या के कार्य एवं आत्मनिर्भरता",
+    adl_desc: "क्या वे बिना किसी की मदद के ये दैनिक कार्य खुद कर सकते हैं?",
+    adl_walk: "चलने-फिरने में सक्षम",
+    adl_eat: "स्वयं भोजन करना",
+    adl_move: "उठना-बैठना (ट्रांसफर)",
+    adl_toilet: "शौचालय जाना",
+    grp_meds_diabetes: "५. दवाइयां और शुगर स्तर",
+    meds_hint: "नियमित दवा और ग्लूकोज",
+    lbl_med_count: "रोजाना दवाइयों की संख्या",
+    lbl_missed_doses: "क्या आज की दवा समय पर ली?",
+    lbl_diabetic: "क्या आपको शुगर/डायबिटीज है?",
+    lbl_sugar: "ब्लड शुगर (ग्लूकोज mg/dL)",
+    grp_hearing_diseases: "६. सुनने की क्षमता एवं पुरानी बीमारियां",
+    hearing_hint: "श्रवण क्षमता एवं रोग",
+    lbl_hearing: "सुनने की स्थिति",
+    lbl_chronic: "पुरानी ज्ञात बीमारियां:",
+    assess_disclaimer: "तुरंत एआई विश्लेषण • स्वास्थ्य जोखिम का सटीक अनुमान (कम / मध्यम / गंभीर)",
+    btn_predict_risk: "स्वास्थ्य जोखिम जांचें (AI Analysis)",
     spoken_greeting: "नमस्ते रमेश जी। हम हमेशा आपके साथ हैं। कृपया बताएं आज आप कैसा महसूस कर रहे हैं, या एक मिस्ड कॉल दें।",
   }
 };
@@ -1427,3 +1515,2147 @@ function showToast(message, type = 'info') {
   }, 4000);
 }
 
+
+
+// =========================================================================
+// ELDER COMPREHENSIVE HEALTH & RISK ASSESSMENT (AI ML PREDICTION ENGINE)
+// =========================================================================
+
+// Live Assessment State
+const assessmentState = {
+  painPresent: false,
+  painLevel: 0,
+  lastPrediction: null
+};
+
+// 1. Fill Quick Presets (Healthy, Moderate, Critical)
+function fillAssessmentPreset(type) {
+  soundEngine.playTone(600, 'sine', 0.1);
+
+  if (type === 'healthy') {
+    document.getElementById('assess-age').value = 68;
+    document.getElementById('assess-gender').value = 'Female';
+    document.getElementById('assess-height').value = 160;
+    document.getElementById('assess-weight').value = 62;
+    document.getElementById('assess-bp-sys').value = 118;
+    document.getElementById('assess-bp-dia').value = 78;
+    document.getElementById('assess-hr').value = 72;
+    document.getElementById('assess-spo2').value = 98;
+    document.getElementById('assess-sleep').value = 7.5;
+    document.getElementById('assess-pain-loc').value = 'None';
+    document.getElementById('assess-walk').value = '1';
+    document.getElementById('assess-eat').value = '1';
+    document.getElementById('assess-move').value = '1';
+    document.getElementById('assess-toilet').value = '1';
+    document.getElementById('assess-med-count').value = 1;
+    document.getElementById('assess-missed-doses').value = '0';
+    document.getElementById('assess-diabetic').value = '0';
+    document.getElementById('assess-sugar').value = 105;
+    document.getElementById('assess-hearing').value = '0';
+    document.getElementById('chk-htn').checked = false;
+    document.getElementById('chk-arth').checked = false;
+    document.getElementById('chk-heart').checked = false;
+    document.getElementById('chk-resp').checked = false;
+    setPainPresent(false);
+    updatePainSlider(0);
+    showToast('Loaded Sample 1: Healthy Senior Profile 🟢', 'success');
+  } else if (type === 'moderate') {
+    document.getElementById('assess-age').value = 76;
+    document.getElementById('assess-gender').value = 'Male';
+    document.getElementById('assess-height').value = 168;
+    document.getElementById('assess-weight').value = 74;
+    document.getElementById('assess-bp-sys').value = 144;
+    document.getElementById('assess-bp-dia').value = 88;
+    document.getElementById('assess-hr').value = 84;
+    document.getElementById('assess-spo2').value = 95;
+    document.getElementById('assess-sleep').value = 6.0;
+    document.getElementById('assess-pain-loc').value = 'Knee';
+    document.getElementById('assess-walk').value = '1';
+    document.getElementById('assess-eat').value = '1';
+    document.getElementById('assess-move').value = '0';
+    document.getElementById('assess-toilet').value = '1';
+    document.getElementById('assess-med-count').value = 4;
+    document.getElementById('assess-missed-doses').value = '0';
+    document.getElementById('assess-diabetic').value = '1';
+    document.getElementById('assess-sugar').value = 165;
+    document.getElementById('assess-hearing').value = '1';
+    document.getElementById('chk-htn').checked = true;
+    document.getElementById('chk-arth').checked = true;
+    document.getElementById('chk-heart').checked = false;
+    document.getElementById('chk-resp').checked = false;
+    setPainPresent(true);
+    updatePainSlider(4);
+    showToast('Loaded Sample 2: Moderate Risk Profile 🟡', 'warning');
+  } else if (type === 'critical') {
+    document.getElementById('assess-age').value = 82;
+    document.getElementById('assess-gender').value = 'Male';
+    document.getElementById('assess-height').value = 165;
+    document.getElementById('assess-weight').value = 58;
+    document.getElementById('assess-bp-sys').value = 168;
+    document.getElementById('assess-bp-dia').value = 98;
+    document.getElementById('assess-hr').value = 106;
+    document.getElementById('assess-spo2').value = 89.5;
+    document.getElementById('assess-sleep').value = 3.5;
+    document.getElementById('assess-pain-loc').value = 'Chest';
+    document.getElementById('assess-walk').value = '0';
+    document.getElementById('assess-eat').value = '0';
+    document.getElementById('assess-move').value = '0';
+    document.getElementById('assess-toilet').value = '0';
+    document.getElementById('assess-med-count').value = 6;
+    document.getElementById('assess-missed-doses').value = '2';
+    document.getElementById('assess-diabetic').value = '1';
+    document.getElementById('assess-sugar').value = 245;
+    document.getElementById('assess-hearing').value = '2';
+    document.getElementById('chk-htn').checked = true;
+    document.getElementById('chk-arth').checked = true;
+    document.getElementById('chk-heart').checked = true;
+    document.getElementById('chk-resp').checked = true;
+    setPainPresent(true);
+    updatePainSlider(8);
+    showToast('Loaded Sample 3: High Risk / Emergency Profile 🔴', 'danger');
+  }
+
+  updateCalculatedBMI();
+  updateADLScore();
+  toggleSugarInput(document.getElementById('assess-diabetic').value);
+  if (typeof saveAssessmentDraft === 'function') saveAssessmentDraft();
+  if (typeof updateAssessmentProgressMeter === 'function') updateAssessmentProgressMeter();
+}
+
+// 2. Calculate BMI Live
+function updateCalculatedBMI() {
+  const h = parseFloat(document.getElementById('assess-height').value) || 160;
+  const w = parseFloat(document.getElementById('assess-weight').value) || 60;
+  const bmiBadge = document.getElementById('bmi-badge');
+  if (!bmiBadge || h <= 0) return;
+
+  const bmi = (w / Math.pow(h / 100, 2)).toFixed(1);
+  let category = 'Normal';
+  let badgeColor = 'bg-teal-100 text-teal-800';
+
+  if (bmi < 18.5) {
+    category = 'Underweight';
+    badgeColor = 'bg-amber-100 text-amber-800';
+  } else if (bmi >= 25 && bmi < 30) {
+    category = 'Overweight';
+    badgeColor = 'bg-amber-100 text-amber-800';
+  } else if (bmi >= 30) {
+    category = 'Obese';
+    badgeColor = 'bg-rose-100 text-rose-800';
+  }
+
+  bmiBadge.className = `text-xs font-bold px-2.5 py-0.5 rounded-full ${badgeColor}`;
+  bmiBadge.textContent = `BMI: ${bmi} (${category})`;
+}
+
+// 3. Pain Toggle Handler
+function setPainPresent(isPresent) {
+  assessmentState.painPresent = isPresent;
+  const btnNo = document.getElementById('btn-pain-no');
+  const btnYes = document.getElementById('btn-pain-yes');
+  const slider = document.getElementById('assess-pain-slider');
+
+  if (isPresent) {
+    btnYes.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-amber-500 bg-amber-500 text-white transition-all text-center';
+    btnNo.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:border-emerald-400 transition-all text-center';
+    if (parseInt(slider.value) === 0) {
+      updatePainSlider(4);
+    }
+  } else {
+    btnNo.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-emerald-500 bg-emerald-500 text-white transition-all text-center';
+    btnYes.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:border-amber-400 transition-all text-center';
+    updatePainSlider(0);
+    document.getElementById('assess-pain-loc').value = 'None';
+  }
+}
+
+// 4. Pain Slider Live Update
+function updatePainSlider(val) {
+  val = parseInt(val) || 0;
+  assessmentState.painLevel = val;
+  const slider = document.getElementById('assess-pain-slider');
+  const sliderVal = document.getElementById('slider-pain-val');
+  const displayBadge = document.getElementById('pain-level-display');
+
+  if (slider) slider.value = val;
+  if (sliderVal) sliderVal.textContent = val;
+
+  if (val === 0) {
+    if (displayBadge) {
+      displayBadge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+      displayBadge.textContent = '😊 No Pain (0/10)';
+    }
+  } else if (val <= 3) {
+    if (displayBadge) {
+      displayBadge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800';
+      displayBadge.textContent = `🙂 Mild Pain (${val}/10)`;
+    }
+  } else if (val <= 6) {
+    if (displayBadge) {
+      displayBadge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+      displayBadge.textContent = `😐 Moderate Pain (${val}/10)`;
+    }
+  } else {
+    if (displayBadge) {
+      displayBadge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 animate-pulse';
+      displayBadge.textContent = `😫 Severe Pain (${val}/10)`;
+    }
+  }
+}
+
+// 5. Update ADL Score Live
+function updateADLScore() {
+  const w = parseInt(document.getElementById('assess-walk').value) || 0;
+  const e = parseInt(document.getElementById('assess-eat').value) || 0;
+  const m = parseInt(document.getElementById('assess-move').value) || 0;
+  const t = parseInt(document.getElementById('assess-toilet').value) || 0;
+  const total = w + e + m + t;
+
+  const badge = document.getElementById('adl-score-badge');
+  if (!badge) return;
+
+  if (total === 4) {
+    badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+    badge.textContent = 'ADL: 4/4 (Independent / आत्मनिर्भर)';
+  } else if (total >= 2) {
+    badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800';
+    badge.textContent = `ADL: ${total}/4 (Partially Dependent / आंशिक सहारा)`;
+  } else {
+    badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800';
+    badge.textContent = `ADL: ${total}/4 (Dependent / पूर्ण सहायता)`;
+  }
+}
+
+// 6. Toggle Sugar Input Visibility
+function toggleSugarInput(isDiabetic) {
+  const container = document.getElementById('sugar-input-container');
+  if (!container) return;
+  if (isDiabetic === '1') {
+    container.classList.remove('opacity-40');
+    container.classList.add('ring-2', 'ring-teal-400', 'rounded-xl', 'p-1', 'transition-all');
+  } else {
+    container.classList.remove('ring-2', 'ring-teal-400', 'p-1');
+  }
+}
+
+// 7. Predict Elder Risk Assessment (AI ML Call)
+async function predictElderRiskAssessment() {
+  // Enforce mandatory input completion
+  if (!validateAssessmentInputsBeforeSubmit()) {
+    return;
+  }
+  const submitBtn = document.getElementById('assess-submit-btn');
+  const originalBtnHtml = submitBtn.innerHTML;
+
+  // Visual loading state
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `
+    <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i>
+    <span>Running AI ML Inference (90,000 Dataset Model)...</span>
+  `;
+
+  // Collect inputs
+  const payload = {
+    seniorName: "Ramesh Sharma",
+    age: parseFloat(document.getElementById('assess-age').value) || 74,
+    gender: document.getElementById('assess-gender').value || "Male",
+    height_cm: parseFloat(document.getElementById('assess-height').value) || 165,
+    weight_kg: parseFloat(document.getElementById('assess-weight').value) || 68,
+    bp_systolic: parseFloat(document.getElementById('assess-bp-sys').value) || 128,
+    bp_diastolic: parseFloat(document.getElementById('assess-bp-dia').value) || 82,
+    heart_rate: parseFloat(document.getElementById('assess-hr').value) || 76,
+    spo2: parseFloat(document.getElementById('assess-spo2').value) || 97,
+    sleep_hours: parseFloat(document.getElementById('assess-sleep').value) || 7.0,
+    pain_present: assessmentState.painPresent ? 1 : 0,
+    pain_level: assessmentState.painLevel,
+    pain_location: document.getElementById('assess-pain-loc').value || "None",
+    walking_independent: parseInt(document.getElementById('assess-walk').value) || 1,
+    eating_independent: parseInt(document.getElementById('assess-eat').value) || 1,
+    moving_independent: parseInt(document.getElementById('assess-move').value) || 1,
+    toileting_independent: parseInt(document.getElementById('assess-toilet').value) || 1,
+    medication_count: parseInt(document.getElementById('assess-med-count').value) || 3,
+    missed_doses: parseInt(document.getElementById('assess-missed-doses').value) || 0,
+    is_diabetic: parseInt(document.getElementById('assess-diabetic').value) || 0,
+    blood_glucose: parseFloat(document.getElementById('assess-sugar').value) || 110,
+    hearing_difficulty: parseInt(document.getElementById('assess-hearing').value) > 0 ? 1 : 0,
+    hearing_aid_used: parseInt(document.getElementById('assess-hearing').value) === 2 ? 1 : 0,
+    has_hypertension: document.getElementById('chk-htn').checked ? 1 : 0,
+    has_arthritis: document.getElementById('chk-arth').checked ? 1 : 0,
+    has_heart_disease: document.getElementById('chk-heart').checked ? 1 : 0,
+    has_respiratory: document.getElementById('chk-resp').checked ? 1 : 0,
+    sync_coordinator: true
+  };
+
+  try {
+    const response = await fetch('/api/senior/assessment-predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    if (data.success && data.result) {
+      assessmentState.lastPrediction = data.result;
+      
+      // Play appropriate sound
+      if (data.result.predicted_risk_level === 'High') {
+        soundEngine.playTone(300, 'sawtooth', 0.4);
+      } else if (data.result.predicted_risk_level === 'Medium') {
+        soundEngine.playTone(450, 'triangle', 0.2);
+      } else {
+        soundEngine.playSuccessChime();
+      }
+
+      renderAssessmentResult(data.result, payload, data.alert_created);
+      
+      // If alert was created, refresh Coordinator queue in background
+      if (typeof refreshCoordinatorQueue === 'function') {
+        refreshCoordinatorQueue();
+      }
+
+      showToast(`Health Risk Prediction Complete: ${data.result.predicted_risk_level} Risk`, 
+        data.result.predicted_risk_level === 'High' ? 'danger' : (data.result.predicted_risk_level === 'Medium' ? 'warning' : 'success'));
+    } else {
+      showToast('Prediction error: ' + (data.error || 'Server responded with error'), 'danger');
+    }
+  } catch (err) {
+    console.error('Assessment predict fetch error:', err);
+    showToast('Failed to connect to ML prediction server.', 'danger');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnHtml;
+  }
+}
+
+// 8. Render Assessment Result Card
+function renderAssessmentResult(res, inputData, alertCreated) {
+  const box = document.getElementById('assessment-result-box');
+  if (!box) return;
+
+  const isHindi = state.seniorLanguage === 'hi';
+  const riskLevel = res.predicted_risk_level; // 'Low', 'Medium', 'High'
+  const isHigh = (riskLevel === 'High');
+  const isMed = (riskLevel === 'Medium');
+  const isLow = (riskLevel === 'Low');
+
+  // Styling based on risk level
+  let theme = {
+    bg: 'bg-emerald-50/90 border-emerald-300',
+    titleColor: 'text-emerald-950',
+    badgeBg: 'bg-emerald-600 text-white',
+    gaugeBg: 'bg-emerald-500',
+    icon: 'fa-solid fa-circle-check text-emerald-600'
+  };
+
+  if (isHigh) {
+    theme = {
+      bg: 'bg-rose-50/95 border-rose-400 shadow-xl shadow-rose-500/10',
+      titleColor: 'text-rose-950',
+      badgeBg: 'bg-rose-600 text-white animate-pulse',
+      gaugeBg: 'bg-rose-600',
+      icon: 'fa-solid fa-triangle-exclamation text-rose-600'
+    };
+  } else if (isMed) {
+    theme = {
+      bg: 'bg-amber-50/90 border-amber-300 shadow-lg shadow-amber-500/10',
+      titleColor: 'text-amber-950',
+      badgeBg: 'bg-amber-600 text-white',
+      gaugeBg: 'bg-amber-500',
+      icon: 'fa-solid fa-circle-exclamation text-amber-600'
+    };
+  }
+
+  const reasonsList = isHindi ? res.alert_reasons_hi : res.alert_reasons;
+  const actionsList = isHindi ? res.recommended_actions_hi : res.recommended_actions;
+  const riskTitle = isHindi ? res.predicted_risk_level_hi : `${riskLevel} Risk Condition`;
+  const urgencyTag = isHindi ? res.status_tag_hi : res.status_tag_en;
+
+  box.className = `mt-8 p-6 sm:p-8 rounded-3xl border-2 transition-all duration-300 ${theme.bg}`;
+  box.classList.remove('hidden');
+
+  box.innerHTML = `
+    <!-- Top Result Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+      <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-md flex items-center justify-center text-3xl sm:text-4xl">
+          <i class="${theme.icon}"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${theme.badgeBg}">
+              ${riskTitle}
+            </span>
+            <span class="text-xs font-bold text-slate-500">
+              Score: ${res.risk_score}/100
+            </span>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-black ${theme.titleColor} mt-1">
+            ${isHindi ? 'एआई स्वास्थ्य जोखिम परिणाम' : 'AI Health Risk Prediction Results'}
+          </h3>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600">
+            ${urgencyTag}
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center space-x-2 w-full sm:w-auto">
+        <button onclick="speakAssessmentResult()"
+          class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold transition-all shadow-sm flex items-center justify-center space-x-1.5">
+          <i class="fa-solid fa-volume-high text-teal-600"></i>
+          <span>${isHindi ? 'बोलकर सुनाएं' : 'Listen Report'}</span>
+        </button>
+        ${(isHigh || isMed) ? `
+          <button onclick="escalateAssessmentToCoordinator()"
+            class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md flex items-center justify-center space-x-1.5">
+            <i class="fa-solid fa-bell animate-pulse"></i>
+            <span>${isHindi ? 'कोऑर्डिनेटर को सूचित' : 'Alert Coordinator'}</span>
+          </button>
+        ` : ''}
+      </div>
+    </div>
+
+    <!-- Metrics Breakdown Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 my-6">
+      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'जोखिम स्कोर' : 'Risk Index Score'}</span>
+        <span class="text-2xl sm:text-3xl font-black text-slate-800">${res.risk_score}</span>
+        <span class="text-[10px] text-slate-400 block mt-0.5">Scale: 0 (Safe) - 100</span>
+      </div>
+      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'एमएल संभावना' : 'AI Decline Prob.'}</span>
+        <span class="text-2xl sm:text-3xl font-black text-teal-600">${(res.predicted_probability * 100).toFixed(1)}%</span>
+        <span class="text-[10px] text-slate-400 block mt-0.5">Random Forest Model</span>
+      </div>
+      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'बीएमआई माप' : 'Body Mass Index'}</span>
+        <span class="text-2xl sm:text-3xl font-black text-slate-800">${res.bmi}</span>
+        <span class="text-[10px] text-slate-400 block mt-0.5">${inputData.weight_kg}kg • ${inputData.height_cm}cm</span>
+      </div>
+      <div class="bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">${isHindi ? 'कोऑर्डिनेटर स्थिति' : 'Care Alert Status'}</span>
+        <span class="text-xs sm:text-sm font-bold ${alertCreated ? 'text-rose-600' : 'text-emerald-600'} block mt-1">
+          <i class="${alertCreated ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-shield-check'} mr-1"></i>
+          ${alertCreated ? (isHindi ? 'अलर्ट दर्ज हुआ' : 'Alert Synced') : (isHindi ? 'सुरक्षित' : 'Normal')}
+        </span>
+        <span class="text-[10px] text-slate-400 block mt-0.5">${alertCreated ? 'View 1 Notified' : 'No escalation needed'}</span>
+      </div>
+    </div>
+
+    <!-- Alert Reasons & Clinical Observations -->
+    <div class="space-y-4">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 mb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-clipboard-list text-teal-600"></i>
+          <span>${isHindi ? 'जोखिम के मुख्य कारण एवं टेलीमेट्री अवलोकन:' : 'Identified Risk Drivers & Telemetry Signals:'}</span>
+        </h4>
+        <ul class="space-y-2 mt-3">
+          ${reasonsList.map(r => `
+            <li class="flex items-start text-xs sm:text-sm text-slate-700">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full ${isHigh ? 'bg-rose-100 text-rose-700' : (isMed ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700')} text-xs mr-2.5 flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </span>
+              <span>${r}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+
+      <!-- Actionable Next Steps -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 mb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-user-doctor text-sky-600"></i>
+          <span>${isHindi ? 'अनुशंसित चिकित्सीय कदम एवं देखभाल योजना:' : 'Recommended Clinical & Support Actions:'}</span>
+        </h4>
+        <ul class="space-y-2 mt-3">
+          ${actionsList.map(a => `
+            <li class="flex items-start text-xs sm:text-sm text-slate-700">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-teal-100 text-teal-800 text-xs mr-2.5 flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-check text-[10px]"></i>
+              </span>
+              <span>${a}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Live Coordinator Escalation Alert Banner if applicable -->
+    ${alertCreated ? `
+      <div class="mt-5 p-4 rounded-2xl bg-rose-100 border border-rose-300 flex items-center justify-between text-xs sm:text-sm text-rose-900">
+        <div class="flex items-center space-x-3">
+          <i class="fa-solid fa-bell-concierge text-xl text-rose-600 animate-bounce"></i>
+          <div>
+            <span class="font-black block">${isHindi ? 'केयर कोऑर्डिनेटर सिस्टर कविता को लाइव अलर्ट भेजा गया' : 'Live Alert Created for Care Coordinator Sister Kavita'}</span>
+            <span class="text-xs text-rose-700">${isHindi ? 'आपकी प्राथमिकता सूची #1 पर अपडेट कर दी गई है।' : 'Triage priority has been placed at Rank #1 in View 1 dashboard.'}</span>
+          </div>
+        </div>
+        <button onclick="navigateRole('coordinator')" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-colors shadow-sm">
+          ${isHindi ? 'कोऑर्डिनेटर व्यू देखें' : 'View in Coordinator'}
+        </button>
+      </div>
+    ` : ''}
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// 9. Read Aloud Assessment Results (Text-to-Speech)
+function speakAssessmentResult() {
+  if (!assessmentState.lastPrediction) {
+    showToast('No assessment results to read.', 'warning');
+    return;
+  }
+
+  const res = assessmentState.lastPrediction;
+  const isHindi = state.seniorLanguage === 'hi';
+  
+  let text = '';
+  if (isHindi) {
+    text = `रमेश जी, आपके स्वास्थ्य का आकलन किया गया है। आपका स्वास्थ्य स्तर ${res.predicted_risk_level_hi} है। जोखिम स्कोर ${res.risk_score} है। मुख्य बात: ${res.alert_reason_summary_hi}। सलाह: ${res.suggested_action_summary_hi}`;
+  } else {
+    text = `Ramesh ji, your health assessment has been evaluated. Your condition is ${res.predicted_risk_level} Risk. Risk index score is ${res.risk_score} out of 100. Primary observation: ${res.alert_reason_summary}. Recommended action: ${res.suggested_action_summary}`;
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
+    utterance.rate = 0.88; // Gentle, clear speed for elders
+    window.speechSynthesis.speak(utterance);
+    showToast(isHindi ? 'स्वास्थ्य रिपोर्ट बोलकर सुनाई जा रही है...' : 'Reading assessment report aloud...', 'info');
+  } else {
+    showToast('Text-to-speech is not supported in this browser.', 'warning');
+  }
+}
+
+// 10. Manual Escalation to Coordinator
+function escalateAssessmentToCoordinator() {
+  if (!assessmentState.lastPrediction) return;
+  soundEngine.playTone(800, 'sine', 0.2);
+  showToast('Care Coordinator Sister Kavita notified directly with assessment telemetry! 🚨', 'success');
+  if (typeof refreshCoordinatorQueue === 'function') {
+    refreshCoordinatorQueue();
+  }
+}
+
+
+// =========================================================================
+// ROLE-BASED ACCESS CONTROL & DEDICATED AUTHENTICATION ENGINE
+// =========================================================================
+
+let selectedAuthRole = 'senior';
+let activeOtpCode = '4826';
+let otpTimerInterval = null;
+
+const authRoleConfigs = {
+  senior: {
+    roleId: 'senior',
+    portalTitle: 'Senior Companion Portal / बुज़ुर्ग लॉगिन',
+    portalDesc: 'Check-in, voice notes, health reminders & AI health assessment',
+    icon: 'fa-solid fa-person-walking-with-cane',
+    bg: 'bg-sky-50 border-sky-200',
+    avatarBg: 'bg-sky-600',
+    emailLabel: 'Senior ID, Mobile or Email (आईडी / फोन / ईमेल)',
+    defaultEmail: 'ramesh.senior@careconnect.in',
+    defaultPass: 'password123',
+    defaultName: 'Ramesh Sharma',
+    defaultBadge: 'Senior (74 Yrs)',
+    avatarInitials: 'RS',
+    signupFieldsHtml: `
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Age (उम्र)</label>
+          <input id="signup-age" type="number" value="74" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Gender (लिंग)</label>
+          <select id="signup-gender" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+            <option value="Male">Male / पुरुष</option>
+            <option value="Female">Female / महिला</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Emergency Family Contact (आपातकालीन संपर्क)</label>
+        <input id="signup-contact" type="text" value="Rahul Sharma (Son) - +91 98110-44912" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+      </div>
+    `
+  },
+  coordinator: {
+    roleId: 'coordinator',
+    portalTitle: 'Care Coordinator Secure Gateway',
+    portalDesc: 'Prioritized daily triage queue, alert management & clinical dispatch',
+    icon: 'fa-solid fa-user-doctor',
+    bg: 'bg-emerald-50 border-emerald-200',
+    avatarBg: 'bg-emerald-600',
+    emailLabel: 'Hospital Staff Email (अस्पताल स्टाफ ईमेल)',
+    defaultEmail: 'kavita.nurse@careconnect.org',
+    defaultPass: 'password123',
+    defaultName: 'Sister Kavita, RN',
+    defaultBadge: 'Care Coordinator',
+    avatarInitials: 'NK',
+    signupFieldsHtml: `
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Clinical Designation (पद)</label>
+        <select id="signup-designation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+          <option value="Registered Nurse (RN)">Registered Nurse (RN)</option>
+          <option value="Paramedic Specialist">Paramedic Specialist</option>
+          <option value="Medical Officer">Medical Officer / Physician</option>
+          <option value="Community Health Buddy">Community Health Buddy</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Staff ID / Medical License (स्टाफ आईडी)</label>
+        <input id="signup-license" type="text" value="RN-DL-49201" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+      </div>
+    `
+  },
+  family: {
+    roleId: 'family',
+    portalTitle: 'Family Member Wellbeing Access',
+    portalDesc: 'Stay informed with weekly health summaries, vitals & emergency alerts',
+    icon: 'fa-solid fa-people-roof',
+    bg: 'bg-purple-50 border-purple-200',
+    avatarBg: 'bg-purple-600',
+    emailLabel: 'Family Email or Mobile (पारिवारिक ईमेल / फोन)',
+    defaultEmail: 'rahul.family@gmail.com',
+    defaultPass: 'password123',
+    defaultName: 'Rahul Sharma',
+    defaultBadge: 'Son / Family Member',
+    avatarInitials: 'RS',
+    signupFieldsHtml: `
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Relationship to Senior (संबंध)</label>
+        <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+          <option value="Son">Son (पुत्र)</option>
+          <option value="Daughter">Daughter (पुत्री)</option>
+          <option value="Spouse">Spouse (पति / पत्नी)</option>
+          <option value="Guardian">Primary Guardian / Caregiver</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Linked Senior's Name (वरिष्ठ परिजन का नाम)</label>
+        <input id="signup-linked-senior" type="text" value="Ramesh Sharma (Father)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+      </div>
+    `
+  },
+  operations: {
+    roleId: 'operations',
+    portalTitle: 'Operations Command Center',
+    portalDesc: 'Monitor alert volumes, response times, city SLAs and fleet analytics',
+    icon: 'fa-solid fa-chart-line',
+    bg: 'bg-orange-50 border-orange-200',
+    avatarBg: 'bg-orange-600',
+    emailLabel: 'Enterprise Admin Email (एडमिन ईमेल)',
+    defaultEmail: 'arun.ops@careconnect.org',
+    defaultPass: 'password123',
+    defaultName: 'Arun Kapoor',
+    defaultBadge: 'Operations Director',
+    avatarInitials: 'AK',
+    signupFieldsHtml: `
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">City Operations Hub (शहर / क्षेत्र)</label>
+        <select id="signup-city" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
+          <option value="Delhi NCR">Delhi NCR Central Hub</option>
+          <option value="Mumbai Metropolitan">Mumbai Metropolitan Hub</option>
+          <option value="Bengaluru Urban">Bengaluru Urban Hub</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Operations Security Key (सुरक्षा कोड)</label>
+        <input id="signup-seckey" type="text" value="OPS-SEC-9981" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+      </div>
+    `
+  }
+};
+
+// 1. User selects role card -> open dedicated authentication portal
+function selectRoleForAuth(role) {
+  selectedAuthRole = role;
+  soundEngine.playTone(550, 'sine', 0.1);
+
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+
+  // Update banner appearance
+  const banner = document.getElementById('auth-role-banner');
+  const avatar = document.getElementById('auth-role-avatar');
+  const icon = document.getElementById('auth-role-icon');
+  const title = document.getElementById('auth-portal-title');
+  const desc = document.getElementById('auth-portal-desc');
+  const emailLabel = document.getElementById('lbl-signin-email');
+  const emailInput = document.getElementById('signin-email');
+  const passInput = document.getElementById('signin-password');
+  const submitBtnLabel = document.getElementById('btn-signin-label');
+  const demoBtnLabel = document.getElementById('btn-quick-demo-label');
+  const roleFieldsContainer = document.getElementById('signup-role-specific-fields');
+
+  if (banner) banner.className = `p-4 rounded-2xl border mb-5 flex items-center space-x-3.5 ${cfg.bg} shadow-sm`;
+  if (avatar) avatar.className = `w-12 h-12 rounded-xl ${cfg.avatarBg} text-white flex items-center justify-center text-2xl shadow-sm flex-shrink-0`;
+  if (icon) icon.className = cfg.icon;
+  if (title) title.textContent = cfg.portalTitle;
+  if (desc) desc.textContent = cfg.portalDesc;
+  if (emailLabel) emailLabel.textContent = cfg.emailLabel;
+  if (emailInput) emailInput.value = cfg.defaultEmail;
+  if (passInput) passInput.value = cfg.defaultPass;
+  if (submitBtnLabel) submitBtnLabel.textContent = `Sign In as ${getRoleDisplayName(role)} / लॉगिन करें`;
+  if (demoBtnLabel) demoBtnLabel.textContent = `1-Click Quick Demo Sign In (${getRoleDisplayName(role)})`;
+
+  // Render role-specific signup fields
+  if (roleFieldsContainer) {
+    roleFieldsContainer.innerHTML = cfg.signupFieldsHtml;
+  }
+
+  // Switch to signin tab
+  switchAuthTab('signin');
+  toggleForgotPasswordOtp(false);
+
+  // Transition views
+  const stepRole = document.getElementById('auth-role-selector-step');
+  const stepCred = document.getElementById('auth-credential-step');
+  if (stepRole) stepRole.classList.add('hidden');
+  if (stepCred) stepCred.classList.remove('hidden');
+
+  showToast(`Selected Portal: ${getRoleDisplayName(role)}`, 'info');
+}
+
+// 2. Return to role selection cards
+function backToRoleSelector() {
+  soundEngine.playTone(400, 'sine', 0.1);
+  const stepRole = document.getElementById('auth-role-selector-step');
+  const stepCred = document.getElementById('auth-credential-step');
+  if (stepRole) stepRole.classList.remove('hidden');
+  if (stepCred) stepCred.classList.add('hidden');
+}
+
+// 3. Switch between Sign In and Create Account tabs
+function switchAuthTab(tab) {
+  const tabSignin = document.getElementById('tab-auth-signin');
+  const tabSignup = document.getElementById('tab-auth-signup');
+  const formSignin = document.getElementById('auth-form-signin');
+  const formSignup = document.getElementById('auth-form-signup');
+  const panelOtp = document.getElementById('auth-panel-otp');
+
+  if (panelOtp) panelOtp.classList.add('hidden');
+
+  if (tab === 'signin') {
+    if (tabSignin) tabSignin.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm';
+    if (tabSignup) tabSignup.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-800';
+    if (formSignin) formSignin.classList.remove('hidden');
+    if (formSignup) formSignup.classList.add('hidden');
+  } else {
+    if (tabSignup) tabSignup.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm';
+    if (tabSignin) tabSignin.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-800';
+    if (formSignin) formSignin.classList.add('hidden');
+    if (formSignup) formSignup.classList.remove('hidden');
+  }
+}
+
+// 4. Show/Hide Password Eye Toggle
+function togglePasswordVisibility(inputId, eyeId) {
+  const input = document.getElementById(inputId);
+  const eye = document.getElementById(eyeId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (eye) eye.className = 'fa-solid fa-eye-slash text-xs text-teal-600';
+  } else {
+    input.type = 'password';
+    if (eye) eye.className = 'fa-solid fa-eye text-xs text-slate-400';
+  }
+}
+
+// 5. Toggle Forgot Password OTP Panel
+function toggleForgotPasswordOtp(show) {
+  const panelOtp = document.getElementById('auth-panel-otp');
+  const formSignin = document.getElementById('auth-form-signin');
+  const formSignup = document.getElementById('auth-form-signup');
+  const banner = document.getElementById('otp-live-banner');
+
+  if (banner) banner.classList.add('hidden');
+  if (otpTimerInterval) clearInterval(otpTimerInterval);
+
+  if (show) {
+    if (panelOtp) panelOtp.classList.remove('hidden');
+    if (formSignin) formSignin.classList.add('hidden');
+    if (formSignup) formSignup.classList.add('hidden');
+    const recipientInput = document.getElementById('otp-input-recipient');
+    const signinEmail = document.getElementById('signin-email');
+    if (recipientInput && signinEmail) recipientInput.value = signinEmail.value;
+  } else {
+    if (panelOtp) panelOtp.classList.add('hidden');
+    if (formSignin) formSignin.classList.remove('hidden');
+  }
+}
+
+// 6. Send OTP Simulation
+function sendPasswordResetOtp() {
+  const recipient = document.getElementById('otp-input-recipient')?.value || 'user@careconnect.in';
+  activeOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+  soundEngine.playTone(650, 'sine', 0.15);
+  const banner = document.getElementById('otp-live-banner');
+  const codeDisplay = document.getElementById('otp-code-display');
+  const timerLabel = document.getElementById('otp-timer-label');
+
+  if (codeDisplay) codeDisplay.textContent = activeOtpCode;
+  if (banner) banner.classList.remove('hidden');
+
+  // Auto-fill OTP fields for seamless testing
+  document.getElementById('otp-d1').value = activeOtpCode[0];
+  document.getElementById('otp-d2').value = activeOtpCode[1];
+  document.getElementById('otp-d3').value = activeOtpCode[2];
+  document.getElementById('otp-d4').value = activeOtpCode[3];
+
+  let seconds = 30;
+  if (otpTimerInterval) clearInterval(otpTimerInterval);
+  otpTimerInterval = setInterval(() => {
+    seconds--;
+    if (timerLabel) timerLabel.textContent = `0:${seconds < 10 ? '0' : ''}${seconds}s`;
+    if (seconds <= 0) {
+      clearInterval(otpTimerInterval);
+    }
+  }, 1000);
+
+  showToast(`OTP ${activeOtpCode} dispatched to ${recipient}`, 'success');
+}
+
+// 7. Verify OTP and Sign In
+function verifyOtpAndLogin() {
+  const d1 = document.getElementById('otp-d1')?.value || '';
+  const d2 = document.getElementById('otp-d2')?.value || '';
+  const d3 = document.getElementById('otp-d3')?.value || '';
+  const d4 = document.getElementById('otp-d4')?.value || '';
+  const entered = d1 + d2 + d3 + d4;
+
+  if (entered.length < 4) {
+    showToast('Please enter the complete 4-digit OTP', 'warning');
+    return;
+  }
+
+  soundEngine.playSuccessChime();
+  showToast('OTP verified successfully! Access granted.', 'success');
+  const cfg = authRoleConfigs[selectedAuthRole];
+  enterDashboard(selectedAuthRole, {
+    name: cfg.defaultName,
+    email: cfg.defaultEmail,
+    role: selectedAuthRole,
+    badge: cfg.defaultBadge,
+    initials: cfg.avatarInitials
+  });
+}
+
+// 8. Handle Standard Sign In
+function handleSignInSubmit(e) {
+  if (e) e.preventDefault();
+  const email = document.getElementById('signin-email')?.value.trim();
+  const password = document.getElementById('signin-password')?.value;
+
+  if (!email || !password) {
+    showToast('Please fill in both email and password', 'warning');
+    return;
+  }
+
+  const cfg = authRoleConfigs[selectedAuthRole];
+  soundEngine.playSuccessChime();
+  enterDashboard(selectedAuthRole, {
+    name: cfg.defaultName,
+    email: email,
+    role: selectedAuthRole,
+    badge: cfg.defaultBadge,
+    initials: cfg.avatarInitials
+  });
+}
+
+// 9. Handle Google OAuth Sign In Simulation
+function handleGoogleSignIn() {
+  soundEngine.playTone(700, 'sine', 0.15);
+  const cfg = authRoleConfigs[selectedAuthRole];
+  showToast('Connecting via Google OAuth Secure SSO...', 'info');
+
+  setTimeout(() => {
+    soundEngine.playSuccessChime();
+    enterDashboard(selectedAuthRole, {
+      name: cfg.defaultName + ' (Google)',
+      email: cfg.defaultEmail,
+      role: selectedAuthRole,
+      badge: cfg.defaultBadge,
+      initials: cfg.avatarInitials
+    });
+    showToast(`Google Sign-In successful for ${getRoleDisplayName(selectedAuthRole)}`, 'success');
+  }, 400);
+}
+
+// 10. Quick 1-Click Demo Login
+function handleQuickDemoSignIn() {
+  const cfg = authRoleConfigs[selectedAuthRole];
+  soundEngine.playSuccessChime();
+  enterDashboard(selectedAuthRole, {
+    name: cfg.defaultName,
+    email: cfg.defaultEmail,
+    role: selectedAuthRole,
+    badge: cfg.defaultBadge,
+    initials: cfg.avatarInitials
+  });
+}
+
+// 11. Handle Create Account (Sign Up)
+function handleSignUpSubmit(e) {
+  if (e) e.preventDefault();
+  const name = document.getElementById('signup-name')?.value.trim();
+  const email = document.getElementById('signup-email')?.value.trim();
+  const password = document.getElementById('signup-password')?.value;
+
+  if (!name || !email || !password) {
+    showToast('Please complete all required fields to create your account', 'warning');
+    return;
+  }
+
+  const cfg = authRoleConfigs[selectedAuthRole];
+  soundEngine.playSuccessChime();
+  
+  // Compute initials
+  const parts = name.split(' ');
+  const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+
+  enterDashboard(selectedAuthRole, {
+    name: name,
+    email: email,
+    role: selectedAuthRole,
+    badge: `${getRoleDisplayName(selectedAuthRole)} (New Member)`,
+    initials: initials
+  });
+
+  showToast(`Account created successfully! Welcome to CareConnect, ${name}`, 'success');
+}
+
+// 12. Enter Dashboard (Strict Isolation: Only the logged-in role is shown!)
+function enterDashboard(role, userObj) {
+  state.currentRole = role;
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+  const user = userObj || {
+    name: cfg.defaultName,
+    email: cfg.defaultEmail,
+    role: role,
+    badge: cfg.defaultBadge,
+    initials: cfg.avatarInitials
+  };
+
+  // Hide Login View completely
+  const viewLogin = document.getElementById('view-login');
+  if (viewLogin) viewLogin.classList.add('hidden');
+
+  // Hide all other role views; show strictly the active role view
+  const allViews = ['coordinator', 'senior', 'family', 'operations'];
+  allViews.forEach(v => {
+    const el = document.getElementById(`view-${v}`);
+    if (el) {
+      if (v === role) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+  });
+
+  // Reveal Global Header
+  const header = document.getElementById('global-header');
+  if (header) header.classList.remove('hidden');
+
+  // Update Active Portal Badge in Header
+  const headerIcon = document.getElementById('header-active-portal-icon');
+  const headerTitle = document.getElementById('header-active-portal-title');
+  if (headerIcon) headerIcon.innerHTML = `<i class="${cfg.icon}"></i>`;
+  if (headerTitle) headerTitle.textContent = `${getRoleDisplayName(role)} Portal`;
+
+  // Update User Profile in Header
+  const avatar = document.getElementById('current-user-avatar');
+  const nameLabel = document.getElementById('current-user-name');
+  const roleLabel = document.getElementById('current-user-role-label');
+
+  if (avatar) {
+    avatar.textContent = user.initials || cfg.avatarInitials;
+    avatar.className = `w-8 h-8 rounded-full ${cfg.avatarBg} text-white flex items-center justify-center font-bold text-xs shadow-sm`;
+  }
+  if (nameLabel) nameLabel.textContent = user.name;
+  if (roleLabel) roleLabel.textContent = user.badge;
+
+  // Role specific view initializations
+  if (role === 'family') {
+    setTimeout(initFamilyVitalsChart, 100);
+  } else if (role === 'operations') {
+    setTimeout(initOpsCharts, 100);
+  } else if (role === 'coordinator') {
+    renderCoordinatorAlerts();
+  } else if (role === 'senior') {
+    setTimeout(() => {
+      if (typeof restoreAssessmentDraft === 'function') {
+        restoreAssessmentDraft();
+      }
+    }, 100);
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 13. Sign Out / Logout Function
+function logout() {
+  soundEngine.playWarningChime();
+
+  // Hide all operational dashboards
+  const allViews = ['coordinator', 'senior', 'family', 'operations'];
+  allViews.forEach(v => {
+    const el = document.getElementById(`view-${v}`);
+    if (el) el.classList.add('hidden');
+  });
+
+  // Hide Global Header
+  const header = document.getElementById('global-header');
+  if (header) header.classList.add('hidden');
+
+  // Show Login View and reset to Role Selector step
+  const viewLogin = document.getElementById('view-login');
+  if (viewLogin) viewLogin.classList.remove('hidden');
+
+  backToRoleSelector();
+
+  showToast('Signed out successfully. Role selection hub opened.', 'info');
+}
+
+// Backward compatibility helper
+function navigateRole(role) {
+  if (role === 'login') {
+    logout();
+  } else {
+    enterDashboard(role);
+  }
+}
+
+function loginAs(role) {
+  selectRoleForAuth(role);
+}
+
+
+// =========================================================================
+// VOICE HEALTH INPUT ASSISTANT, MANDATORY VALIDATION & PERSISTENT AUTO-SAVE
+// =========================================================================
+
+const STORAGE_KEY_ASSESSMENT_DRAFT = 'careconnect_elder_assessment_draft';
+
+// 1. Auto-Save Assessment Draft to LocalStorage
+function saveAssessmentDraft() {
+  const form = document.getElementById('elder-assessment-form');
+  if (!form) return;
+
+  const draft = {
+    age: document.getElementById('assess-age')?.value || '',
+    gender: document.getElementById('assess-gender')?.value || 'Male',
+    height: document.getElementById('assess-height')?.value || '',
+    weight: document.getElementById('assess-weight')?.value || '',
+    bp_sys: document.getElementById('assess-bp-sys')?.value || '',
+    bp_dia: document.getElementById('assess-bp-dia')?.value || '',
+    hr: document.getElementById('assess-hr')?.value || '',
+    spo2: document.getElementById('assess-spo2')?.value || '',
+    sleep: document.getElementById('assess-sleep')?.value || '',
+    pain_present: assessmentState.painPresent ? 1 : 0,
+    pain_level: assessmentState.painLevel,
+    pain_loc: document.getElementById('assess-pain-loc')?.value || 'None',
+    walk: document.getElementById('assess-walk')?.value || '1',
+    eat: document.getElementById('assess-eat')?.value || '1',
+    move: document.getElementById('assess-move')?.value || '1',
+    toilet: document.getElementById('assess-toilet')?.value || '1',
+    med_count: document.getElementById('assess-med-count')?.value || '',
+    missed_doses: document.getElementById('assess-missed-doses')?.value || '0',
+    diabetic: document.getElementById('assess-diabetic')?.value || '0',
+    sugar: document.getElementById('assess-sugar')?.value || '',
+    hearing: document.getElementById('assess-hearing')?.value || '0',
+    chk_htn: document.getElementById('chk-htn')?.checked || false,
+    chk_arth: document.getElementById('chk-arth')?.checked || false,
+    chk_heart: document.getElementById('chk-heart')?.checked || false,
+    chk_resp: document.getElementById('chk-resp')?.checked || false,
+    savedAt: new Date().toISOString()
+  };
+
+  try {
+    localStorage.setItem(STORAGE_KEY_ASSESSMENT_DRAFT, JSON.stringify(draft));
+    const badgeText = document.getElementById('assess-autosave-text');
+    if (badgeText) {
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      badgeText.textContent = `Draft Auto-Saved (${timeStr})`;
+    }
+  } catch (e) {
+    console.warn('Could not auto-save draft to localStorage:', e);
+  }
+
+  updateAssessmentProgressMeter();
+}
+
+// 2. Restore Assessment Draft from LocalStorage on load
+function restoreAssessmentDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_ASSESSMENT_DRAFT);
+    if (!raw) {
+      updateAssessmentProgressMeter();
+      return false;
+    }
+    const d = JSON.parse(raw);
+    if (!d) return false;
+
+    if (d.age !== undefined && document.getElementById('assess-age')) document.getElementById('assess-age').value = d.age;
+    if (d.gender && document.getElementById('assess-gender')) document.getElementById('assess-gender').value = d.gender;
+    if (d.height && document.getElementById('assess-height')) document.getElementById('assess-height').value = d.height;
+    if (d.weight && document.getElementById('assess-weight')) document.getElementById('assess-weight').value = d.weight;
+    if (d.bp_sys && document.getElementById('assess-bp-sys')) document.getElementById('assess-bp-sys').value = d.bp_sys;
+    if (d.bp_dia && document.getElementById('assess-bp-dia')) document.getElementById('assess-bp-dia').value = d.bp_dia;
+    if (d.hr && document.getElementById('assess-hr')) document.getElementById('assess-hr').value = d.hr;
+    if (d.spo2 && document.getElementById('assess-spo2')) document.getElementById('assess-spo2').value = d.spo2;
+    if (d.sleep && document.getElementById('assess-sleep')) document.getElementById('assess-sleep').value = d.sleep;
+    if (d.pain_loc && document.getElementById('assess-pain-loc')) document.getElementById('assess-pain-loc').value = d.pain_loc;
+    if (d.walk && document.getElementById('assess-walk')) document.getElementById('assess-walk').value = d.walk;
+    if (d.eat && document.getElementById('assess-eat')) document.getElementById('assess-eat').value = d.eat;
+    if (d.move && document.getElementById('assess-move')) document.getElementById('assess-move').value = d.move;
+    if (d.toilet && document.getElementById('assess-toilet')) document.getElementById('assess-toilet').value = d.toilet;
+    if (d.med_count !== undefined && document.getElementById('assess-med-count')) document.getElementById('assess-med-count').value = d.med_count;
+    if (d.missed_doses && document.getElementById('assess-missed-doses')) document.getElementById('assess-missed-doses').value = d.missed_doses;
+    if (d.diabetic !== undefined && document.getElementById('assess-diabetic')) {
+      document.getElementById('assess-diabetic').value = d.diabetic;
+      toggleSugarInput(d.diabetic);
+    }
+    if (d.sugar && document.getElementById('assess-sugar')) document.getElementById('assess-sugar').value = d.sugar;
+    if (d.hearing !== undefined && document.getElementById('assess-hearing')) document.getElementById('assess-hearing').value = d.hearing;
+    if (document.getElementById('chk-htn')) document.getElementById('chk-htn').checked = !!d.chk_htn;
+    if (document.getElementById('chk-arth')) document.getElementById('chk-arth').checked = !!d.chk_arth;
+    if (document.getElementById('chk-heart')) document.getElementById('chk-heart').checked = !!d.chk_heart;
+    if (document.getElementById('chk-resp')) document.getElementById('chk-resp').checked = !!d.chk_resp;
+
+    if (d.pain_present) {
+      setPainPresent(true);
+      updatePainSlider(d.pain_level || 4);
+    } else {
+      setPainPresent(false);
+      updatePainSlider(0);
+    }
+
+    updateCalculatedBMI();
+    updateADLScore();
+    updateAssessmentProgressMeter();
+
+    const badgeText = document.getElementById('assess-autosave-text');
+    if (badgeText) badgeText.textContent = 'Draft Restored from Memory';
+    return true;
+  } catch (e) {
+    console.warn('Error restoring assessment draft:', e);
+    return false;
+  }
+}
+
+// 3. Clear Assessment Draft
+function clearAssessmentDraft() {
+  localStorage.removeItem(STORAGE_KEY_ASSESSMENT_DRAFT);
+  if (typeof window.__resetCumulativeVoiceState === 'function') {
+    window.__resetCumulativeVoiceState();
+  }
+  document.getElementById('assess-age').value = '';
+  document.getElementById('assess-weight').value = '';
+  document.getElementById('assess-height').value = '';
+  document.getElementById('assess-bp-sys').value = '';
+  document.getElementById('assess-bp-dia').value = '';
+  document.getElementById('assess-hr').value = '';
+  document.getElementById('assess-spo2').value = '';
+  document.getElementById('assess-sleep').value = '';
+  document.getElementById('assess-med-count').value = '';
+  document.getElementById('assess-sugar').value = '';
+  document.getElementById('chk-htn').checked = false;
+  document.getElementById('chk-arth').checked = false;
+  document.getElementById('chk-heart').checked = false;
+  document.getElementById('chk-resp').checked = false;
+  setPainPresent(false);
+  updatePainSlider(0);
+  updateCalculatedBMI();
+  updateADLScore();
+  updateAssessmentProgressMeter();
+
+  const alertBox = document.getElementById('assessment-validation-alert');
+  if (alertBox) alertBox.classList.add('hidden');
+
+  showToast('Assessment form draft cleared / फॉर्म साफ कर दिया गया', 'info');
+}
+
+// 4. Update Assessment Readiness Progress Meter
+function updateAssessmentProgressMeter() {
+  const fields = [
+    { id: 'assess-age', name: 'Age (उम्र)' },
+    { id: 'assess-gender', name: 'Gender (लिंग)' },
+    { id: 'assess-height', name: 'Height (लंबाई)' },
+    { id: 'assess-weight', name: 'Weight (वजन)' },
+    { id: 'assess-bp-sys', name: 'BP Systolic (ऊपर का BP)' },
+    { id: 'assess-bp-dia', name: 'BP Diastolic (नीचे का BP)' },
+    { id: 'assess-hr', name: 'Heart Rate (धड़कन)' },
+    { id: 'assess-spo2', name: 'Oxygen SpO2 (ऑक्सीजन)' },
+    { id: 'assess-sleep', name: 'Sleep Hours (नींद)' },
+    { id: 'assess-med-count', name: 'Medication Count (दवा संख्या)' }
+  ];
+
+  let filledCount = 0;
+  fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    if (el && el.value.toString().trim() !== '') {
+      filledCount++;
+    }
+  });
+
+  // Check sugar if diabetic
+  const isDiabetic = document.getElementById('assess-diabetic')?.value === '1';
+  let totalRequired = fields.length + (isDiabetic ? 1 : 0);
+  if (isDiabetic) {
+    const sugarEl = document.getElementById('assess-sugar');
+    if (sugarEl && sugarEl.value.toString().trim() !== '') {
+      filledCount++;
+    }
+  }
+
+  const percent = Math.min(100, Math.round((filledCount / totalRequired) * 100));
+  const badge = document.getElementById('assess-progress-badge');
+  const bar = document.getElementById('assess-progress-bar');
+
+  if (bar) bar.style.width = `${percent}%`;
+
+  if (badge) {
+    if (percent === 100) {
+      badge.className = 'text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+      badge.textContent = 'Ready to Predict (100% Complete) ✅';
+      if (bar) bar.className = 'h-full bg-emerald-500 rounded-full transition-all duration-300';
+    } else {
+      badge.className = 'text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+      badge.textContent = `Incomplete (${filledCount}/${totalRequired} parameters - ${percent}%)`;
+      if (bar) bar.className = 'h-full bg-amber-500 rounded-full transition-all duration-300';
+    }
+  }
+}
+
+// 5. Mandatory Validation Before Submission
+function validateAssessmentInputsBeforeSubmit() {
+  const missing = [];
+  const fieldsToCheck = [
+    { id: 'assess-age', label: 'Age (उम्र)' },
+    { id: 'assess-gender', label: 'Gender (लिंग)' },
+    { id: 'assess-height', label: 'Height (लंबाई cm)' },
+    { id: 'assess-weight', label: 'Weight (वजन kg)' },
+    { id: 'assess-bp-sys', label: 'BP Systolic (ऊपर का BP)' },
+    { id: 'assess-bp-dia', label: 'BP Diastolic (नीचे का BP)' },
+    { id: 'assess-hr', label: 'Heart Rate (धड़कन / पल्स)' },
+    { id: 'assess-spo2', label: 'Oxygen SpO2 (ऑक्सीजन %)' },
+    { id: 'assess-sleep', label: 'Sleep Hours (नींद के घंटे)' },
+    { id: 'assess-med-count', label: 'Daily Medicine Count (दवा संख्या)' }
+  ];
+
+  // Remove previous error highlights
+  document.querySelectorAll('.input-field-error').forEach(el => {
+    el.classList.remove('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
+  });
+
+  let firstErrorElement = null;
+
+  fieldsToCheck.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (!el || el.value.toString().trim() === '' || isNaN(parseFloat(el.value))) {
+      missing.push(item.label);
+      if (el) {
+        el.classList.add('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
+        if (!firstErrorElement) firstErrorElement = el;
+      }
+    }
+  });
+
+  // If diabetic is 1, sugar reading is mandatory
+  const isDiabetic = document.getElementById('assess-diabetic')?.value === '1';
+  if (isDiabetic) {
+    const sugarEl = document.getElementById('assess-sugar');
+    if (!sugarEl || sugarEl.value.toString().trim() === '' || isNaN(parseFloat(sugarEl.value))) {
+      missing.push('Blood Glucose (शुगर स्तर mg/dL)');
+      if (sugarEl) {
+        sugarEl.classList.add('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
+        if (!firstErrorElement) firstErrorElement = sugarEl;
+      }
+    }
+  }
+
+  const alertBox = document.getElementById('assessment-validation-alert');
+  const missingListContainer = document.getElementById('assessment-missing-fields-list');
+
+  if (missing.length > 0) {
+    soundEngine.playTone(300, 'sawtooth', 0.25);
+    if (alertBox) alertBox.classList.remove('hidden');
+    if (missingListContainer) {
+      missingListContainer.innerHTML = missing.map(m => `
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-200 text-rose-900 border border-rose-300">
+          <i class="fa-solid fa-circle-exclamation mr-1 text-[10px]"></i> ${m}
+        </span>
+      `).join('');
+    }
+
+    if (firstErrorElement) {
+      firstErrorElement.focus();
+      firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    showToast(`कृपया सभी आवश्यक संकेत भरें (${missing.length} fields missing)`, 'danger');
+    return false;
+  } else {
+    if (alertBox) alertBox.classList.add('hidden');
+    return true;
+  }
+}
+
+// 6. Highlight Modified Field (Visual Voice Feedback)
+function highlightInputModification(inputId, label = 'Voice Updated') {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+
+  el.classList.add('ring-4', 'ring-emerald-400', 'bg-emerald-50', 'transition-all');
+  setTimeout(() => {
+    el.classList.remove('ring-4', 'ring-emerald-400', 'bg-emerald-50');
+  }, 1800);
+
+  // Injected tiny badge next to field label if available
+  const container = el.closest('.form-group') || el.closest('div');
+  if (container) {
+    let tag = container.querySelector(`.voice-tag-captured[data-key="${inputId}"]`);
+    if (!tag) {
+      tag = document.createElement('span');
+      tag.className = 'voice-tag-captured';
+      tag.setAttribute('data-key', inputId);
+      tag.innerHTML = `<i class="fa-solid fa-microphone-lines text-emerald-600"></i> ${label}`;
+      const lbl = container.querySelector('label') || container.querySelector('span');
+      if (lbl) lbl.appendChild(tag);
+      setTimeout(() => {
+        if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
+      }, 5000);
+    }
+  }
+}
+
+// =========================================================================
+// HIGH-FIDELITY BILINGUAL AI VOICE ENGINE & NEURAL SPEECH SYNTHESIS
+// =========================================================================
+
+let activeSpeechAudio = null;
+let cumulativeExtracted = {};
+let currentChecklist = null;
+let currentInquiries = [];
+let selectedVoiceLang = 'hi-IN';
+let lastAssistantSpeech = '';
+let voiceRecognitionInstance = null;
+let isVoiceRecording = false;
+
+window.__resetCumulativeVoiceState = function () {
+  cumulativeExtracted = {};
+  currentChecklist = null;
+  currentInquiries = [];
+  lastAssistantSpeech = '';
+  const transcriptBox = document.getElementById('voice-transcript-text');
+  if (transcriptBox) transcriptBox.value = '';
+  const bubble = document.getElementById('voice-feedback-bubble');
+  if (bubble) bubble.classList.add('hidden');
+  const statusBadge = document.getElementById('voice-status-text');
+  if (statusBadge) statusBadge.innerText = 'Voice Assistant Ready';
+
+  // Reset checklist badges to missing
+  const badgeKeys = ['age', 'gender', 'body', 'vitals', 'pain', 'sleep', 'adl_walk', 'adl_eat', 'adl_move', 'adl_toilet', 'meds', 'sugar', 'hearing', 'diseases'];
+  badgeKeys.forEach(k => {
+    const b = document.getElementById(`badge-chk-${k}`);
+    if (b) {
+      b.className = 'voice-check-badge status-missing';
+      const statusSpan = b.querySelector('.badge-tag-status');
+      if (statusSpan) statusSpan.innerHTML = '? Needs Info';
+    }
+  });
+  const lblNext = document.getElementById('lbl-ask-next');
+  if (lblNext) lblNext.innerText = 'Ask Next Question';
+};
+
+function stopAllSpeechAudio() {
+  if (activeSpeechAudio) {
+    try {
+      activeSpeechAudio.pause();
+      activeSpeechAudio.currentTime = 0;
+    } catch (e) {}
+    activeSpeechAudio = null;
+  }
+  if (window.speechSynthesis) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {}
+  }
+}
+
+function playAcousticChime(type = 'assistant') {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    const startFreq = type === 'start' ? 520 : type === 'finish' ? 660 : 587;
+    const endFreq = type === 'start' ? 780 : type === 'finish' ? 880 : 880;
+
+    osc.frequency.setValueAtTime(startFreq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(endFreq, ctx.currentTime + 0.18);
+
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.26);
+  } catch (e) {}
+}
+
+function getAvailableSpeechVoices() {
+  if (!window.speechSynthesis) return [];
+  return window.speechSynthesis.getVoices() || [];
+}
+
+function findBestSpeechVoice(requestedLang) {
+  const voices = getAvailableSpeechVoices();
+  if (!voices || voices.length === 0) return null;
+
+  const isHi = (requestedLang === 'hi-IN' || requestedLang === 'hi');
+  if (isHi) {
+    const hi = voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('hi') || v.lang.toLowerCase().includes('in-hi') || (v.name && v.name.toLowerCase().includes('hindi'))));
+    if (hi) return { voice: hi, isNativeHindi: true };
+
+    const inEn = voices.find(v => v.lang && (v.lang.toLowerCase().includes('en-in') || (v.name && v.name.toLowerCase().includes('india'))));
+    if (inEn) return { voice: inEn, isNativeHindi: false };
+  }
+
+  const en = voices.find(v => v.lang && (v.lang.toLowerCase().includes('en-in') || v.lang.toLowerCase().startsWith('en')));
+  if (en) return { voice: en, isNativeHindi: false };
+
+  return { voice: voices[0], isNativeHindi: false };
+}
+
+function speakRobustText(text, requestedLang, options = {}) {
+  if (!window.speechSynthesis || !text) return;
+  stopAllSpeechAudio();
+
+  setTimeout(() => {
+    try {
+      const cleanText = String(text).replace(/[*#_~`]/g, ' ').replace(/\s+/g, ' ').trim();
+      const utt = new SpeechSynthesisUtterance(cleanText);
+      const voiceMatch = findBestSpeechVoice(requestedLang);
+
+      if (voiceMatch && voiceMatch.voice) {
+        utt.voice = voiceMatch.voice;
+        utt.lang = voiceMatch.voice.lang || requestedLang;
+      } else {
+        utt.lang = requestedLang || 'hi-IN';
+      }
+
+      utt.rate = options.rate || 0.95;
+      utt.pitch = options.pitch || 1.0;
+      utt.volume = 1.0;
+
+      utt.onend = (e) => {
+        if (typeof options.onend === 'function') options.onend(e);
+      };
+      utt.onerror = (e) => {
+        if (typeof options.onend === 'function') options.onend(e);
+      };
+
+      window.speechSynthesis.speak(utt);
+    } catch (e) {
+      if (typeof options.onend === 'function') options.onend();
+    }
+  }, 80);
+}
+
+function playElderSpeech(text, requestedLang, options = {}) {
+  if (!text || !String(text).trim()) {
+    if (typeof options.onend === 'function') options.onend();
+    return;
+  }
+
+  stopAllSpeechAudio();
+
+  if (options.playChime !== false) {
+    playAcousticChime(options.toneType || 'assistant');
+  }
+
+  const cleanText = String(text).replace(/[*#_~`]/g, ' ').replace(/\s+/g, ' ').trim();
+  const isHi = (requestedLang === 'hi-IN' || requestedLang === 'hi' || requestedLang === 'hindi');
+  const langParam = isHi ? 'hi' : 'en';
+
+  // 1. Try High-Fidelity Neural Server TTS (/api/tts)
+  const ttsUrl = `/api/tts?text=${encodeURIComponent(cleanText)}&lang=${langParam}`;
+  const audio = new Audio(ttsUrl);
+  activeSpeechAudio = audio;
+
+  let fallbackFired = false;
+  const triggerWebSpeechFallback = () => {
+    if (fallbackFired) return;
+    fallbackFired = true;
+    speakRobustText(cleanText, requestedLang, { ...options, playChime: false });
+  };
+
+  audio.onended = (e) => {
+    activeSpeechAudio = null;
+    if (typeof options.onend === 'function') options.onend(e);
+  };
+
+  audio.onerror = (e) => {
+    activeSpeechAudio = null;
+    triggerWebSpeechFallback();
+  };
+
+  try {
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        triggerWebSpeechFallback();
+      });
+    }
+  } catch (err) {
+    triggerWebSpeechFallback();
+  }
+}
+
+// =========================================================================
+// VOICE ASSISTANT UI CONTROLLER (DOM BINDINGS & AUDIT BADGES)
+// =========================================================================
+
+function initElderVoiceAssistant() {
+  const btnHindi = document.getElementById('btn-lang-hindi');
+  const btnEnglish = document.getElementById('btn-lang-english');
+  const btnTestVoice = document.getElementById('btn-test-assistant-voice');
+  const btnRecord = document.getElementById('btn-voice-record');
+  const recordText = document.getElementById('voice-record-btn-text');
+  const soundWave = document.getElementById('voice-sound-wave');
+  const statusText = document.getElementById('voice-status-text');
+  const transcriptBox = document.getElementById('voice-transcript-text');
+  const btnClear = document.getElementById('btn-clear-transcript');
+  const btnParse = document.getElementById('btn-parse-transcript-text');
+  const fileInput = document.getElementById('voice-file-upload');
+  const bubble = document.getElementById('voice-feedback-bubble');
+  const assistantText = document.getElementById('voice-assistant-text');
+  const missingWrap = document.getElementById('voice-missing-fields-tags');
+  const btnReplay = document.getElementById('btn-replay-assistant-voice');
+  const btnAskNext = document.getElementById('btn-ask-next-inquiry');
+
+  // 1. Language Toggle
+  if (btnHindi && btnEnglish) {
+    btnHindi.addEventListener('click', () => {
+      selectedVoiceLang = 'hi-IN';
+      btnHindi.classList.add('active');
+      btnEnglish.classList.remove('active');
+      if (statusText) statusText.innerText = 'Language: हिन्दी (hi-IN)';
+      showToast('Voice Assistant set to Hindi (हिन्दी)', 'info');
+    });
+
+    btnEnglish.addEventListener('click', () => {
+      selectedVoiceLang = 'en-IN';
+      btnEnglish.classList.add('active');
+      btnHindi.classList.remove('active');
+      if (statusText) statusText.innerText = 'Language: English (en-IN)';
+      showToast('Voice Assistant set to English', 'info');
+    });
+  }
+
+  // 2. Test Voice Button
+  if (btnTestVoice) {
+    btnTestVoice.addEventListener('click', () => {
+      const testMsg = selectedVoiceLang === 'hi-IN'
+        ? 'नमस्ते! CareConnect AI voice assistant पूरी तरह से सक्रिय है। आप अपनी सेहत की जानकारी बोल सकते हैं।'
+        : 'Hello! CareConnect AI voice assistant is fully active and listening. You can speak your health details.';
+      playElderSpeech(testMsg, selectedVoiceLang);
+      showToast('Playing voice assistant audio sample...', 'info');
+    });
+  }
+
+  // 3. Clear Transcript
+  if (btnClear && transcriptBox) {
+    btnClear.addEventListener('click', () => {
+      transcriptBox.value = '';
+      if (bubble) bubble.classList.add('hidden');
+      if (statusText) statusText.innerText = 'Transcript cleared. Ready to record.';
+    });
+  }
+
+  // 4. Web Speech API Microphone Recording
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let currentSessionTranscript = '';
+
+  if (SpeechRec) {
+    voiceRecognitionInstance = new SpeechRec();
+    voiceRecognitionInstance.continuous = true;
+    voiceRecognitionInstance.interimResults = true;
+
+    voiceRecognitionInstance.onstart = () => {
+      isVoiceRecording = true;
+      currentSessionTranscript = '';
+      if (btnRecord) {
+        btnRecord.classList.add('recording');
+        if (recordText) recordText.innerText = 'Stop Speaking (सुन रहे हैं...)';
+      }
+      if (soundWave) soundWave.classList.remove('hidden');
+      if (statusText) statusText.innerText = `Listening in ${selectedVoiceLang === 'hi-IN' ? 'Hindi (हिन्दी)' : 'English'}... Speak clearly`;
+      playAcousticChime('start');
+    };
+
+    voiceRecognitionInstance.onresult = (event) => {
+      let fullTranscript = '';
+      for (let i = 0; i < event.results.length; ++i) {
+        fullTranscript += event.results[i][0].transcript;
+        if (event.results[i].isFinal) fullTranscript += ' ';
+      }
+      currentSessionTranscript = fullTranscript.trim();
+      if (transcriptBox && currentSessionTranscript) {
+        transcriptBox.value = currentSessionTranscript;
+      }
+    };
+
+    voiceRecognitionInstance.onerror = (event) => {
+      console.warn('Speech recognition error:', event.error);
+      stopRecordingUI();
+      if (statusText) statusText.innerText = `Mic notice: ${event.error}. Click Mic to speak again.`;
+    };
+
+    voiceRecognitionInstance.onend = () => {
+      stopRecordingUI();
+      const textToProcess = currentSessionTranscript || (transcriptBox ? transcriptBox.value.trim() : '');
+      if (textToProcess) {
+        processTranscriptWithNLP(textToProcess);
+      } else {
+        if (statusText) statusText.innerText = 'Ready. Click Mic or a question to speak.';
+      }
+    };
+  } else {
+    if (statusText) statusText.innerText = 'Live mic uses Web Speech API. Audio file upload is fully supported.';
+  }
+
+  function stopRecordingUI() {
+    isVoiceRecording = false;
+    if (btnRecord) {
+      btnRecord.classList.remove('recording');
+      if (recordText) recordText.innerText = 'Start Speaking (Mic)';
+    }
+    if (soundWave) soundWave.classList.add('hidden');
+    if (statusText) statusText.innerText = 'Processing clinical voice note...';
+  }
+
+  if (btnRecord) {
+    btnRecord.addEventListener('click', () => {
+      if (!voiceRecognitionInstance) {
+        showToast('Live microphone requires Chrome/Edge. You can upload an audio file or click try examples below.', 'warning');
+        return;
+      }
+      if (!isVoiceRecording) {
+        stopAllSpeechAudio();
+        voiceRecognitionInstance.lang = selectedVoiceLang;
+        try {
+          voiceRecognitionInstance.start();
+        } catch (e) {
+          try {
+            voiceRecognitionInstance.stop();
+            setTimeout(() => {
+              try { voiceRecognitionInstance.start(); } catch (err) {}
+            }, 120);
+          } catch (err) {}
+        }
+      } else {
+        try {
+          voiceRecognitionInstance.stop();
+        } catch (e) {}
+      }
+    });
+  }
+
+  // 5. Audio File Upload (.wav, .mp3, .m4a, .flac)
+  if (fileInput) {
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (statusText) statusText.innerText = 'Transcribing uploaded audio file...';
+      if (soundWave) soundWave.classList.remove('hidden');
+
+      const formData = new FormData();
+      formData.append('audio', file);
+      formData.append('language', selectedVoiceLang);
+      formData.append('current_entities', JSON.stringify(cumulativeExtracted));
+
+      try {
+        const res = await fetch('/api/audio/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const json = await res.json();
+        if (soundWave) soundWave.classList.add('hidden');
+
+        if (json.success) {
+          if (transcriptBox && json.transcript) transcriptBox.value = json.transcript;
+          applyExtractedEntities(json);
+        } else {
+          showToast(json.error || 'Audio upload could not be transcribed. Use live mic or .wav.', 'danger');
+          if (statusText) statusText.innerText = 'Audio transcription failed';
+        }
+      } catch (err) {
+        if (soundWave) soundWave.classList.add('hidden');
+        showToast('Error uploading audio file', 'danger');
+        if (statusText) statusText.innerText = 'Error uploading audio';
+      }
+    });
+  }
+
+  // 6. Manual / Edited Transcript Extraction
+  if (btnParse && transcriptBox) {
+    btnParse.addEventListener('click', () => {
+      const text = transcriptBox.value.trim();
+      if (!text) {
+        showToast('Please speak or type your clinical details first.', 'warning');
+        return;
+      }
+      processTranscriptWithNLP(text);
+    });
+  }
+
+  // 7. Replay Assistant Voice
+  if (btnReplay) {
+    btnReplay.addEventListener('click', () => {
+      if (lastAssistantSpeech) {
+        playElderSpeech(lastAssistantSpeech, selectedVoiceLang);
+      } else {
+        playElderSpeech('Voice assistant is ready. Please record your health information.', selectedVoiceLang);
+      }
+    });
+  }
+
+  // 8. Ask Next Missing Question Button
+  if (btnAskNext) {
+    btnAskNext.addEventListener('click', () => {
+      if (!currentInquiries || currentInquiries.length === 0) {
+        const doneMsg = selectedVoiceLang === 'hi-IN'
+          ? 'सभी स्वास्थ्य संकेत पूरे हो चुके हैं! आप जोखिम जांचें बटन पर क्लिक करके अपनी AI रिपोर्ट देख सकते हैं।'
+          : 'All clinical parameters are complete! You can now click Predict Health Risk to generate your report.';
+        playElderSpeech(doneMsg, selectedVoiceLang);
+        if (assistantText) assistantText.innerText = doneMsg;
+        showToast('All items answered! Ready for AI prediction.', 'success');
+        return;
+      }
+
+      const nextInq = currentInquiries[0];
+      const qText = selectedVoiceLang === 'hi-IN' ? nextInq.question_hi : nextInq.question_en;
+      lastAssistantSpeech = qText;
+
+      if (bubble && assistantText) {
+        bubble.classList.remove('hidden');
+        assistantText.innerText = qText;
+      }
+      if (statusText) statusText.innerText = `Assistant asking: "${nextInq.title}"... Listening starts after speech.`;
+      showToast(`Next question: ${nextInq.title}`, 'info');
+
+      playElderSpeech(qText, selectedVoiceLang, {
+        onend: () => {
+          if (voiceRecognitionInstance && !isVoiceRecording) {
+            try {
+              voiceRecognitionInstance.lang = selectedVoiceLang;
+              voiceRecognitionInstance.start();
+              showToast(`Now listening for ${nextInq.title}... Speak your answer.`, 'info');
+            } catch (e) {
+              console.warn('Recognition auto-start error:', e);
+            }
+          }
+        }
+      });
+    });
+  }
+}
+
+// 7. Process Speech Transcript with Backend NLP
+async function processTranscriptWithNLP(text) {
+  const statusText = document.getElementById('voice-status-text');
+  if (statusText) statusText.innerText = 'AI Extracting Clinical Parameters...';
+
+  try {
+    const res = await fetch('/api/audio/extract-form', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        transcript: text,
+        language: selectedVoiceLang,
+        current_entities: cumulativeExtracted
+      })
+    });
+    const json = await res.json();
+    if (json.success) {
+      applyExtractedEntities(json);
+    } else {
+      showToast(json.error || 'Failed to extract clinical entities', 'danger');
+      if (statusText) statusText.innerText = 'Extraction encountered an issue';
+    }
+  } catch (e) {
+    console.warn('NLP extraction network error', e);
+    showToast('Network error while extracting parameters', 'danger');
+    if (statusText) statusText.innerText = 'Network error extracting parameters';
+  }
+}
+
+// 8. Apply Extracted Entities into Form DOM, Checklist Badges & Voice Feedback
+function applyExtractedEntities(result) {
+  if (result.extracted) {
+    cumulativeExtracted = { ...cumulativeExtracted, ...result.extracted };
+  }
+  const extracted = cumulativeExtracted;
+  const { missing_fields, feedback, is_ready_for_assessment } = result;
+
+  // 1. Age
+  if (extracted.age !== undefined) {
+    const ageEl = document.getElementById('assess-age');
+    if (ageEl) {
+      ageEl.value = extracted.age;
+      highlightInputModification('assess-age', `Age ${extracted.age}y`);
+    }
+  }
+
+  // 2. Gender
+  if (extracted.gender !== undefined) {
+    const gEl = document.getElementById('assess-gender');
+    if (gEl) {
+      gEl.value = extracted.gender;
+      highlightInputModification('assess-gender', extracted.gender);
+    }
+  }
+
+  // 3. Weight & Height
+  if (extracted.weight !== undefined) {
+    const wEl = document.getElementById('assess-weight');
+    if (wEl) {
+      wEl.value = extracted.weight;
+      highlightInputModification('assess-weight', `${extracted.weight}kg`);
+    }
+  }
+  if (extracted.height !== undefined) {
+    const hEl = document.getElementById('assess-height');
+    if (hEl) {
+      hEl.value = extracted.height;
+      highlightInputModification('assess-height', `${extracted.height}cm`);
+    }
+  }
+
+  // 4. Blood Pressure (BP Systolic & Diastolic)
+  if (extracted.bp_sys !== undefined) {
+    const sysEl = document.getElementById('assess-bp-sys');
+    if (sysEl) {
+      sysEl.value = extracted.bp_sys;
+      highlightInputModification('assess-bp-sys', `Sys ${extracted.bp_sys}`);
+    }
+  }
+  if (extracted.bp_dia !== undefined) {
+    const diaEl = document.getElementById('assess-bp-dia');
+    if (diaEl) {
+      diaEl.value = extracted.bp_dia;
+      highlightInputModification('assess-bp-dia', `Dia ${extracted.bp_dia}`);
+    }
+  }
+
+  // 5. Heart Rate & SpO2
+  if (extracted.heart_rate !== undefined) {
+    const hrEl = document.getElementById('assess-hr');
+    if (hrEl) {
+      hrEl.value = extracted.heart_rate;
+      highlightInputModification('assess-hr', `${extracted.heart_rate} bpm`);
+    }
+  }
+  if (extracted.spo2 !== undefined) {
+    const spEl = document.getElementById('assess-spo2');
+    if (spEl) {
+      spEl.value = extracted.spo2;
+      highlightInputModification('assess-spo2', `${extracted.spo2}%`);
+    }
+  }
+
+  // 6. Pain Profile
+  if (extracted.pain_present !== undefined) {
+    setPainPresent(extracted.pain_present === 1);
+  }
+  if (extracted.pain_level !== undefined) {
+    updatePainSlider(extracted.pain_level);
+  }
+  if (extracted.pain_loc !== undefined && extracted.pain_loc !== 'None') {
+    const locEl = document.getElementById('assess-pain-loc');
+    if (locEl) {
+      locEl.value = extracted.pain_loc;
+      highlightInputModification('assess-pain-loc', extracted.pain_loc);
+    }
+  }
+
+  // 7. Sleep Hours
+  if (extracted.sleep_hours !== undefined) {
+    const slEl = document.getElementById('assess-sleep');
+    if (slEl) {
+      slEl.value = extracted.sleep_hours;
+      highlightInputModification('assess-sleep', `${extracted.sleep_hours} hrs`);
+    }
+  }
+
+  // 8. ADL Functional Independence
+  if (extracted.walk !== undefined) {
+    const wEl = document.getElementById('assess-walk');
+    if (wEl) {
+      wEl.value = String(extracted.walk);
+      highlightInputModification('assess-walk', extracted.walk === 1 ? 'Indep' : 'Needs Help');
+    }
+  }
+  if (extracted.eat !== undefined) {
+    const eEl = document.getElementById('assess-eat');
+    if (eEl) {
+      eEl.value = String(extracted.eat);
+      highlightInputModification('assess-eat', extracted.eat === 1 ? 'Indep' : 'Dependent');
+    }
+  }
+  if (extracted.move !== undefined) {
+    const mEl = document.getElementById('assess-move');
+    if (mEl) {
+      mEl.value = String(extracted.move);
+      highlightInputModification('assess-move', extracted.move === 1 ? 'Indep' : 'Needs Help');
+    }
+  }
+  if (extracted.toilet !== undefined) {
+    const tEl = document.getElementById('assess-toilet');
+    if (tEl) {
+      tEl.value = String(extracted.toilet);
+      highlightInputModification('assess-toilet', extracted.toilet === 1 ? 'Indep' : 'Dependent');
+    }
+  }
+
+  // 9. Medications & Missed Doses
+  if (extracted.med_count !== undefined) {
+    const mEl = document.getElementById('assess-med-count');
+    if (mEl) {
+      mEl.value = extracted.med_count;
+      highlightInputModification('assess-med-count', `${extracted.med_count} meds`);
+    }
+  }
+  if (extracted.missed_doses !== undefined) {
+    const mdEl = document.getElementById('assess-missed-doses');
+    if (mdEl) {
+      mdEl.value = String(extracted.missed_doses);
+      highlightInputModification('assess-missed-doses');
+    }
+  }
+
+  // 10. Diabetes & Blood Sugar
+  if (extracted.diabetic !== undefined) {
+    const dEl = document.getElementById('assess-diabetic');
+    if (dEl) {
+      dEl.value = String(extracted.diabetic);
+      toggleSugarInput(String(extracted.diabetic));
+      highlightInputModification('assess-diabetic', extracted.diabetic === 1 ? 'Diabetic' : 'No Diabetes');
+    }
+  }
+  if (extracted.sugar_level !== undefined) {
+    const sEl = document.getElementById('assess-sugar');
+    if (sEl) {
+      sEl.value = extracted.sugar_level;
+      highlightInputModification('assess-sugar', `${extracted.sugar_level} mg/dL`);
+    }
+  }
+
+  // 11. Hearing Level
+  if (extracted.hearing_level !== undefined) {
+    const hEl = document.getElementById('assess-hearing');
+    if (hEl) {
+      hEl.value = String(extracted.hearing_level);
+      highlightInputModification('assess-hearing', extracted.hearing_level === 0 ? 'Normal' : extracted.hearing_level === 1 ? 'Mild' : 'Hearing Aid');
+    }
+  }
+
+  // 12. Chronic Diseases
+  if (extracted.htn !== undefined) {
+    const cb = document.getElementById('chk-htn');
+    if (cb) cb.checked = extracted.htn === 1;
+  }
+  if (extracted.arth !== undefined) {
+    const cb = document.getElementById('chk-arth');
+    if (cb) cb.checked = extracted.arth === 1;
+  }
+  if (extracted.heart !== undefined) {
+    const cb = document.getElementById('chk-heart');
+    if (cb) cb.checked = extracted.heart === 1;
+  }
+  if (extracted.resp !== undefined) {
+    const cb = document.getElementById('chk-resp');
+    if (cb) cb.checked = extracted.resp === 1;
+  }
+
+  // Update Calculations & Persistence
+  updateCalculatedBMI();
+  updateADLScore();
+  saveAssessmentDraft();
+
+  // Render Comprehensive Clinical Audit Checklist
+  if (result.checklist) {
+    currentChecklist = result.checklist;
+    currentInquiries = result.inquiries || [];
+    renderChecklistGrid(result.checklist, currentInquiries);
+  }
+
+  // Render Speech Feedback Bubble
+  const voiceText = selectedVoiceLang === 'hi-IN' ? feedback.hindi : feedback.english;
+  lastAssistantSpeech = voiceText;
+
+  const bubble = document.getElementById('voice-feedback-bubble');
+  const assistantText = document.getElementById('voice-assistant-text');
+  const missingWrap = document.getElementById('voice-missing-fields-tags');
+  const statusText = document.getElementById('voice-status-text');
+
+  if (bubble && assistantText) {
+    bubble.classList.remove('hidden');
+    assistantText.innerText = voiceText;
+
+    if (missingWrap) {
+      missingWrap.innerHTML = '';
+      if (missing_fields && missing_fields.length > 0) {
+        missing_fields.forEach(f => {
+          const pill = document.createElement('span');
+          pill.className = 'missing-pill';
+          pill.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Needs Info: ${f.replace('_', ' ').toUpperCase()}`;
+          missingWrap.appendChild(pill);
+        });
+      }
+    }
+  }
+
+  if (statusText) {
+    statusText.innerText = is_ready_for_assessment
+      ? 'All parameters completed! Ready for AI Assessment.'
+      : `Details updated! ${missing_fields.length} parameter(s) remaining.`;
+  }
+
+  // Speak Assistant Response Aloud
+  playElderSpeech(voiceText, selectedVoiceLang);
+
+  // Pulse Final Assessment button if ready
+  const submitBtn = document.getElementById('assess-submit-btn');
+  if (submitBtn) {
+    if (is_ready_for_assessment) {
+      submitBtn.classList.add('ring-4', 'ring-teal-300', 'animate-bounce');
+      setTimeout(() => submitBtn.classList.remove('animate-bounce'), 2500);
+    } else {
+      submitBtn.classList.remove('ring-4', 'ring-teal-300');
+    }
+  }
+
+  showToast('Clinical parameters extracted and form updated!', 'success');
+}
+
+// 9. Render Clinical Checklist Grid Badges
+function renderChecklistGrid(checklist, inquiries) {
+  const badgeKeys = ['age', 'gender', 'body', 'vitals', 'pain', 'sleep', 'adl_walk', 'adl_eat', 'adl_move', 'adl_toilet', 'meds', 'sugar', 'hearing', 'diseases'];
+
+  badgeKeys.forEach(k => {
+    const badge = document.getElementById(`badge-chk-${k}`);
+    if (!badge) return;
+    const item = checklist[k];
+    if (!item) return;
+
+    const isAnswered = item.status === 'provided';
+    badge.className = `voice-check-badge ${isAnswered ? 'status-provided' : 'status-missing'}`;
+
+    let valDisplay = '';
+    if (isAnswered && item.value !== null && item.value !== undefined) {
+      valDisplay = `: ${item.value}`;
+    }
+
+    const titlePrefix = item.title.split(' ')[0];
+    const statusText = isAnswered
+      ? '<i class="fa-solid fa-check text-emerald-600"></i> Answered'
+      : '? Needs Info';
+
+    const labelSpan = badge.querySelector('.badge-tag-label');
+    const statusSpan = badge.querySelector('.badge-tag-status');
+
+    if (labelSpan) {
+      const icon = labelSpan.querySelector('i');
+      const iconClass = icon ? icon.className : 'fa-solid fa-circle-dot';
+      labelSpan.innerHTML = `<i class="${iconClass}"></i> ${titlePrefix}${valDisplay}`;
+    }
+    if (statusSpan) {
+      statusSpan.innerHTML = statusText;
+    }
+
+    // Clicking ANY checklist badge prompts the assistant to speak the specific question
+    badge.onclick = () => {
+      const qText = selectedVoiceLang === 'hi-IN' ? item.question_hi : item.question_en;
+      lastAssistantSpeech = qText;
+
+      const bubble = document.getElementById('voice-feedback-bubble');
+      const assistantText = document.getElementById('voice-assistant-text');
+      const statusText = document.getElementById('voice-status-text');
+
+      if (bubble && assistantText) {
+        bubble.classList.remove('hidden');
+        assistantText.innerText = qText;
+      }
+      if (statusText) statusText.innerText = `Assistant asking about ${item.title}... Listening starts after speech.`;
+      showToast(`Asking about ${item.title}...`, 'info');
+
+      playElderSpeech(qText, selectedVoiceLang, {
+        onend: () => {
+          if (voiceRecognitionInstance && !isVoiceRecording) {
+            try {
+              voiceRecognitionInstance.lang = selectedVoiceLang;
+              voiceRecognitionInstance.start();
+              showToast(`Now listening for ${item.title}... Speak your answer.`, 'info');
+            } catch (e) {
+              console.warn('Recognition auto-start error:', e);
+            }
+          }
+        }
+      });
+    };
+  });
+
+  const lblNext = document.getElementById('lbl-ask-next');
+  if (lblNext) {
+    lblNext.innerText = inquiries && inquiries.length > 0
+      ? `Ask Next (${inquiries.length} remaining)`
+      : 'All Parameters Complete ✓';
+  }
+}
+
+// 10. Simulate Voice Input (Evaluator One-Click Testing)
+function simulateVoiceHealthInput(phrase) {
+  const transcriptBox = document.getElementById('voice-transcript-text');
+  if (transcriptBox) transcriptBox.value = phrase;
+  processTranscriptWithNLP(phrase);
+}
+
+// 11. Bind Form Auto-Save Listeners & Initialize Voice Assistant
+function initAssessmentDraftAutoSaveListeners() {
+  const form = document.getElementById('elder-assessment-form');
+  if (form) {
+    form.addEventListener('input', () => {
+      saveAssessmentDraft();
+    });
+    form.addEventListener('change', () => {
+      saveAssessmentDraft();
+    });
+  }
+
+  // Restore saved draft from localStorage
+  restoreAssessmentDraft();
+
+  // Initialize Elder Voice Assistant
+  initElderVoiceAssistant();
+}
+
+// Auto-run draft listeners and voice assistant on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAssessmentDraftAutoSaveListeners);
+} else {
+  initAssessmentDraftAutoSaveListeners();
+}

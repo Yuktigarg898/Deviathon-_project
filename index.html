@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CareConnect - Better Signals • Safer Tomorrows</title>
+  <title>CareConnect AI - Better Signals • Safer Tomorrows</title>
+  <link rel="icon" type="image/png" href="careconnect-emblem.png">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
@@ -47,51 +48,30 @@
     class="hidden sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm transition-all duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Brand Logo & Live Badge -->
+        <!-- Brand Logo & Live Badge (Official CareConnect AI Logo) -->
         <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateRole('login')">
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00a896] to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
-            <i class="fa-solid fa-heart-pulse text-xl"></i>
-          </div>
+          <img src="careconnect-emblem.png" alt="CareConnect AI Logo"
+            class="w-10 h-10 object-contain rounded-xl shadow-md border border-slate-100 bg-white p-0.5">
           <div>
             <div class="flex items-center space-x-2">
-              <span class="font-extrabold text-xl text-[#0e294b] tracking-tight">Care<span
-                  class="text-[#00a896]">Connect</span></span>
+              <span class="font-extrabold text-xl tracking-tight text-[#0e294b]">Care<span
+                  class="text-[#00a896]">Connect</span> <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent font-black">AI</span></span>
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                 <span class="w-1.5 h-1.5 mr-1 rounded-full bg-emerald-500 animate-pulse"></span> Live System
               </span>
             </div>
-            <p class="text-[11px] text-slate-500 -mt-0.5 font-medium hidden sm:block">Better Signals • Safer Tomorrows
-            </p>
+            <p class="text-[11px] text-slate-500 -mt-0.5 font-semibold hidden sm:block">Better Signals • Safer Tomorrows</p>
           </div>
         </div>
 
-        <!-- Role Quick Switcher Pills (Evaluator Convenience) -->
-        <div class="hidden md:flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 shadow-inner">
-          <button onclick="navigateRole('coordinator')" id="pill-coordinator"
-            class="role-nav-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-user-doctor text-[#00a896]"></i>
-            <span>Care Coordinator</span>
-            <span id="nav-alert-count"
-              class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-rose-500 text-white">2</span>
-          </button>
-          <button onclick="navigateRole('senior')" id="pill-senior"
-            class="role-nav-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-person-walking-with-cane text-sky-600"></i>
-            <span>Senior (बुज़ुर्ग)</span>
-          </button>
-          <button onclick="navigateRole('family')" id="pill-family"
-            class="role-nav-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-people-roof text-purple-600"></i>
-            <span>Family Member</span>
-            <span id="nav-family-alert-dot" class="w-2 h-2 rounded-full bg-rose-500 hidden animate-ping"></span>
-          </button>
-          <button onclick="navigateRole('operations')" id="pill-operations"
-            class="role-nav-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-chart-line text-orange-600"></i>
-            <span>Operations Manager</span>
-          </button>
+        <!-- Active Persona Badge in Header (Restricted to logged-in user) -->
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200">
+          <span id="header-active-portal-icon" class="text-sm text-teal-600"><i class="fa-solid fa-user-shield"></i></span>
+          <span id="header-active-portal-title" class="text-xs font-bold text-slate-800">Care Coordinator Portal</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+            <span class="w-1.5 h-1.5 mr-1 rounded-full bg-emerald-500 animate-pulse"></span> Authenticated Session
+          </span>
         </div>
 
         <!-- Right Side: Current Persona Badge & Audio Toggle & Switch Role -->
@@ -115,32 +95,19 @@
             </div>
           </div>
 
-          <!-- Back to Role Selection Button -->
+          <!-- Sign Out Button -->
           <button onclick="logout()"
-            class="inline-flex items-center px-2.5 py-1.5 border border-slate-200 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 hover:text-rose-600 hover:border-rose-200 transition-all shadow-sm"
-            title="Back to Role Selector">
-            <i class="fa-solid fa-arrow-left-long mr-1.5"></i>
-            <span class="hidden sm:inline">Role Selector</span>
+            class="inline-flex items-center px-3 py-1.5 border border-rose-200 text-xs font-bold rounded-xl text-rose-700 bg-rose-50 hover:bg-rose-100 transition-all shadow-sm"
+            title="Sign out of active account">
+            <i class="fa-solid fa-arrow-right-from-bracket mr-1.5 text-rose-500"></i>
+            <span>Sign Out / लॉग आउट</span>
           </button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Mobile Role Nav Bar (Below header on small devices) -->
-  <div id="mobile-role-nav"
-    class="hidden md:hidden bg-slate-100 border-b border-slate-200 px-2 py-2 overflow-x-auto whitespace-nowrap">
-    <div class="flex space-x-1">
-      <button onclick="navigateRole('coordinator')"
-        class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-700 bg-white shadow-sm border border-slate-200">Coordinator</button>
-      <button onclick="navigateRole('senior')"
-        class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-700 bg-white shadow-sm border border-slate-200">Senior</button>
-      <button onclick="navigateRole('family')"
-        class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-700 bg-white shadow-sm border border-slate-200">Family</button>
-      <button onclick="navigateRole('operations')"
-        class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-700 bg-white shadow-sm border border-slate-200">Operations</button>
-    </div>
-  </div>
+  <!-- Mobile Role Nav Bar Removed for Strict Role Isolation -->
 
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
@@ -156,32 +123,24 @@
 
         <!-- ================= LEFT COLUMN: HERO & BRANDING ================= -->
         <div
-          class="lg:w-1/2 w-full bg-[#f8fbfa] p-8 sm:p-12 lg:p-14 flex flex-col justify-between relative border-r border-slate-100">
+          class="lg:w-1/2 w-full bg-gradient-to-br from-[#f8fbfb] via-[#f0f9f8] to-[#edf7f6] p-6 sm:p-10 lg:p-12 flex flex-col justify-between relative border-r border-slate-200/80">
 
-          <!-- Top: Logo & Slogan -->
+          <!-- Top: Official CareConnect AI Logo & Slogan -->
           <div>
-            <div class="flex items-center space-x-3 mb-8">
-              <!-- Custom Stylized CareConnect Heart-Pulse Logo -->
-              <div class="w-12 h-12 flex items-center justify-center">
-                <svg viewBox="0 0 100 100" class="w-12 h-12">
-                  <!-- Abstract dual heads -->
-                  <circle cx="36" cy="22" r="9" fill="#00a896" />
-                  <circle cx="64" cy="22" r="9" fill="#0e294b" />
-                  <!-- Heart outline body with pulse -->
-                  <path
-                    d="M 22 45 C 10 25, 40 25, 50 42 C 60 25, 90 25, 78 45 C 65 65, 50 85, 50 85 C 50 85, 35 65, 22 45 Z"
-                    fill="none" stroke="#00a896" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
-                  <!-- ECG pulse inside heart -->
-                  <path d="M 32 50 L 42 50 L 46 38 L 52 62 L 57 44 L 61 50 L 68 50" fill="none" stroke="#00a896"
-                    stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
+            <div class="flex items-center space-x-3.5 mb-6">
+              <img src="careconnect-emblem.png" alt="CareConnect AI Logo"
+                class="w-14 h-14 sm:w-16 sm:h-16 object-contain rounded-2xl shadow-md border border-slate-100 bg-white p-1 flex-shrink-0">
               <div>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-[#0e294b] tracking-tight">
-                  Care<span class="text-[#00a896]">Connect</span>
-                </h2>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium tracking-wide">
-                  Better Signals &nbsp;•&nbsp; Safer Tomorrows
+                <div class="flex items-center space-x-2">
+                  <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0e294b]">
+                    Care<span class="text-[#00a896]">Connect</span> <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent font-black">AI</span>
+                  </h2>
+                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200">
+                    Smart Telemetry
+                  </span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500 font-semibold tracking-wide mt-0.5">
+                  Better Signals • Safer Tomorrows
                 </p>
               </div>
             </div>
@@ -274,173 +233,356 @@
         </div>
 
 
-        <!-- ================= RIGHT COLUMN: ROLE SELECTION ================= -->
+        <!-- ================= RIGHT COLUMN: AUTHENTICATION FLOW ================= -->
         <div
-          class="lg:w-1/2 w-full flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12 relative bg-white min-h-screen">
+          class="lg:w-1/2 w-full flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-10 relative bg-white min-h-screen">
 
-          <!-- Botanical Corner Accents (Exact match from mockup) -->
-          <img src="leaf-top-right.png" class="absolute top-0 right-0 w-36 pointer-events-none opacity-85 select-none"
+          <!-- Botanical Corner Accents (Decorative Background) -->
+          <img src="leaf-top-right.png" class="absolute top-0 right-0 w-28 sm:w-36 pointer-events-none opacity-40 select-none -z-0"
             alt="">
           <img src="leaf-bottom-right.png"
-            class="absolute bottom-0 right-0 w-36 pointer-events-none opacity-85 select-none" alt="">
+            class="absolute bottom-0 right-0 w-28 sm:w-36 pointer-events-none opacity-40 select-none -z-0" alt="">
 
           <div class="max-w-md mx-auto w-full relative z-10">
 
-            <!-- Welcome Header -->
-            <div class="text-center mb-8 sm:mb-10">
-              <h2 class="text-3xl sm:text-4xl font-extrabold text-[#0e294b] tracking-tight">
-                Welcome to <span class="text-[#00a896]">CareConnect</span>
-              </h2>
-              <p class="text-sm sm:text-base text-slate-500 mt-2 font-medium">
-                Choose your role to continue
-              </p>
+            <!-- STEP 1: ROLE SELECTION HUB -->
+            <div id="auth-role-selector-step" class="transition-all duration-300">
+              <!-- Welcome Header -->
+              <div class="text-center mb-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200 mb-3 shadow-sm">
+                  <i class="fa-solid fa-shield-halved text-teal-600"></i>
+                  <span>Role-Based Access Control • AI Telemetry</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0e294b] tracking-tight">
+                  Welcome to Care<span class="text-[#00a896]">Connect</span> <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">AI</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1.5 font-medium">
+                  Select your role to open your dedicated companion portal
+                </p>
+              </div>
+
+              <!-- 4 ROLE SELECTION CARDS (Modernized, Responsive & High-Contrast) -->
+              <div class="space-y-3 sm:space-y-3.5">
+
+                <!-- 1. Care Coordinator -->
+                <div onclick="selectRoleForAuth('coordinator')"
+                  class="group bg-[#f0fbf7] hover:bg-[#e4f7ee] border-2 border-[#c8f0dc] hover:border-[#10b981] rounded-2xl p-3.5 sm:p-4 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/15 active:scale-[0.99]">
+                  <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-[#10b981] to-[#059669] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                      <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center space-x-2">
+                        <h3 class="text-sm sm:text-base font-extrabold text-[#0e294b] group-hover:text-emerald-900 transition-colors">
+                          Care Coordinator
+                        </h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                          Clinical Queue
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-0.5 leading-snug">
+                        Ranked daily triage queue, priority alerts & nurse dispatch actions.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-white text-emerald-700 flex items-center justify-center text-sm font-bold ml-2 shadow-sm border border-emerald-200 group-hover:bg-emerald-600 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </div>
+                </div>
+
+                <!-- 2. Senior (बुज़ुर्ग साथी) -->
+                <div onclick="selectRoleForAuth('senior')"
+                  class="group bg-[#f0f7ff] hover:bg-[#e2effe] border-2 border-[#cbe3fd] hover:border-[#0284c7] rounded-2xl p-3.5 sm:p-4 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-sky-500/15 active:scale-[0.99]">
+                  <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-[#0284c7] to-[#0369a1] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
+                      <i class="fa-solid fa-person-walking-with-cane"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center space-x-2">
+                        <h3 class="text-sm sm:text-base font-extrabold text-[#0e294b] group-hover:text-sky-900 transition-colors">
+                          Senior (बुज़ुर्ग साथी)
+                        </h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-300">
+                          Voice Companion
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-0.5 leading-snug">
+                        AI Health Assessment, voice note check-ins & emergency assistance.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-white text-sky-700 flex items-center justify-center text-sm font-bold ml-2 shadow-sm border border-sky-200 group-hover:bg-sky-600 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </div>
+                </div>
+
+                <!-- 3. Family Member -->
+                <div onclick="selectRoleForAuth('family')"
+                  class="group bg-[#f7f3ff] hover:bg-[#ece3ff] border-2 border-[#dfd2fd] hover:border-[#7c3aed] rounded-2xl p-3.5 sm:p-4 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/15 active:scale-[0.99]">
+                  <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-[#7c3aed] to-[#6d28d9] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                      <i class="fa-solid fa-people-group"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center space-x-2">
+                        <h3 class="text-sm sm:text-base font-extrabold text-[#0e294b] group-hover:text-purple-900 transition-colors">
+                          Family Member
+                        </h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-300">
+                          Wellbeing Hub
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-0.5 leading-snug">
+                        Weekly health summaries, routine notifications & critical alerts.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-white text-purple-700 flex items-center justify-center text-sm font-bold ml-2 shadow-sm border border-purple-200 group-hover:bg-purple-600 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </div>
+                </div>
+
+                <!-- 4. Operations Manager -->
+                <div onclick="selectRoleForAuth('operations')"
+                  class="group bg-[#fff7ed] hover:bg-[#ffedd5] border-2 border-[#fed7aa] hover:border-[#ea580c] rounded-2xl p-3.5 sm:p-4 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/15 active:scale-[0.99]">
+                  <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-[#f97316] to-[#c2410c] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
+                      <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center space-x-2">
+                        <h3 class="text-sm sm:text-base font-extrabold text-[#0e294b] group-hover:text-orange-900 transition-colors">
+                          Operations Manager
+                        </h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 border border-orange-300">
+                          Command Center
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-0.5 leading-snug">
+                        Fleet response metrics, alert volumes, and citywide SLAs.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-white text-orange-700 flex items-center justify-center text-sm font-bold ml-2 shadow-sm border border-orange-200 group-hover:bg-orange-600 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
-            <!-- 4 ROLE SELECTION CARDS (EXACT MATCH TO DESIGN) -->
-            <div class="space-y-4">
-
-              <!-- 1. Care Coordinator -->
-              <div onclick="loginAs('coordinator')"
-                class="group bg-[#f0fbf7] hover:bg-[#e4f7ee] border border-[#d2f3e3] rounded-2xl p-4 sm:p-5 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-[#b5ecd0] active:scale-[0.99]">
-                <div class="flex items-center space-x-4">
-                  <!-- Teal Icon -->
-                  <div
-                    class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#10b981] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-user-doctor"></i>
-                  </div>
-                  <div>
-                    <h3
-                      class="text-base sm:text-lg font-bold text-[#0e294b] group-hover:text-emerald-800 transition-colors">
-                      Care Coordinator
-                    </h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5 leading-snug">
-                      View prioritized seniors, manage alerts and take action.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="text-slate-700 text-xl font-bold ml-3 group-hover:text-emerald-700 group-hover:translate-x-1.5 transition-all">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </div>
-              </div>
-
-              <!-- 2. Senior -->
-              <div onclick="loginAs('senior')"
-                class="group bg-[#f0f7ff] hover:bg-[#e2effe] border border-[#d5e7fd] rounded-2xl p-4 sm:p-5 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-sky-500/10 hover:border-[#b8d9fc] active:scale-[0.99]">
-                <div class="flex items-center space-x-4">
-                  <!-- Blue Icon -->
-                  <div
-                    class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#0284c7] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-face-smile"></i>
-                  </div>
-                  <div>
-                    <h3
-                      class="text-base sm:text-lg font-bold text-[#0e294b] group-hover:text-sky-800 transition-colors">
-                      Senior
-                    </h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5 leading-snug">
-                      Share your health updates, voice notes and get timely reminders.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="text-slate-700 text-xl font-bold ml-3 group-hover:text-sky-700 group-hover:translate-x-1.5 transition-all">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </div>
-              </div>
-
-              <!-- 3. Family Member -->
-              <div onclick="loginAs('family')"
-                class="group bg-[#f7f3ff] hover:bg-[#ece3ff] border border-[#e5dcff] rounded-2xl p-4 sm:p-5 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/10 hover:border-[#d7c7fe] active:scale-[0.99]">
-                <div class="flex items-center space-x-4">
-                  <!-- Purple Icon -->
-                  <div
-                    class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#7c3aed] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-people-group"></i>
-                  </div>
-                  <div>
-                    <h3
-                      class="text-base sm:text-lg font-bold text-[#0e294b] group-hover:text-purple-800 transition-colors">
-                      Family Member
-                    </h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5 leading-snug">
-                      View wellbeing summaries and receive important alerts.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="text-slate-700 text-xl font-bold ml-3 group-hover:text-purple-700 group-hover:translate-x-1.5 transition-all">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </div>
-              </div>
-
-              <!-- 4. Operations Manager -->
-              <div onclick="loginAs('operations')"
-                class="group bg-[#fff5ed] hover:bg-[#ffe9d8] border border-[#ffe1cb] rounded-2xl p-4 sm:p-5 flex items-center justify-between cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/10 hover:border-[#ffd1ad] active:scale-[0.99]">
-                <div class="flex items-center space-x-4">
-                  <!-- Orange Icon -->
-                  <div
-                    class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#f97316] text-white flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-chart-simple"></i>
-                  </div>
-                  <div>
-                    <h3
-                      class="text-base sm:text-lg font-bold text-[#0e294b] group-hover:text-orange-800 transition-colors">
-                      Operations Manager
-                    </h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5 leading-snug">
-                      Monitor analytics, alert volumes, response times and outcomes.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="text-slate-700 text-xl font-bold ml-3 group-hover:text-orange-700 group-hover:translate-x-1.5 transition-all">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Optional Collapsible Enterprise Credential Form -->
-            <div class="mt-8 text-center">
-              <button onclick="toggleEnterpriseLogin()"
-                class="text-xs font-semibold text-slate-400 hover:text-slate-700 transition-colors inline-flex items-center space-x-1">
-                <span>Enterprise Sign-in with password</span>
-                <i id="enterprise-caret" class="fa-solid fa-chevron-down text-[10px] ml-1"></i>
+            <!-- STEP 2: DEDICATED ROLE AUTHENTICATION PORTAL (SIGN IN / REGISTER / OTP / GOOGLE) -->
+            <div id="auth-credential-step" class="hidden transition-all duration-300">
+              
+              <!-- Back to Role Selection Button -->
+              <button type="button" onclick="backToRoleSelector()" class="inline-flex items-center space-x-2 text-xs font-bold text-slate-600 hover:text-teal-700 bg-slate-100 hover:bg-teal-50 px-3.5 py-1.5 rounded-xl border border-slate-200 mb-4 transition-all shadow-sm">
+                <i class="fa-solid fa-arrow-left text-teal-600"></i>
+                <span>Choose Another Role / दूसरा रोल चुनें</span>
               </button>
 
-              <div id="enterprise-form-container"
-                class="hidden mt-4 text-left bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <form onsubmit="handleFormLogin(event)" class="space-y-3">
+              <!-- Role Context Banner -->
+              <div id="auth-role-banner" class="p-4 rounded-2xl border mb-5 flex items-center space-x-3.5 bg-sky-50 border-sky-200 transition-colors shadow-sm">
+                <div id="auth-role-avatar" class="w-12 h-12 rounded-xl bg-sky-600 text-white flex items-center justify-center text-2xl shadow-sm flex-shrink-0">
+                  <i id="auth-role-icon" class="fa-solid fa-person-walking-with-cane"></i>
+                </div>
+                <div>
+                  <h3 id="auth-portal-title" class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">
+                    Senior Portal Sign In / बुज़ुर्ग लॉगिन
+                  </h3>
+                  <p id="auth-portal-desc" class="text-xs text-slate-600 font-medium mt-0.5">
+                    Access your personal health reminders & check-ins
+                  </p>
+                </div>
+              </div>
+
+              <!-- Auth Mode Toggle Tabs (Sign In vs Create Account) -->
+              <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-5 border border-slate-200 shadow-inner">
+                <button type="button" id="tab-auth-signin" onclick="switchAuthTab('signin')"
+                  class="py-2 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm">
+                  Sign In / लॉगिन
+                </button>
+                <button type="button" id="tab-auth-signup" onclick="switchAuthTab('signup')"
+                  class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-800">
+                  Create Account / नया खाता
+                </button>
+              </div>
+
+              <!-- ================= 1. SIGN IN FORM ================= -->
+              <div id="auth-form-signin" class="space-y-4">
+                <form onsubmit="handleSignInSubmit(event)" class="space-y-3.5">
                   <div>
-                    <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Email</label>
-                    <input id="login-email" type="email" value="kavita.nurse@careconnect.org" required
-                      class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs">
+                    <label id="lbl-signin-email" class="block text-xs font-bold text-slate-700 mb-1">
+                      Email or Mobile Number (ईमेल / फोन)
+                    </label>
+                    <input id="signin-email" type="text" value="ramesh.senior@careconnect.in" required
+                      class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none bg-slate-50/50">
                   </div>
+
                   <div>
-                    <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Role Destination</label>
-                    <select id="login-role-select"
-                      class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white">
-                      <option value="coordinator">1. Care Coordinator</option>
-                      <option value="senior">2. Senior (Hindi / English)</option>
-                      <option value="family">3. Family Member</option>
-                      <option value="operations">4. Operations Manager</option>
-                    </select>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs font-bold text-slate-700">Password (पासवर्ड)</label>
+                      <button type="button" onclick="toggleForgotPasswordOtp(true)" class="text-xs font-bold text-teal-600 hover:text-teal-800">
+                        Forgot Password? (पासवर्ड भूल गए?)
+                      </button>
+                    </div>
+                    <div class="relative">
+                      <input id="signin-password" type="password" value="password123" required
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none bg-slate-50/50 pr-10">
+                      <button type="button" onclick="togglePasswordVisibility('signin-password', 'eye-signin')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                        <i id="eye-signin" class="fa-solid fa-eye text-xs"></i>
+                      </button>
+                    </div>
                   </div>
-                  <button type="submit"
-                    class="w-full bg-[#0e294b] text-white py-2 rounded-lg text-xs font-bold hover:bg-slate-800 transition-colors">
-                    Sign In Directly
+
+                  <div class="flex items-center justify-between text-xs">
+                    <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                      <input type="checkbox" checked class="rounded text-teal-600 focus:ring-teal-500">
+                      <span>Remember this device</span>
+                    </label>
+                  </div>
+
+                  <button type="submit" id="btn-signin-submit"
+                    class="w-full py-3 rounded-xl bg-[#0e294b] hover:bg-slate-900 text-white font-extrabold text-xs sm:text-sm transition-all shadow-md active:scale-[0.99] flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span id="btn-signin-label">Sign In to Dashboard / लॉगिन करें</span>
                   </button>
                 </form>
+
+                <!-- OR Divider -->
+                <div class="relative my-3 text-center">
+                  <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                  <span class="relative bg-white px-3 text-[11px] font-bold text-slate-400 uppercase">OR / या</span>
+                </div>
+
+                <!-- Google One-Click Sign In -->
+                <button type="button" onclick="handleGoogleSignIn()"
+                  class="w-full py-2.5 px-4 rounded-xl border border-slate-300 hover:border-slate-400 bg-white text-slate-700 font-bold text-xs sm:text-sm transition-all shadow-sm hover:shadow flex items-center justify-center space-x-2.5 active:scale-[0.99]">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                  </svg>
+                  <span>Continue with Google (गूगल से लॉगिन करें)</span>
+                </button>
+
+                <!-- Quick Evaluator 1-Click Demo Login Pill -->
+                <button type="button" onclick="handleQuickDemoSignIn()"
+                  class="w-full py-2 px-3 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm">
+                  <i class="fa-solid fa-bolt text-teal-600"></i>
+                  <span id="btn-quick-demo-label">1-Click Quick Demo Sign In</span>
+                </button>
               </div>
+
+              <!-- ================= 2. FORGOT PASSWORD & OTP PANEL ================= -->
+              <div id="auth-panel-otp" class="hidden space-y-4">
+                <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200 text-left">
+                  <div class="flex items-center space-x-2 text-amber-800 font-extrabold text-xs mb-1">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Reset Password via One-Time Password (OTP)</span>
+                  </div>
+                  <p class="text-[11px] text-amber-700">
+                    Enter your registered email or phone number. We will send a 4-digit verification code.
+                  </p>
+                </div>
+
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Registered Email or Phone</label>
+                    <div class="flex space-x-2">
+                      <input id="otp-input-recipient" type="text" value="ramesh.senior@careconnect.in"
+                        class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                      <button type="button" onclick="sendPasswordResetOtp()" id="btn-send-otp"
+                        class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                        Send OTP
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Live Sent OTP Demo Banner (Appears after clicking Send OTP) -->
+                  <div id="otp-live-banner" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <i class="fa-solid fa-comment-sms text-emerald-600 text-base"></i>
+                      <span>Demo OTP Code: <strong id="otp-code-display" class="font-mono text-sm underline text-emerald-800">4826</strong></span>
+                    </div>
+                    <span id="otp-timer-label" class="text-[10px] text-emerald-700 font-mono">0:30s</span>
+                  </div>
+
+                  <!-- 4-digit OTP Entry -->
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Enter 4-Digit OTP Code</label>
+                    <div class="flex space-x-2 justify-between">
+                      <input id="otp-d1" maxlength="1" type="text" class="w-14 h-11 text-center text-lg font-black rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 bg-white" oninput="if(this.value) document.getElementById('otp-d2').focus()">
+                      <input id="otp-d2" maxlength="1" type="text" class="w-14 h-11 text-center text-lg font-black rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 bg-white" oninput="if(this.value) document.getElementById('otp-d3').focus()">
+                      <input id="otp-d3" maxlength="1" type="text" class="w-14 h-11 text-center text-lg font-black rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 bg-white" oninput="if(this.value) document.getElementById('otp-d4').focus()">
+                      <input id="otp-d4" maxlength="1" type="text" class="w-14 h-11 text-center text-lg font-black rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 bg-white">
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="verifyOtpAndLogin()"
+                    class="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs transition-all shadow-md">
+                    Verify OTP & Access Portal / सत्यापित करें
+                  </button>
+
+                  <div class="text-center pt-1">
+                    <button type="button" onclick="toggleForgotPasswordOtp(false)" class="text-xs font-bold text-slate-500 hover:text-slate-800">
+                      ← Back to Password Sign In
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================= 3. CREATE ACCOUNT FORM (ROLE SPECIFIC) ================= -->
+              <div id="auth-form-signup" class="hidden space-y-3.5">
+                <form onsubmit="handleSignUpSubmit(event)" class="space-y-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Full Name (पूरा नाम)</label>
+                    <input id="signup-name" type="text" placeholder="e.g. Ramesh Sharma" required
+                      class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 bg-slate-50/50">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Email or Mobile (ईमेल या मोबाइल)</label>
+                    <input id="signup-email" type="text" placeholder="e.g. user@careconnect.in" required
+                      class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 bg-slate-50/50">
+                  </div>
+
+                  <!-- Role Specific Extra Dynamic Fields -->
+                  <div id="signup-role-specific-fields" class="space-y-3">
+                    <!-- Populated dynamically based on role -->
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Create Password (पासवर्ड बनाएं)</label>
+                    <div class="relative">
+                      <input id="signup-password" type="password" value="pass1234" required
+                        class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 bg-slate-50/50 pr-10">
+                      <button type="button" onclick="togglePasswordVisibility('signup-password', 'eye-signup')" class="absolute right-3 top-2 text-slate-400 hover:text-slate-600">
+                        <i id="eye-signup" class="fa-solid fa-eye text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <button type="submit"
+                    class="w-full py-3 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-extrabold text-xs sm:text-sm transition-all shadow-md active:scale-[0.99] flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span id="btn-signup-label">Create Account & Enter Portal / खाता बनाएं</span>
+                  </button>
+                </form>
+
+                <div class="text-center pt-2 border-t border-slate-100">
+                  <span class="text-xs text-slate-500">Already registered? </span>
+                  <button type="button" onclick="switchAuthTab('signin')" class="text-xs font-bold text-teal-600 hover:text-teal-800">
+                    Sign In here (लॉगिन करें)
+                  </button>
+                </div>
+              </div>
+
             </div>
 
           </div>
-
         </div>
-
-      </div>
-    </section>
+      </section>
 
 
     <!-- ========================================================================= -->
@@ -636,12 +778,19 @@
             </div>
           </div>
 
-          <!-- Text-to-Speech Read Aloud Button -->
-          <button onclick="speakSeniorInstructions()"
-            class="inline-flex items-center space-x-2 text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-2 rounded-xl border border-teal-200 transition-colors">
-            <i class="fa-solid fa-volume-high text-teal-600"></i>
-            <span data-i18n="read_aloud_btn">Listen Aloud / बोलकर सुनाएं</span>
-          </button>
+          <!-- Action Buttons: Assessment Jump & Listen Aloud -->
+          <div class="flex items-center space-x-2">
+            <button onclick="document.getElementById('senior-assessment-section').scrollIntoView({ behavior: 'smooth' })"
+              class="inline-flex items-center space-x-1.5 text-xs font-bold text-sky-800 bg-sky-100 hover:bg-sky-200 px-3 py-2 rounded-xl border border-sky-300 transition-colors shadow-sm">
+              <i class="fa-solid fa-notes-medical text-sky-600"></i>
+              <span data-i18n="jump_assess_btn">AI Health Assessment / स्वास्थ्य जांच</span>
+            </button>
+            <button onclick="speakSeniorInstructions()"
+              class="inline-flex items-center space-x-2 text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-2 rounded-xl border border-teal-200 transition-colors">
+              <i class="fa-solid fa-volume-high text-teal-600"></i>
+              <span data-i18n="read_aloud_btn">Listen Aloud / बोलकर सुनाएं</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -815,6 +964,630 @@
               <span data-i18n="missed_call_action">Simulate Missed Call Now</span>
             </button>
           </div>
+        </div>
+
+
+
+        <!-- METHOD 4: COMPREHENSIVE ELDER HEALTH & RISK ASSESSMENT (AI ML PREDICTOR) -->
+        <div id="senior-assessment-section" class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-teal-200/90 shadow-md">
+          <!-- Section Header -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00a896] to-emerald-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-teal-500/20">
+                <i class="fa-solid fa-notes-medical"></i>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <h3 class="text-lg sm:text-xl font-extrabold text-[#0e294b]" data-i18n="assess_title">
+                    Comprehensive Health & Risk Assessment
+                  </h3>
+                  <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
+                    <i class="fa-solid fa-microchip mr-1"></i>AI ML Engine
+                  </span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium" data-i18n="assess_subtitle">
+                  Trained on 90,000 multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.
+                </p>
+              </div>
+            </div>
+
+            <!-- Quick Preset Buttons for Evaluator Convenience -->
+            <div class="flex flex-wrap items-center gap-1.5 self-stretch sm:self-auto">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block sm:inline mr-1" data-i18n="assess_presets_label">Quick Samples:</span>
+              <button type="button" onclick="fillAssessmentPreset('healthy')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors">
+                🟢 <span data-i18n="preset_healthy">Healthy Senior</span>
+              </button>
+              <button type="button" onclick="fillAssessmentPreset('moderate')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors">
+                🟡 <span data-i18n="preset_moderate">Moderate Risk</span>
+              </button>
+              <button type="button" onclick="fillAssessmentPreset('critical')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors">
+                🔴 <span data-i18n="preset_critical">High Risk Alert</span>
+              </button>
+            </div>
+          </div>
+
+
+          <!-- FORM COMPLETION & PERSISTENT AUTO-SAVE BAR -->
+          <div class="mt-4 mb-5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-inner">
+            <div class="flex items-center space-x-3 w-full sm:w-auto">
+              <div class="w-8 h-8 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <i class="fa-solid fa-list-check"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold text-slate-800" data-i18n="form_progress_label">Assessment Readiness:</span>
+                  <span id="assess-progress-badge" class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                    Ready to Predict (100%)
+                  </span>
+                </div>
+                <!-- Progress track -->
+                <div class="w-full sm:w-56 h-1.5 bg-slate-200 rounded-full mt-1.5 overflow-hidden">
+                  <div id="assess-progress-bar" class="h-full bg-teal-500 rounded-full transition-all duration-300" style="width: 100%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Auto-save Status & Reset Draft Button -->
+            <div class="flex items-center space-x-2 self-end sm:self-auto text-xs">
+              <span id="assess-autosave-badge" class="inline-flex items-center space-x-1.5 text-slate-500 font-semibold text-[11px] bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="assess-autosave-text">Draft Auto-Saved</span>
+              </span>
+              <button type="button" onclick="clearAssessmentDraft()"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors"
+                title="Clear current draft">
+                <i class="fa-solid fa-rotate-right mr-1"></i>
+                <span data-i18n="btn_clear_draft">Clear / साफ करें</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- =================================================================== -->
+          <!-- BILINGUAL AI VOICE ASSISTANT & AUDIO FORM AUTO-FILL (ElderCare)      -->
+          <!-- =================================================================== -->
+          <div class="voice-assistant-hero" id="voice-assistant-panel">
+            <div class="voice-hero-header">
+              <div class="voice-header-brand">
+                <div class="voice-mic-badge pulse-glow">
+                  <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <h3 style="margin: 0; font-size: 1.18rem; font-weight: 800; color: #0e294b;">AI Voice Assistant & Auto-Fill</h3>
+                    <span class="voice-lang-pill"><i class="fa-solid fa-language"></i> हिन्दी & English</span>
+                  </div>
+                  <p style="margin: 4px 0 0 0; font-size: 0.82rem; color: #475569; font-weight: 500;">
+                    Bol kar ya audio file upload karke form bharwayein. Assistant missing information bhi batayegi.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Language Toggle & Test Voice Button -->
+              <div class="voice-lang-switcher">
+                <span class="lang-switch-label">Language:</span>
+                <div class="voice-lang-options">
+                  <button type="button" class="lang-opt-btn active" data-lang="hi-IN" id="btn-lang-hindi">
+                    <span>🇮🇳 हिन्दी</span>
+                  </button>
+                  <button type="button" class="lang-opt-btn" data-lang="en-IN" id="btn-lang-english">
+                    <span>🇬🇧 English</span>
+                  </button>
+                  <button type="button" class="btn-test-voice" id="btn-test-assistant-voice" title="Test Voice Output (Check Speakers)">
+                    <i class="fa-solid fa-volume-high"></i> Test Voice
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Voice Control Buttons & Real-Time Wave -->
+            <div class="voice-controls-row">
+              <button type="button" class="btn-voice-record" id="btn-voice-record">
+                <i class="fa-solid fa-microphone"></i>
+                <span id="voice-record-btn-text">Start Speaking (Mic)</span>
+              </button>
+
+              <label class="btn-voice-upload" for="voice-file-upload" title="Upload pre-recorded audio (.wav, .mp3, .m4a)">
+                <i class="fa-solid fa-cloud-arrow-up text-teal-600"></i>
+                <span>Upload Audio File</span>
+                <input type="file" id="voice-file-upload" accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac" style="display:none;">
+              </label>
+
+              <!-- Animated Equalizer Wave -->
+              <div class="sound-wave hidden" id="voice-sound-wave">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+
+              <div class="voice-status-badge" id="voice-status-badge">
+                <i class="fa-solid fa-circle-dot text-emerald-500"></i>
+                <span id="voice-status-text">Voice Assistant Ready</span>
+              </div>
+            </div>
+
+            <!-- Live Speech Transcript Box -->
+            <div class="voice-transcript-container">
+              <div class="transcript-header">
+                <span><i class="fa-solid fa-comment-dots text-teal-600"></i> Audio Transcript / Spoken Clinical Note:</span>
+                <button type="button" class="btn-xs-text" id="btn-clear-transcript">
+                  <i class="fa-solid fa-trash-can"></i> Clear
+                </button>
+              </div>
+              <textarea id="voice-transcript-text" class="voice-transcript-box" rows="2"
+                placeholder="Aapki aawaz ya upload kiye gaye audio ka transcript yahan aayega... Example: 'Meri umar 74 saal hai, vajan 68 kg, BP 130 aur 85, oxygen 97, ghutne me dard hai level 5, khana khud kha leta hu...'"></textarea>
+              <div class="transcript-actions">
+                <button type="button" class="btn-sm btn-primary-action" id="btn-parse-transcript-text">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Extract & Auto-Populate Form
+                </button>
+              </div>
+            </div>
+
+            <!-- Bilingual Voice Assistant Speech Feedback Bubble -->
+            <div class="voice-feedback-bubble hidden" id="voice-feedback-bubble">
+              <div class="assistant-avatar">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="bubble-content">
+                <div class="bubble-title-row">
+                  <strong id="voice-assistant-title">Voice Assistant Feedback</strong>
+                  <button type="button" class="btn-speak-again" id="btn-replay-assistant-voice" title="Replay Voice Prompt">
+                    <i class="fa-solid fa-volume-high"></i> Listen Again
+                  </button>
+                </div>
+                <p id="voice-assistant-text"></p>
+                <div id="voice-missing-fields-tags" class="missing-fields-wrap"></div>
+              </div>
+            </div>
+
+            <!-- Comprehensive Clinical Assessment Checklist (Audit) -->
+            <div class="voice-checklist-container" id="voice-checklist-container">
+              <div class="voice-checklist-header">
+                <span class="voice-checklist-title">
+                  <i class="fa-solid fa-clipboard-check text-teal-600"></i> Clinical Parameter Audit (Kuch Bhi Chhoote Na):
+                </span>
+                <button type="button" class="btn-ask-next-inquiry" id="btn-ask-next-inquiry" title="Assistant will speak the next missing health question">
+                  <i class="fa-solid fa-microphone-lines"></i> <span id="lbl-ask-next">Ask Next Question</span>
+                </button>
+              </div>
+              <div class="voice-checklist-grid" id="voice-checklist-grid">
+                <!-- Badges populated dynamically with Answered / Needs Info indicators -->
+                <div class="voice-check-badge status-missing" data-field="age" id="badge-chk-age">
+                  <span class="badge-tag-label"><i class="fa-solid fa-cake-candles"></i> Age</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="gender" id="badge-chk-gender">
+                  <span class="badge-tag-label"><i class="fa-solid fa-venus-mars"></i> Gender</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="body" id="badge-chk-body">
+                  <span class="badge-tag-label"><i class="fa-solid fa-weight-scale"></i> Body (Ht/Wt)</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="vitals" id="badge-chk-vitals">
+                  <span class="badge-tag-label"><i class="fa-solid fa-heart-pulse"></i> Vitals (BP/O2)</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="pain" id="badge-chk-pain">
+                  <span class="badge-tag-label"><i class="fa-solid fa-bolt"></i> Pain Status</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="sleep" id="badge-chk-sleep">
+                  <span class="badge-tag-label"><i class="fa-solid fa-bed"></i> Sleep Hours</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="adl_walk" id="badge-chk-adl-walk">
+                  <span class="badge-tag-label"><i class="fa-solid fa-person-walking"></i> Walking</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="adl_eat" id="badge-chk-adl-eat">
+                  <span class="badge-tag-label"><i class="fa-solid fa-utensils"></i> Eating</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="adl_move" id="badge-chk-adl-move">
+                  <span class="badge-tag-label"><i class="fa-solid fa-chair"></i> Transferring</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="adl_toilet" id="badge-chk-adl-toilet">
+                  <span class="badge-tag-label"><i class="fa-solid fa-restroom"></i> Toileting</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="meds" id="badge-chk-meds">
+                  <span class="badge-tag-label"><i class="fa-solid fa-pills"></i> Medications</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="sugar" id="badge-chk-sugar">
+                  <span class="badge-tag-label"><i class="fa-solid fa-droplet"></i> Diabetes/Sugar</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="hearing" id="badge-chk-hearing">
+                  <span class="badge-tag-label"><i class="fa-solid fa-ear-listen"></i> Hearing</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+                <div class="voice-check-badge status-missing" data-field="diseases" id="badge-chk-diseases">
+                  <span class="badge-tag-label"><i class="fa-solid fa-notes-medical"></i> Diseases</span>
+                  <span class="badge-tag-status">? Needs Info</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Spoken Test Chips for Instant Testing -->
+            <div class="mt-3 pt-3 border-t border-teal-200/60 flex flex-wrap items-center gap-1.5 text-xs">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-1">
+                Try Voice Examples / उदाहरण बोलें:
+              </span>
+              <button type="button" onclick="simulateVoiceHealthInput('Meri umar 76 saal hai, vajan 70 kilo, lambaai 168 cm, purush male')"
+                class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-teal-200 text-[11px] font-semibold transition-colors shadow-sm">
+                🗣️ "Umar 76, Vajan 70kg, Purush"
+              </button>
+              <button type="button" onclick="simulateVoiceHealthInput('BP 140 aur 90 hai, dhadkan 84, oxygen 96 percent, sugar 140')"
+                class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-teal-200 text-[11px] font-semibold transition-colors shadow-sm">
+                🗣️ "BP 140/90, SpO2 96%, Sugar 140"
+              </button>
+              <button type="button" onclick="simulateVoiceHealthInput('Ghutne me dard hai level 6, neend 7 ghante, 3 dawai leta hu')"
+                class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-teal-200 text-[11px] font-semibold transition-colors shadow-sm">
+                🗣️ "Ghutne me dard 6, 3 dawai"
+              </button>
+              <button type="button" onclick="simulateVoiceHealthInput('Khana khud kha leta hu, toilet khud, chal leta hu bina sahare')"
+                class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-teal-200 text-[11px] font-semibold transition-colors shadow-sm">
+                🗣️ "Khana khud, toilet khud"
+              </button>
+              <button type="button" onclick="simulateVoiceHealthInput('Umar 78 kar do aur BP 130 by 85')"
+                class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-[11px] font-bold transition-colors shadow-sm">
+                🔄 "Umar 78 kar do, BP 130/85 (Modify)"
+              </button>
+            </div>
+          </div>
+
+          <!-- MANDATORY VALIDATION WARNING BANNER (Hidden until submit with missing inputs) -->
+          <div id="assessment-validation-alert" class="hidden mb-6 p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 text-xs sm:text-sm text-rose-900 shadow-md">
+            <div class="flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="flex-1">
+                <h5 class="font-extrabold text-rose-950 text-sm" data-i18n="val_alert_title">
+                  All Parameters Required / सभी स्वास्थ्य संकेत अनिवार्य हैं
+                </h5>
+                <p class="text-xs text-rose-700 mt-0.5" data-i18n="val_alert_desc">
+                  AI risk prediction ke liye sabhi inputs dena anivarya hai. Kripya bache hue sanket bharein:
+                </p>
+                <div id="assessment-missing-fields-list" class="mt-2 flex flex-wrap gap-1.5">
+                  <!-- Injected badges of missing fields -->
+                </div>
+              </div>
+              <button type="button" onclick="document.getElementById('assessment-validation-alert').classList.add('hidden')"
+                class="text-rose-400 hover:text-rose-700 text-sm font-bold">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Assessment Form -->
+          <form id="elder-assessment-form" onsubmit="event.preventDefault(); predictElderRiskAssessment();" class="mt-6 space-y-6">
+            
+            <!-- GROUP 1: Demographics & Body Metrics -->
+            <div class="bg-slate-50/80 rounded-2xl p-4 sm:p-5 border border-slate-200">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200/60">
+                <span class="text-xs font-bold text-[#0e294b] flex items-center space-x-1.5 uppercase tracking-wider">
+                  <i class="fa-solid fa-user text-teal-600"></i>
+                  <span data-i18n="grp_demographics">1. Personal & Body Metrics / व्यक्तिगत जानकारी</span>
+                </span>
+                <span id="bmi-badge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                  BMI: 25.0 (Normal)
+                </span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_age">Age (उम्र)</label>
+                  <input type="number" id="assess-age" value="74" min="50" max="110" required
+                    class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_gender">Gender (लिंग)</label>
+                  <select id="assess-gender" class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                    <option value="Female">Female / महिला</option>
+                    <option value="Male" selected>Male / पुरुष</option>
+                    <option value="Other">Other / अन्य</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_height">Height (लंबाई cm)</label>
+                  <input type="number" id="assess-height" value="165" min="100" max="220" oninput="updateCalculatedBMI()"
+                    class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_weight">Weight (वजन kg)</label>
+                  <input type="number" id="assess-weight" value="68" min="30" max="180" oninput="updateCalculatedBMI()"
+                    class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                </div>
+              </div>
+            </div>
+
+            <!-- GROUP 2: Vital Signs Telemetry -->
+            <div class="bg-sky-50/60 rounded-2xl p-4 sm:p-5 border border-sky-200">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-sky-200/60">
+                <span class="text-xs font-bold text-[#0e294b] flex items-center space-x-1.5 uppercase tracking-wider">
+                  <i class="fa-solid fa-heart-pulse text-sky-600"></i>
+                  <span data-i18n="grp_vitals">2. Vital Signs Telemetry / जीवन संकेत</span>
+                </span>
+                <span class="text-[11px] font-medium text-slate-500" data-i18n="vitals_hint">BP • Pulse • Blood Oxygen</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_bp_sys">BP Systolic (ऊपर का BP)</label>
+                  <div class="relative">
+                    <input type="number" id="assess-bp-sys" value="128" min="70" max="240" required
+                      class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white pr-12">
+                    <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-mono">mmHg</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_bp_dia">BP Diastolic (नीचे का BP)</label>
+                  <div class="relative">
+                    <input type="number" id="assess-bp-dia" value="82" min="40" max="140" required
+                      class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white pr-12">
+                    <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-mono">mmHg</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_heart_rate">Heart Rate / Pulse (धड़कन)</label>
+                  <div class="relative">
+                    <input type="number" id="assess-hr" value="76" min="40" max="180" required
+                      class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white pr-10">
+                    <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-mono">bpm</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_spo2">Oxygen SpO2 (ऑक्सीजन)</label>
+                  <div class="relative">
+                    <input type="number" id="assess-spo2" value="97" min="70" max="100" step="0.5" required
+                      class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white pr-8">
+                    <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-mono">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GROUP 3: Pain Assessment & Sleep Hours -->
+            <div class="bg-amber-50/60 rounded-2xl p-4 sm:p-5 border border-amber-200">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-amber-200/60">
+                <span class="text-xs font-bold text-[#0e294b] flex items-center space-x-1.5 uppercase tracking-wider">
+                  <i class="fa-solid fa-bed text-amber-600"></i>
+                  <span data-i18n="grp_pain_sleep">3. Pain & Sleep Hours / दर्द एवं नींद</span>
+                </span>
+                <span id="pain-level-display" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                  😊 No Pain (0/10)
+                </span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                
+                <!-- Pain Toggle & Location -->
+                <div class="sm:col-span-4 space-y-2">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_pain_present">Any Pain or Discomfort? (क्या दर्द है?)</label>
+                    <div class="grid grid-cols-2 gap-2">
+                      <button type="button" id="btn-pain-no" onclick="setPainPresent(false)"
+                        class="px-3 py-2 text-xs font-bold rounded-xl border-2 border-emerald-500 bg-emerald-500 text-white transition-all text-center">
+                        <span data-i18n="opt_no_pain">No / नहीं</span>
+                      </button>
+                      <button type="button" id="btn-pain-yes" onclick="setPainPresent(true)"
+                        class="px-3 py-2 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:border-amber-400 transition-all text-center">
+                        <span data-i18n="opt_yes_pain">Yes / हाँ</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_pain_loc">Pain Location (दर्द की जगह)</label>
+                    <select id="assess-pain-loc" class="w-full px-3 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                      <option value="None">None / कहीं नहीं</option>
+                      <option value="Knee">Knee / घुटना</option>
+                      <option value="Back">Lower Back / कमर</option>
+                      <option value="Shoulder">Shoulder / कंधा</option>
+                      <option value="Joints">Joints / जोड़</option>
+                      <option value="Chest">Chest / छाती (Critical)</option>
+                      <option value="Other">Other / अन्य</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Pain Level Slider (0-10) -->
+                <div class="sm:col-span-5 bg-white p-3 rounded-xl border border-amber-200/80">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-bold text-slate-700" data-i18n="lbl_pain_scale">Pain Severity Scale (0 to 10)</label>
+                    <span id="slider-pain-val" class="font-extrabold text-sm text-slate-800">0</span>
+                  </div>
+                  <input type="range" id="assess-pain-slider" min="0" max="10" value="0" step="1" oninput="updatePainSlider(this.value)"
+                    class="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600">
+                  <div class="flex justify-between text-[10px] text-slate-400 font-medium mt-1">
+                    <span>0: None</span>
+                    <span>1-3: Mild</span>
+                    <span>4-6: Moderate</span>
+                    <span>7-10: Severe</span>
+                  </div>
+                </div>
+
+                <!-- Sleeping Hours -->
+                <div class="sm:col-span-3">
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_sleep">Sleep Hours (नींद के घंटे)</label>
+                  <div class="relative">
+                    <input type="number" id="assess-sleep" value="7.0" min="1" max="16" step="0.5" required
+                      class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white pr-10">
+                    <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-mono">hrs</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400 mt-1 block" data-i18n="sleep_hint">Normal: 6 to 8 hrs</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- GROUP 4: Daily Activities (ADL Independence) -->
+            <div class="bg-purple-50/60 rounded-2xl p-4 sm:p-5 border border-purple-200">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-purple-200/60">
+                <span class="text-xs font-bold text-[#0e294b] flex items-center space-x-1.5 uppercase tracking-wider">
+                  <i class="fa-solid fa-person-walking text-purple-600"></i>
+                  <span data-i18n="grp_adl">4. Daily Activities & Independence / दिनचर्या में आत्मनिर्भरता</span>
+                </span>
+                <span id="adl-score-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                  ADL: 4/4 (Independent)
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mb-3" data-i18n="adl_desc">
+                Can they perform these essential daily living activities by themselves without human assistance?
+              </p>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <!-- Walking -->
+                <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-sm">
+                  <span class="block text-xs font-bold text-slate-800 mb-1.5 flex items-center">
+                    <i class="fa-solid fa-person-walking text-purple-600 mr-1.5"></i>
+                    <span data-i18n="adl_walk">Able to Walk (चलना)</span>
+                  </span>
+                  <select id="assess-walk" onchange="updateADLScore()" class="w-full px-2 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white">
+                    <option value="1">✅ Independent / खुद</option>
+                    <option value="0">⚠️ Needs Help / सहारा</option>
+                  </select>
+                </div>
+                <!-- Eating -->
+                <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-sm">
+                  <span class="block text-xs font-bold text-slate-800 mb-1.5 flex items-center">
+                    <i class="fa-solid fa-utensils text-purple-600 mr-1.5"></i>
+                    <span data-i18n="adl_eat">Eat Themselves (खाना)</span>
+                  </span>
+                  <select id="assess-eat" onchange="updateADLScore()" class="w-full px-2 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white">
+                    <option value="1">✅ Independent / खुद</option>
+                    <option value="0">⚠️ Dependent / निर्भर</option>
+                  </select>
+                </div>
+                <!-- Moving / Transfers -->
+                <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-sm">
+                  <span class="block text-xs font-bold text-slate-800 mb-1.5 flex items-center">
+                    <i class="fa-solid fa-chair text-purple-600 mr-1.5"></i>
+                    <span data-i18n="adl_move">Move / Transfer (उठना)</span>
+                  </span>
+                  <select id="assess-move" onchange="updateADLScore()" class="w-full px-2 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white">
+                    <option value="1">✅ Independent / खुद</option>
+                    <option value="0">⚠️ Needs Help / सहारा</option>
+                  </select>
+                </div>
+                <!-- Toileting -->
+                <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-sm">
+                  <span class="block text-xs font-bold text-slate-800 mb-1.5 flex items-center">
+                    <i class="fa-solid fa-restroom text-purple-600 mr-1.5"></i>
+                    <span data-i18n="adl_toilet">Toilet (शौचालय)</span>
+                  </span>
+                  <select id="assess-toilet" onchange="updateADLScore()" class="w-full px-2 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white">
+                    <option value="1">✅ Independent / खुद</option>
+                    <option value="0">⚠️ Dependent / निर्भर</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- GROUP 5: Medications & Diabetes Assessment -->
+            <div class="bg-emerald-50/60 rounded-2xl p-4 sm:p-5 border border-emerald-200">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-emerald-200/60">
+                <span class="text-xs font-bold text-[#0e294b] flex items-center space-x-1.5 uppercase tracking-wider">
+                  <i class="fa-solid fa-pills text-emerald-600"></i>
+                  <span data-i18n="grp_meds_diabetes">5. Medication Adherence & Diabetes / दवाइयां और शुगर</span>
+                </span>
+                <span class="text-[11px] font-medium text-slate-500" data-i18n="meds_hint">Prescriptions & Glycemic Check</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_med_count">Daily Medicines (दवा संख्या)</label>
+                  <input type="number" id="assess-med-count" value="3" min="0" max="25" required
+                    class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_missed_doses">Doses Taken Today? (दवा ली?)</label>
+                  <select id="assess-missed-doses" class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                    <option value="0">✅ All Taken / सब ले ली</option>
+                    <option value="1">⚠️ Missed 1 Dose / 1 छूटी</option>
+                    <option value="2">❌ Missed 2+ Doses / कई छूटी</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_diabetic">Diabetic? (मधुमेह / शुगर है?)</label>
+                  <select id="assess-diabetic" onchange="toggleSugarInput(this.value)" class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                    <option value="0">No / नहीं</option>
+                    <option value="1">Yes / हाँ</option>
+                  </select>
+                </div>
+                <div id="sugar-input-container">
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_sugar">Blood Glucose (शुगर mg/dL)</label>
+                  <div class="relative">
+                    <input type="number" id="assess-sugar" value="110" min="40" max="500"
+                      class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white pr-12">
+                    <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-mono">mg/dL</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GROUP 6: Hearing Ability & Chronic Diseases -->
+            <div class="bg-rose-50/40 rounded-2xl p-4 sm:p-5 border border-rose-200">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-rose-200/60">
+                <span class="text-xs font-bold text-[#0e294b] flex items-center space-x-1.5 uppercase tracking-wider">
+                  <i class="fa-solid fa-ear-listen text-rose-600"></i>
+                  <span data-i18n="grp_hearing_diseases">6. Hearing Ability & Chronic Conditions / श्रवण क्षमता व बीमारियां</span>
+                </span>
+                <span class="text-[11px] font-medium text-slate-500" data-i18n="hearing_hint">Accessibility & Comorbidities</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                
+                <!-- Hearing -->
+                <div class="sm:col-span-5">
+                  <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_hearing">Hearing Level (सुनने की क्षमता)</label>
+                  <select id="assess-hearing" class="w-full px-3 py-2 text-sm font-semibold rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                    <option value="0">👂 Perfect / Normal (बिल्कुल सही)</option>
+                    <option value="1">🦻 Mild Difficulty (थोड़ा कम सुनाई देता है)</option>
+                    <option value="2">📢 Uses Hearing Aid / Severe (हियरिंग एड आवश्यक)</option>
+                  </select>
+                </div>
+
+                <!-- Existing Chronic Diseases Checkboxes -->
+                <div class="sm:col-span-7">
+                  <label class="block text-xs font-bold text-slate-700 mb-2" data-i18n="lbl_chronic">Existing Diagnosed Conditions (पुरानी बीमारियां):</label>
+                  <div class="grid grid-cols-2 gap-2 text-xs font-medium text-slate-700">
+                    <label class="flex items-center space-x-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                      <input type="checkbox" id="chk-htn" class="rounded text-teal-600 focus:ring-teal-500">
+                      <span>Hypertension / High BP</span>
+                    </label>
+                    <label class="flex items-center space-x-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                      <input type="checkbox" id="chk-arth" class="rounded text-teal-600 focus:ring-teal-500">
+                      <span>Arthritis / Joint Pain</span>
+                    </label>
+                    <label class="flex items-center space-x-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                      <input type="checkbox" id="chk-heart" class="rounded text-teal-600 focus:ring-teal-500">
+                      <span>Heart / Cardiac Disease</span>
+                    </label>
+                    <label class="flex items-center space-x-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                      <input type="checkbox" id="chk-resp" class="rounded text-teal-600 focus:ring-teal-500">
+                      <span>Respiratory / Asthma</span>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Submit Button & Action Bar -->
+            <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="text-xs text-slate-500 text-center sm:text-left">
+                <i class="fa-solid fa-shield-halved text-teal-600 mr-1"></i>
+                <span data-i18n="assess_disclaimer">Instant ML inference • Predicts Risk Condition (Low / Medium / High)</span>
+              </div>
+              <button type="submit" id="assess-submit-btn"
+                class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-[#00a896] via-teal-600 to-emerald-600 hover:from-[#008779] hover:to-emerald-700 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-teal-500/25 active:scale-95 transition-all flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-lg animate-pulse"></i>
+                <span data-i18n="btn_predict_risk">Predict Health Risk (AI Analysis) / जोखिम जांचें</span>
+              </button>
+            </div>
+
+          </form>
+
+          <!-- ASSESSMENT RESULTS CARD (Dynamic Container) -->
+          <div id="assessment-result-box" class="hidden mt-8 p-6 sm:p-8 rounded-3xl border-2 transition-all duration-300">
+            <!-- Injected by JavaScript -->
+          </div>
+
         </div>
 
 

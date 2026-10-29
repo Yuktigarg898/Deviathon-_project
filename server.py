@@ -8,8 +8,11 @@ import os
 import sys
 import json
 import webbrowser
+import tempfile
+import io
 from datetime import datetime
 from flask import Flask, jsonify, request, send_from_directory
+import nlp_extractor as nlp
 
 app = Flask(__name__, static_folder=".")
 
@@ -89,6 +92,47 @@ def index():
 def static_files(filename):
     return send_from_directory(".", filename)
 
+# --- AUTHENTICATION ROUTES ---
+@app.route("/api/auth/login", methods=["POST"])
+def auth_login():
+    data = request.json or {}
+    role = data.get("role", "senior")
+    email = data.get("email", "")
+    return jsonify({
+        "success": True,
+        "role": role,
+        "token": "cc_auth_token_mock_session",
+        "user": {
+            "email": email,
+            "role": role,
+            "loginTime": datetime.now().isoformat()
+        }
+    })
+
+@app.route("/api/auth/register", methods=["POST"])
+def auth_register():
+    data = request.json or {}
+    role = data.get("role", "senior")
+    name = data.get("name", "New Member")
+    return jsonify({
+        "success": True,
+        "message": f"Account created successfully for {name}",
+        "role": role,
+        "user": data
+    })
+
+@app.route("/api/auth/otp/send", methods=["POST"])
+def auth_send_otp():
+    data = request.json or {}
+    recipient = data.get("recipient", "")
+    # Generated mock OTP
+    return jsonify({
+        "success": True,
+        "otp": "4826",
+        "recipient": recipient,
+        "message": "Demo OTP dispatched successfully"
+    })
+
 # --- REST API ROUTES ---
 @app.route("/api/health", methods=["GET"])
 def health_check():
@@ -162,9 +206,154 @@ def senior_checkin():
         "senior": DB["senior_status"]
     })
 
+@app.route("/api/senior/assessment-predict", methods=["POST"])
+def senior_assessment_predict():
+    data = request.json or {}
+    try:
+        from ml_engine import predict_elder_risk
+        result = predict_elder_risk(data)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    
+    senior_name = data.get("seniorName", "Ramesh Sharma")
+    risk_level = result["predicted_risk_level"]
+    
+    # Update senior live state in in-memory DB
+    DB["senior_status"]["checkedIn"] = True
+    DB["senior_status"]["method"] = "Health Assessment"
+    DB["senior_status"]["lastCheckIn"] = datetime.now().strftime("%I:%M %p")
+    DB["senior_status"]["isSerious"] = (risk_level == "High")
+    DB["senior_status"]["lastRisk"] = result
+    
+    alert_created = False
+    # If High or Medium, create or escalate real-time alert for Care Coordinator
+    if risk_level in ["High", "Medium"] and data.get("sync_coordinator", True):
+        new_id = f"ALT-{len(DB['alerts']) + 1100}"
+        priority = "critical" if risk_level == "High" else "high"
+        new_alert = {
+            "id": new_id,
+            "rank": 1,
+            "priority": priority,
+            "priorityScore": result["risk_score"],
+            "seniorName": senior_name,
+            "age": int(data.get("age", 74)),
+            "location": data.get("location", "South Delhi (Greater Kailash)"),
+            "phone": "+91 98110-44912",
+            "familyContact": "Rahul Sharma (Son)",
+            "assignedNurse": "Sister Kavita, RN" if risk_level == "High" else "Brother Amit, Paramedic",
+            "reason": f"Assessment ({risk_level} Risk): " + result["alert_reason_summary"],
+            "suggestedAction": result["suggested_action_summary"],
+            "status": "pending",
+            "timestamp": datetime.now().strftime("%H:%M:%S"),
+            "assessmentDetails": result
+        }
+        for a in DB["alerts"]:
+            a["rank"] += 1
+        DB["alerts"].insert(0, new_alert)
+        DB["ops_metrics"]["totalAlerts"] += 1
+        DB["ops_metrics"]["activeAlerts"] += 1
+        alert_created = True
+
+    return jsonify({
+        "success": True,
+        "result": result,
+        "alert_created": alert_created,
+        "senior_status": DB["senior_status"]
+    })
+
 @app.route("/api/ops/metrics", methods=["GET"])
 def get_ops_metrics():
     return jsonify(DB["ops_metrics"])
+
+
+# =========================================================================
+# AUDIO INTAKE, VOICE AUTO-FILL & BILINGUAL CLINICAL NLP
+# =========================================================================
+
+@app.route("/api/audio/extract-form", methods=["POST"])
+def audio_extract_form():
+    """
+    Parses speech transcript (Hindi, English, or Hinglish) and extracts
+    elder assessment parameters, updates cumulative context, and audits checklist.
+    """
+    try:
+        data = request.get_json() or {}
+        transcript = data.get("transcript", "").strip()
+        lang_hint = data.get("language", "hi-IN")
+        current_entities = data.get("current_entities") or {}
+        result = nlp.extract_clinical_entities_from_text(transcript, lang_hint=lang_hint, current_entities=current_entities)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route("/api/audio/upload", methods=["POST"])
+def audio_upload_and_extract():
+    """
+    Accepts uploaded audio file (.wav, .flac, etc.), transcribes speech,
+    and extracts clinical entities into form fields with bilingual voice feedback.
+    """
+    try:
+        if "audio" not in request.files and "file" not in request.files:
+            return jsonify({"success": False, "error": "No audio file uploaded."}), 400
+        audio_file = request.files.get("audio") or request.files.get("file")
+        if not audio_file or not audio_file.filename:
+            return jsonify({"success": False, "error": "Empty audio file."}), 400
+
+        language = request.form.get("language", "hi-IN")
+        import json
+        current_entities = {}
+        if "current_entities" in request.form:
+            try:
+                current_entities = json.loads(request.form["current_entities"])
+            except Exception:
+                pass
+
+        ext = os.path.splitext(audio_file.filename)[1].lower() or ".wav"
+        with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+            tmp_path = tmp.name
+            audio_file.save(tmp_path)
+
+        try:
+            ok, transcript, err_msg = nlp.transcribe_audio_file(tmp_path, language=language)
+            if not ok or not transcript:
+                return jsonify({
+                    "success": False,
+                    "error": f"Audio transcription could not be completed: {err_msg}. Please speak clearly into the microphone or test with provided speech samples."
+                }), 400
+            result = nlp.extract_clinical_entities_from_text(transcript, lang_hint=language, current_entities=current_entities)
+            return jsonify(result)
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route("/api/tts", methods=["GET"])
+def text_to_speech_stream():
+    """
+    High-fidelity neural Text-to-Speech audio streaming endpoint using gTTS.
+    Returns authentic MP3 audio stream for Hindi and English voice instructions.
+    """
+    try:
+        from gtts import gTTS
+        from flask import send_file
+
+        text = (request.args.get("text") or "").strip()
+        lang = (request.args.get("lang") or "hi").lower()
+        if not text:
+            return jsonify({"error": "No text provided"}), 400
+
+        tts_lang = "hi" if (lang in ["hi", "hi-in", "hindi"]) else "en"
+        tld = "co.in"  # Authentic Indian accent phonetics
+
+        tts = gTTS(text=text, lang=tts_lang, tld=tld, slow=False)
+        fp = io.BytesIO()
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return send_file(fp, mimetype="audio/mpeg", as_attachment=False)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 def main():
     port = int(os.environ.get("PORT", 5000))

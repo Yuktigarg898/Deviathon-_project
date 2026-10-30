@@ -1499,20 +1499,12 @@
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-[#f2ede4]">
           <div class="flex items-center space-x-4 text-center sm:text-left">
             <div class="relative">
-<<<<<<< HEAD
               <div
-                class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-700 text-white font-black text-2xl sm:text-3xl flex items-center justify-center border-4 border-sky-200 shadow-md flex-shrink-0">
-                <span id="senior-view-initials">RS</span>
-              </div>
-              <span class="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white"
-                title="Connected"></span>
-=======
-              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-200 via-amber-100 to-[#FFF9EE] border-4 border-amber-300 shadow-md flex items-center justify-center text-amber-900 text-3xl sm:text-4xl select-none">
-                👴
+                class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-amber-200 via-amber-100 to-[#FFF9EE] text-amber-900 font-black text-2xl sm:text-3xl flex items-center justify-center border-4 border-amber-300 shadow-md flex-shrink-0 select-none">
+                <span id="senior-view-initials">👴</span>
               </div>
               <span class="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-xs"
                 title="Active & Connected"></span>
->>>>>>> 5f0b85e (My latest changes)
             </div>
             <div>
               <div class="inline-flex items-center space-x-2">
@@ -1654,7 +1646,7 @@
           </div>
 
           <!-- Tile 3: Water Intake (Hydration) -->
-          <div onclick="logWaterGlass(); document.getElementById('senior-reminders-section').scrollIntoView({ behavior: 'smooth' })"
+          <div onclick="logWaterGlass(); openAddReminderPage()"
             class="p-4 sm:p-5 rounded-3xl bg-white hover:bg-sky-50/60 border-2 border-sky-100/90 shadow-sm hover:shadow-md transition-all cursor-pointer group active:scale-95 flex flex-col justify-between">
             <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl mb-3 shadow-xs group-hover:scale-110 transition-transform">
               <i class="fa-solid fa-glass-water"></i>
@@ -2460,7 +2452,423 @@
     <!-- only when something is serious.                                           -->
     <!-- ========================================================================= -->
         <!-- ========================================================================= -->
-<<<<<<< HEAD
+    <!-- ========================================================================= -->
+    <!-- DEDICATED FULL PAGE: ADD & MANAGE CARE REMINDERS (दैनिक केयर रिमाइंडर व अलार्म) -->
+    <!-- Categories: Water, Food, Medicine, Sleep Hours, Screen Watching, Walking -->
+    <!-- ========================================================================= -->
+    <section id="view-add-reminder" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full animate-fadeIn">
+      <!-- Top Navigation & Return Header -->
+      <div class="flex items-center justify-between pb-4 mb-6 border-b border-amber-200">
+        <button type="button" onclick="closeAddReminderPage()"
+          class="px-4 py-2.5 rounded-2xl bg-white hover:bg-amber-50 text-amber-950 border-2 border-amber-300 font-extrabold text-xs sm:text-sm shadow-xs transition-all flex items-center space-x-2 active:scale-95">
+          <i class="fa-solid fa-arrow-left text-amber-700"></i>
+          <span>← Back to Elder Home / वापस जाएं</span>
+        </button>
+
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
+            CareConnect Alarm Engine • Active
+          </span>
+        </div>
+      </div>
+
+      <!-- Schedule New Care Alert Card -->
+      <div class="bg-gradient-to-b from-[#fbf8f3] via-white to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-md">
+        <!-- Hero Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-amber-200">
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-amber-400 text-white flex items-center justify-center text-2xl sm:text-3xl shadow-lg shadow-amber-500/25 flex-shrink-0 animate-bounce">
+              <i class="fa-solid fa-bell"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">
+                  Daily Care Reminders & Alarm • दैनिक रिमाइंडर
+                </span>
+                <span class="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                  6 Wellness Categories
+                </span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-black text-[#1b4332] mt-1 font-sans">
+                Schedule Care Alarms & Alerts
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">
+                Set water intake, meals, medicines, sleep hours, screen time breaks & walking alerts with ringing chime & Hindi/English voice announcements
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="testSampleReminderAlarm()"
+              class="px-4 py-2.5 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-extrabold text-xs border border-amber-300 flex items-center justify-center space-x-2 active:scale-95 transition-all shadow-xs"
+              title="Test Continuous Melodic Tone & Bilingual Voice Announcement">
+              <i class="fa-solid fa-volume-high text-amber-700"></i>
+              <span>Test Alarm Tone / अलार्म टेस्ट</span>
+            </button>
+            <button type="button" onclick="setQuickOneMinuteAlarm()"
+              class="px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm flex items-center justify-center space-x-1.5 active:scale-95 transition-all"
+              title="Automatically sets an alarm for 1 minute from now to test real live clock triggering">
+              <i class="fa-solid fa-stopwatch-20 text-white"></i>
+              <span>⚡ Alarm in 1 Min / 1 मिनट का अलार्म</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1-Click Quick Presets Grid across All 6 Key Categories -->
+        <div class="mt-6 p-4.5 rounded-2xl bg-[#FFF9EE] border-2 border-amber-200/90 shadow-2xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
+            <span class="text-xs font-black text-amber-950 uppercase tracking-wider flex items-center space-x-2">
+              <i class="fa-solid fa-bolt-lightning text-amber-600"></i>
+              <span>1-Click Quick Presets (त्वरित चयन - सभी श्रेणियां)</span>
+            </span>
+            <span class="text-[11px] text-amber-800 font-bold">Tap any card below to auto-fill details & set alarm</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+            <!-- 1. Water -->
+            <button type="button" onclick="applyReminderPreset('water_morning')"
+              class="p-3 rounded-2xl bg-white hover:bg-sky-50 text-sky-950 border-2 border-sky-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">💧</span>
+                <span class="text-[9px] font-black uppercase text-sky-700 bg-sky-100 px-1.5 py-0.5 rounded">Water</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-sky-800">Morning Water</span>
+                <span class="text-[10px] text-sky-700 font-bold">08:00 AM • 1 Glass</span>
+              </div>
+            </button>
+
+            <!-- 2. Food Breakfast -->
+            <button type="button" onclick="applyReminderPreset('food_breakfast')"
+              class="p-3 rounded-2xl bg-white hover:bg-amber-50 text-amber-950 border-2 border-amber-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">🍲</span>
+                <span class="text-[9px] font-black uppercase text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">Food</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-amber-800">Breakfast</span>
+                <span class="text-[10px] text-amber-700 font-bold">09:00 AM • Healthy</span>
+              </div>
+            </button>
+
+            <!-- 3. Medicine BP -->
+            <button type="button" onclick="applyReminderPreset('med_morning')"
+              class="p-3 rounded-2xl bg-white hover:bg-purple-50 text-purple-950 border-2 border-purple-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">💊</span>
+                <span class="text-[9px] font-black uppercase text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded">Medicine</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-purple-800">BP Medicine</span>
+                <span class="text-[10px] text-purple-700 font-bold">08:30 AM • After Meal</span>
+              </div>
+            </button>
+
+            <!-- 4. Screen Watching Break -->
+            <button type="button" onclick="applyReminderPreset('screen_morning')"
+              class="p-3 rounded-2xl bg-white hover:bg-violet-50 text-violet-950 border-2 border-violet-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">📱</span>
+                <span class="text-[9px] font-black uppercase text-violet-700 bg-violet-100 px-1.5 py-0.5 rounded">Screen</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-violet-800">Eye Break 20-20</span>
+                <span class="text-[10px] text-violet-700 font-bold">11:00 AM • Rest Eyes</span>
+              </div>
+            </button>
+
+            <!-- 5. Sleep Afternoon Nap -->
+            <button type="button" onclick="applyReminderPreset('sleep_nap')"
+              class="p-3 rounded-2xl bg-white hover:bg-indigo-50 text-indigo-950 border-2 border-indigo-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">🌙</span>
+                <span class="text-[9px] font-black uppercase text-indigo-700 bg-indigo-100 px-1.5 py-0.5 rounded">Sleep</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-indigo-800">Power Nap</span>
+                <span class="text-[10px] text-indigo-700 font-bold">02:30 PM • 30 Mins</span>
+              </div>
+            </button>
+
+            <!-- 6. Walking Evening -->
+            <button type="button" onclick="applyReminderPreset('walking_evening')"
+              class="p-3 rounded-2xl bg-white hover:bg-emerald-50 text-emerald-950 border-2 border-emerald-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">🚶</span>
+                <span class="text-[9px] font-black uppercase text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Walking</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-emerald-800">Park Walk</span>
+                <span class="text-[10px] text-emerald-700 font-bold">05:30 PM • 20 Mins</span>
+              </div>
+            </button>
+
+            <!-- 7. Midday Hydration -->
+            <button type="button" onclick="applyReminderPreset('water_afternoon')"
+              class="p-3 rounded-2xl bg-white hover:bg-sky-50 text-sky-950 border-2 border-sky-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">💧</span>
+                <span class="text-[9px] font-black uppercase text-sky-700 bg-sky-100 px-1.5 py-0.5 rounded">Water</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-sky-800">Midday Water</span>
+                <span class="text-[10px] text-sky-700 font-bold">11:30 AM • 1 Glass</span>
+              </div>
+            </button>
+
+            <!-- 8. Balanced Lunch -->
+            <button type="button" onclick="applyReminderPreset('food_lunch')"
+              class="p-3 rounded-2xl bg-white hover:bg-amber-50 text-amber-950 border-2 border-amber-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">🍲</span>
+                <span class="text-[9px] font-black uppercase text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">Food</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-amber-800">Lunch Meal</span>
+                <span class="text-[10px] text-amber-700 font-bold">01:30 PM • Warm Meal</span>
+              </div>
+            </button>
+
+            <!-- 9. Screen Limit Break -->
+            <button type="button" onclick="applyReminderPreset('screen_afternoon')"
+              class="p-3 rounded-2xl bg-white hover:bg-violet-50 text-violet-950 border-2 border-violet-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">📱</span>
+                <span class="text-[9px] font-black uppercase text-violet-700 bg-violet-100 px-1.5 py-0.5 rounded">Screen</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-violet-800">TV/Phone Limit</span>
+                <span class="text-[10px] text-violet-700 font-bold">04:00 PM • Screen Off</span>
+              </div>
+            </button>
+
+            <!-- 10. Post-Dinner Walk -->
+            <button type="button" onclick="applyReminderPreset('walking_night')"
+              class="p-3 rounded-2xl bg-white hover:bg-emerald-50 text-emerald-950 border-2 border-emerald-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">🚶</span>
+                <span class="text-[9px] font-black uppercase text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Walking</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-emerald-800">Dinner Stroll</span>
+                <span class="text-[10px] text-emerald-700 font-bold">08:45 PM • 10 Mins</span>
+              </div>
+            </button>
+
+            <!-- 11. Night Medicine -->
+            <button type="button" onclick="applyReminderPreset('med_night')"
+              class="p-3 rounded-2xl bg-white hover:bg-purple-50 text-purple-950 border-2 border-purple-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">💊</span>
+                <span class="text-[9px] font-black uppercase text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded">Medicine</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-purple-800">Night Medicine</span>
+                <span class="text-[10px] text-purple-700 font-bold">09:30 PM • Night Regimen</span>
+              </div>
+            </button>
+
+            <!-- 12. Bedtime Sleep -->
+            <button type="button" onclick="applyReminderPreset('sleep_bedtime')"
+              class="p-3 rounded-2xl bg-white hover:bg-indigo-50 text-indigo-950 border-2 border-indigo-200/90 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between group">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-xl">🌙</span>
+                <span class="text-[9px] font-black uppercase text-indigo-700 bg-indigo-100 px-1.5 py-0.5 rounded">Sleep</span>
+              </div>
+              <div class="mt-2">
+                <span class="font-black text-xs block text-slate-900 group-hover:text-indigo-800">Bedtime Sleep</span>
+                <span class="text-[10px] text-indigo-700 font-bold">10:15 PM • Deep Sleep</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Reminder Form -->
+        <form onsubmit="handleSaveNewReminder(event)" class="mt-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
+              Reminder Title (रिमाइंडर का नाम) *
+            </label>
+            <input type="text" id="rem-page-input-title" required placeholder="e.g. Drink 1 Glass Warm Water / पानी पिएं या सैर करें"
+              class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-bold text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
+                Category (श्रेणी) *
+              </label>
+              <select id="rem-page-input-category" required
+                class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-bold text-xs sm:text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
+                <option value="water">💧 Water Intake (जल सेवन / पानी)</option>
+                <option value="food">🍲 Food & Nutrition (भोजन व नाश्ता)</option>
+                <option value="medicine">💊 Medicine & Regimen (दवा व खुराक)</option>
+                <option value="sleep">🌙 Sleep & Nap Hours (नींद व विश्राम का समय)</option>
+                <option value="screen">📱 Screen Watching Break (स्क्रीन समय ब्रेक)</option>
+                <option value="walking">🚶 Walking & Mobility (सैर व वॉक का समय)</option>
+                <option value="other">🩺 BP & Health Vital / Other (अन्य)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
+                Alarm Time (अलार्म का समय) *
+              </label>
+              <input type="time" id="rem-page-input-time" required value="08:00"
+                class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-mono font-black text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
+              Instructions & Notes (निर्देश या खुराक)
+            </label>
+            <input type="text" id="rem-page-input-notes" placeholder="e.g. Drink slowly with warm water / 20 मिनट पार्क में टहलें"
+              class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-medium text-xs sm:text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-5 border-t border-amber-200">
+            <button type="button" onclick="closeAddReminderPage()"
+              class="w-full sm:w-auto px-6 py-3 rounded-2xl border-2 border-slate-200 text-slate-700 font-bold text-xs sm:text-sm hover:bg-slate-100 transition-all text-center">
+              Cancel / रद्द करें
+            </button>
+            <button type="submit"
+              class="w-full sm:w-auto px-7 py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-check"></i>
+              <span>Save Reminder & Set Alarm / अलार्म सहेजें</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ALL SENIOR CARE REMINDERS & ALARM CONTROLS HUB -->
+      <div id="senior-reminders-section" class="bg-gradient-to-b from-white via-amber-50/20 to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-sm mt-6">
+        <!-- Section Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-amber-200">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-md shadow-amber-500/25 flex-shrink-0 animate-bounce">
+              <i class="fa-solid fa-bell"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="text-lg sm:text-xl font-black text-slate-900">
+                  Daily Care Reminders & Alarm / दैनिक रिमाइंडर व अलार्म
+                </h3>
+                <span id="reminders-live-clock" class="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg bg-amber-200 text-amber-950 border border-amber-300 shadow-2xs">
+                  --:-- --
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">
+                Water intake, nutritious meals, medicines, sleep hours, screen breaks & walking alerts with ringing alarm sounds & bilingual voice speech
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Controls -->
+          <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <button onclick="testSampleReminderAlarm()"
+              class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs transition-all flex items-center justify-center space-x-1.5 border border-amber-300 active:scale-95 shadow-sm"
+              title="Test Alarm Sound, Screen Alert & Voice Announcement">
+              <i class="fa-solid fa-volume-high text-amber-700"></i>
+              <span>Test Alarm / अलार्म टेस्ट</span>
+            </button>
+            <button onclick="setQuickOneMinuteAlarm()"
+              class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-all flex items-center justify-center space-x-1.5 active:scale-95 shadow-sm"
+              title="Sets an automated alarm for 1 minute from now to verify live clock ticking">
+              <i class="fa-solid fa-stopwatch-20"></i>
+              <span>⚡ Alarm in 1 Min</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Notification Permission Banner -->
+        <div id="device-notif-permission-card" class="mt-4 p-3.5 rounded-2xl bg-sky-50 border border-sky-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center space-x-2.5">
+            <i class="fa-solid fa-mobile-screen-button text-sky-600 text-lg"></i>
+            <div>
+              <span class="font-extrabold text-sky-950">Device Alarm Notifications:</span>
+              <span class="text-sky-800 ml-1">Receive ringing pop-up alarms even when the screen is locked or browser is in background.</span>
+            </div>
+          </div>
+          <button onclick="requestDeviceNotificationPermission()"
+            class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition-all shadow-sm flex items-center space-x-1.5 flex-shrink-0">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Enable Device Alarm / अनुमति दें</span>
+          </button>
+        </div>
+
+        <!-- Daily Hydration Quick Tracker Card -->
+        <div class="mt-5 p-4 rounded-2xl bg-white border border-sky-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl flex-shrink-0">
+              <i class="fa-solid fa-glass-water"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs sm:text-sm font-extrabold text-slate-900">Today's Water Intake (जल सेवन लक्ष्य):</span>
+                <span id="water-logged-counter" class="text-xs font-black text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">
+                  4 / 8 Glasses (1.0L)
+                </span>
+              </div>
+              <div id="water-glasses-icons" class="text-base sm:text-lg mt-1 space-x-1">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <button onclick="logWaterGlass()"
+            class="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-sm flex items-center justify-center space-x-1.5 transition-all active:scale-95">
+            <i class="fa-solid fa-plus text-sm"></i>
+            <span>Drank 1 Glass / 1 गिलास पिया</span>
+          </button>
+        </div>
+
+        <!-- Category Filter Pills across All 6 Categories -->
+        <div class="flex flex-wrap items-center gap-1.5 mt-5">
+          <button onclick="filterReminders('all')" id="rem-filter-all"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm">
+            All (सभी)
+          </button>
+          <button onclick="filterReminders('water')" id="rem-filter-water"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            💧 Water (पानी)
+          </button>
+          <button onclick="filterReminders('food')" id="rem-filter-food"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            🍲 Food (भोजन)
+          </button>
+          <button onclick="filterReminders('medicine')" id="rem-filter-medicine"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            💊 Medicine (दवा)
+          </button>
+          <button onclick="filterReminders('sleep')" id="rem-filter-sleep"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            🌙 Sleep (नींद)
+          </button>
+          <button onclick="filterReminders('screen')" id="rem-filter-screen"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            📱 Screen Break (स्क्रीन ब्रेक)
+          </button>
+          <button onclick="filterReminders('walking')" id="rem-filter-walking"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            🚶 Walking (सैर)
+          </button>
+          <button onclick="filterReminders('other')" id="rem-filter-other"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+            🩺 Others (अन्य)
+          </button>
+        </div>
+
+        <!-- Dynamic Reminders Grid -->
+        <div id="senior-reminders-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-4">
+          <!-- Populated by renderSeniorReminders() -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
     <!-- 3. FAMILY MEMBER PORTAL (परिवार का वेलबीइंग व हेल्थ मॉनिटर)               -->
     <!-- Features: Senior Health Report, AI Analyze Summary, Assessment History     -->
     <!-- ========================================================================= -->
@@ -2496,295 +2904,6 @@
 
         <!-- Family Profile & Senior Selector -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2.5">
-=======
-    <!-- DEDICATED FULL PAGE: ADD CARE REMINDER (नया देखभाल रिमाइंडर जोड़ें)       -->
-    <!-- ========================================================================= -->
-    <section id="view-add-reminder" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full animate-fadeIn">
-      <!-- Top Navigation & Back Button -->
-      <div class="flex items-center justify-between pb-4 mb-6 border-b border-amber-200">
-        <button type="button" onclick="closeAddReminderPage()"
-          class="px-4 py-2.5 rounded-2xl bg-white hover:bg-amber-50 text-amber-900 border-2 border-amber-300 font-extrabold text-xs sm:text-sm shadow-xs transition-all flex items-center space-x-2 active:scale-95">
-          <i class="fa-solid fa-arrow-left text-amber-700"></i>
-          <span>← Back to Elder Home / वापस जाएं</span>
-        </button>
-
-        <div class="flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <span class="text-xs font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
-            CareConnect Alarm Engine
-          </span>
-        </div>
-      </div>
-
-      <!-- Main Dedicated Card -->
-      <div class="bg-gradient-to-b from-[#fbf8f3] via-white to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-md">
-        <!-- Hero Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-amber-200">
-          <div class="flex items-center space-x-4">
-            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-amber-400 text-white flex items-center justify-center text-2xl sm:text-3xl shadow-lg shadow-amber-500/25 flex-shrink-0 animate-bounce">
-              <i class="fa-solid fa-bell"></i>
-            </div>
-            <div>
-              <span class="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full">
-                Elder Care Alarm • नया रिमाइंडर
-              </span>
-              <h2 class="text-xl sm:text-2xl font-black text-[#1b4332] mt-1 font-sans">
-                Schedule a Daily Care Alert
-              </h2>
-              <p class="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">
-                Set water intake, meals, medicines, and walking alerts with audio ringtones & spoken announcements
-              </p>
-            </div>
-          </div>
-
-          <button type="button" onclick="testSampleReminderAlarm()"
-            class="px-4 py-2.5 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-extrabold text-xs border border-amber-300 flex items-center justify-center space-x-2 active:scale-95 transition-all shadow-xs">
-            <i class="fa-solid fa-volume-high text-amber-700"></i>
-            <span>Test Alarm Tone / अलार्म बजाएं</span>
-          </button>
-        </div>
-
-        <!-- 1-Click Quick Presets Grid -->
-        <div class="mt-6 p-4 rounded-2xl bg-[#FFF9EE] border border-amber-200">
-          <div class="flex items-center justify-between mb-2.5">
-            <span class="text-xs font-black text-amber-950 uppercase tracking-wider flex items-center space-x-1.5">
-              <i class="fa-solid fa-bolt-lightning text-amber-600"></i>
-              <span>1-Click Quick Presets (त्वरित चयन)</span>
-            </span>
-            <span class="text-[10px] text-amber-800 font-bold">Tap any preset to auto-fill details</span>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <button type="button" onclick="applyReminderPreset('water_morning')"
-              class="p-2.5 rounded-xl bg-white hover:bg-sky-50 text-sky-950 border border-sky-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">💧</span>
-              <span class="font-black text-[11px] mt-1">Morning Water</span>
-              <span class="text-[10px] text-sky-700 font-semibold">08:00 AM • 1 Glass</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('med_morning')"
-              class="p-2.5 rounded-xl bg-white hover:bg-purple-50 text-purple-950 border border-purple-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">💊</span>
-              <span class="font-black text-[11px] mt-1">BP Medicine</span>
-              <span class="text-[10px] text-purple-700 font-semibold">08:30 AM • After Meal</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('food_breakfast')"
-              class="p-2.5 rounded-xl bg-white hover:bg-amber-50 text-amber-950 border border-amber-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">🍲</span>
-              <span class="font-black text-[11px] mt-1">Breakfast</span>
-              <span class="text-[10px] text-amber-700 font-semibold">09:00 AM • Nutritious</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('water_afternoon')"
-              class="p-2.5 rounded-xl bg-white hover:bg-sky-50 text-sky-950 border border-sky-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">💧</span>
-              <span class="font-black text-[11px] mt-1">Midday Hydration</span>
-              <span class="text-[10px] text-sky-700 font-semibold">11:30 AM • 1 Glass</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('food_lunch')"
-              class="p-2.5 rounded-xl bg-white hover:bg-amber-50 text-amber-950 border border-amber-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">🍲</span>
-              <span class="font-black text-[11px] mt-1">Lunch</span>
-              <span class="text-[10px] text-amber-700 font-semibold">01:30 PM • Warm Meal</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('walk')"
-              class="p-2.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-950 border border-emerald-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">🏃</span>
-              <span class="font-black text-[11px] mt-1">Evening Walk</span>
-              <span class="text-[10px] text-emerald-700 font-semibold">05:30 PM • 20 Mins</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('bp')"
-              class="p-2.5 rounded-xl bg-white hover:bg-rose-50 text-rose-950 border border-rose-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">🩺</span>
-              <span class="font-black text-[11px] mt-1">BP & Vitals</span>
-              <span class="text-[10px] text-rose-700 font-semibold">06:00 PM • Digital Cuff</span>
-            </button>
-
-            <button type="button" onclick="applyReminderPreset('med_night')"
-              class="p-2.5 rounded-xl bg-white hover:bg-purple-50 text-purple-950 border border-purple-200 font-bold text-xs text-left transition-all active:scale-95 shadow-2xs flex flex-col justify-between">
-              <span class="text-base">💊</span>
-              <span class="font-black text-[11px] mt-1">Night Medicine</span>
-              <span class="text-[10px] text-purple-700 font-semibold">09:30 PM • Before Sleep</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Custom Reminder Form -->
-        <form onsubmit="handleSaveNewReminder(event)" class="mt-6 space-y-4 text-xs sm:text-sm">
-          <div>
-            <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
-              Reminder Title (रिमाइंडर का नाम) *
-            </label>
-            <input type="text" id="rem-page-input-title" required placeholder="e.g. Drink 1 Glass Warm Water / पानी पिएं"
-              class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-bold text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
-                Category (श्रेणी) *
-              </label>
-              <select id="rem-page-input-category" required
-                class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-bold text-xs sm:text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
-                <option value="water">💧 Water Intake (जल सेवन)</option>
-                <option value="food">🍲 Food / Meals (भोजन व नाश्ता)</option>
-                <option value="medicine">💊 Medicine (दवा व खुराक)</option>
-                <option value="walk">🏃 Walk / Exercise (शाम की सैर)</option>
-                <option value="bp">🩺 BP / Vitals Check (रक्तचाप व वाइटल्स)</option>
-                <option value="other">🔔 Other Care Reminder (अन्य)</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
-                Alarm Time (अलार्म का समय) *
-              </label>
-              <input type="time" id="rem-page-input-time" required value="08:00"
-                class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-mono font-black text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1.5 text-xs sm:text-sm">
-              Instructions & Notes (निर्देश या खुराक)
-            </label>
-            <input type="text" id="rem-page-input-notes" placeholder="e.g. Drink slowly with warm water after breakfast"
-              class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 font-medium text-xs sm:text-sm bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all">
-          </div>
-
-          <!-- Bottom Action Buttons -->
-          <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-5 border-t border-amber-200">
-            <button type="button" onclick="closeAddReminderPage()"
-              class="w-full sm:w-auto px-6 py-3 rounded-2xl border-2 border-slate-200 text-slate-700 font-bold text-xs sm:text-sm hover:bg-slate-100 transition-all text-center">
-              Cancel / रद्द करें
-            </button>
-            <button type="submit"
-              class="w-full sm:w-auto px-7 py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-check"></i>
-              <span>Save Reminder & Set Alarm / अलार्म सहेजें</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- ALL SENIOR CARE REMINDERS & ALARM CONTROLS -->
-      <div id="senior-reminders-section" class="bg-gradient-to-b from-white via-amber-50/20 to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-sm mt-6">
-          
-          <!-- Section Header -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-amber-200">
-            <div class="flex items-center space-x-3.5">
-              <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-md shadow-amber-500/25 flex-shrink-0 animate-bounce">
-                <i class="fa-solid fa-bell"></i>
-              </div>
-              <div>
-                <div class="flex items-center space-x-2">
-                  <h3 class="text-lg sm:text-xl font-black text-slate-900">
-                    Daily Care Reminders & Alarm / दैनिक रिमाइंडर व अलार्म
-                  </h3>
-                  <span id="reminders-live-clock" class="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg bg-amber-200 text-amber-950 border border-amber-300 shadow-2xs">
-                    --:-- --
-                  </span>
-                </div>
-                <p class="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">
-                  Water intake, nutritious meals, and timely medication alerts with device alarm sounds & speech
-                </p>
-              </div>
-            </div>
-
-            <!-- Action Controls -->
-            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-              <button onclick="testSampleReminderAlarm()"
-                class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs transition-all flex items-center justify-center space-x-1.5 border border-amber-300 active:scale-95 shadow-sm"
-                title="Test Alarm Sound, Screen Alert & Voice Announcement">
-                <i class="fa-solid fa-volume-high text-amber-700"></i>
-                <span>Test Alarm / अलार्म टेस्ट</span>
-              </button>
-
-            </div>
-          </div>
-
-          <!-- Notification Permission Banner (if not yet granted) -->
-          <div id="device-notif-permission-card" class="mt-4 p-3.5 rounded-2xl bg-sky-50 border border-sky-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-            <div class="flex items-center space-x-2.5">
-              <i class="fa-solid fa-mobile-screen-button text-sky-600 text-lg"></i>
-              <div>
-                <span class="font-extrabold text-sky-950">Device Alarm Notifications:</span>
-                <span class="text-sky-800 ml-1">Receive ringing pop-up alarms even when the screen is locked or browser is in background.</span>
-              </div>
-            </div>
-            <button onclick="requestDeviceNotificationPermission()"
-              class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition-all shadow-sm flex items-center space-x-1.5 flex-shrink-0">
-              <i class="fa-solid fa-circle-check"></i>
-              <span>Enable Device Alarm / अनुमति दें</span>
-            </button>
-          </div>
-
-          <!-- Daily Hydration Quick Tracker Card -->
-          <div class="mt-5 p-4 rounded-2xl bg-white border border-sky-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl flex-shrink-0">
-                <i class="fa-solid fa-glass-water"></i>
-              </div>
-              <div>
-                <div class="flex items-center space-x-2">
-                  <span class="text-xs sm:text-sm font-extrabold text-slate-900">Today's Water Intake (जल सेवन लक्ष्य):</span>
-                  <span id="water-logged-counter" class="text-xs font-black text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">
-                    4 / 8 Glasses (1.0L)
-                  </span>
-                </div>
-                <div id="water-glasses-icons" class="text-base sm:text-lg mt-1 space-x-1">
-                  <!-- Rendered dynamically -->
-                </div>
-              </div>
-            </div>
-
-            <button onclick="logWaterGlass()"
-              class="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-sm flex items-center justify-center space-x-1.5 transition-all active:scale-95">
-              <i class="fa-solid fa-plus text-sm"></i>
-              <span>Drank 1 Glass / 1 गिलास पिया</span>
-            </button>
-          </div>
-
-          <!-- Filter Pills -->
-          <div class="flex flex-wrap items-center gap-1.5 mt-5">
-            <button onclick="filterReminders('all')" id="rem-filter-all"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-900 text-white shadow-sm">
-              All (सभी)
-            </button>
-            <button onclick="filterReminders('water')" id="rem-filter-water"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
-              💧 Water (पानी)
-            </button>
-            <button onclick="filterReminders('food')" id="rem-filter-food"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
-              🍲 Food / Meals (भोजन)
-            </button>
-            <button onclick="filterReminders('medicine')" id="rem-filter-medicine"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
-              💊 Medicine (दवा)
-            </button>
-            <button onclick="filterReminders('other')" id="rem-filter-other"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
-              🏃 Others (अन्य)
-            </button>
-          </div>
-
-          <!-- Dynamic Reminders Grid -->
-          <div id="senior-reminders-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-4">
-            <!-- Populated by renderSeniorReminders() -->
-          </div>
-        </div>
-    </section>
-
-<section id="view-family" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
-      <!-- Header Banner with Senior Context -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
->>>>>>> 5f0b85e (My latest changes)
           <div class="flex items-center space-x-2">
             <!-- Notification Filter Preference Badge -->
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
@@ -6505,6 +6624,18 @@
           <button type="button" onclick="applyReminderPreset('med_night')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 text-[11px] font-bold border border-purple-200">
             💊 Night Medicine (9:30 PM)
           </button>
+          <button type="button" onclick="applyReminderPreset('screen_morning')" class="px-2.5 py-1 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-800 text-[11px] font-bold border border-violet-200">
+            📱 Screen Break (11 AM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('sleep_nap')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-[11px] font-bold border border-indigo-200">
+            🌙 Power Nap (2:30 PM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('walking_evening')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200">
+            🚶 Evening Walk (5:30 PM)
+          </button>
+          <button type="button" onclick="applyReminderPreset('sleep_bedtime')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-[11px] font-bold border border-indigo-200">
+            🌙 Sleep (10:15 PM)
+          </button>
         </div>
       </div>
 
@@ -6520,12 +6651,13 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Category (श्रेणी) *</label>
             <select id="rem-input-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white focus:ring-2 focus:ring-amber-500">
-              <option value="water">💧 Water Intake (पानी)</option>
-              <option value="food">🍲 Food / Meal (भोजन)</option>
-              <option value="medicine">💊 Medicine (दवा)</option>
-              <option value="walk">🏃 Walk / Exercise (सैर)</option>
-              <option value="bp">🩺 BP / Vitals Check (जांच)</option>
-              <option value="other">🔔 Other Custom (अन्य)</option>
+              <option value="water">💧 Water Intake (जल सेवन / पानी)</option>
+              <option value="food">🍲 Food & Nutrition (भोजन व नाश्ता)</option>
+              <option value="medicine">💊 Medicine & Regimen (दवा व खुराक)</option>
+              <option value="sleep">🌙 Sleep & Nap Hours (नींद व विश्राम का समय)</option>
+              <option value="screen">📱 Screen Watching Break (स्क्रीन समय ब्रेक)</option>
+              <option value="walking">🚶 Walking & Mobility (सैर व वॉक का समय)</option>
+              <option value="other">🩺 Health Vitals / Other (अन्य)</option>
             </select>
           </div>
 

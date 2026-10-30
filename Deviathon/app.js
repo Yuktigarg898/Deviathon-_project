@@ -13270,12 +13270,39 @@ function downloadClinicalReportSheet() {
 }
 
 
-// ==================================================================// DAILY CARE REMINDERS & DEVICE ALARM ENGINE (पानी, भोजन, दवा रिमाइंडर)
+// ==================================================================// ==================================================================
+// DAILY CARE REMINDERS & DEVICE ALARM ENGINE (पानी, भोजन, दवा, नींद, स्क्रीन ब्रेक, सैर)
 // ==================================================================
 const defaultSeniorReminders = [
   {
+    id: 'rem-sleep-wake',
+    title: 'Morning Wake-Up & Gentle Stretch / सुबह जागना व स्ट्रेचिंग',
+    category: 'sleep',
+    time: '06:30',
+    timeDisplay: '06:30 AM',
+    notes: 'Begin the day with gentle breathing, joint rotation and natural morning sunlight.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-sun',
+    color: 'text-amber-600 bg-amber-50 border-amber-200'
+  },
+  {
+    id: 'rem-walking-1',
+    title: 'Morning Garden Walk & Mobility / सुबह की ताजी सैर',
+    category: 'walking',
+    time: '07:30',
+    timeDisplay: '07:30 AM',
+    notes: '15-20 minutes gentle walk in fresh garden air to maintain joint mobility.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-person-walking',
+    color: 'text-emerald-600 bg-emerald-50 border-emerald-200'
+  },
+  {
     id: 'rem-water-1',
-    title: 'Drink 1 Glass Warm Water / सुबह 1 गिलास पानी',
+    title: 'Drink 1 Glass Warm Water / सुबह 1 गिलास गुनगुना पानी',
     category: 'water',
     time: '08:00',
     timeDisplay: '08:00 AM',
@@ -13288,11 +13315,11 @@ const defaultSeniorReminders = [
   },
   {
     id: 'rem-med-1',
-    title: 'BP Medicine (Amlodipine 5mg) / सुबह की दवा',
+    title: 'BP Medicine (Amlodipine 5mg) / सुबह की बीपी दवा',
     category: 'medicine',
     time: '08:30',
     timeDisplay: '08:30 AM',
-    notes: 'Take with warm water after food to stabilize morning cardiovascular pressure.',
+    notes: 'Take with warm water after morning meal to stabilize cardiovascular pressure.',
     enabled: true,
     completedToday: false,
     lastTriggeredDate: '',
@@ -13305,12 +13332,25 @@ const defaultSeniorReminders = [
     category: 'food',
     time: '09:00',
     timeDisplay: '09:00 AM',
-    notes: 'Oats / dalia / boiled egg or warm khichdi with fruit.',
+    notes: 'Oats, dalia, or light multigrain breakfast with fresh seasonal fruit.',
     enabled: true,
     completedToday: false,
     lastTriggeredDate: '',
-    icon: 'fa-solid fa-utensils',
+    icon: 'fa-solid fa-bowl-food',
     color: 'text-amber-600 bg-amber-50 border-amber-200'
+  },
+  {
+    id: 'rem-screen-1',
+    title: 'Screen Watching Break (20-20-20 Rule) / स्क्रीन समय ब्रेक',
+    category: 'screen',
+    time: '11:00',
+    timeDisplay: '11:00 AM',
+    notes: 'Look 20 feet away for 20 seconds. Rest eyes from phone or television strain.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-mobile-screen-button',
+    color: 'text-violet-600 bg-violet-50 border-violet-200'
   },
   {
     id: 'rem-water-2',
@@ -13327,7 +13367,7 @@ const defaultSeniorReminders = [
   },
   {
     id: 'rem-food-2',
-    title: 'Balanced Lunch / दोपहर का भोजन',
+    title: 'Balanced Low-Sodium Lunch / दोपहर का भोजन',
     category: 'food',
     time: '13:30',
     timeDisplay: '01:30 PM',
@@ -13335,7 +13375,7 @@ const defaultSeniorReminders = [
     enabled: true,
     completedToday: false,
     lastTriggeredDate: '',
-    icon: 'fa-solid fa-bowl-food',
+    icon: 'fa-solid fa-utensils',
     color: 'text-amber-600 bg-amber-50 border-amber-200'
   },
   {
@@ -13352,6 +13392,32 @@ const defaultSeniorReminders = [
     color: 'text-purple-600 bg-purple-50 border-purple-200'
   },
   {
+    id: 'rem-sleep-nap',
+    title: 'Afternoon Rest & Power Nap / दोपहर का विश्राम (नैप)',
+    category: 'sleep',
+    time: '14:30',
+    timeDisplay: '02:30 PM',
+    notes: '20-30 minutes restful nap to rejuvenate mental clarity and lower stress.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-bed',
+    color: 'text-indigo-600 bg-indigo-50 border-indigo-200'
+  },
+  {
+    id: 'rem-screen-2',
+    title: 'TV & Phone Limit Break / शाम का स्क्रीन ब्रेक',
+    category: 'screen',
+    time: '16:00',
+    timeDisplay: '04:00 PM',
+    notes: 'Step out of TV room. Blink eyes, drink water, and do gentle neck stretches.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-eye',
+    color: 'text-violet-600 bg-violet-50 border-violet-200'
+  },
+  {
     id: 'rem-water-3',
     title: 'Evening Hydration & Herbal Tea / शाम का पानी',
     category: 'water',
@@ -13365,8 +13431,21 @@ const defaultSeniorReminders = [
     color: 'text-sky-600 bg-sky-50 border-sky-200'
   },
   {
+    id: 'rem-walking-2',
+    title: 'Evening Park Stroll & Mobility / शाम की सैर व वॉक',
+    category: 'walking',
+    time: '17:30',
+    timeDisplay: '05:30 PM',
+    notes: '15-20 minutes leisurely walk with walking cane or companion to stay active.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-person-walking',
+    color: 'text-emerald-600 bg-emerald-50 border-emerald-200'
+  },
+  {
     id: 'rem-food-3',
-    title: 'Light Dinner / रात्रि का हल्का भोजन',
+    title: 'Light Low-Sodium Dinner / रात्रि का हल्का भोजन',
     category: 'food',
     time: '20:00',
     timeDisplay: '08:00 PM',
@@ -13374,8 +13453,34 @@ const defaultSeniorReminders = [
     enabled: true,
     completedToday: false,
     lastTriggeredDate: '',
-    icon: 'fa-solid fa-utensils',
+    icon: 'fa-solid fa-bowl-rice',
     color: 'text-amber-600 bg-amber-50 border-amber-200'
+  },
+  {
+    id: 'rem-walking-3',
+    title: 'Post-Dinner 10-Min Stroll / भोजन उपरांत हल्की सैर',
+    category: 'walking',
+    time: '20:45',
+    timeDisplay: '08:45 PM',
+    notes: '100 paces gentle indoor or verandah walk for smooth glycemic digestion.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-shoe-prints',
+    color: 'text-emerald-600 bg-emerald-50 border-emerald-200'
+  },
+  {
+    id: 'rem-screen-3',
+    title: 'Night Blue-Light Cutoff / रात्रि स्क्रीन बंद करें',
+    category: 'screen',
+    time: '21:00',
+    timeDisplay: '09:00 PM',
+    notes: 'Turn off mobile phones & TV 1 hour before sleep for natural melatonin release.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-moon',
+    color: 'text-violet-600 bg-violet-50 border-violet-200'
   },
   {
     id: 'rem-med-3',
@@ -13389,6 +13494,19 @@ const defaultSeniorReminders = [
     lastTriggeredDate: '',
     icon: 'fa-solid fa-pills',
     color: 'text-purple-600 bg-purple-50 border-purple-200'
+  },
+  {
+    id: 'rem-sleep-night',
+    title: 'Bedtime Wind-Down & Deep Sleep / रात्रि शयन व विश्राम',
+    category: 'sleep',
+    time: '22:15',
+    timeDisplay: '10:15 PM',
+    notes: 'Turn off bright lights, relax mind and prepare for 7-8 hours restorative sleep.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-moon',
+    color: 'text-indigo-600 bg-indigo-50 border-indigo-200'
   }
 ];
 
@@ -13401,7 +13519,24 @@ function getSeniorReminders() {
   try {
     const raw = localStorage.getItem('careconnect_senior_reminders');
     if (raw) {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      // If stored array is small or missing new categories, merge with defaultSeniorReminders
+      const hasSleep = parsed.some(r => r.category === 'sleep');
+      const hasScreen = parsed.some(r => r.category === 'screen');
+      const hasWalking = parsed.some(r => r.category === 'walking');
+      if (hasSleep && hasScreen && hasWalking && parsed.length >= 8) {
+        return parsed;
+      }
+      // Merge unique default reminders
+      const existingIds = new Set(parsed.map(r => r.id));
+      defaultSeniorReminders.forEach(dr => {
+        if (!existingIds.has(dr.id)) {
+          parsed.push(dr);
+        }
+      });
+      parsed.sort((a, b) => a.time.localeCompare(b.time));
+      saveSeniorReminders(parsed);
+      return parsed;
     }
   } catch (e) {
     console.warn('Error reading reminders from localStorage:', e);
@@ -13452,9 +13587,9 @@ function updateWaterTrackerDisplay() {
   let iconsHtml = '';
   for (let i = 1; i <= total; i++) {
     if (i <= count) {
-      iconsHtml += `<span class="inline-block transition-transform hover:scale-125" title="Glass ${i}: Logged ✓">💧</span>`;
+      iconsHtml += `<span class="inline-block transition-transform hover:scale-125 cursor-pointer" onclick="logWaterGlass()" title="Glass ${i}: Logged ✓">💧</span>`;
     } else {
-      iconsHtml += `<span class="inline-block opacity-40 hover:opacity-80 transition-opacity" title="Glass ${i}: Pending">🥛</span>`;
+      iconsHtml += `<span class="inline-block opacity-40 hover:opacity-80 transition-opacity cursor-pointer" onclick="logWaterGlass()" title="Glass ${i}: Click to Log">🥛</span>`;
     }
   }
   iconsContainer.innerHTML = iconsHtml;
@@ -13481,8 +13616,9 @@ function renderSeniorReminders(filter = 'all') {
   const reminders = getSeniorReminders();
   const filtered = (filter === 'all') ? reminders : reminders.filter(r => r.category === filter);
 
-  // Update filter pill UI
-  ['all', 'water', 'food', 'medicine', 'other'].forEach(f => {
+  // Update filter pill UI across all categories
+  const allFilters = ['all', 'water', 'food', 'medicine', 'sleep', 'screen', 'walking', 'other'];
+  allFilters.forEach(f => {
     const btn = document.getElementById(`rem-filter-${f}`);
     if (btn) {
       if (f === filter) {
@@ -13499,19 +13635,38 @@ function renderSeniorReminders(filter = 'all') {
         <i class="fa-solid fa-bell-slash text-3xl mb-2 text-slate-300"></i>
         <p class="text-xs font-bold text-slate-600">No reminders found in this category / कोई रिमाइंडर नहीं मिला</p>
         <button onclick="openAddReminderModal()" class="mt-2 text-xs font-bold text-amber-600 hover:underline">
-          + Add your first reminder now
+          + Add your first reminder in this category now
         </button>
       </div>
     `;
     return;
   }
 
+  const categoryBadges = {
+    water: 'bg-sky-100 text-sky-800 border-sky-200',
+    food: 'bg-amber-100 text-amber-800 border-amber-200',
+    medicine: 'bg-purple-100 text-purple-800 border-purple-200',
+    sleep: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+    screen: 'bg-violet-100 text-violet-800 border-violet-200',
+    walking: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    other: 'bg-slate-100 text-slate-800 border-slate-200'
+  };
+
+  const categoryLabels = {
+    water: '💧 Water / पानी',
+    food: '🍲 Food / भोजन',
+    medicine: '💊 Medicine / दवा',
+    sleep: '🌙 Sleep / नींद',
+    screen: '📱 Screen / स्क्रीन ब्रेक',
+    walking: '🚶 Walking / सैर',
+    other: '🩺 Other / अन्य'
+  };
+
   grid.innerHTML = filtered.map(r => {
     const isDone = r.completedToday;
     const isEnabled = r.enabled;
-    const catBadge = (r.category === 'water') 
-      ? 'bg-sky-100 text-sky-800' 
-      : (r.category === 'medicine' ? 'bg-purple-100 text-purple-800' : (r.category === 'food' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'));
+    const badgeStyle = categoryBadges[r.category] || categoryBadges.other;
+    const catLabel = categoryLabels[r.category] || r.category;
     
     return `
       <div id="rem-card-${r.id}"
@@ -13529,8 +13684,8 @@ function renderSeniorReminders(filter = 'all') {
             </div>
 
             <div class="flex items-center space-x-2">
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${catBadge}">
-                ${r.category}
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border uppercase tracking-wider ${badgeStyle}">
+                ${catLabel}
               </span>
               <!-- Enable / Disable Switch -->
               <button onclick="toggleReminderStatus('${r.id}')"
@@ -13559,10 +13714,10 @@ function renderSeniorReminders(filter = 'all') {
 
           <div class="flex items-center space-x-1.5">
             <button onclick="triggerDeviceReminderAlarm(getSeniorReminders().find(x => x.id === '${r.id}'))"
-              class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition-all border border-amber-200"
-              title="Test Alarm Sound for this reminder / अलार्म बजाएं">
+              class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition-all border border-amber-200 active:scale-95 flex items-center space-x-1"
+              title="Test Alarm Sound & Voice for this reminder / अलार्म बजाएं">
               <i class="fa-solid fa-bell text-xs"></i>
-              <span class="hidden sm:inline ml-1">Ring</span>
+              <span>Ring / अलार्म</span>
             </button>
             <button onclick="deleteReminder('${r.id}')"
               class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-all flex items-center justify-center text-xs"
@@ -13631,8 +13786,8 @@ function openAddReminderPage() {
   if (typeof renderSeniorReminders === 'function') {
     renderSeniorReminders(currentRemindersFilter || 'all');
   }
-  if (typeof updateHydrationUi === 'function') {
-    updateHydrationUi();
+  if (typeof updateWaterTrackerDisplay === 'function') {
+    updateWaterTrackerDisplay();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -13653,7 +13808,8 @@ function openAddReminderModal() {
 }
 
 function closeAddReminderModal() {
-  closeAddReminderPage();
+  const modal = document.getElementById('modal-add-reminder');
+  if (modal) modal.classList.add('hidden');
 }
 
 function applyReminderPreset(presetKey) {
@@ -13663,53 +13819,126 @@ function applyReminderPreset(presetKey) {
   const notesInput = document.getElementById('rem-page-input-notes') || document.getElementById('rem-input-notes');
 
   const presets = {
+    // Water
     water_morning: {
       title: 'Morning Warm Water (1 Glass) / सुबह का गुनगुना पानी',
       cat: 'water',
       time: '08:00',
       notes: 'Hydration supports circulation, kidney vitality and regulates blood pressure.'
     },
-    med_morning: {
-      title: 'Morning BP Medicine / सुबह की रक्तचाप की दवा',
-      cat: 'medicine',
-      time: '08:30',
-      notes: 'Take with warm water after morning meal.'
+    water_afternoon: {
+      title: 'Midday Hydration (1 Glass) / दोपहर 1 गिलास पानी',
+      cat: 'water',
+      time: '11:30',
+      notes: 'Stay hydrated to prevent fatigue, dizziness and blood viscosity spikes.'
     },
+    water_evening: {
+      title: 'Evening Hydration & Herbal Tea / शाम का पानी',
+      cat: 'water',
+      time: '16:30',
+      notes: 'Warm water or herbal tea for comfortable evening circulation.'
+    },
+
+    // Food
     food_breakfast: {
       title: 'Nutritious Breakfast / पौष्टिक नाश्ता',
       cat: 'food',
       time: '09:00',
-      notes: 'Oats, dalia, or light multigrain breakfast with fruit.'
+      notes: 'Oats, dalia, or light multigrain breakfast with fresh seasonal fruit.'
     },
     food_lunch: {
       title: 'Balanced Low-Sodium Lunch / दोपहर का भोजन',
       cat: 'food',
       time: '13:30',
-      notes: 'Warm roti, steamed vegetables, dal, and fresh curd.'
+      notes: 'Warm roti, steamed seasonal vegetables, dal, and fresh curd.'
     },
-    water_afternoon: {
-      title: 'Midday Hydration / दोपहर 1 गिलास पानी',
-      cat: 'water',
-      time: '11:30',
-      notes: 'Stay hydrated to prevent fatigue and headaches.'
+    food_dinner: {
+      title: 'Light Low-Sodium Dinner / रात्रि का हल्का भोजन',
+      cat: 'food',
+      time: '20:00',
+      notes: 'Easily digestible soup, steamed vegetables, and light multigrain roti.'
+    },
+
+    // Medicine
+    med_morning: {
+      title: 'Morning BP Medicine (Amlodipine 5mg) / सुबह की दवा',
+      cat: 'medicine',
+      time: '08:30',
+      notes: 'Take with warm water after morning meal to stabilize cardiovascular pressure.'
     },
     med_night: {
       title: 'Night Medicine & Cardiac Regimen / रात की दवा',
       cat: 'medicine',
       time: '21:30',
-      notes: 'Prescribed night dose for restful sleep.'
+      notes: 'Prescribed night dose for sustained blood pressure regulation during sleep.'
     },
-    walk: {
-      title: 'Evening Gentle Walk / शाम की हल्की सैर',
-      cat: 'walk',
+
+    // Sleep
+    sleep_wake: {
+      title: 'Morning Wake-Up & Stretch / सुबह जागना व स्ट्रेचिंग',
+      cat: 'sleep',
+      time: '06:30',
+      notes: 'Gentle wake-up, joint rotation, deep breathing and natural sunlight.'
+    },
+    sleep_nap: {
+      title: 'Afternoon Rest & Power Nap / दोपहर का विश्राम (पावर नैप)',
+      cat: 'sleep',
+      time: '14:30',
+      notes: '20-30 minutes restful nap to rejuvenate mental clarity and lower stress.'
+    },
+    sleep_bedtime: {
+      title: 'Bedtime Wind-Down & Deep Sleep / रात्रि शयन व विश्राम',
+      cat: 'sleep',
+      time: '22:15',
+      notes: 'Turn off bright lights, relax mind and prepare for 7-8 hours restorative sleep.'
+    },
+
+    // Screen
+    screen_morning: {
+      title: 'Screen Eye Strain Break (20-20-20 Rule) / स्क्रीन ब्रेक',
+      cat: 'screen',
+      time: '11:00',
+      notes: 'Look at an object 20 feet away for 20 seconds to prevent digital eye strain.'
+    },
+    screen_afternoon: {
+      title: 'TV & Phone Watching Limit Break / टीवी-फोन ब्रेक',
+      cat: 'screen',
+      time: '16:00',
+      notes: 'Take a break from screen devices, blink eyes frequently and do light neck stretches.'
+    },
+    screen_night: {
+      title: 'Night Blue-Light Cutoff / रात्रि स्क्रीन बंद करें',
+      cat: 'screen',
+      time: '21:00',
+      notes: 'Switch off television and smartphone screens for natural melatonin and deep sleep.'
+    },
+
+    // Walking
+    walking_morning: {
+      title: 'Morning Garden Walk / सुबह की ताजी सैर',
+      cat: 'walking',
+      time: '07:30',
+      notes: 'Gentle 20-minute morning walk in the garden for fresh air and active joints.'
+    },
+    walking_evening: {
+      title: 'Evening Park Stroll & Mobility / शाम की सैर व वॉक',
+      cat: 'walking',
       time: '17:30',
-      notes: '15-20 minutes gentle walk for joint mobility and fresh air.'
+      notes: '15-20 minutes leisurely walk with walking cane or companion.'
     },
+    walking_night: {
+      title: 'Post-Dinner 10-Minute Stroll / भोजन उपरांत हल्की सैर',
+      cat: 'walking',
+      time: '20:45',
+      notes: '100 gentle steps indoors or in verandah to support smooth glycemic digestion.'
+    },
+
+    // BP & Vitals
     bp: {
       title: 'Blood Pressure & Vitals Check / बीपी जांच',
-      cat: 'bp',
+      cat: 'other',
       time: '18:00',
-      notes: 'Check blood pressure with digital cuff and log readings.'
+      notes: 'Check blood pressure with digital cuff and log systolic/diastolic readings.'
     }
   };
 
@@ -13734,6 +13963,37 @@ function applyReminderPreset(presetKey) {
   soundEngine.playTone(700, 'sine', 0.1);
 }
 
+function setQuickOneMinuteAlarm() {
+  const now = new Date();
+  const nextMin = new Date(now.getTime() + 60 * 1000);
+  const h = String(nextMin.getHours()).padStart(2, '0');
+  const m = String(nextMin.getMinutes()).padStart(2, '0');
+  const timeStr = `${h}:${m}`;
+
+  const quickReminder = {
+    id: 'rem-quick-' + Date.now(),
+    title: '⚡ 1-Minute Care Alarm Test / 1 मिनट का परीक्षण अलार्म',
+    category: 'water',
+    time: timeStr,
+    timeDisplay: format24to12Time(timeStr),
+    notes: 'Live automated clock ticker alarm verification test. Hydration & care alert.',
+    enabled: true,
+    completedToday: false,
+    lastTriggeredDate: '',
+    icon: 'fa-solid fa-stopwatch-20',
+    color: 'text-amber-600 bg-amber-50 border-amber-200'
+  };
+
+  const reminders = getSeniorReminders();
+  reminders.push(quickReminder);
+  reminders.sort((a, b) => a.time.localeCompare(b.time));
+  saveSeniorReminders(reminders);
+  renderSeniorReminders(currentRemindersFilter);
+
+  soundEngine.playSuccessChime();
+  showToast(`⚡ Live Alarm scheduled for ${quickReminder.timeDisplay} (in 1 minute)! Clock ticker active. ⏰`, 'success');
+}
+
 function handleSaveNewReminder(e) {
   if (e) e.preventDefault();
   const title = (document.getElementById('rem-page-input-title')?.value || document.getElementById('rem-input-title')?.value || '').trim();
@@ -13748,8 +14008,11 @@ function handleSaveNewReminder(e) {
 
   const iconMap = {
     water: 'fa-solid fa-glass-water',
-    food: 'fa-solid fa-utensils',
+    food: 'fa-solid fa-bowl-food',
     medicine: 'fa-solid fa-pills',
+    sleep: 'fa-solid fa-moon',
+    screen: 'fa-solid fa-mobile-screen-button',
+    walking: 'fa-solid fa-person-walking',
     walk: 'fa-solid fa-person-walking',
     bp: 'fa-solid fa-heart-pulse',
     other: 'fa-solid fa-bell'
@@ -13759,6 +14022,9 @@ function handleSaveNewReminder(e) {
     water: 'text-sky-600 bg-sky-50 border-sky-200',
     food: 'text-amber-600 bg-amber-50 border-amber-200',
     medicine: 'text-purple-600 bg-purple-50 border-purple-200',
+    sleep: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+    screen: 'text-violet-600 bg-violet-50 border-violet-200',
+    walking: 'text-emerald-600 bg-emerald-50 border-emerald-200',
     walk: 'text-emerald-600 bg-emerald-50 border-emerald-200',
     bp: 'text-rose-600 bg-rose-50 border-rose-200',
     other: 'text-slate-600 bg-slate-50 border-slate-200'
@@ -13813,7 +14079,8 @@ function scrollToRemindersSection() {
   }
 }
 
-// ==================================================================// DEVICE ALARM TRIGGER, AUDITORY CHIME, NOTIFICATION & ACTIONS
+// ==================================================================
+// DEVICE ALARM TRIGGER, AUDITORY CHIME, NOTIFICATION & ACTIONS
 // ==================================================================
 function triggerDeviceReminderAlarm(reminder) {
   if (!reminder) return;
@@ -13822,7 +14089,16 @@ function triggerDeviceReminderAlarm(reminder) {
   // 1. Start continuous audio alarm chime
   soundEngine.startReminderAlarm();
 
-  // 2. Populate and show alarm modal
+  // 2. Device Vibration if supported
+  if ('vibrate' in navigator) {
+    try {
+      navigator.vibrate([400, 200, 400, 200, 600]);
+    } catch (e) {
+      console.warn('Vibration not permitted:', e);
+    }
+  }
+
+  // 3. Populate and show high-priority alarm modal
   const modal = document.getElementById('modal-reminder-alarm');
   const iconEl = document.getElementById('alarm-dialog-icon');
   const timeEl = document.getElementById('alarm-dialog-time');
@@ -13836,20 +14112,49 @@ function triggerDeviceReminderAlarm(reminder) {
 
   if (modal) modal.classList.remove('hidden');
 
-  // 3. Text to Speech announcement
+  // 4. Bilingual Text-to-Speech Announcement
   if ('speechSynthesis' in window) {
     try {
       window.speechSynthesis.cancel();
-      const isHi = state.seniorLanguage === 'hi';
-      const prof = getUserProfile('senior');
-      const seniorFirstName = prof.name ? prof.name.split(' ')[0] : 'Ramesh';
+      const isHi = (typeof state !== 'undefined' && state.seniorLanguage === 'hi');
+      const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : {};
+      const seniorFirstName = (prof && prof.name) ? prof.name.split(' ')[0] : 'रमेश';
       let spokenText = '';
+
       if (isHi) {
-        const catText = (reminder.category === 'water') ? 'पानी पीने' : (reminder.category === 'medicine' ? 'दवा लेने' : 'भोजन');
-        spokenText = `नमस्ते ${seniorFirstName} जी। यह आपके ${catText} का समय है। कृपया ${reminder.title} पर ध्यान दें।`;
+        if (reminder.category === 'water') {
+          spokenText = `नमस्ते ${seniorFirstName} जी। यह आपके पानी पीने का समय है। कृपया एक गिलास गुनगुना पानी पिएं और स्वस्थ रहें।`;
+        } else if (reminder.category === 'food') {
+          spokenText = `नमस्ते ${seniorFirstName} जी। यह आपके भोजन का समय है। कृपया समय पर पौष्टिक आहार लें।`;
+        } else if (reminder.category === 'medicine') {
+          spokenText = `नमस्ते ${seniorFirstName} जी। यह आपकी दवाई लेने का समय है। कृपया अपनी निर्धारित दवा समय पर लें।`;
+        } else if (reminder.category === 'sleep') {
+          spokenText = `नमस्ते ${seniorFirstName} जी। यह आपके सोने और विश्राम का समय है। कृपया आराम करें और अच्छी नींद लें।`;
+        } else if (reminder.category === 'screen') {
+          spokenText = `नमस्ते ${seniorFirstName} जी। स्क्रीन देखते हुए समय हो गया है। कृपया टीवी या मोबाइल से ब्रेक लें और अपनी आँखों को आराम दें।`;
+        } else if (reminder.category === 'walking' || reminder.category === 'walk') {
+          spokenText = `नमस्ते ${seniorFirstName} जी। यह आपकी सैर और वॉक का समय है। थोड़ी देर टहलें और जोड़ों को सक्रिय रखें।`;
+        } else {
+          spokenText = `नमस्ते ${seniorFirstName} जी। यह आपके स्वास्थ्य रिमाइंडर का समय है: ${reminder.title}।`;
+        }
       } else {
-        spokenText = `Attention ${seniorFirstName} ji. It is time for your scheduled reminder: ${reminder.title}.`;
+        if (reminder.category === 'water') {
+          spokenText = `Hello ${seniorFirstName} ji. It is time for your hydration. Please drink a fresh glass of water.`;
+        } else if (reminder.category === 'food') {
+          spokenText = `Hello ${seniorFirstName} ji. It is time for your nutritious meal.`;
+        } else if (reminder.category === 'medicine') {
+          spokenText = `Attention ${seniorFirstName} ji. It is time to take your scheduled medication: ${reminder.title}.`;
+        } else if (reminder.category === 'sleep') {
+          spokenText = `Hello ${seniorFirstName} ji. It is time for your scheduled sleep and restful wind-down.`;
+        } else if (reminder.category === 'screen') {
+          spokenText = `Attention ${seniorFirstName} ji. Screen watching break. Please look away from screens and rest your eyes.`;
+        } else if (reminder.category === 'walking' || reminder.category === 'walk') {
+          spokenText = `Hello ${seniorFirstName} ji. It is time for your walking and mobility routine.`;
+        } else {
+          spokenText = `Attention ${seniorFirstName} ji. It is time for your care reminder: ${reminder.title}.`;
+        }
       }
+
       const utterance = new SpeechSynthesisUtterance(spokenText);
       utterance.lang = isHi ? 'hi-IN' : 'en-IN';
       utterance.rate = 0.88;
@@ -13859,11 +14164,11 @@ function triggerDeviceReminderAlarm(reminder) {
     }
   }
 
-  // 4. Device Native Notification
+  // 5. Native Device Notification
   if ('Notification' in window && Notification.permission === 'granted') {
     try {
       new Notification(`⏰ CareConnect Alarm: ${reminder.title}`, {
-        body: reminder.notes || 'Scheduled health reminder alert!',
+        body: reminder.notes || 'Scheduled health & wellness reminder alert!',
         icon: 'careconnect-emblem.png',
         tag: `careconnect-rem-${reminder.id}`,
         requireInteraction: true
@@ -13883,6 +14188,12 @@ function completeAlarmAction() {
     markReminderDone(activeAlarmReminder.id);
     if (activeAlarmReminder.category === 'water') {
       logWaterGlass();
+    } else if (activeAlarmReminder.category === 'screen') {
+      showToast('Vision break completed! Great job resting your eyes! 👁️✨', 'success');
+    } else if (activeAlarmReminder.category === 'walking' || activeAlarmReminder.category === 'walk') {
+      showToast('Daily steps and walking mobility completed! Keep moving! 🚶‍♂️🌟', 'success');
+    } else if (activeAlarmReminder.category === 'sleep') {
+      showToast('Sleep and restful hours logged! Have a sound sleep! 🌙', 'success');
     }
   }
 
@@ -13994,7 +14305,8 @@ function initSeniorRemindersHub() {
 
   if (!remindersTickerInterval) {
     checkRemindersAlarmTicker();
-    remindersTickerInterval = setInterval(checkRemindersAlarmTicker, 15000);
+    // Check ticker every 2 seconds for high accuracy
+    remindersTickerInterval = setInterval(checkRemindersAlarmTicker, 2000);
   }
 }
 

@@ -14053,17 +14053,27 @@ function deleteReminder(id) {
 function openAddReminderPage() {
   if (typeof toggleSlideDrawer === 'function') toggleSlideDrawer(false);
   
-  const allViews = ['coordinator', 'senior', 'family', 'operations'];
-  allViews.forEach(v => {
-    const el = document.getElementById(`view-${v}`);
-    if (el) el.classList.add('hidden');
-  });
-
   const page = document.getElementById('view-add-reminder');
-  if (page) page.classList.remove('hidden');
-
-  const header = document.getElementById('global-header');
-  if (header) header.classList.remove('hidden');
+  if (page) {
+    const allViews = ['coordinator', 'senior', 'family', 'operations'];
+    allViews.forEach(v => {
+      const el = document.getElementById(`view-${v}`);
+      if (el) el.classList.add('hidden');
+    });
+    page.classList.remove('hidden');
+    const header = document.getElementById('global-header');
+    if (header) header.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    // If on senior portal, scroll to reminders hub & open reminder modal
+    const senior = document.getElementById('view-senior');
+    if (senior) senior.classList.remove('hidden');
+    const hub = document.getElementById('senior-reminders-hub-card') || document.getElementById('senior-reminders-grid');
+    if (hub) {
+      hub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    openAddReminderModal();
+  }
 
   if (typeof renderSeniorReminders === 'function') {
     renderSeniorReminders(currentRemindersFilter || 'all');
@@ -14071,8 +14081,6 @@ function openAddReminderPage() {
   if (typeof updateWaterTrackerDisplay === 'function') {
     updateWaterTrackerDisplay();
   }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function closeAddReminderPage() {
@@ -14086,7 +14094,10 @@ function closeAddReminderPage() {
 }
 
 function openAddReminderModal() {
-  openAddReminderPage();
+  const modal = document.getElementById('modal-add-reminder');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
 }
 
 function closeAddReminderModal() {

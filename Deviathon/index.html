@@ -1740,40 +1740,46 @@
       </div>
 
       <!-- 3. UPCOMING ROUTINE SCHEDULE CARD (LIKE IN ELDORA REFERENCE) -->
-      <div class="mb-6 p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-50/90 via-orange-50/60 to-amber-50/90 border-2 border-amber-200/90 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div class="flex items-center space-x-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-lg flex-shrink-0 shadow-sm animate-bounce">
+      <div id="senior-upcoming-routine-banner"
+        class="mb-6 p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-50/95 via-orange-50/70 to-amber-50/95 border-2 border-amber-300 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 transition-all overflow-hidden">
+        
+        <!-- Left: Icon & Details (Fluid & Constrained) -->
+        <div class="flex items-start sm:items-center space-x-3.5 min-w-0 flex-1">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-xl flex-shrink-0 shadow-md shadow-amber-500/25">
             <i class="fa-solid fa-calendar-check"></i>
           </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <span class="text-[10px] font-black uppercase tracking-wider bg-amber-200 text-amber-950 px-2 py-0.5 rounded-full">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+              <span class="text-[10px] font-black uppercase tracking-wider bg-amber-200/80 text-amber-950 px-2.5 py-0.5 rounded-full border border-amber-300/70">
                 Upcoming Routine / आगामी दिनचर्या
               </span>
-              <span class="text-xs font-bold text-amber-800">Scheduled for Today</span>
+              <span class="text-xs font-bold text-amber-800 flex items-center gap-1">
+                <i class="fa-regular fa-clock text-[11px]"></i> Today, 08:30 AM
+              </span>
             </div>
-            <h4 class="text-xs sm:text-sm font-black text-slate-900 mt-0.5">
+            <h4 class="text-xs sm:text-sm font-black text-slate-900 mt-0.5 leading-snug">
               💊 BP Medicine (Amlodipine 5mg) & Hydration (1 Glass Warm Water)
             </h4>
-            <p class="text-[11px] text-slate-600 font-medium">
+            <p class="text-[11px] text-slate-600 font-medium mt-0.5">
               Scheduled at 08:30 AM • Sound alarm & voice notification will chime.
             </p>
           </div>
         </div>
 
-        <div class="flex items-center space-x-2 w-full sm:w-auto">
-          <button onclick="testSampleReminderAlarm()"
-            class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-black shadow-xs transition-all flex items-center justify-center space-x-1.5 active:scale-95">
+        <!-- Right: Action Buttons (Responsive & Perfectly Contained) -->
+        <div class="flex items-center space-x-2.5 w-full sm:w-auto justify-end flex-shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-amber-200/60">
+          <button type="button" onclick="testSampleReminderAlarm()"
+            class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-white hover:bg-amber-100 text-amber-950 border-2 border-amber-300 text-xs font-black shadow-xs transition-all flex items-center justify-center space-x-1.5 active:scale-95 whitespace-nowrap">
             <i class="fa-solid fa-volume-high text-amber-600"></i>
             <span>Test Alarm / बजाएं</span>
           </button>
-          <button onclick="openAddReminderPage()"
-            class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white border border-amber-500 text-xs font-black shadow-xs transition-all flex items-center justify-center space-x-1.5 active:scale-95">
+          <button type="button" onclick="openAddReminderModal()"
+            class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-black text-xs shadow-md shadow-amber-600/25 transition-all flex items-center justify-center space-x-1.5 active:scale-95 border border-amber-500 whitespace-nowrap">
             <i class="fa-solid fa-bell"></i>
             <span>Manage Reminders / रिमाइंडर देखें</span>
           </button>
-
         </div>
+
       </div>
 
 
@@ -2492,7 +2498,7 @@
       </div>
 
       <!-- Schedule New Care Alert Card -->
-      <div class="bg-gradient-to-b from-[#fbf8f3] via-white to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-md">
+      <div id="senior-reminders-hub-card" class="bg-gradient-to-b from-[#fbf8f3] via-white to-white rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-md">
         <!-- Hero Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-amber-200">
           <div class="flex items-center space-x-4">

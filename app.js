@@ -322,7 +322,7 @@ const translations = {
     sos_btn: "PRESS FOR SOS",
     jump_assess_btn: "AI Health Assessment",
     assess_title: "Comprehensive Health & Risk Assessment",
-    assess_subtitle: "Trained on 90,000 multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.",
+    assess_subtitle: "Comprehensive multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.",
     assess_presets_label: "Quick Samples:",
     preset_healthy: "Healthy Senior",
     preset_moderate: "Moderate Risk",
@@ -366,7 +366,7 @@ const translations = {
     lbl_hearing: "Hearing Level",
     lbl_chronic: "Existing Diagnosed Conditions:",
     assess_disclaimer: "Instant ML inference • Predicts Risk Condition (Low / Medium / High)",
-    btn_predict_risk: "Predict Health Risk (AI Analysis)",
+    btn_predict_risk: "Run Dataset",
     spoken_greeting: "Namaste Ramesh ji. We are here with you. Please tap how you feel, speak a voice note, or give a missed call."
   },
   hi: {
@@ -563,7 +563,7 @@ const translations = {
     lbl_hearing: "सुनने की स्थिति",
     lbl_chronic: "पुरानी ज्ञात बीमारियां:",
     assess_disclaimer: "तुरंत एआई विश्लेषण • स्वास्थ्य जोखिम का सटीक अनुमान",
-    btn_predict_risk: "स्वास्थ्य जोखिम जांचें (AI Analysis)",
+    btn_predict_risk: "Run Dataset",
     spoken_greeting: "नमस्ते रमेश जी। हम हमेशा आपके साथ हैं। कृपया बताएं आज आप कैसा महसूस कर रहे हैं, या एक मिस्ड कॉल दें।"
   }
 };
@@ -7797,7 +7797,7 @@ async function predictElderRiskAssessment() {
   submitBtn.disabled = true;
   submitBtn.innerHTML = `
     <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i>
-    <span>Running AI ML Inference (90,000 Dataset Model)...</span>
+    <span>Running Dataset Model...</span>
   `;
 
   const prof = getUserProfile('senior');
@@ -10286,6 +10286,16 @@ function enterDashboard(role, userObj) {
     }
   });
 
+  // Manage Header SOS Button (Hidden on Elder Portal)
+  const headerSosBtn = document.getElementById('header-sos-btn');
+  if (headerSosBtn) {
+    if (role === 'senior') {
+      headerSosBtn.classList.add('hidden');
+    } else {
+      headerSosBtn.classList.remove('hidden');
+    }
+  }
+
   // Reveal Global Header (hidden for Operations Manager & Coordinator which have their own dedicated command center top bar & sidebar)
   const header = document.getElementById('global-header');
   if (header) {
@@ -10360,6 +10370,9 @@ function enterDashboard(role, userObj) {
       }
       if (typeof initSeniorRemindersHub === 'function') {
         initSeniorRemindersHub();
+      }
+      if (typeof renderSeniorCareTasks === 'function') {
+        renderSeniorCareTasks();
       }
       if (typeof checkUserProfilePrompt === 'function') {
         checkUserProfilePrompt('senior');
@@ -10750,7 +10763,7 @@ function renderElderAssessmentHistoryList() {
             </span>
             <div>
               <div class="text-xs sm:text-sm font-black text-slate-900">${dateLabel}</div>
-              <div class="text-[11px] text-slate-500 font-medium">90,000 Dataset Geriatric ML Model</div>
+              <div class="text-[11px] text-slate-500 font-medium">Dataset Geriatric ML Model</div>
             </div>
           </div>
 
@@ -12559,7 +12572,7 @@ function generateClinicalReportSheetHtml(res, payload, prof) {
           <span class="text-sm font-extrabold text-slate-800 block mt-0.5">
             ${Math.round((res.predicted_probability || 0.88) * 100)}% Severity Confidence
           </span>
-          <span class="text-[10px] text-slate-500 block">Trained on 90,000 Geriatric Telemetry Cohort</span>
+          <span class="text-[10px] text-slate-500 block">Geriatric Telemetry Dataset Model</span>
         </div>
       </div>
 
@@ -14587,3 +14600,657 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 300);
 });
+
+
+// ============================================================================
+// DAILY CARE TASKS & COMPLETION PROOF TRACKING SYSTEM (दैनिक कार्य एवं प्रमाण)
+// ============================================================================
+
+// Sample visual evidence SVGs (Encoded data URIs for immediate preview & demonstration)
+const taskProofPresets = {
+  blister: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="100%" height="100%" fill="%23f1f5f9" rx="16"/><rect x="40" y="30" width="320" height="200" rx="12" fill="%23e2e8f0" stroke="%2394a3b8" stroke-width="3"/><rect x="60" y="50" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><rect x="130" y="50" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><rect x="200" y="50" width="55" height="40" rx="8" fill="%23ef4444" stroke="%23b91c1c" stroke-width="2"/><circle cx="227" cy="70" r="12" fill="%23fee2e2"/><line x1="220" y1="70" x2="235" y2="70" stroke="%23b91c1c" stroke-width="2"/><rect x="270" y="50" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><rect x="60" y="110" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><rect x="130" y="110" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><rect x="200" y="110" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><rect x="270" y="110" width="55" height="40" rx="8" fill="%23cbd5e1" stroke="%233b82f6" stroke-width="2"/><text x="200" y="185" font-family="Arial" font-size="14" font-weight="bold" fill="%231e293b" text-anchor="middle">Tab Telmisartan 40mg (1 Tablet Consumed)</text><rect x="50" y="200" width="300" height="24" rx="6" fill="%23059669"/><text x="200" y="217" font-family="Arial" font-size="11" font-weight="bold" fill="%23ffffff" text-anchor="middle">OFFICIAL PROOF: TELMISARTAN 40MG CONSUMED</text></svg>`,
+  water: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="100%" height="100%" fill="%23f0fdfa" rx="16"/><path d="M140 40 L260 40 L240 210 L160 210 Z" fill="%23bae6fd" stroke="%230284c7" stroke-width="4"/><path d="M150 90 L250 90 L237 205 L163 205 Z" fill="%2338bdf8" opacity="0.85"/><circle cx="200" cy="140" r="16" fill="%23ffffff" opacity="0.4"/><text x="200" y="150" font-family="Arial" font-size="18" font-weight="bold" fill="%230369a1" text-anchor="middle">500 ml Warm Water</text><rect x="50" y="222" width="300" height="24" rx="6" fill="%230284c7"/><text x="200" y="239" font-family="Arial" font-size="11" font-weight="bold" fill="%23ffffff" text-anchor="middle">HYDRATION PROOF: 500ML COMPLETED</text></svg>`,
+  walk: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="100%" height="100%" fill="%230f172a" rx="16"/><rect x="80" y="30" width="240" height="190" rx="20" fill="%231e293b" stroke="%23334155" stroke-width="4"/><text x="200" y="80" font-family="monospace" font-size="28" font-weight="bold" fill="%2310b981" text-anchor="middle">1,240 STEPS</text><text x="200" y="115" font-family="Arial" font-size="14" fill="%2394a3b8" text-anchor="middle">Time: 18 mins • Dist: 0.92 km</text><text x="200" y="150" font-family="Arial" font-size="16" font-weight="bold" fill="%23f43f5e" text-anchor="middle">❤️ Heart Rate: 104 bpm</text><rect x="100" y="170" width="200" height="28" rx="8" fill="%23047857"/><text x="200" y="189" font-family="Arial" font-size="12" font-weight="bold" fill="%23ffffff" text-anchor="middle">PEDOMETER TELEMETRY VERIFIED</text></svg>`,
+  meal: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="100%" height="100%" fill="%23fffbeb" rx="16"/><circle cx="200" cy="120" r="95" fill="%23ffffff" stroke="%23d97706" stroke-width="4"/><ellipse cx="160" cy="120" rx="35" ry="30" fill="%23fef3c7" stroke="%23f59e0b" stroke-width="2"/><text x="160" y="125" font-family="Arial" font-size="12" font-weight="bold" fill="%2392400e" text-anchor="middle">Oats Porridge</text><circle cx="225" cy="100" r="22" fill="%23fef08a" stroke="%23ca8a04" stroke-width="2"/><circle cx="225" cy="100" r="10" fill="%23eab308"/><text x="225" y="145" font-family="Arial" font-size="11" font-weight="bold" fill="%2315803d" text-anchor="middle">Green Apple</text><rect x="50" y="222" width="300" height="24" rx="6" fill="%23b45309"/><text x="200" y="239" font-family="Arial" font-size="11" font-weight="bold" fill="%23ffffff" text-anchor="middle">NUTRITION LOG: BALANCED BREAKFAST</text></svg>`,
+  vitals: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="100%" height="100%" fill="%230f172a" rx="16"/><rect x="60" y="25" width="280" height="200" rx="16" fill="%231e293b" stroke="%230ea5e9" stroke-width="3"/><text x="200" y="70" font-family="monospace" font-size="28" font-weight="bold" fill="%2338bdf8" text-anchor="middle">SYS 126 / DIA 82</text><text x="200" y="110" font-family="monospace" font-size="22" font-weight="bold" fill="%23ec4899" text-anchor="middle">PULSE 74 BPM</text><text x="200" y="145" font-family="Arial" font-size="14" fill="%23cbd5e1" text-anchor="middle">Digital Omron Cuff BP Reading</text><rect x="80" y="170" width="240" height="30" rx="8" fill="%230284c7"/><text x="200" y="190" font-family="Arial" font-size="12" font-weight="bold" fill="%23ffffff" text-anchor="middle">DIGITAL MONITOR CAPTURE VERIFIED</text></svg>`
+};
+
+const defaultSeniorCareTasks = [
+  {
+    id: "TASK-101",
+    patientId: "PAT-101",
+    title: "Morning Blood Pressure Medication (Telmisartan 40mg)",
+    titleHi: "सुबह की बीपी की दवा (टेल्मिसार्टन 40 मिग्रा)",
+    category: "medicine",
+    categoryLabel: "Medicine / दवा",
+    time: "08:30 AM",
+    icon: "fa-solid fa-pills",
+    color: "rose",
+    instructions: "Take 1 tablet with warm water after light breakfast. Photo of blister pack required.",
+    proofType: "photo",
+    status: "verified", // 'pending' | 'verified'
+    completedAt: "Today, 08:32 AM",
+    proof: {
+      photoUrl: taskProofPresets.blister,
+      notes: "Taken 1 tab Telmisartan 40mg with warm water. Blood pressure was normal (126/82).",
+      voiceTranscript: "Dawa le li hai beta, thoda garam paani ke sath.",
+      verifiedBy: "Sister Kavita, RN (Care Coordinator)",
+      submittedAt: "Today, 08:32 AM",
+      hash: "CC-PRF-88491"
+    }
+  },
+  {
+    id: "TASK-102",
+    patientId: "PAT-101",
+    title: "Morning Hydration (500ml Warm Water)",
+    titleHi: "सुबह पानी का सेवन (500 मिली गुनगुना पानी)",
+    category: "water",
+    categoryLabel: "Hydration / पानी",
+    time: "07:30 AM",
+    icon: "fa-solid fa-droplet",
+    color: "sky",
+    instructions: "Drink at least 2 full glasses of lukewarm water before morning stroll.",
+    proofType: "photo",
+    status: "verified",
+    completedAt: "Today, 07:35 AM",
+    proof: {
+      photoUrl: taskProofPresets.water,
+      notes: "Drank 2 glasses of lukewarm water right after waking up.",
+      voiceTranscript: "Do glass garam paani pi liya hai.",
+      verifiedBy: "Sister Kavita, RN (Care Coordinator)",
+      submittedAt: "Today, 07:35 AM",
+      hash: "CC-PRF-88492"
+    }
+  },
+  {
+    id: "TASK-103",
+    patientId: "PAT-101",
+    title: "15-Min Garden Walk & Step Count",
+    titleHi: "15 मिनट पार्क में टहलना",
+    category: "walk",
+    categoryLabel: "Walking / टहलना",
+    time: "09:30 AM",
+    icon: "fa-solid fa-person-walking",
+    color: "emerald",
+    instructions: "Walk at gentle pace in the garden or courtyard. Snap pedometer or watch steps.",
+    proofType: "photo",
+    status: "pending",
+    completedAt: null,
+    proof: null
+  },
+  {
+    id: "TASK-104",
+    patientId: "PAT-101",
+    title: "Post-Walk Healthy Breakfast (Oatmeal & Protein)",
+    titleHi: "पौष्टिक नाश्ता (दलिया और प्रोटीन)",
+    category: "food",
+    categoryLabel: "Nutrition / भोजन",
+    time: "10:15 AM",
+    icon: "fa-solid fa-bowl-food",
+    color: "amber",
+    instructions: "Eat warm oats porridge with fruits or eggs. Avoid excessive salt.",
+    proofType: "photo",
+    status: "pending",
+    completedAt: null,
+    proof: null
+  },
+  {
+    id: "TASK-105",
+    patientId: "PAT-101",
+    title: "Midday Blood Pressure & Pulse Check",
+    titleHi: "दोपहर में बीपी और पल्स की जांच",
+    category: "vitals",
+    categoryLabel: "Vitals / जांच",
+    time: "02:00 PM",
+    icon: "fa-solid fa-heart-pulse",
+    color: "purple",
+    instructions: "Measure BP with digital cuff while resting quietly for 5 minutes.",
+    proofType: "value",
+    status: "pending",
+    completedAt: null,
+    proof: null
+  }
+];
+
+let activeCareTaskCategory = "all";
+let currentTaskSubmittingId = null;
+let currentTaskProofPhotoData = null;
+let isRecordingTaskVoice = false;
+let taskSpeechRecognition = null;
+
+// Retrieve tasks from localStorage or initialize defaults
+function getStoredCareTasks() {
+  try {
+    const raw = localStorage.getItem("careconnect_tasks");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn("Could not parse careconnect_tasks from localStorage", e);
+  }
+  localStorage.setItem("careconnect_tasks", JSON.stringify(defaultSeniorCareTasks));
+  return defaultSeniorCareTasks;
+}
+
+function saveStoredCareTasks(tasks) {
+  try {
+    localStorage.setItem("careconnect_tasks", JSON.stringify(tasks));
+  } catch (e) {
+    console.error("Could not save careconnect_tasks", e);
+  }
+}
+
+// Category filter
+function filterCareTasks(category) {
+  activeCareTaskCategory = category;
+  const cats = ['all', 'medicine', 'water', 'walk', 'food', 'vitals'];
+  cats.forEach(c => {
+    const btn = document.getElementById(`btn-task-filter-${c}`);
+    if (btn) {
+      if (c === category) {
+        btn.className = "px-3 py-1 rounded-xl text-xs font-bold bg-teal-600 text-white shadow-xs transition-all";
+      } else {
+        btn.className = "px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all";
+      }
+    }
+  });
+  renderSeniorCareTasks();
+}
+
+// Render dynamic task items
+function renderSeniorCareTasks() {
+  const container = document.getElementById("senior-care-tasks-list");
+  if (!container) return;
+
+  const tasks = getStoredCareTasks();
+  const filtered = activeCareTaskCategory === "all" 
+    ? tasks 
+    : tasks.filter(t => t.category === activeCareTaskCategory);
+
+  const total = tasks.length;
+  const verifiedCount = tasks.filter(t => t.status === "verified").length;
+  const pct = total > 0 ? Math.round((verifiedCount / total) * 100) : 0;
+
+  // Update progress badge
+  const pill = document.getElementById("senior-tasks-progress-pill");
+  if (pill) {
+    pill.textContent = `${verifiedCount} / ${total} Tasks Verified (${pct}%)`;
+    pill.className = pct >= 80 
+      ? "px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300"
+      : pct >= 40
+      ? "px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-100 text-amber-800 border border-amber-300"
+      : "px-2.5 py-0.5 rounded-full text-[11px] font-black bg-rose-100 text-rose-800 border border-rose-300";
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200">
+        <i class="fa-solid fa-circle-check text-3xl text-teal-600 mb-2"></i>
+        <p class="text-sm font-bold text-slate-700">No tasks found under this category.</p>
+        <button type="button" onclick="filterCareTasks('all')" class="mt-3 text-xs text-teal-600 font-bold hover:underline">
+          View All Tasks (सभी कार्य देखें)
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const curLang = (typeof state !== 'undefined' && state.seniorLanguage) ? state.seniorLanguage : 'en';
+
+  container.innerHTML = filtered.map(t => {
+    const isVerified = t.status === "verified";
+    const titleText = (curLang === 'hi' && t.titleHi) ? t.titleHi : t.title;
+
+    let badgeColorClass = "bg-rose-50 text-rose-700 border-rose-200";
+    if (t.color === "sky") badgeColorClass = "bg-sky-50 text-sky-700 border-sky-200";
+    if (t.color === "emerald") badgeColorClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
+    if (t.color === "amber") badgeColorClass = "bg-amber-50 text-amber-700 border-amber-200";
+    if (t.color === "purple") badgeColorClass = "bg-purple-50 text-purple-700 border-purple-200";
+
+    return `
+      <div class="p-4 sm:p-4.5 rounded-2xl border ${isVerified ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200 bg-white hover:border-teal-300'} shadow-xs transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
+        
+        <!-- Left: Icon & Info -->
+        <div class="flex items-start space-x-3 min-w-0 flex-1">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 border ${badgeColorClass}">
+            <i class="${t.icon || 'fa-solid fa-list-check'}"></i>
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <h4 class="text-sm font-black text-slate-900 leading-snug">${titleText}</h4>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                <i class="fa-regular fa-clock mr-1"></i>${t.time}
+              </span>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${badgeColorClass} uppercase">
+                ${t.category}
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium mt-1">
+              ${t.instructions}
+            </p>
+
+            ${isVerified ? `
+              <div class="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/80">
+                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                <span>Completed: ${t.completedAt || 'Today'}</span>
+                <span>•</span>
+                <span class="text-emerald-800 font-semibold truncate">Evidence: ${t.proof?.notes ? t.proof.notes.substring(0, 45) + '...' : 'Visual Proof Logged'}</span>
+              </div>
+            ` : `
+              <div class="mt-2 text-[11px] text-amber-700 font-semibold flex items-center space-x-1.5">
+                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+                <span>Proof Required: Photo capture or voice confirmation</span>
+              </div>
+            `}
+          </div>
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="flex items-center space-x-2 w-full sm:w-auto justify-end flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          ${isVerified ? `
+            <button type="button" onclick="openViewTaskProofModal('${t.id}')"
+              class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-all flex items-center space-x-1.5 active:scale-95">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>View Proof / प्रमाण देखें</span>
+            </button>
+          ` : `
+            <button type="button" onclick="openSubmitTaskProofModal('${t.id}')"
+              class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-black text-xs shadow-md shadow-teal-600/25 transition-all flex items-center space-x-1.5 active:scale-95 animate-pulse">
+              <i class="fa-solid fa-camera"></i>
+              <span>Submit Proof / प्रमाण दें</span>
+            </button>
+          `}
+        </div>
+
+      </div>
+    `;
+  }).join('');
+
+  // Keep family summary updated in real-time if family view exists
+  renderFamilyTaskTrackerSummary();
+}
+
+// Open modal to submit proof
+function openSubmitTaskProofModal(taskId) {
+  const tasks = getStoredCareTasks();
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  currentTaskSubmittingId = taskId;
+  currentTaskProofPhotoData = null;
+
+  document.getElementById("proof-modal-task-title").textContent = task.title;
+  document.getElementById("proof-modal-task-category").textContent = `Category: ${task.category.toUpperCase()}`;
+  document.getElementById("proof-modal-task-due").textContent = `Scheduled: ${task.time}`;
+  document.getElementById("proof-modal-task-desc").textContent = task.instructions;
+
+  // Clear inputs
+  document.getElementById("proof-notes-input").value = "";
+  document.getElementById("proof-voice-transcript").value = "";
+  clearTaskProofPhoto();
+
+  // If specific preset matches task category, default to it
+  if (task.category === "medicine") useSampleProofPreset("blister");
+  else if (task.category === "water") useSampleProofPreset("water");
+  else if (task.category === "walk") useSampleProofPreset("walk");
+  else if (task.category === "food") useSampleProofPreset("meal");
+  else if (task.category === "vitals") useSampleProofPreset("vitals");
+
+  const modal = document.getElementById("modal-submit-task-proof");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closeSubmitTaskProofModal() {
+  const modal = document.getElementById("modal-submit-task-proof");
+  if (modal) modal.classList.add("hidden");
+  currentTaskSubmittingId = null;
+  currentTaskProofPhotoData = null;
+}
+
+// Handling file uploads
+function handleTaskProofFileSelected(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentTaskProofPhotoData = e.target.result;
+    const previewContainer = document.getElementById("proof-photo-preview-container");
+    const emptyState = document.getElementById("proof-photo-empty-state");
+    const previewImg = document.getElementById("proof-photo-preview-img");
+
+    if (previewImg) previewImg.src = currentTaskProofPhotoData;
+    if (previewContainer) previewContainer.classList.remove("hidden");
+    if (emptyState) emptyState.classList.add("hidden");
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearTaskProofPhoto() {
+  currentTaskProofPhotoData = null;
+  const fileInput = document.getElementById("task-proof-file-input");
+  if (fileInput) fileInput.value = "";
+  const previewContainer = document.getElementById("proof-photo-preview-container");
+  const emptyState = document.getElementById("proof-photo-empty-state");
+  if (previewContainer) previewContainer.classList.add("hidden");
+  if (emptyState) emptyState.classList.remove("hidden");
+}
+
+function useSampleProofPreset(type) {
+  const svgData = taskProofPresets[type];
+  if (!svgData) return;
+
+  currentTaskProofPhotoData = svgData;
+  const previewContainer = document.getElementById("proof-photo-preview-container");
+  const emptyState = document.getElementById("proof-photo-empty-state");
+  const previewImg = document.getElementById("proof-photo-preview-img");
+
+  if (previewImg) previewImg.src = svgData;
+  if (previewContainer) previewContainer.classList.remove("hidden");
+  if (emptyState) emptyState.classList.add("hidden");
+
+  // Auto-fill suggested clinical notes based on preset
+  const notesInput = document.getElementById("proof-notes-input");
+  if (notesInput && !notesInput.value) {
+    if (type === "blister") notesInput.value = "Took 1 tablet Telmisartan 40mg after breakfast. Feeling well.";
+    if (type === "water") notesInput.value = "Consumed 2 full glasses of warm water (approx 500ml).";
+    if (type === "walk") notesInput.value = "Completed 18-min morning stroll in garden. Step count: 1,240.";
+    if (type === "meal") notesInput.value = "Had warm oatmeal bowl with apple slices and egg.";
+    if (type === "vitals") notesInput.value = "Measured sitting BP: 126/82 mmHg, Pulse: 74 bpm.";
+  }
+}
+
+// Voice Note recording
+function toggleTaskProofVoiceRecord() {
+  const lbl = document.getElementById("lbl-proof-mic");
+  const icon = document.getElementById("icon-proof-mic");
+  const transcriptInput = document.getElementById("proof-voice-transcript");
+
+  if (!isRecordingTaskVoice) {
+    // Start recording / speech recognition
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRec) {
+      taskSpeechRecognition = new SpeechRec();
+      taskSpeechRecognition.lang = (typeof state !== 'undefined' && state.seniorLanguage === 'hi') ? 'hi-IN' : 'en-IN';
+      taskSpeechRecognition.onresult = (evt) => {
+        const text = evt.results[0][0].transcript;
+        if (transcriptInput) transcriptInput.value = text;
+      };
+      taskSpeechRecognition.onerror = () => {
+        // Fallback simulation
+        if (transcriptInput) transcriptInput.value = "हाँ, मैंने समय पर कार्य पूरा कर लिया है (Task completed on time)";
+      };
+      try {
+        taskSpeechRecognition.start();
+      } catch (e) {
+        if (transcriptInput) transcriptInput.value = "कार्य पूर्ण हुआ (Task completed verified)";
+      }
+    } else {
+      // Browser doesn't support Web Speech API, use realistic simulation
+      if (transcriptInput) {
+        transcriptInput.value = "Maine time pe dawa le li aur paani pi liya hai (Audio Verified)";
+      }
+    }
+
+    isRecordingTaskVoice = true;
+    if (lbl) lbl.textContent = "Recording... Tap to Stop";
+    if (icon) icon.className = "fa-solid fa-microphone text-rose-600 animate-pulse";
+  } else {
+    // Stop recording
+    if (taskSpeechRecognition) {
+      try { taskSpeechRecognition.stop(); } catch(e) {}
+    }
+    isRecordingTaskVoice = false;
+    if (lbl) lbl.textContent = "Voice Note Recorded ✓";
+    if (icon) icon.className = "fa-solid fa-microphone text-emerald-600";
+  }
+}
+
+// Submit proof and update status
+async function submitTaskProofForm() {
+  if (!currentTaskSubmittingId) return;
+
+  const notes = document.getElementById("proof-notes-input").value.trim();
+  const voice = document.getElementById("proof-voice-transcript").value.trim();
+  const photo = currentTaskProofPhotoData || taskProofPresets.blister;
+
+  const btn = document.getElementById("btn-submit-task-proof");
+  const origText = btn ? btn.innerHTML : "";
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Verifying Proof...`;
+  }
+
+  const tasks = getStoredCareTasks();
+  const taskIndex = tasks.findIndex(t => t.id === currentTaskSubmittingId);
+  if (taskIndex === -1) {
+    if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+    return;
+  }
+
+  const task = tasks[taskIndex];
+  const now = new Date();
+  const timeFormatted = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const hash = "CC-PRF-" + Math.floor(10000 + Math.random() * 90000);
+
+  const proofPayload = {
+    task_id: task.id,
+    patient_id: task.patientId || "PAT-101",
+    task_title: task.title,
+    proof_type: "photo",
+    proof_data: photo,
+    notes: notes || "Task completed with visual proof.",
+    submitted_at: `Today, ${timeFormatted}`,
+    verified_by: "Sister Kavita, RN (Care Coordinator)"
+  };
+
+  // Sync with backend API
+  try {
+    await fetch("/api/tasks/submit-proof", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(proofPayload)
+    });
+  } catch (err) {
+    console.warn("Could not post to /api/tasks/submit-proof, fallback local:", err);
+  }
+
+  // Update local task
+  tasks[taskIndex].status = "verified";
+  tasks[taskIndex].completedAt = `Today, ${timeFormatted}`;
+  tasks[taskIndex].proof = {
+    photoUrl: photo,
+    notes: notes || "Task completed on time.",
+    voiceTranscript: voice || "Audio confirmed.",
+    verifiedBy: "Sister Kavita, RN (Care Coordinator)",
+    submittedAt: `Today, ${timeFormatted}`,
+    hash: hash
+  };
+
+  saveStoredCareTasks(tasks);
+
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = origText;
+  }
+
+  closeSubmitTaskProofModal();
+  renderSeniorCareTasks();
+
+  if (typeof showToast === 'function') {
+    showToast("Task Proof Submitted & Verified Successfully! ✅", "success");
+  } else {
+    console.log("Task Proof Submitted & Verified Successfully! ✅");
+  }
+}
+
+// Open modal to view proof
+function openViewTaskProofModal(taskId) {
+  const tasks = getStoredCareTasks();
+  const task = tasks.find(t => t.id === taskId);
+  if (!task || !task.proof) return;
+
+  document.getElementById("view-proof-task-title").textContent = task.title;
+  document.getElementById("view-proof-timestamp").textContent = task.completedAt || "Today";
+  document.getElementById("view-proof-verified-by").textContent = `Verified by: ${task.proof.verifiedBy || 'Sister Kavita, RN'}`;
+  
+  const imgEl = document.getElementById("view-proof-photo-img");
+  if (imgEl) {
+    imgEl.src = task.proof.photoUrl || taskProofPresets.blister;
+  }
+
+  const noteEl = document.getElementById("view-proof-notes-text");
+  if (noteEl) {
+    let text = `"${task.proof.notes || 'Completed as prescribed.'}"`;
+    if (task.proof.voiceTranscript) {
+      text += ` • Voice Note: "${task.proof.voiceTranscript}"`;
+    }
+    noteEl.textContent = text;
+  }
+
+  const modal = document.getElementById("modal-view-task-proof");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closeViewTaskProofModal() {
+  const modal = document.getElementById("modal-view-task-proof");
+  if (modal) modal.classList.add("hidden");
+}
+
+// Modal to assign new care task
+function openAddTaskModal() {
+  const modal = document.getElementById("modal-add-care-task");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closeAddTaskModal() {
+  const modal = document.getElementById("modal-add-care-task");
+  if (modal) modal.classList.add("hidden");
+}
+
+function handleAddNewCareTask(e) {
+  e.preventDefault();
+  const title = document.getElementById("new-task-title").value.trim();
+  const category = document.getElementById("new-task-category").value;
+  const timeRaw = document.getElementById("new-task-time").value;
+  const proofType = document.getElementById("new-task-proof-type").value;
+  const instructions = document.getElementById("new-task-instructions").value.trim();
+
+  if (!title) return;
+
+  // Format time
+  let timeStr = timeRaw || "14:00";
+  try {
+    const [h, m] = timeStr.split(":");
+    const hours = parseInt(h, 10);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const h12 = hours % 12 || 12;
+    timeStr = `${String(h12).padStart(2, '0')}:${m} ${ampm}`;
+  } catch(err) {}
+
+  let icon = "fa-solid fa-list-check";
+  let color = "teal";
+  if (category === "medicine") { icon = "fa-solid fa-pills"; color = "rose"; }
+  if (category === "water") { icon = "fa-solid fa-droplet"; color = "sky"; }
+  if (category === "walk") { icon = "fa-solid fa-person-walking"; color = "emerald"; }
+  if (category === "food") { icon = "fa-solid fa-bowl-food"; color = "amber"; }
+  if (category === "vitals") { icon = "fa-solid fa-heart-pulse"; color = "purple"; }
+
+  const newTask = {
+    id: "TASK-" + Math.floor(1000 + Math.random() * 9000),
+    patientId: "PAT-101",
+    title: title,
+    titleHi: title,
+    category: category,
+    categoryLabel: category.toUpperCase(),
+    time: timeStr,
+    icon: icon,
+    color: color,
+    instructions: instructions || "Complete prescribed daily health routine.",
+    proofType: proofType,
+    status: "pending",
+    completedAt: null,
+    proof: null
+  };
+
+  const tasks = getStoredCareTasks();
+  tasks.push(newTask);
+  saveStoredCareTasks(tasks);
+
+  closeAddTaskModal();
+  renderSeniorCareTasks();
+
+  if (typeof showToast === 'function') {
+    showToast(`New task "${title}" assigned successfully!`, "success");
+  }
+}
+
+// Synchronize with Family Portal Summary Tab
+function renderFamilyTaskTrackerSummary() {
+  const container = document.getElementById("family-assigned-tasks-proof-tracker");
+  if (!container) return;
+
+  const tasks = getStoredCareTasks();
+  const total = tasks.length;
+  const verified = tasks.filter(t => t.status === "verified").length;
+  const pct = total > 0 ? Math.round((verified / total) * 100) : 0;
+
+  let html = `
+    <div class="mt-6 pt-6 border-t border-slate-200">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+              Daily Care Tasks & Proof Audits
+            </span>
+            <span class="text-xs text-slate-400">Live Caregiver Verification</span>
+          </div>
+          <h4 class="text-base font-extrabold text-[#0e294b] mt-1">
+            Father's Daily Care Tasks & Completed Proofs
+          </h4>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-black ${pct >= 60 ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-100 text-amber-800 border border-amber-300'}">
+          ${verified} / ${total} Tasks Verified (${pct}%)
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+  `;
+
+  tasks.forEach(t => {
+    const isV = t.status === "verified";
+    html += `
+      <div class="p-3.5 rounded-2xl border ${isV ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-slate-50'} flex items-center justify-between">
+        <div class="flex items-center space-x-2.5 min-w-0 flex-1 mr-2">
+          <div class="w-8 h-8 rounded-xl ${isV ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'} flex items-center justify-center text-sm flex-shrink-0">
+            <i class="${t.icon}"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-black text-slate-800 truncate">${t.title}</div>
+            <div class="text-[11px] text-slate-500 font-mono">${t.time} • ${isV ? '<span class="text-emerald-700 font-bold">Verified with Proof ✅</span>' : '<span class="text-amber-600 font-bold">Pending ⏳</span>'}</div>
+          </div>
+        </div>
+
+        <div>
+          ${isV ? `
+            <button type="button" onclick="openViewTaskProofModal('${t.id}')"
+              class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-xs transition-all whitespace-nowrap">
+              View Proof
+            </button>
+          ` : `
+            <span class="text-[11px] text-slate-400 font-medium italic">Awaiting Senior</span>
+          `}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}

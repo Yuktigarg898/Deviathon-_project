@@ -1778,7 +1778,63 @@
 
 
 
-                <!-- METHOD 4: COMPREHENSIVE ELDER HEALTH & RISK ASSESSMENT (AI ML PREDICTOR) -->
+                
+      <!-- ===================================================================== -->
+      <!-- DAILY ASSIGNED CARE TASKS & PROOF TRACKER (दैनिक कार्य एवं प्रमाण ट्रैकर) -->
+      <!-- ===================================================================== -->
+      <div id="senior-tasks-tracker-card" class="mb-6 p-5 sm:p-7 rounded-3xl bg-white border-2 border-teal-200/90 shadow-md transition-all">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-600 text-white flex items-center justify-center text-xl shadow-md shadow-teal-500/20 flex-shrink-0">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-base sm:text-lg font-black text-[#1b4332]">
+                  Daily Care Tasks & Proof Tracker / दैनिक कार्य प्रमाण
+                </h3>
+                <span id="senior-tasks-progress-pill" class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  2 / 5 Tasks Verified (40%)
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">
+                Track assigned wellness tasks. Submit photo, voice, or sensor proof of completion to keep care team verified.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 w-full sm:w-auto">
+            <button type="button" onclick="openAddTaskModal()"
+              class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-black shadow-sm transition-all flex items-center justify-center space-x-1.5 active:scale-95">
+              <i class="fa-solid fa-plus"></i>
+              <span>Assign New Task / नया कार्य</span>
+            </button>
+            <button type="button" onclick="renderSeniorCareTasks()"
+              class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs transition-all shadow-xs"
+              title="Refresh Task List / रीफ्रेश करें">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Task Category Tabs -->
+        <div class="flex flex-wrap items-center gap-1.5 my-3.5">
+          <button type="button" onclick="filterCareTasks('all')" id="btn-task-filter-all" class="px-3 py-1 rounded-xl text-xs font-bold bg-teal-600 text-white shadow-xs transition-all">All Tasks (सभी)</button>
+          <button type="button" onclick="filterCareTasks('medicine')" id="btn-task-filter-medicine" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">💊 Medicine</button>
+          <button type="button" onclick="filterCareTasks('water')" id="btn-task-filter-water" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">💧 Hydration</button>
+          <button type="button" onclick="filterCareTasks('walk')" id="btn-task-filter-walk" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">🚶 Walking</button>
+          <button type="button" onclick="filterCareTasks('food')" id="btn-task-filter-food" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">🍲 Food</button>
+          <button type="button" onclick="filterCareTasks('vitals')" id="btn-task-filter-vitals" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">🩺 Vitals</button>
+        </div>
+
+        <!-- Dynamic Tasks List -->
+        <div id="senior-care-tasks-list" class="space-y-3">
+          <!-- Rendered dynamically by renderSeniorCareTasks() in app.js -->
+        </div>
+      </div>
+
+
+      <!-- METHOD 4: COMPREHENSIVE ELDER HEALTH & RISK ASSESSMENT (AI ML PREDICTOR) -->
         <div id="senior-assessment-section" class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-teal-200/90 shadow-md">
           <!-- Section Header -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
@@ -1796,7 +1852,7 @@
                   </span>
                 </div>
                 <p class="text-xs sm:text-sm text-slate-500 font-medium" data-i18n="assess_subtitle">
-                  Trained on 90,000 multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.
+                  Comprehensive multi-parameter elder health records. Predicts Risk Condition: Low, Medium, or High.
                 </p>
               </div>
             </div>
@@ -2414,7 +2470,7 @@
               <button type="submit" id="assess-submit-btn"
                 class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-[#00a896] via-teal-600 to-emerald-600 hover:from-[#008779] hover:to-emerald-700 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-teal-500/25 active:scale-95 transition-all flex items-center justify-center space-x-2">
                 <i class="fa-solid fa-wand-magic-sparkles text-lg animate-pulse"></i>
-                <span data-i18n="btn_predict_risk">Predict Health Risk (AI Analysis)</span>
+                <span data-i18n="btn_predict_risk">Run Dataset</span>
               </button>
             </div>
 
@@ -2433,71 +2489,6 @@
 
       </div>
 
-      <!-- App-style Floating Quick SOS Trigger Pill (Visible on Elder Portal) -->
-      <div id="senior-floating-sos-bar" class="fixed bottom-5 right-5 z-40 flex items-center">
-        <button onclick="openVoiceEmergencySOSModal()"
-          class="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-800 text-white font-black text-xs sm:text-sm shadow-2xl shadow-rose-600/50 border-2 border-rose-300 flex items-center space-x-2.5 active:scale-95 transition-all animate-bounce">
-          <i class="fa-solid fa-triangle-exclamation text-base"></i>
-          <span>EMERGENCY SOS / मदद</span>
-        </button>
-      </div>
-    
-      <!-- 4. ELDORA-INSPIRED BOTTOM APP NAVIGATION BAR (STICKY AT BOTTOM OF ELDER VIEW) -->
-      <div id="senior-bottom-nav" class="sticky bottom-3 z-30 max-w-md mx-auto bg-white/95 backdrop-blur-md p-1.5 rounded-2xl border-2 border-slate-200/90 shadow-xl grid grid-cols-5 gap-1 text-center mt-6">
-        <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-          class="p-2 rounded-xl text-teal-800 hover:bg-teal-50 transition-all flex flex-col items-center justify-center active:scale-95">
-          <i class="fa-solid fa-house text-sm sm:text-base"></i>
-          <span class="text-[10px] font-bold mt-0.5">Home</span>
-        </button>
-        <button onclick="document.getElementById('senior-assessment-section').scrollIntoView({ behavior: 'smooth' })"
-          class="p-2 rounded-xl text-slate-600 hover:text-rose-700 hover:bg-rose-50 transition-all flex flex-col items-center justify-center active:scale-95">
-          <i class="fa-solid fa-heart-pulse text-sm sm:text-base"></i>
-          <span class="text-[10px] font-bold mt-0.5">Health</span>
-        </button>
-        <button onclick="openAddReminderPage()"
-          class="p-2 rounded-xl text-slate-600 hover:text-amber-700 hover:bg-amber-50 transition-all flex flex-col items-center justify-center active:scale-95">
-          <i class="fa-solid fa-bell text-sm sm:text-base"></i>
-          <span class="text-[10px] font-bold mt-0.5">Reminders</span>
-        </button>
-        <button onclick="openFamilyCareCircleModal()"
-          class="p-2 rounded-xl text-slate-600 hover:text-indigo-700 hover:bg-indigo-50 transition-all flex flex-col items-center justify-center active:scale-95">
-          <i class="fa-solid fa-people-roof text-sm sm:text-base"></i>
-          <span class="text-[10px] font-bold mt-0.5">Connect</span>
-        </button>
-        <button onclick="toggleSlideDrawer(true)"
-          class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex flex-col items-center justify-center active:scale-95">
-          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
-          <span class="text-[10px] font-bold mt-0.5">Menu</span>
-        </button>
-      </div>
-</section>
-
-
-    <!-- ========================================================================= -->
-    <!-- 3. FAMILY MEMBER VIEW                                                     -->
-    <!-- Requirement: A short weekly wellbeing summary and an immediate alert     -->
-    <!-- only when something is serious.                                           -->
-    <!-- ========================================================================= -->
-        <!-- ========================================================================= -->
-    <!-- ========================================================================= -->
-    <!-- DEDICATED FULL PAGE: ADD & MANAGE CARE REMINDERS (दैनिक केयर रिमाइंडर व अलार्म) -->
-    <!-- Categories: Water, Food, Medicine, Sleep Hours, Screen Watching, Walking -->
-    <!-- ========================================================================= -->
-    <section id="view-add-reminder" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full animate-fadeIn">
-      <!-- Top Navigation & Return Header -->
-      <div class="flex items-center justify-between pb-4 mb-6 border-b border-amber-200">
-        <button type="button" onclick="closeAddReminderPage()"
-          class="px-4 py-2.5 rounded-2xl bg-white hover:bg-amber-50 text-amber-950 border-2 border-amber-300 font-extrabold text-xs sm:text-sm shadow-xs transition-all flex items-center space-x-2 active:scale-95">
-          <i class="fa-solid fa-arrow-left text-amber-700"></i>
-          <span>← Back to Elder Home / वापस जाएं</span>
-        </button>
-
-        <div class="flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <span class="text-xs font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
-            CareConnect Alarm Engine • Active
-          </span>
-        </div>
       </div>
 
       <!-- Schedule New Care Alert Card -->
@@ -3351,6 +3342,8 @@
           </div>
 
         </div>
+
+        <div id="family-assigned-tasks-proof-tracker" class="mb-6"></div>
 
         <!-- Quick Message / Loving Note to Senior -->
         <div
@@ -7771,6 +7764,266 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: SUBMIT TASK PROOF OF COMPLETION (प्रमाण जमा करें)                   -->
+  <!-- ========================================================================= -->
+  <div id="modal-submit-task-proof" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border-2 border-teal-200 overflow-hidden my-6 animate-scaleUp">
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-teal-700 via-teal-800 to-emerald-900 text-white p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-lg border border-white/30">
+            <i class="fa-solid fa-camera-retro"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-white">Submit Task Proof / पूर्णता प्रमाण</h3>
+            <p class="text-[11px] text-teal-100">Upload photo, speak voice note, or log value for verification</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSubmitTaskProofModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Task Details Banner -->
+      <div class="p-4 bg-teal-50/70 border-b border-teal-100">
+        <div class="flex items-center justify-between text-xs">
+          <span id="proof-modal-task-category" class="font-bold text-teal-800 uppercase tracking-wide">Category</span>
+          <span id="proof-modal-task-due" class="font-mono font-bold text-slate-500">Due: 08:30 AM</span>
+        </div>
+        <h4 id="proof-modal-task-title" class="text-sm font-extrabold text-slate-900 mt-1">Morning Blood Pressure Medication</h4>
+        <p id="proof-modal-task-desc" class="text-xs text-slate-600 mt-0.5">Please take 1 tablet with water and upload photo of blister pack.</p>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs">
+        <!-- 1. PHOTO PROOF UPLOAD -->
+        <div>
+          <label class="block font-black text-slate-800 mb-1.5 flex items-center justify-between">
+            <span>1. Photo Proof / फोटो प्रमाण *</span>
+            <span class="text-[10px] text-slate-400 font-normal">Real camera photo or blister pack / glass</span>
+          </label>
+          <div class="border-2 border-dashed border-teal-300 rounded-2xl p-4 bg-[#fbfdfc] text-center hover:bg-teal-50/50 transition-colors">
+            <input type="file" id="task-proof-file-input" accept="image/*" class="hidden" onchange="handleTaskProofFileSelected(event)">
+            
+            <div id="proof-photo-empty-state">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-teal-600 mb-2"></i>
+              <p class="text-xs font-bold text-slate-700">Tap to take photo or choose file</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Supports JPG, PNG from phone camera or gallery</p>
+              <button type="button" onclick="document.getElementById('task-proof-file-input').click()"
+                class="mt-2.5 px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-xs transition-all">
+                <i class="fa-solid fa-camera mr-1"></i> Capture / Browse Photo
+              </button>
+            </div>
+
+            <!-- Preview Container -->
+            <div id="proof-photo-preview-container" class="hidden">
+              <div class="relative inline-block">
+                <img id="proof-photo-preview-img" src="" alt="Proof Preview" class="max-h-48 rounded-xl border border-slate-300 shadow-md mx-auto object-cover">
+                <div class="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-mono px-2 py-0.5 rounded-md">
+                  <i class="fa-solid fa-check text-emerald-400 mr-1"></i> Watermark Verified
+                </div>
+              </div>
+              <div class="mt-2 flex items-center justify-center space-x-2">
+                <button type="button" onclick="clearTaskProofPhoto()" class="text-rose-600 hover:text-rose-800 text-[11px] font-bold">
+                  <i class="fa-solid fa-trash mr-1"></i> Remove & Re-take
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Test Photo Presets -->
+          <div class="mt-2 flex flex-wrap items-center gap-1.5">
+            <span class="text-[10px] font-bold text-slate-400">1-Tap Sample Proof:</span>
+            <button type="button" onclick="useSampleProofPreset('blister')" class="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-900 text-[10px] font-bold border border-slate-200">💊 Blister Strip</button>
+            <button type="button" onclick="useSampleProofPreset('water')" class="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-900 text-[10px] font-bold border border-slate-200">💧 Water Glass</button>
+            <button type="button" onclick="useSampleProofPreset('walk')" class="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-900 text-[10px] font-bold border border-slate-200">🚶 850 Steps</button>
+            <button type="button" onclick="useSampleProofPreset('meal')" class="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-900 text-[10px] font-bold border border-slate-200">🍲 Meal Plate</button>
+          </div>
+        </div>
+
+        <!-- 2. VOICE CONFIRMATION (OPTIONAL) -->
+        <div>
+          <label class="block font-black text-slate-800 mb-1 flex items-center justify-between">
+            <span>2. Voice Note Check / आवाज़ में पुष्टि</span>
+            <span class="text-[10px] text-slate-400 font-normal">Optional check</span>
+          </label>
+          <div class="flex items-center space-x-2">
+            <button type="button" id="btn-record-task-proof-voice" onclick="toggleTaskProofVoiceRecord()"
+              class="px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center space-x-1.5 transition-all shadow-xs">
+              <i class="fa-solid fa-microphone text-amber-600" id="icon-proof-mic"></i>
+              <span id="lbl-proof-mic">Tap to Record Voice Note</span>
+            </button>
+            <input type="text" id="proof-voice-transcript" placeholder="Voice transcript will appear here..."
+              class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 font-medium">
+          </div>
+        </div>
+
+        <!-- 3. NOTES & VALUE -->
+        <div>
+          <label class="block font-black text-slate-800 mb-1">3. Notes / Specific Value (टिप्पणी / विवरण)</label>
+          <input type="text" id="proof-notes-input" placeholder="e.g. Took 1 tablet with warm water, feeling stable."
+            class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end space-x-2">
+        <button type="button" onclick="closeSubmitTaskProofModal()"
+          class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100 transition-all text-xs">
+          Cancel / रद्द करें
+        </button>
+        <button type="button" onclick="submitTaskProofForm()" id="btn-submit-task-proof"
+          class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-black shadow-md shadow-teal-600/30 active:scale-95 transition-all text-xs flex items-center space-x-1.5">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Submit Proof & Mark Verified ✅</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: VIEW AUDIT PROOF OF COMPLETION (प्रमाण देखें)                       -->
+  <!-- ========================================================================= -->
+  <div id="modal-view-task-proof" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden my-6 animate-scaleUp">
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-lg border border-emerald-400/30">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-white">Verified Task Proof / सत्यापन रिपोर्ट</h3>
+            <p class="text-[11px] text-purple-200">Clinical evidence, timestamp & telemetry confirmation</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeViewTaskProofModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs">
+        <!-- Verification Seal Banner -->
+        <div class="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-900 flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <i class="fa-solid fa-certificate text-emerald-600 text-xl"></i>
+            <div>
+              <div class="font-black text-xs">OFFICIALLY VERIFIED TASK PROOF ✅</div>
+              <div class="text-[10px] text-emerald-700" id="view-proof-verified-by">Verified by Care Coordinator Sister Kavita, RN</div>
+            </div>
+          </div>
+          <span class="font-mono text-[10px] font-bold bg-white px-2 py-0.5 rounded border border-emerald-300 text-emerald-800">SECURE</span>
+        </div>
+
+        <!-- Task Info -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-1">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Task Item</div>
+          <h4 id="view-proof-task-title" class="text-sm font-black text-slate-900">Morning Blood Pressure Medication</h4>
+          <div class="flex items-center space-x-3 text-slate-600 text-[11px] pt-1 border-t border-slate-200/80">
+            <span><strong>Completed:</strong> <span id="view-proof-timestamp">Today, 08:35 AM</span></span>
+            <span>•</span>
+            <span><strong>Patient:</strong> Ramesh Sharma (74 Yrs)</span>
+          </div>
+        </div>
+
+        <!-- Submitted Photo Display -->
+        <div>
+          <label class="block font-black text-slate-700 mb-1.5">Submitted Visual Evidence:</label>
+          <div class="rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-900 flex items-center justify-center p-2">
+            <img id="view-proof-photo-img" src="" alt="Proof Evidence" class="max-h-60 w-auto rounded-xl object-contain shadow-md">
+          </div>
+        </div>
+
+        <!-- Notes & Transcript -->
+        <div class="bg-amber-50/70 p-3 rounded-2xl border border-amber-200 space-y-1">
+          <div class="text-[10px] uppercase font-bold text-amber-800">Senior Note & Voice Check:</div>
+          <p id="view-proof-notes-text" class="text-xs text-slate-800 italic font-medium">"Took 1 tablet with warm water, feeling stable."</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <span class="text-[11px] text-slate-400 font-mono">HASH: CC-PRF-88491</span>
+        <button type="button" onclick="closeViewTaskProofModal()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all">
+          Close Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ASSIGN NEW CARE TASK (नया कार्य जोड़ें)                              -->
+  <!-- ========================================================================= -->
+  <div id="modal-add-care-task" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden my-6 animate-scaleUp">
+      <div class="bg-gradient-to-r from-teal-700 to-emerald-800 text-white p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-base">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-white">Assign New Care Task</h3>
+            <p class="text-[11px] text-teal-100">Add custom health task with mandatory proof requirement</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAddTaskModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleAddNewCareTask(event)" class="p-5 space-y-3.5 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Task Title *</label>
+          <input type="text" id="new-task-title" required placeholder="e.g. Afternoon Glucose Blood Test"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 bg-slate-50">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Category *</label>
+            <select id="new-task-category" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white">
+              <option value="medicine">💊 Medicine</option>
+              <option value="water">💧 Hydration</option>
+              <option value="walk">🚶 Walking / Exercise</option>
+              <option value="food">🍲 Nutrition / Food</option>
+              <option value="vitals">🩺 Vitals Check</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Scheduled Time *</label>
+            <input type="time" id="new-task-time" required value="14:00"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Proof Requirement *</label>
+          <select id="new-task-proof-type" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white">
+            <option value="photo">📷 Photo Proof (Blister / Meter / Plate)</option>
+            <option value="voice">🎙️ Voice Note Confirmation</option>
+            <option value="value">📝 Numeric Value / Sensor Log</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Instructions for Senior *</label>
+          <textarea id="new-task-instructions" rows="2" placeholder="e.g. Measure before lunch and snap photo of reading."
+            class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:bg-white font-medium"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2 border-t border-slate-200">
+          <button type="button" onclick="closeAddTaskModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-black text-xs shadow-md">
+            Save & Assign Task
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

@@ -302,6 +302,111 @@ def auth_users():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+
+# --- TASK TRACKING & PROOF OF COMPLETION ENGINE ---
+def init_task_proofs_db():
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS task_proofs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                patient_id TEXT NOT NULL,
+                task_title TEXT NOT NULL,
+                category TEXT,
+                status TEXT NOT NULL,
+                proof_type TEXT,
+                proof_data TEXT,
+                notes TEXT,
+                submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                verified_by TEXT DEFAULT 'Care Coordinator (Verified)'
+            )
+        ''')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing task proofs db: {e}")
+
+init_task_proofs_db()
+
+@app.route("/api/tasks/submit-proof", methods=["POST"])
+def api_submit_task_proof():
+    data = request.json or {}
+    task_id = str(data.get("task_id", "")).strip()
+    patient_id = str(data.get("patient_id", "PAT-101")).strip()
+    task_title = str(data.get("task_title", "Daily Task")).strip()
+    category = str(data.get("category", "general")).strip()
+    proof_type = str(data.get("proof_type", "photo")).strip()
+    proof_data = str(data.get("proof_data", "")).strip()
+    notes = str(data.get("notes", "")).strip()
+
+    if not task_id:
+        return jsonify({"success": False, "error": "task_id is required"}), 400
+
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO task_proofs (task_id, patient_id, task_title, category, status, proof_type, proof_data, notes)
+            VALUES (?, ?, ?, ?, 'completed', ?, ?, ?)
+        ''', (task_id, patient_id, task_title, category, proof_type, proof_data, notes))
+        proof_id = c.lastrowid
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "message": f"Proof submitted & verified for task '{task_title}'",
+            "proof": {
+                "id": proof_id,
+                "task_id": task_id,
+                "patient_id": patient_id,
+                "task_title": task_title,
+                "status": "completed",
+                "proof_type": proof_type,
+                "notes": notes,
+                "submitted_at": datetime.now().isoformat()
+            }
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route("/api/tasks/proofs", methods=["GET"])
+def api_get_task_proofs():
+    patient_id = request.args.get("patient_id", "PAT-101")
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            SELECT id, task_id, patient_id, task_title, category, status, proof_type, proof_data, notes, submitted_at, verified_by
+            FROM task_proofs
+            WHERE patient_id = ?
+            ORDER BY id DESC
+        ''', (patient_id,))
+        rows = c.fetchall()
+        conn.close()
+
+        proofs = []
+        for r in rows:
+            proofs.append({
+                "id": r[0],
+                "task_id": r[1],
+                "patient_id": r[2],
+                "task_title": r[3],
+                "category": r[4],
+                "status": r[5],
+                "proof_type": r[6],
+                "proof_data": r[7],
+                "notes": r[8],
+                "submitted_at": r[9],
+                "verified_by": r[10]
+            })
+        return jsonify({"success": True, "proofs": proofs, "total": len(proofs)})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 # --- REST API ROUTES ---
 @app.route("/api/health", methods=["GET"])
 def health_check():

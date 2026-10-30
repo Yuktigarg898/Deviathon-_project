@@ -2225,7 +2225,7 @@ function changeFamilyLinkedSenior(patientId) {
   // Update Top Banner Senior Name with Dual Brackets
   const heading = document.getElementById('family-senior-name-heading');
   if (heading) {
-    heading.innerHTML = `${p.name} <span class="text-lg sm:text-xl font-bold text-purple-200">${bracketStr}</span>`;
+    heading.innerHTML = `${p.name} <span class="inline-block ml-1.5 px-3 py-0.5 rounded-xl bg-white/15 text-purple-200 text-sm sm:text-base font-bold whitespace-nowrap">${bracketStr}</span>`;
   }
   const caregiverHeading = document.getElementById('family-caregiver-heading');
   if (caregiverHeading) {

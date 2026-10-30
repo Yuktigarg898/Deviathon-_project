@@ -1,5 +1,5 @@
 @echo off
-title CareConnect - Connected Healthcare & Elder Support System
+title CareConnect - Connected Healthcare and Elder Support System
 echo =======================================================================
 echo          Starting CareConnect (Deviathon Project)
 echo =======================================================================

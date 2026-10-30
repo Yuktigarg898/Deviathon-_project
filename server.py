@@ -1066,7 +1066,7 @@ def evaluate_patient_tier():
         "patient": patient
     })
 
-# --- SMART WATCH WI-FI TELEMETRY & SOS EMERGENCY ENGINE ---
+# --- SMART WATCH BLUETOOTH (BLE) TELEMETRY & SOS EMERGENCY ENGINE ---
 def init_smartwatch_sos_db():
     try:
         conn = sqlite3.connect(USERS_DB_PATH)
@@ -1077,7 +1077,7 @@ def init_smartwatch_sos_db():
                 patient_id TEXT NOT NULL DEFAULT 'PAT-101',
                 patient_name TEXT NOT NULL DEFAULT 'Ramesh Sharma',
                 device_model TEXT DEFAULT 'CareConnect Watch V2 (WearOS / Galaxy)',
-                connection_type TEXT DEFAULT 'Wi-Fi (Home_WiFi_5G)',
+                connection_type TEXT DEFAULT 'Bluetooth BLE (SmartWatch_BLE_99)',
                 bp_systolic REAL NOT NULL DEFAULT 158.0,
                 bp_diastolic REAL NOT NULL DEFAULT 96.0,
                 spo2 REAL NOT NULL DEFAULT 94.0,
@@ -1101,7 +1101,7 @@ def api_submit_watch_sos_alert():
     patient_id = str(data.get("patient_id", "PAT-101")).strip()
     patient_name = str(data.get("patient_name", "Ramesh Sharma")).strip()
     device_model = str(data.get("device_model", "CareConnect Watch V2 (WearOS / Galaxy)")).strip()
-    connection_type = str(data.get("connection_type", "Wi-Fi (Home_WiFi_5G)")).strip()
+    connection_type = str(data.get("connection_type", "Bluetooth BLE (SmartWatch_BLE_99)")).strip()
     bp_sys = float(data.get("bp_systolic", 158.0))
     bp_dia = float(data.get("bp_diastolic", 96.0))
     spo2 = float(data.get("spo2", 94.0))
@@ -1135,7 +1135,7 @@ def api_submit_watch_sos_alert():
         return jsonify({
             "success": True,
             "alert_id": alert_id,
-            "message": "Smartwatch SOS emergency packet dispatched to Care Coordinator and Family over Wi-Fi",
+            "message": "Smartwatch SOS emergency packet dispatched to Care Coordinator and Family over Bluetooth BLE",
             "telemetry": {
                 "bp": f"{int(bp_sys)}/{int(bp_dia)} mmHg",
                 "spo2": f"{int(spo2)}%",

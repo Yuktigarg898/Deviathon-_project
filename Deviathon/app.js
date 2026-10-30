@@ -15268,7 +15268,7 @@ function renderFamilyTaskTrackerSummary() {
 
 
 // ============================================================================
-// SMART WATCH WI-FI TELEMETRY & 1-TAP SOS ENGINE (स्मार्ट वॉच टेलीमेट्री एवं एसओएस)
+// SMART WATCH BLUETOOTH (BLE) TELEMETRY & 1-TAP SOS ENGINE (स्मार्ट वॉच टेलीमेट्री एवं एसओएस)
 // ============================================================================
 
 let watchClockInterval = null;
@@ -15356,7 +15356,7 @@ async function confirmAndDispatchWatchSOS() {
     patient_id: "PAT-101",
     patient_name: "Ramesh Sharma",
     device_model: "CareConnect Watch V2 (WearOS / Galaxy)",
-    connection_type: "Wi-Fi (Home_WiFi_5G)",
+    connection_type: "Bluetooth BLE (SmartWatch_BLE_99)",
     bp_systolic: 158,
     bp_diastolic: 96,
     spo2: 94,
@@ -15394,7 +15394,7 @@ async function confirmAndDispatchWatchSOS() {
         rameshAlert.priority = 'critical';
         rameshAlert.priorityScore = 100;
         rameshAlert.rank = 1;
-        rameshAlert.reason = '🚨 SMARTWATCH SOS VIA WI-FI: Senior triggered emergency from wrist watch. BP: 158/96 mmHg, SpO2: 94%, HR: 114 bpm. Voice distress captured.';
+        rameshAlert.reason = '🚨 SMARTWATCH SOS VIA BLUETOOTH: Senior triggered emergency from wrist watch via Bluetooth BLE. BP: 158/96 mmHg, SpO2: 94%, HR: 114 bpm. Voice distress captured.';
         rameshAlert.suggestedAction = 'Emergency rapid response: Nearest paramedic dispatched. Care coordinator & family line engaged.';
         if (typeof renderCoordinatorAlerts === 'function') {
           renderCoordinatorAlerts();
@@ -15410,7 +15410,7 @@ async function confirmAndDispatchWatchSOS() {
   }
 
   if (typeof showToast === 'function') {
-    showToast("🚨 Smartwatch SOS Dispatched over Wi-Fi! Sister Kavita RN & Family Alerted.", "danger");
+    showToast("🚨 Smartwatch SOS Dispatched over Bluetooth BLE! Sister Kavita RN & Family Alerted.", "danger");
   }
 }
 

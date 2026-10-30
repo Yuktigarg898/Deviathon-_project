@@ -1740,7 +1740,7 @@
       </div>
 
       <!-- ===================================================================== -->
-      <!-- SMART WATCH WI-FI TELEMETRY & 1-TAP SOS CONNECTION CARD              -->
+      <!-- SMART WATCH BLUETOOTH (BLE) TELEMETRY & 1-TAP SOS CONNECTION CARD              -->
       <!-- ===================================================================== -->
       <div id="senior-smartwatch-connect-card"
         class="mb-6 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border-2 border-indigo-500/40 shadow-xl transition-all">
@@ -1764,14 +1764,14 @@
                   Smart Watch Telemetry • स्मार्ट वॉच
                 </span>
                 <span id="watch-sync-pill" class="text-[11px] font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/40 flex items-center gap-1.5">
-                  <i class="fa-solid fa-wifi text-[10px]"></i> Wi-Fi Paired • Home_WiFi_5G
+                  <i class="fa-brands fa-bluetooth-b text-[11px] text-sky-400"></i> Bluetooth BLE Paired • SmartWatch_BLE_99
                 </span>
               </div>
               <h3 class="text-base sm:text-lg font-black text-white">
                 Connect to Your Smart Watch / अपनी स्मार्ट वॉच जोड़ें
               </h3>
               <p class="text-xs text-indigo-200/80 font-medium mt-0.5 leading-relaxed">
-                Download the CareConnect Watch Companion onto any smartwatch. Auto-connects over home Wi-Fi. Features 1-Tap SOS that calculates live BP, SpO2, Heart Rate and records distress voice to report directly to your Care Coordinator &amp; Family!
+                Download the CareConnect Watch Companion onto any smartwatch. Auto-connects via Bluetooth BLE telemetry. Features 1-Tap SOS that calculates live BP, SpO2, Heart Rate and records distress voice to report directly to your Care Coordinator &amp; Family!
               </p>
             </div>
           </div>
@@ -3259,7 +3259,7 @@
                 <div>
                   <div class="flex flex-wrap items-center gap-2 mb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider bg-white text-red-900 px-2.5 py-0.5 rounded-full">
-                      🚨 URGENT SMARTWATCH SOS ALERT (Wi-Fi)
+                      🚨 URGENT SMARTWATCH SOS ALERT (Bluetooth BLE)
                     </span>
                     <span class="text-xs font-mono font-bold text-red-100">Live Telemetry from Wrist</span>
                   </div>
@@ -8132,10 +8132,10 @@
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-lg border border-indigo-400/30">
-            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-brands fa-bluetooth-b text-sky-300"></i>
           </div>
           <div>
-            <h3 class="text-base font-black text-white">Smart Watch Wi-Fi Pairing</h3>
+            <h3 class="text-base font-black text-white">Smart Watch Bluetooth (BLE) Pairing</h3>
             <p class="text-[11px] text-indigo-200">2-Minute Setup for WearOS, Apple Watch &amp; Galaxy Watch</p>
           </div>
         </div>
@@ -8156,8 +8156,8 @@
         <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-start space-x-3">
           <div class="w-7 h-7 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</div>
           <div>
-            <div class="font-black text-slate-900 text-xs">Connect to Home Wi-Fi Network</div>
-            <p class="text-slate-600 text-[11px] mt-0.5">Make sure watch is connected to <strong>Home_WiFi_5G</strong>. It will automatically link with patient profile <strong>Ramesh Sharma</strong>.</p>
+            <div class="font-black text-slate-900 text-xs">Turn on Bluetooth & Auto-Pair</div>
+            <p class="text-slate-600 text-[11px] mt-0.5">Ensure Bluetooth is turned on. The watch pairs seamlessly over Bluetooth Low Energy (BLE) with patient profile <strong>Ramesh Sharma</strong>.</p>
           </div>
         </div>
 
@@ -8173,7 +8173,7 @@
           <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Simulated Watch Pairing Status</div>
           <div class="inline-flex items-center space-x-2 text-xs font-mono font-black text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>PAIRED: CC-WATCH-889 • Home_WiFi_5G</span>
+            <span>PAIRED: CC-WATCH-BLE-889 • Bluetooth 5.3 Active</span>
           </div>
         </div>
       </div>
@@ -8219,9 +8219,9 @@
             
             <!-- Watch Top Status Bar -->
             <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 pb-1 border-b border-slate-800/80">
-              <div class="flex items-center space-x-1 text-emerald-400">
-                <i class="fa-solid fa-wifi text-[9px]"></i>
-                <span class="text-[9px]">Wi-Fi</span>
+              <div class="flex items-center space-x-1 text-sky-400">
+                <i class="fa-brands fa-bluetooth-b text-[10px]"></i>
+                <span class="text-[9px]">BLE 5.3</span>
               </div>
               <div id="watch-live-clock" class="font-bold text-white text-[11px]">08:35 AM</div>
               <div class="flex items-center space-x-1 text-slate-300">
@@ -8332,7 +8332,7 @@
               <div class="w-full pt-1 flex items-center space-x-1">
                 <button type="button" onclick="confirmAndDispatchWatchSOS()"
                   class="w-full py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-black text-xs shadow-md">
-                  Transmit Emergency Over Wi-Fi →
+                  Transmit Emergency Over Bluetooth BLE →
                 </button>
               </div>
             </div>
@@ -8345,7 +8345,7 @@
                 <div class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-400 text-emerald-400 flex items-center justify-center text-xl mx-auto">
                   <i class="fa-solid fa-check"></i>
                 </div>
-                <div class="text-xs font-black text-white mt-1">DISPATCH SENT OVER WI-FI! ✅</div>
+                <div class="text-xs font-black text-white mt-1">DISPATCH SENT OVER BLUETOOTH BLE! ✅</div>
                 <div class="text-[9px] text-emerald-400 font-mono">HASH: CC-WTC-9941</div>
               </div>
 

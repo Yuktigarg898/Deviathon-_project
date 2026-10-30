@@ -3223,59 +3223,219 @@ function updateOpsTelemetryDisplay() {
   if (elHospEsc) elHospEsc.textContent = `${m.erEscalatedPercent}%`;
 }
 
-function updateOpsDashboard() {
-  soundEngine.playTone(550, 'sine', 0.08);
-  const city = document.getElementById('ops-city-filter').value;
-  const team = document.getElementById('ops-team-filter').value;
-  const period = document.getElementById('ops-time-filter').value;
+// ============================================================================
+// OPERATIONS DASHBOARD CITY & DAY CALENDAR TELEMETRY ENGINE
+// ============================================================================
 
-  // Simulate metric modulation based on city/filter
-  if (city === 'mumbai') {
-    state.opsMetrics.totalAlerts = 286;
-    state.opsMetrics.activeAlerts = 9;
-    state.opsMetrics.avgResponseMinutes = 7.1;
-    state.opsMetrics.avertedERCount = 19;
-  } else if (city === 'bengaluru') {
-    state.opsMetrics.totalAlerts = 210;
-    state.opsMetrics.activeAlerts = 7;
-    state.opsMetrics.avgResponseMinutes = 5.9;
-    state.opsMetrics.avertedERCount = 16;
-  } else {
-    state.opsMetrics.totalAlerts = 342;
-    state.opsMetrics.activeAlerts = 14;
-    state.opsMetrics.avgResponseMinutes = 6.4;
-    state.opsMetrics.avertedERCount = 24;
+const OPS_CITY_METRICS = {
+  delhi: {
+    cityName: 'Delhi NCR',
+    seniors: 200,
+    highRisk: 24,
+    modRisk: 68,
+    lowRisk: 108,
+    alertsToday: 32,
+    activeCoords: 8,
+    avgResponseMinutes: 6.4,
+    sla: '94.8%',
+    coords: [
+      { name: 'Team Alpha (Lead: Sister Kavita)', zone: 'South Delhi (GK, Saket, Vasant Kunj)', seniors: 84, alerts: 14, avgResp: '5.8 mins', compliance: '98.2%', status: 'Active (On Shift)' },
+      { name: 'Team Beta (Lead: Sister Sunita)', zone: 'East & Central Delhi (Connaught Pl, Mayur Vihar)', seniors: 58, alerts: 9, avgResp: '6.4 mins', compliance: '96.5%', status: 'Active (On Shift)' },
+      { name: 'Team Gamma (Lead: Brother Amit)', zone: 'South-West Delhi (Dwarka, Janakpuri)', seniors: 46, alerts: 7, avgResp: '6.9 mins', compliance: '94.0%', status: 'Active (On Shift)' },
+      { name: 'Team Delta (Lead: Rajesh Kumar)', zone: 'North & West Delhi (Rohini, Pitampura)', seniors: 12, alerts: 2, avgResp: '6.1 mins', compliance: '95.0%', status: 'Standby' }
+    ],
+    latLng: [28.5355, 77.2410],
+    zoom: 12
+  },
+  mumbai: {
+    cityName: 'Mumbai Metro',
+    seniors: 185,
+    highRisk: 18,
+    modRisk: 62,
+    lowRisk: 105,
+    alertsToday: 26,
+    activeCoords: 7,
+    avgResponseMinutes: 7.1,
+    sla: '93.4%',
+    coords: [
+      { name: 'Team Marine (Lead: Nurse Ananya, RN)', zone: 'South Mumbai (Colaba, Nariman Pt)', seniors: 75, alerts: 11, avgResp: '6.8 mins', compliance: '97.4%', status: 'Active (On Shift)' },
+      { name: 'Team Coast (Lead: Brother Sachin)', zone: 'Bandra & Khar West', seniors: 65, alerts: 9, avgResp: '7.2 mins', compliance: '95.1%', status: 'Active (On Shift)' },
+      { name: 'Team Suburban (Lead: Sister Meera)', zone: 'Andheri & Juhu', seniors: 45, alerts: 6, avgResp: '7.5 mins', compliance: '92.8%', status: 'Active (On Shift)' }
+    ],
+    latLng: [19.0760, 72.8777],
+    zoom: 12
+  },
+  bengaluru: {
+    cityName: 'Bengaluru Urban',
+    seniors: 160,
+    highRisk: 14,
+    modRisk: 54,
+    lowRisk: 92,
+    alertsToday: 21,
+    activeCoords: 6,
+    avgResponseMinutes: 5.9,
+    sla: '96.1%',
+    coords: [
+      { name: 'Team Tech (Lead: Sister Deepa, RN)', zone: 'Indiranagar & Koramangala', seniors: 68, alerts: 9, avgResp: '5.4 mins', compliance: '98.8%', status: 'Active (On Shift)' },
+      { name: 'Team Garden (Lead: Brother Vinay)', zone: 'Jayanagar & JP Nagar', seniors: 52, alerts: 7, avgResp: '5.9 mins', compliance: '96.4%', status: 'Active (On Shift)' },
+      { name: 'Team Silicon (Lead: Sister Lakshmi)', zone: 'Whitefield & Bellandur', seniors: 40, alerts: 5, avgResp: '6.3 mins', compliance: '94.2%', status: 'Active (On Shift)' }
+    ],
+    latLng: [12.9716, 77.5946],
+    zoom: 12
+  },
+  hyderabad: {
+    cityName: 'Hyderabad',
+    seniors: 140,
+    highRisk: 10,
+    modRisk: 48,
+    lowRisk: 82,
+    alertsToday: 18,
+    activeCoords: 5,
+    avgResponseMinutes: 6.2,
+    sla: '95.5%',
+    coords: [
+      { name: 'Team Pearl (Lead: Sister Fatima, RN)', zone: 'Banjara Hills & Jubilee Hills', seniors: 62, alerts: 8, avgResp: '5.8 mins', compliance: '97.2%', status: 'Active (On Shift)' },
+      { name: 'Team Cyber (Lead: Brother Suresh)', zone: 'Gachibowli & Madhapur', seniors: 48, alerts: 6, avgResp: '6.2 mins', compliance: '95.6%', status: 'Active (On Shift)' },
+      { name: 'Team Nizami (Lead: Sister Priya)', zone: 'Secunderabad & Begumpet', seniors: 30, alerts: 4, avgResp: '6.6 mins', compliance: '94.1%', status: 'Active (On Shift)' }
+    ],
+    latLng: [17.3850, 78.4867],
+    zoom: 12
+  },
+  all: {
+    cityName: 'All Metros (Pan-India)',
+    seniors: 685,
+    highRisk: 66,
+    modRisk: 232,
+    lowRisk: 387,
+    alertsToday: 97,
+    activeCoords: 26,
+    avgResponseMinutes: 6.4,
+    sla: '95.0%',
+    coords: [
+      { name: 'North Zone Hub (Sister Kavita, RN)', zone: 'Delhi NCR Hub (South, East, West)', seniors: 200, alerts: 32, avgResp: '6.4 mins', compliance: '94.8%', status: 'Active (On Shift)' },
+      { name: 'West Zone Hub (Nurse Ananya, RN)', zone: 'Mumbai Metro Command (South & Suburbs)', seniors: 185, alerts: 26, avgResp: '7.1 mins', compliance: '93.4%', status: 'Active (On Shift)' },
+      { name: 'South Zone Hub (Sister Deepa, RN)', zone: 'Bengaluru Tech Corridors', seniors: 160, alerts: 21, avgResp: '5.9 mins', compliance: '96.1%', status: 'Active (On Shift)' },
+      { name: 'Central Zone Hub (Sister Fatima, RN)', zone: 'Hyderabad Urban Zone', seniors: 140, alerts: 18, avgResp: '6.2 mins', compliance: '95.5%', status: 'Active (On Shift)' }
+    ],
+    latLng: [21.7679, 78.8718],
+    zoom: 5
+  }
+};
+
+let currentOpsDayFilter = 'today';
+let currentOpsCustomDate = '2026-10-30';
+
+function updateOpsDashboard() {
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(550, 'sine', 0.08);
+  }
+  const citySelect = document.getElementById('ops-city-filter');
+  const city = (citySelect ? citySelect.value : 'delhi') || 'delhi';
+  const metrics = OPS_CITY_METRICS[city] || OPS_CITY_METRICS.delhi;
+
+  // Day filter factor
+  let dayFactor = 1.0;
+  let dayLabel = 'Today';
+  if (currentOpsDayFilter === 'yesterday') {
+    dayFactor = 0.88;
+    dayLabel = 'Yesterday (29 Oct 2026)';
+  } else if (currentOpsDayFilter === '7days') {
+    dayFactor = 6.4;
+    dayLabel = 'Last 7 Days (24 - 30 Oct)';
+  } else if (currentOpsDayFilter === '30days') {
+    dayFactor = 26.5;
+    dayLabel = 'Last 30 Days (Oct 2026)';
+  } else if (currentOpsDayFilter === 'custom') {
+    dayFactor = 0.94;
+    dayLabel = `Date: ${currentOpsCustomDate}`;
   }
 
-  updateOpsTelemetryDisplay();
-  renderOpsTeamTable();
-  initOpsCharts();
-  showToast(`Operations telemetry filtered: ${city.toUpperCase()} • ${team}`, 'info');
+  const computedAlerts = Math.round(metrics.alertsToday * dayFactor);
+
+  // Update KPI metric elements
+  const elTotal = document.getElementById('ops-kpi-total-seniors');
+  const elHigh = document.getElementById('ops-kpi-high-risk');
+  const elMod = document.getElementById('ops-kpi-mod-risk');
+  const elLow = document.getElementById('ops-kpi-low-risk');
+  const elAlerts = document.getElementById('ops-kpi-alerts-today');
+  const elAlertsLabel = document.getElementById('ops-kpi-alerts-label');
+  const elCoords = document.getElementById('ops-kpi-active-coords');
+
+  if (elTotal) elTotal.textContent = metrics.seniors.toLocaleString();
+  if (elHigh) elHigh.textContent = metrics.highRisk.toLocaleString();
+  if (elMod) elMod.textContent = metrics.modRisk.toLocaleString();
+  if (elLow) elLow.textContent = metrics.lowRisk.toLocaleString();
+  if (elAlerts) elAlerts.textContent = computedAlerts.toLocaleString();
+  if (elAlertsLabel) {
+    elAlertsLabel.textContent = currentOpsDayFilter === 'today' ? 'Alerts Today' :
+      currentOpsDayFilter === 'yesterday' ? 'Alerts Yesterday' :
+      currentOpsDayFilter === '7days' ? 'Alerts (7 Days)' :
+      currentOpsDayFilter === '30days' ? 'Alerts (30 Days)' : 'Alerts on Date';
+  }
+  if (elCoords) elCoords.textContent = metrics.activeCoords.toString();
+
+  // Update Team Management Table
+  renderOpsTeamTableForCity(metrics.coords);
+
+  // Re-render chart with city data
+  if (typeof initOpsCharts === 'function') {
+    initOpsCharts(city);
+  }
+
+  // If map initialized, pan to city
+  if (typeof opsLeafletMap !== 'undefined' && opsLeafletMap && metrics.latLng) {
+    opsLeafletMap.flyTo(metrics.latLng, metrics.zoom, { duration: 1.2 });
+  }
+
+  showToast(`Dashboard updated: ${metrics.cityName} • ${dayLabel}`, 'info');
+}
+
+function handleOpsDashboardDayChange(val) {
+  currentOpsDayFilter = val;
+  const datePicker = document.getElementById('ops-dashboard-datepicker');
+  if (val === 'custom') {
+    if (datePicker) {
+      datePicker.classList.remove('hidden');
+      datePicker.focus();
+    }
+  } else {
+    if (datePicker) {
+      datePicker.classList.add('hidden');
+    }
+    updateOpsDashboard();
+  }
+}
+
+function handleOpsDashboardCustomDate(dateVal) {
+  currentOpsCustomDate = dateVal || '2026-10-30';
+  updateOpsDashboard();
+}
+
+function renderOpsTeamTableForCity(coords) {
+  const tbody = document.getElementById('ops-team-table-body');
+  if (!tbody || !coords) return;
+
+  tbody.innerHTML = coords.map(c => `
+    <tr class="hover:bg-slate-50 transition-colors">
+      <td class="p-4 font-bold text-slate-900">${c.name}</td>
+      <td class="p-4 text-slate-600 font-medium">${c.zone}</td>
+      <td class="p-4 font-mono font-bold text-slate-800">${c.seniors}</td>
+      <td class="p-4 font-mono font-bold text-teal-700">${c.alerts}</td>
+      <td class="p-4 text-slate-600 font-mono text-xs">${c.avgResp}</td>
+      <td class="p-4 text-emerald-600 font-bold">${c.compliance}</td>
+      <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${c.status.includes('Active') ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">${c.status}</span></td>
+      <td class="p-4 text-center">
+        <button type="button" onclick="showToast('Roster updated for ' + '${c.name.replace(/'/g, "\'")}', 'success')" class="text-teal-600 hover:text-teal-800 font-bold text-xs p-1">Edit</button>
+      </td>
+    </tr>
+  `).join('');
 }
 
 function renderOpsTeamTable() {
-  const tbody = document.getElementById('ops-team-table-body');
-  if (!tbody) return;
-
-  const teams = [
-    { name: 'Team Alpha (Lead: Sister Kavita)', zone: 'South Delhi (GK, Saket, Vasant Kunj)', seniors: 420, alerts: 112, avgResp: '5.8 mins', compliance: '98.2%', status: 'Active (On Shift)' },
-    { name: 'Team Beta (Lead: Sister Sunita)', zone: 'East & Central Delhi (Connaught Pl, Mayur Vihar)', seniors: 380, alerts: 94, avgResp: '6.9 mins', compliance: '96.4%', status: 'Active (On Shift)' },
-    { name: 'Rapid Response Unit 1 (Paramedic Amit)', zone: 'Hauz Khas & Ring Road Hub', seniors: 150, alerts: 42, avgResp: '3.4 mins', compliance: '99.1%', status: 'Dispatched (In Transit)' },
-    { name: 'Buddy Volunteers Corps (Rajesh)', zone: 'Malviya Nagar & Panchsheel', seniors: 260, alerts: 68, avgResp: '8.2 mins', compliance: '94.8%', status: 'Active (Field)' },
-    { name: 'Night Shift Triage Standby', zone: 'NCR Municipal Command', seniors: 1210, alerts: 26, avgResp: '4.5 mins', compliance: '99.5%', status: 'Standby' }
-  ];
-
-  tbody.innerHTML = teams.map(t => `
-    <tr class="hover:bg-slate-50 transition-colors">
-      <td class="py-3 px-4 font-bold text-slate-900">${t.name}</td>
-      <td class="py-3 px-4 text-slate-500">${t.zone}</td>
-      <td class="py-3 px-4 text-center font-mono font-bold">${t.seniors}</td>
-      <td class="py-3 px-4 text-center font-mono font-bold text-teal-700">${t.alerts}</td>
-      <td class="py-3 px-4 text-center font-mono font-bold text-slate-800">${t.avgResp}</td>
-      <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.compliance}</span></td>
-      <td class="py-3 px-4 text-center"><span class="inline-flex items-center text-[10px] font-semibold text-slate-600"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>${t.status}</span></td>
-    </tr>
-  `).join('');
+  const citySelect = document.getElementById('ops-city-filter');
+  const city = (citySelect ? citySelect.value : 'delhi') || 'delhi';
+  const metrics = OPS_CITY_METRICS[city] || OPS_CITY_METRICS.delhi;
+  renderOpsTeamTableForCity(metrics.coords);
 }
 
 // =============================================================================
@@ -3980,7 +4140,7 @@ function renderOpsCasesTable() {
 
       return `
         <tr class="hover:bg-slate-50/80 transition-colors ops-case-row" data-senior="${item.senior}" data-risk="${item.risk}" data-issue="${item.issueCategory}" data-status="${item.status}" data-coord="${item.coordinator}">
-          <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
+          <td class="p-3.5 pl-4"><input type="checkbox" class="ops-case-checkbox rounded text-teal-600 cursor-pointer" data-id="${item.id}" data-senior="${item.senior}" onchange="handleOpsCaseCheckboxChange()"></td>
           <td class="p-3.5 font-bold text-slate-900">${item.senior}</td>
           <td class="p-3.5">${riskBadge}</td>
           <td class="p-3.5 text-slate-600 font-medium">${item.issue}</td>
@@ -4042,6 +4202,11 @@ function renderOpsCasesTable() {
 
       controlsEl.innerHTML = btnsHtml;
     }
+  }
+
+  // Sync checkboxes and bulk actions toolbar
+  if (typeof handleOpsCaseCheckboxChange === 'function') {
+    handleOpsCaseCheckboxChange();
   }
 }
 
@@ -4167,7 +4332,7 @@ function submitOpsNewAlert(e) {
       : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Low</span>';
 
     tr.innerHTML = `
-      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
+      <td class="p-3.5 pl-4"><input type="checkbox" class="ops-case-checkbox rounded text-teal-600 cursor-pointer" data-id="${item.id}" data-senior="${item.senior}" onchange="handleOpsCaseCheckboxChange()"></td>
       <td class="p-3.5 font-bold text-slate-900">${senior}</td>
       <td class="p-3.5">${riskBadge}</td>
       <td class="p-3.5 text-slate-600 font-medium">${issue}</td>
@@ -10685,3 +10850,178 @@ function initSeniorRemindersHub() {
   }
 }
 
+<<<<<<< HEAD
+=======
+// Start ticker on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (typeof initSeniorRemindersHub === 'function') {
+      initSeniorRemindersHub();
+    }
+  }, 300);
+});
+
+
+// ============================================================================
+// CHECKBOX MULTI-SELECT & BULK ACTIONS ENGINE
+// ============================================================================
+
+function handleOpsCaseCheckboxChange() {
+  const checkboxes = document.querySelectorAll('.ops-case-checkbox:checked');
+  const totalCheckboxes = document.querySelectorAll('.ops-case-checkbox');
+  const count = checkboxes.length;
+  const toolbar = document.getElementById('ops-cases-bulk-toolbar');
+  const countSpan = document.getElementById('ops-bulk-count');
+  const selectAll = document.getElementById('ops-cases-select-all');
+
+  if (countSpan) countSpan.textContent = count;
+
+  if (toolbar) {
+    if (count > 0) {
+      toolbar.classList.remove('hidden');
+    } else {
+      toolbar.classList.add('hidden');
+    }
+  }
+
+  if (selectAll && totalCheckboxes.length > 0) {
+    selectAll.checked = count === totalCheckboxes.length;
+    selectAll.indeterminate = count > 0 && count < totalCheckboxes.length;
+  }
+}
+
+function toggleOpsSelectAllCases(checked) {
+  const checkboxes = document.querySelectorAll('.ops-case-checkbox');
+  checkboxes.forEach(cb => {
+    cb.checked = checked;
+  });
+  handleOpsCaseCheckboxChange();
+}
+
+function clearOpsBulkSelection() {
+  const selectAll = document.getElementById('ops-cases-select-all');
+  if (selectAll) {
+    selectAll.checked = false;
+    selectAll.indeterminate = false;
+  }
+  const checkboxes = document.querySelectorAll('.ops-case-checkbox');
+  checkboxes.forEach(cb => {
+    cb.checked = false;
+  });
+  handleOpsCaseCheckboxChange();
+}
+
+function getSelectedOpsCaseSeniors() {
+  const checkboxes = document.querySelectorAll('.ops-case-checkbox:checked');
+  const seniors = [];
+  checkboxes.forEach(cb => {
+    const senior = cb.getAttribute('data-senior');
+    if (senior) seniors.push(senior);
+  });
+  return seniors;
+}
+
+function executeOpsBulkAssign() {
+  const seniors = getSelectedOpsCaseSeniors();
+  if (seniors.length === 0) {
+    showToast('Please select at least one alert to assign.', 'warning');
+    return;
+  }
+
+  const coordSelect = document.getElementById('ops-bulk-assign-coord');
+  const chosenCoord = coordSelect ? coordSelect.value : 'Sister Kavita, RN';
+
+  seniors.forEach(seniorName => {
+    const item = OPS_ALL_32_ALERTS.find(a => a.senior === seniorName);
+    if (item) {
+      item.coordinator = chosenCoord;
+      item.status = 'In Progress';
+    }
+  });
+
+  if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
+    soundEngine.playSuccessChime();
+  }
+
+  renderOpsCasesTable();
+  clearOpsBulkSelection();
+  showToast('Successfully assigned ' + seniors.length + ' cases to ' + chosenCoord + '!', 'success');
+}
+
+function executeOpsBulkDispatch() {
+  const seniors = getSelectedOpsCaseSeniors();
+  if (seniors.length === 0) {
+    showToast('Please select at least one alert to dispatch.', 'warning');
+    return;
+  }
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(784, 'sine', 0.15);
+    setTimeout(() => soundEngine.playTone(880, 'sine', 0.18), 180);
+    setTimeout(() => soundEngine.playTone(1046, 'sine', 0.25), 380);
+  }
+
+  seniors.forEach(seniorName => {
+    const item = OPS_ALL_32_ALERTS.find(a => a.senior === seniorName);
+    if (item) {
+      item.status = 'Dispatched (12m)';
+    }
+  });
+
+  renderOpsCasesTable();
+  clearOpsBulkSelection();
+  showToast('Emergency clinical nurses dispatched for ' + seniors.length + ' seniors!', 'success');
+}
+
+function executeOpsBulkResolve() {
+  const seniors = getSelectedOpsCaseSeniors();
+  if (seniors.length === 0) {
+    showToast('Please select at least one alert to resolve.', 'warning');
+    return;
+  }
+
+  if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
+    soundEngine.playSuccessChime();
+  }
+
+  seniors.forEach(seniorName => {
+    const item = OPS_ALL_32_ALERTS.find(a => a.senior === seniorName);
+    if (item) {
+      item.status = 'Resolved';
+    }
+  });
+
+  renderOpsCasesTable();
+  clearOpsBulkSelection();
+  showToast('Marked ' + seniors.length + ' selected cases as Resolved!', 'success');
+}
+
+function executeOpsBulkExport() {
+  const seniors = getSelectedOpsCaseSeniors();
+  if (seniors.length === 0) {
+    showToast('Please select at least one alert to export.', 'warning');
+    return;
+  }
+
+  const selectedAlerts = OPS_ALL_32_ALERTS.filter(a => seniors.includes(a.senior));
+
+  let csvContent = 'CareConnect - Selected Alerts Export Sheet\n';
+  csvContent += 'Generated On: ' + new Date().toLocaleString() + '\n';
+  csvContent += 'Selected Records: ' + selectedAlerts.length + '\n\n';
+  csvContent += 'Case ID,Senior Name,Age,Area,Risk Level,Issue Category,Clinical Description,Time Logged,Status,Assigned Coordinator,Emergency Phone\n';
+
+  selectedAlerts.forEach(a => {
+    csvContent += '"' + a.id + '","' + a.senior + '","' + a.age + '","' + a.area + '","' + a.risk + '","' + a.issueCategory + '","' + a.issue + '","' + a.time + '","' + a.status + '","' + a.coordinator + '","' + a.phone + '"\n';
+  });
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'CareConnect_Selected_' + selectedAlerts.length + '_Alerts_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  showToast('Exported ' + selectedAlerts.length + ' selected cases to CSV!', 'success');
+}
+>>>>>>> 9778372 (Enable Operations Manager City & Day calendar filters, and add interactive bulk checkbox toolbar)

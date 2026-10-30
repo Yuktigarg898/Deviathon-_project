@@ -172,6 +172,68 @@ const state = {
 // Bilingual Localization Dictionary (Zero parallel text: 100% English or 100% Hindi)
 const translations = {
   en: {
+    // Operations Manager Portal
+    ops_nav_dashboard: "Dashboard",
+    ops_nav_risk: "Risk Analytics",
+    ops_nav_alerts: "Alerts & Cases",
+    ops_nav_team: "Team Management",
+    ops_nav_area: "Area Monitoring",
+    ops_nav_reports: "Reports",
+    ops_nav_audit: "Audit Logs",
+    ops_welcome_title: "Welcome back, Operations Manager!",
+    ops_welcome_sub: "Here's what's happening with CareConnect today.",
+    ops_filter_today: "Today",
+    ops_filter_last30: "Last 30 Days",
+    ops_filter_all_areas: "All Areas (Delhi NCR)",
+    ops_filter_all_seniors: "200 Seniors",
+    ops_kpi_total_seniors: "Total Seniors",
+    ops_kpi_high_risk: "High-Risk",
+    ops_kpi_moderate_risk: "Moderate-Risk",
+    ops_kpi_low_risk: "Low-Risk",
+    ops_kpi_alerts_today: "Alerts Today",
+    ops_kpi_active_coordinators: "Active Coordinators",
+    ops_kpi_on_leave: "on leave",
+    ops_recent_alerts_title: "Recent Alerts",
+    ops_view_all: "View All →",
+    ops_th_time: "Time",
+    ops_th_senior: "Senior",
+    ops_th_risk_level: "Risk Level",
+    ops_th_issue: "Issue",
+    ops_th_status: "Status",
+    ops_th_assigned_to: "Assigned To",
+    ops_th_action: "Action",
+    ops_btn_view: "View",
+    ops_btn_call: "Call",
+    ops_btn_dispatch: "Dispatch",
+    ops_btn_assign: "Assign",
+    ops_btn_new_alert: "+ New Alert",
+    ops_btn_add_coordinator: "+ Add Coordinator",
+    ops_btn_export_report: "Export Report",
+    ops_btn_export: "Export",
+    ops_risk_title: "Risk Analytics",
+    ops_risk_sub: "Understand risk distribution, trends and key health signals.",
+    ops_tab_overview: "Overview",
+    ops_tab_distribution: "Risk Distribution",
+    ops_tab_trend: "Trend Analysis",
+    ops_tab_signals: "Warning Signals",
+    ops_tab_change: "Risk Change",
+    ops_tab_demographics: "Demographics",
+    ops_team_title: "Team Management",
+    ops_team_sub: "Monitor care coordinators, workload and performance.",
+    ops_area_title: "Area Monitoring",
+    ops_area_sub: "View geographical distribution of risks and incidents.",
+    ops_reports_title: "Reports",
+    ops_reports_sub: "Generate and view reports for better decision-making.",
+    ops_audit_title: "Audit Logs",
+    ops_audit_sub: "Track all important actions and system activities.",
+    ops_kpi_total_alerts: "Total Alerts",
+    ops_kpi_high_risk_seniors: "High-Risk Seniors",
+    ops_kpi_resolution_rate: "Resolution Rate",
+    ops_kpi_avg_response: "Avg. Response Time",
+    ops_modal_call_senior: "Call Senior",
+    ops_modal_dispatch_nurse: "Dispatch Nurse",
+    ops_modal_close: "Close",
+
     // Header & Navigation
     nav_sign_out: "Sign Out",
     nav_live_system: "Live System",
@@ -307,6 +369,68 @@ const translations = {
     spoken_greeting: "Namaste Ramesh ji. We are here with you. Please tap how you feel, speak a voice note, or give a missed call."
   },
   hi: {
+    // Operations Manager Portal (हिन्दी)
+    ops_nav_dashboard: "डैशबोर्ड",
+    ops_nav_risk: "जोखिम विश्लेषण",
+    ops_nav_alerts: "अलर्ट और मामले",
+    ops_nav_team: "टीम प्रबंधन",
+    ops_nav_area: "क्षेत्र निगरानी",
+    ops_nav_reports: "रिपोर्ट्स",
+    ops_nav_audit: "ऑडिट लॉग",
+    ops_welcome_title: "वापसी पर स्वागत है, संचालन प्रबंधक!",
+    ops_welcome_sub: "आज केयरकनेक्ट प्रणाली की वर्तमान स्थिति यहाँ देखें।",
+    ops_filter_today: "आज",
+    ops_filter_last30: "पिछले ३० दिन",
+    ops_filter_all_areas: "सभी क्षेत्र (दिल्ली एनसीआर)",
+    ops_filter_all_seniors: "२०० वरिष्ठ जन",
+    ops_kpi_total_seniors: "कुल वरिष्ठ जन",
+    ops_kpi_high_risk: "उच्च जोखिम",
+    ops_kpi_moderate_risk: "मध्यम जोखिम",
+    ops_kpi_low_risk: "कम जोखिम",
+    ops_kpi_alerts_today: "आज के अलर्ट",
+    ops_kpi_active_coordinators: "सक्रिय समन्वयक",
+    ops_kpi_on_leave: "अवकाश पर",
+    ops_recent_alerts_title: "ताज़ा अलर्ट",
+    ops_view_all: "सभी देखें →",
+    ops_th_time: "समय",
+    ops_th_senior: "वरिष्ठ जन",
+    ops_th_risk_level: "जोखिम स्तर",
+    ops_th_issue: "समस्या",
+    ops_th_status: "स्थिति",
+    ops_th_assigned_to: "सौंपा गया",
+    ops_th_action: "कार्रवाई",
+    ops_btn_view: "देखें",
+    ops_btn_call: "कॉल करें",
+    ops_btn_dispatch: "नर्स भेजें",
+    ops_btn_assign: "सौंपें",
+    ops_btn_new_alert: "+ नया अलर्ट",
+    ops_btn_add_coordinator: "+ समन्वयक जोड़ें",
+    ops_btn_export_report: "रिपोर्ट निर्यात करें",
+    ops_btn_export: "निर्यात करें",
+    ops_risk_title: "जोखिम विश्लेषण",
+    ops_risk_sub: "जोखिम वितरण, प्रवृत्तियां और प्रमुख स्वास्थ्य संकेतों को समझें।",
+    ops_tab_overview: "अवलोकन",
+    ops_tab_distribution: "जोखिम वितरण",
+    ops_tab_trend: "प्रवृत्ति विश्लेषण",
+    ops_tab_signals: "चेतावनी संकेत",
+    ops_tab_change: "जोखिम परिवर्तन",
+    ops_tab_demographics: "जनसांख्यिकी",
+    ops_team_title: "टीम प्रबंधन",
+    ops_team_sub: "देखभाल समन्वयकों, कार्यभार और प्रदर्शन की निगरानी करें।",
+    ops_area_title: "क्षेत्र निगरानी",
+    ops_area_sub: "जोखिमों और घटनाओं का भौगोलिक वितरण देखें।",
+    ops_reports_title: "रिपोर्ट्स",
+    ops_reports_sub: "बेहतर निर्णय लेने के लिए विस्तृत रिपोर्ट देखें।",
+    ops_audit_title: "ऑडिट लॉग",
+    ops_audit_sub: "सभी महत्वपूर्ण गतिविधियों और प्रणाली कार्यों को ट्रैक करें।",
+    ops_kpi_total_alerts: "कुल अलर्ट",
+    ops_kpi_high_risk_seniors: "उच्च जोखिम वाले वरिष्ठ जन",
+    ops_kpi_resolution_rate: "समाधान दर",
+    ops_kpi_avg_response: "औसत प्रतिक्रिया समय",
+    ops_modal_call_senior: "वरिष्ठ जन को कॉल करें",
+    ops_modal_dispatch_nurse: "नर्स भेजें",
+    ops_modal_close: "बंद करें",
+
     // Header & Navigation
     nav_sign_out: "लॉग आउट",
     nav_live_system: "सक्रिय सिस्टम",
@@ -1185,7 +1309,7 @@ function updateLanguageSwitcherButtons(lang) {
     }
   }
 
-  // Operations Manager Topbar Buttons
+  // Operations Manager topbar buttons
   const opsEn = document.getElementById('ops-top-lang-en');
   const opsHi = document.getElementById('ops-top-lang-hi');
   if (opsEn && opsHi) {
@@ -1197,6 +1321,14 @@ function updateLanguageSwitcherButtons(lang) {
       opsEn.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
     }
   }
+
+  // Operations Account Settings select
+  const accSel = document.getElementById('ops-account-lang-select');
+  if (accSel) {
+    accSel.value = lang;
+  }
+
+
 
   // Senior portal buttons
   const btnEn = document.getElementById('lang-btn-en');
@@ -1695,6 +1827,11 @@ function switchOpsTab(tabId) {
     setTimeout(initOpsCharts, 80);
   }
 
+  // Trigger Leaflet interactive map rendering when entering area monitoring
+  if (tabId === 'area') {
+    setTimeout(initOpsRealMap, 100);
+  }
+
   // Close any popups
   const userDropdown = document.getElementById('ops-user-dropdown');
   if (userDropdown) userDropdown.classList.add('hidden');
@@ -1855,7 +1992,7 @@ function closeOpsAssignModal() {
 
 function confirmOpsAssignModal() {
   const coordSelect = document.getElementById('ops-assign-coordinator-select');
-  const chosenCoord = coordSelect ? coordSelect.value : 'Ananya';
+  const chosenCoord = coordSelect ? coordSelect.value : 'Sister Kavita, RN';
 
   if (currentAssignTargetSenior) {
     const rows = document.querySelectorAll('#ops-alerts-table-body tr');
@@ -1961,7 +2098,7 @@ function openOpsAlertDetail(senior, risk, issue, status, assignee) {
   if (nameEl) nameEl.textContent = senior;
   if (avatarEl) {
     const initials = senior.split(' ').map(w => w[0]).join('').substring(0, 2);
-    avatarEl.textContent = initials || 'SJ';
+    avatarEl.textContent = initials || 'RS';
   }
   if (statusEl) statusEl.textContent = `Status: ${status} • Assigned: ${assignee}`;
   if (issueEl) issueEl.textContent = issue;
@@ -1977,7 +2114,78 @@ function openOpsAlertDetail(senior, risk, issue, status, assignee) {
     }
   }
 
+  // Live Dataset binding:
+  const patient = typeof getPatientByNameOrId === 'function' ? getPatientByNameOrId(senior) : null;
+  const bpEl = document.getElementById('ops-detail-bp');
+  const hrEl = document.getElementById('ops-detail-hr');
+  const glucoseEl = document.getElementById('ops-detail-glucose');
+  const spo2El = document.getElementById('ops-detail-spo2');
+  const probBadgeEl = document.getElementById('ops-detail-prob-badge');
+  const driversListEl = document.getElementById('ops-detail-drivers-list');
+
+  if (patient) {
+    const latestCheckup = (patient.checkups && patient.checkups.length > 0) ? patient.checkups[0] : {};
+    if (bpEl) bpEl.textContent = (latestCheckup.bp || '120/80 mmHg').replace(' mmHg', '');
+    if (hrEl) hrEl.textContent = latestCheckup.hr || '72 bpm';
+    if (glucoseEl) glucoseEl.textContent = latestCheckup.glucose || '110 mg/dL';
+    if (spo2El) spo2El.textContent = latestCheckup.spo2 || '98%';
+
+    if (probBadgeEl) {
+      const prob = patient.predictedProbability || (risk === 'High' ? '64.3%' : risk === 'Moderate' ? '38.9%' : '18.2%');
+      probBadgeEl.textContent = `${prob} ML Probability`;
+      if (risk === 'High') {
+        probBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700';
+      } else if (risk === 'Moderate') {
+        probBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700';
+      } else {
+        probBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700';
+      }
+    }
+
+    if (driversListEl) {
+      if (patient.modelDrivers && patient.modelDrivers.length > 0) {
+        driversListEl.innerHTML = patient.modelDrivers.slice(0, 3).map(d => `<li>${d}</li>`).join('');
+      } else {
+        driversListEl.innerHTML = `<li>Primary symptom: ${issue}</li><li>Monitored under standard clinical protocols</li>`;
+      }
+    }
+
+    state.currentOpsAlertSenior = patient;
+  } else {
+    // Fallback for cohort seniors
+    if (bpEl) bpEl.textContent = risk === 'High' ? '154/92' : risk === 'Moderate' ? '136/86' : '120/80';
+    if (hrEl) hrEl.textContent = risk === 'High' ? '106 bpm' : '74 bpm';
+    if (glucoseEl) glucoseEl.textContent = risk === 'High' ? '180 mg/dL' : '110 mg/dL';
+    if (spo2El) spo2El.textContent = risk === 'High' ? '94%' : '98%';
+    if (probBadgeEl) {
+      probBadgeEl.textContent = risk === 'High' ? '62.0% ML Probability' : risk === 'Moderate' ? '35.0% ML Probability' : '18.0% ML Probability';
+      probBadgeEl.className = risk === 'High' ? 'px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700' : 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700';
+    }
+    if (driversListEl) {
+      driversListEl.innerHTML = `<li>Reported symptom: ${issue}</li><li>Zone telemetry flagged by triage algorithms</li>`;
+    }
+    state.currentOpsAlertSenior = { name: senior, phone: '+91 98110-44912', assignedNurse: assignee };
+  }
+
   modal.classList.remove('hidden');
+}
+
+function triggerOpsCallSenior() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const phone = p.phone || '+91 98110-44912';
+  if (typeof triggerSimulatedCall === 'function') {
+    triggerSimulatedCall(name, phone);
+  } else {
+    showToast(`Initiating emergency 2-way call to ${name} (${phone})...`, 'info');
+  }
+}
+
+function triggerOpsDispatchNurse() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const nurse = p.assignedNurse || 'Sister Kavita, RN';
+  showToast(`Emergency Nurse ${nurse} dispatched for ${name}! ETA: 12 mins.`, 'success');
 }
 
 function closeOpsAlertDetail() {
@@ -2018,49 +2226,480 @@ function toggleMapMode(mode) {
 }
 
 // 12. Export Functions
+
+// ============================================================================
+// OPERATIONS MANAGER: FULLY CONNECTED CLINICAL & REALISTIC DATASET ENGINE
+// ============================================================================
+
+// 1. Audit Log Recorder Helper
+function addOpsAuditRecord(senior, actionText, user) {
+  const table = document.getElementById('ops-audit-table-body');
+  if (!table) return;
+
+  const now = new Date();
+  const timeStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+  const tr = document.createElement('tr');
+  tr.className = 'hover:bg-slate-50 transition-colors bg-teal-50/20';
+  tr.innerHTML = `
+    <td class="p-3.5 pl-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">${timeStr}</td>
+    <td class="p-3.5 font-bold text-slate-900">${user || 'OM (You)'}</td>
+    <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">Operations</span></td>
+    <td class="p-3.5 text-slate-700 font-medium">${actionText}</td>
+    <td class="p-3.5 font-mono text-[11px] text-slate-500">Live Telemetry</td>
+    <td class="p-3.5 font-bold text-slate-800">${senior}</td>
+    <td class="p-3.5 font-mono text-[11px] text-slate-400">192.168.1.15</td>
+  `;
+  table.prepend(tr);
+}
+
+// 2. Call Senior Directly from Alerts & Cases
+function triggerOpsCallSeniorFor(seniorName, phone) {
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(440, 'sine', 0.25);
+    setTimeout(() => soundEngine.playTone(480, 'sine', 0.35), 300);
+  }
+
+  const patient = typeof getPatientByNameOrId === 'function' ? getPatientByNameOrId(seniorName) : null;
+  const targetPhone = phone || (patient ? patient.phone : '+91 98110-44912');
+
+  addOpsAuditRecord(seniorName, `Initiated 2-way clinical phone check-in (${targetPhone})`, 'Operations Manager');
+
+  if (typeof triggerSimulatedCall === 'function') {
+    triggerSimulatedCall(seniorName, targetPhone);
+  } else {
+    showToast(`Emergency 2-way call connected to ${seniorName} (${targetPhone}). Telemetry audio streaming.`, 'info');
+  }
+}
+
+// 3. Dispatch Emergency Nurse Directly from Alerts & Cases
+function triggerOpsDispatchNurseFor(seniorName, assignedNurse) {
+  const patient = typeof getPatientByNameOrId === 'function' ? getPatientByNameOrId(seniorName) : null;
+  const nurse = assignedNurse || (patient ? patient.assignedNurse : 'Sister Kavita, RN');
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(784, 'sine', 0.15);
+    setTimeout(() => soundEngine.playTone(880, 'sine', 0.18), 180);
+    setTimeout(() => soundEngine.playTone(1046, 'sine', 0.22), 380);
+  }
+
+  // Update rows in both Alerts & Cases table and Recent Alerts table
+  const rows = document.querySelectorAll('#ops-alerts-table-body tr, #ops-recent-alerts-body tr');
+  rows.forEach(r => {
+    if (r.getAttribute('data-senior') === seniorName) {
+      r.setAttribute('data-status', 'In Progress');
+      const cells = r.querySelectorAll('td');
+      // Tab 3 table has 8 columns: [checkbox, name, risk, issue, time, status, coord, action]
+      if (cells.length >= 8) {
+        cells[5].innerHTML = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700 animate-pulse">Dispatched (12m)</span>';
+        cells[6].textContent = nurse;
+      } else if (cells.length >= 6) {
+        // Tab 1 table has 6 columns: [time, senior, risk, issue, status, action]
+        cells[4].innerHTML = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700 animate-pulse">Dispatched</span>';
+      }
+    }
+  });
+
+  addOpsAuditRecord(seniorName, `Emergency nurse ${nurse} dispatched to senior residence (ETA 12m)`, 'Operations Manager');
+
+  showToast(`Emergency Nurse ${nurse} dispatched for ${seniorName}! ETA: 12 mins. GPS dispatch tracker active.`, 'success');
+}
+
+// 4. Modal Diagnostic Triggers
+function triggerOpsCallSenior() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const phone = p.phone || '+91 98110-44912';
+  triggerOpsCallSeniorFor(name, phone);
+}
+
+function triggerOpsDispatchNurse() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const nurse = p.assignedNurse || 'Sister Kavita, RN';
+  triggerOpsDispatchNurseFor(name, nurse);
+}
+
+// 5. Risk Analytics Sub-Tab Switcher
+function switchOpsRiskTab(tabName) {
+  // Hide all risk subpanes
+  document.querySelectorAll('.ops-risk-subpane').forEach(el => el.classList.add('hidden'));
+
+  // Reset tab button styles
+  document.querySelectorAll('.ops-risk-tab-btn').forEach(btn => {
+    btn.classList.remove('border-teal-600', 'text-teal-800');
+    btn.classList.add('border-transparent', 'text-slate-500');
+  });
+
+  // Activate selected subpane
+  const targetPane = document.getElementById(`ops-risk-pane-${tabName}`);
+  if (targetPane) targetPane.classList.remove('hidden');
+
+  const targetBtn = document.getElementById(`btn-ops-risk-tab-${tabName}`);
+  if (targetBtn) {
+    targetBtn.classList.remove('border-transparent', 'text-slate-500');
+    targetBtn.classList.add('border-teal-600', 'text-teal-800');
+  }
+
+  // Trigger chart re-render / resize if overview or trend
+  if (tabName === 'overview' || tabName === 'trend') {
+    setTimeout(() => {
+      initOpsCharts();
+    }, 50);
+  }
+}
+
+// 6. Add Coordinator with Real DOM & State Persistence
+function submitOpsAddCoordinator(e) {
+  if (e && e.preventDefault) e.preventDefault();
+
+  const nameInput = document.getElementById('ops-coord-name');
+  const roleInput = document.getElementById('ops-coord-role');
+  const areaInput = document.getElementById('ops-coord-area');
+  const phoneInput = document.getElementById('ops-coord-phone');
+  const emailInput = document.getElementById('ops-coord-email');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const role = roleInput ? roleInput.value : 'Care Nurse';
+  const area = areaInput ? areaInput.value : 'Greater Kailash';
+  const phone = phoneInput ? phoneInput.value.trim() : '+91 98765 00000';
+  const email = emailInput ? emailInput.value.trim() : 'coordinator@careconnect.com';
+
+  if (!name) {
+    showToast('Please enter coordinator name', 'warning');
+    return;
+  }
+
+  const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'CC';
+
+  // Append new coordinator row to #ops-team-table-body
+  const tableBody = document.getElementById('ops-team-table-body');
+  if (tableBody) {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-slate-50/80 transition-colors bg-teal-50/40 border-l-4 border-teal-500';
+    tr.innerHTML = `
+      <td class="p-3.5 pl-4 flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 font-black flex items-center justify-center text-xs flex-shrink-0">
+          ${initials}
+        </div>
+        <div>
+          <div class="font-black text-slate-900">${name}</div>
+          <div class="text-[10px] text-slate-400 font-semibold">${role} &bull; ${area}</div>
+        </div>
+      </td>
+      <td class="p-3.5 text-center font-bold text-slate-800">0</td>
+      <td class="p-3.5 text-center font-bold text-slate-400">0</td>
+      <td class="p-3.5 text-center font-bold text-emerald-600">0</td>
+      <td class="p-3.5 text-center font-mono text-slate-500 text-[11px]">New</td>
+      <td class="p-3.5 text-center">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Active</span>
+      </td>
+    `;
+    tableBody.prepend(tr);
+  }
+
+  // Increment active coordinator count
+  const countEl = document.getElementById('ops-active-coord-count');
+  if (countEl) {
+    const cur = parseInt(countEl.textContent) || 8;
+    countEl.textContent = cur + 1;
+  }
+
+  // Add coordinator to all relevant dropdowns
+  const newOption = `<option value="${name}" selected>${name} (${role} &bull; ${area})</option>`;
+  ['task-coordinator', 'ops-assign-coordinator-select', 'ops-new-alert-coord'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (sel) sel.insertAdjacentHTML('beforeend', newOption);
+  });
+
+  addOpsAuditRecord(name, `New care coordinator ${name} (${role}) enrolled for sector ${area}`, 'Operations Manager');
+
+  // Reset & close
+  const form = document.getElementById('ops-add-coordinator-form');
+  if (form) form.reset();
+  closeOpsAddCoordinatorModal();
+
+  showToast(`Coordinator ${name} added successfully to ${area}!`, 'success');
+}
+
+// 7. Real Leaflet OpenStreetMap Map for Area Monitoring
+let opsLeafletMap = null;
+let opsTileLayerStreet = null;
+let opsTileLayerSat = null;
+let opsCurrentTileMode = 'street';
+
+function initOpsRealMap() {
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet mapping engine loading...');
+    setTimeout(initOpsRealMap, 500);
+    return;
+  }
+
+  const container = document.getElementById('ops-leaflet-map');
+  if (!container) return;
+
+  if (opsLeafletMap) {
+    setTimeout(() => { opsLeafletMap.invalidateSize(); }, 150);
+    return;
+  }
+
+  try {
+    // Delhi NCR Center (South Delhi Cluster)
+    opsLeafletMap = L.map('ops-leaflet-map', {
+      center: [28.536, 77.215],
+      zoom: 13,
+      zoomControl: true,
+      scrollWheelZoom: true
+    });
+
+    opsTileLayerStreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    });
+
+    opsTileLayerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
+
+    opsTileLayerStreet.addTo(opsLeafletMap);
+
+    const sectors = [
+      {
+        name: "Greater Kailash (South Delhi)",
+        coords: [28.541, 77.241],
+        risk: "High",
+        color: "#f43f5e",
+        seniors: 40,
+        high: 8,
+        mod: 14,
+        low: 18,
+        coordinator: "Sister Kavita, RN",
+        alerts: "Ramesh Sharma (HR 114 bpm), Devi Lal Kapoor"
+      },
+      {
+        name: "Hauz Khas",
+        coords: [28.552, 77.202],
+        risk: "High",
+        color: "#f43f5e",
+        seniors: 35,
+        high: 6,
+        mod: 12,
+        low: 17,
+        coordinator: "Brother Amit (Paramedic)",
+        alerts: "Savitri Devi (Fall impact, acute hip pain)"
+      },
+      {
+        name: "Saket",
+        coords: [28.523, 77.218],
+        risk: "High",
+        color: "#f59e0b",
+        seniors: 32,
+        high: 4,
+        mod: 10,
+        low: 18,
+        coordinator: "Rajesh Kumar (Buddy)",
+        alerts: "Anand Verma (Insulin gap, Fasting Sugar 228 mg/dL)"
+      },
+      {
+        name: "Vasant Kunj",
+        coords: [28.530, 77.155],
+        risk: "Moderate",
+        color: "#f59e0b",
+        seniors: 28,
+        high: 4,
+        mod: 8,
+        low: 16,
+        coordinator: "Sister Sunita (Counselor)",
+        alerts: "Meena Iyer (Sleep deficit 4.1h, bereavement support)"
+      },
+      {
+        name: "Malviya Nagar",
+        coords: [28.532, 77.210],
+        risk: "Low",
+        color: "#10b981",
+        seniors: 24,
+        high: 2,
+        mod: 8,
+        low: 14,
+        coordinator: "Sister Kavita, RN",
+        alerts: "Harish Patel (Stable, 100% ADL Independence)"
+      }
+    ];
+
+    sectors.forEach(s => {
+      // Glow perimeter
+      L.circle(s.coords, {
+        radius: 480,
+        color: s.color,
+        fillColor: s.color,
+        fillOpacity: 0.18,
+        weight: 1.5
+      }).addTo(opsLeafletMap);
+
+      // Core pin
+      const marker = L.circleMarker(s.coords, {
+        radius: 12,
+        color: '#ffffff',
+        fillColor: s.color,
+        fillOpacity: 0.95,
+        weight: 3
+      }).addTo(opsLeafletMap);
+
+      const popupHtml = `
+        <div style="font-family: inherit; font-size: 12px; line-height: 1.4; min-width: 210px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="font-size: 13px; color: #0f172a;">${s.name}</strong>
+            <span style="background: ${s.color}; color: #fff; padding: 2px 7px; border-radius: 9999px; font-size: 10px; font-weight: 800;">${s.risk} Risk</span>
+          </div>
+          <div style="color: #64748b; font-size: 11px; margin-bottom: 6px;">Total Cohort: <strong>${s.seniors} Seniors</strong> (${s.high} High, ${s.mod} Mod, ${s.low} Low)</div>
+          <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 6px;">
+            <div style="font-size: 10px; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Active Alerts / Incidents:</div>
+            <div style="color: #0f172a; font-weight: 600; font-size: 11px;">${s.alerts}</div>
+          </div>
+          <div style="color: #475569; font-size: 11px;">
+            Assigned Lead: <strong>${s.coordinator}</strong>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupHtml);
+    });
+
+    setTimeout(() => { opsLeafletMap.invalidateSize(); }, 200);
+  } catch (err) {
+    console.warn('Map initialization:', err);
+  }
+}
+
+function toggleMapMode(mode) {
+  opsCurrentTileMode = mode;
+  const btnStreet = document.getElementById('map-mode-street');
+  const btnSat = document.getElementById('map-mode-sat');
+
+  if (btnStreet && btnSat) {
+    if (mode === 'sat') {
+      btnSat.className = 'px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm';
+      btnStreet.className = 'px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+    } else {
+      btnStreet.className = 'px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm';
+      btnSat.className = 'px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+    }
+  }
+
+  if (!opsLeafletMap) return;
+
+  if (mode === 'sat') {
+    if (opsTileLayerStreet) opsLeafletMap.removeLayer(opsTileLayerStreet);
+    if (opsTileLayerSat) opsTileLayerSat.addTo(opsLeafletMap);
+  } else {
+    if (opsTileLayerSat) opsLeafletMap.removeLayer(opsTileLayerSat);
+    if (opsTileLayerStreet) opsTileLayerStreet.addTo(opsLeafletMap);
+  }
+}
+
+// 8. Reports Dynamic Duration & Sub-tabs
+function changeOpsReportsDuration(val) {
+  const durationMap = {
+    "1": { label: "Today", alerts: 4, high: 3, resRate: "100%", avgTime: "0.9 hrs" },
+    "7": { label: "Last 7 Days", alerts: 11, high: 9, resRate: "95%", avgTime: "1.8 hrs" },
+    "30": { label: "Last 30 Days", alerts: 32, high: 24, resRate: "92%", avgTime: "2.8 hrs" },
+    "90": { label: "This Quarter", alerts: 98, high: 27, resRate: "91%", avgTime: "3.1 hrs" },
+    "365": { label: "Year to Date", alerts: 412, high: 34, resRate: "89%", avgTime: "3.4 hrs" }
+  };
+
+  const sel = durationMap[val] || durationMap["30"];
+  const elAlerts = document.getElementById('ops-rep-kpi-alerts');
+  const elHigh = document.getElementById('ops-rep-kpi-high');
+  const elRes = document.getElementById('ops-rep-kpi-res');
+  const elTime = document.getElementById('ops-rep-kpi-time');
+
+  if (elAlerts) elAlerts.textContent = sel.alerts;
+  if (elHigh) elHigh.textContent = sel.high;
+  if (elRes) elRes.textContent = sel.resRate;
+  if (elTime) elTime.textContent = sel.avgTime;
+
+  showToast(`Reports metrics updated for ${sel.label}!`, 'info');
+}
+
+function switchOpsReportsTab(tabName) {
+  document.querySelectorAll('.ops-rep-tab-btn').forEach(btn => {
+    btn.classList.remove('border-teal-600', 'text-teal-800');
+    btn.classList.add('border-transparent', 'text-slate-500');
+  });
+
+  const activeBtn = document.getElementById(`btn-ops-rep-tab-${tabName}`);
+  if (activeBtn) {
+    activeBtn.classList.remove('border-transparent', 'text-slate-500');
+    activeBtn.classList.add('border-teal-600', 'text-teal-800');
+  }
+
+  showToast(`Viewing ${tabName.toUpperCase()} section of Operations Report`, 'info');
+}
+
+// 9. Realistic Dataset Clinical CSV Export
 function exportOpsReports() {
-  const csvContent = "data:text/csv;charset=utf-8,"
-    + "Metric,Value,Period,Status\n"
-    + "Total Active Seniors,200,Last 30 Days,Normal\n"
-    + "High Risk Alerts,24,Last 30 Days,Action Required\n"
-    + "Moderate Risk Alerts,68,Last 30 Days,Monitoring\n"
-    + "Low Risk Alerts,108,Last 30 Days,Normal\n"
-    + "Resolution Rate,92%,Last 30 Days,Target Met\n"
-    + "Avg Response Time,2.8 hrs,Last 30 Days,Target Met\n";
+  const durationSelect = document.getElementById('ops-reports-duration');
+  const durationLabel = durationSelect ? durationSelect.options[durationSelect.selectedIndex].text : 'Last 30 Days';
 
+  const rows = [
+    ["=== CARECONNECT AI TELEHEALTH CLINICAL OPERATIONS REPORT ==="],
+    ["Generated On", new Date().toLocaleString()],
+    ["Reporting Period", durationLabel],
+    ["Active Senior Population", "200 Seniors (Unseen Validation Test Set Cohort)"],
+    ["Clinical Care Team", "8 Active Coordinators (5 Clinical Specialist Leads)"],
+    [],
+    ["--- SECTION 1: POPULATION RISK STRATIFICATION ---"],
+    ["Risk Tier", "Seniors Count", "Percentage of Fleet", "Biomarker Classification Criteria", "Action Protocol"],
+    ["High Risk (Critical)", "24", "12.0%", "SpO2 < 95% OR HR > 110 bpm OR Blood Sugar > 200 OR Impact Fall Sensor", "Immediate 2-way call + Emergency Nurse Dispatch"],
+    ["Moderate Risk", "68", "34.0%", "Sleep Deficit (<5 hrs) OR Osteoarthritis Pain 4-6/10 OR Missed 1 Dose", "Daily Tele-Counseling & Health Buddy Visit"],
+    ["Low Risk (Safe)", "108", "54.0%", "100% ADL Independence & Zero Missed Doses", "Routine Bi-Weekly Assessment"],
+    [],
+    ["--- SECTION 2: ACTIVE CLINICAL DOSSIERS (DATASET SENIORS) ---"],
+    ["Patient ID", "Senior Name", "Age", "Gender", "Sector (Delhi NCR)", "Risk Level", "ML Probability", "BP (mmHg)", "Heart Rate", "SpO2", "Blood Sugar", "Primary Symptom", "Assigned Care Lead", "Emergency Family Contact", "Adherence Rate"],
+    ["PAT-101", "Ramesh Sharma", "74", "Male", "Greater Kailash, C-42", "High Risk (Critical)", "64.3%", "158/96", "114 bpm", "94%", "138 mg/dL", "Missed check-in & resting tachycardia spike", "Sister Kavita, RN", "Rahul Sharma (Son) +91 98711-20931", "89%"],
+    ["PAT-102", "Savitri Devi", "81", "Female", "Hauz Khas, E-12", "High Risk (Critical)", "63.2%", "142/88", "88 bpm", "97%", "110 mg/dL", "Impact shock sensor triggered in bathroom & hip pain (8/10)", "Brother Amit (Paramedic)", "Sunil Devi (Son) +91 98110-33418", "94%"],
+    ["PAT-103", "Anand Verma", "78", "Male", "Saket, B-104", "High Risk (Critical)", "68.6%", "132/84", "76 bpm", "98%", "228 mg/dL", "Severe Hyperglycemia & 2 missed insulin doses", "Rajesh Kumar (Buddy)", "Pooja Verma (Daughter) +91 98711-55442", "72%"],
+    ["PAT-104", "Meena Iyer", "72", "Female", "Vasant Kunj, Sec-C", "Moderate Risk", "38.9%", "124/80", "72 bpm", "98%", "105 mg/dL", "Sleep deficit (4.1h) & emotional bereavement distress", "Sister Sunita (Counselor)", "Karthik Iyer (Son) +91 98110-66778", "96%"],
+    ["PAT-105", "Harish Patel", "76", "Male", "Malviya Nagar, G-18", "Low Risk (Safe)", "18.2%", "122/80", "72 bpm", "98%", "108 mg/dL", "Routine check-in normal (100% ADL independent)", "Sister Kavita, RN", "Vikram Patel (Son) +91 98711-99001", "100%"],
+    ["PAT-106", "Devi Lal Kapoor", "83", "Male", "Greater Kailash-2", "High Risk", "61.5%", "154/92", "86 bpm", "95%", "145 mg/dL", "Stage-2 essential hypertension elevation", "Dr. V.K. Kapoor", "Mohit Kapoor (Son) +91 98110-11223", "91%"],
+    ["PAT-107", "Suman Singh", "79", "Female", "Hauz Khas Enclave", "Moderate Risk", "42.0%", "136/86", "78 bpm", "96%", "125 mg/dL", "Severe osteoarthritis knee pain & mobility restriction", "Brother Amit", "Rekha Singh (Daughter) +91 98110-99887", "93%"],
+    ["PAT-108", "Bala Rao", "75", "Male", "Saket, Block-J", "Moderate Risk", "36.5%", "128/82", "70 bpm", "97%", "118 mg/dL", "Insomnia & irregular resting pulse fluctuations", "Rajesh Kumar", "Suresh Rao (Son) +91 98110-44332", "95%"],
+    [],
+    ["--- SECTION 3: SECTOR GEOGRAPHICAL SUMMARY (DELHI NCR) ---"],
+    ["Sector", "Active Seniors", "High Risk", "Moderate Risk", "Low Risk", "Lead Care Coordinator", "Key Active Incidents"],
+    ["Greater Kailash (South Delhi)", "40", "8", "14", "18", "Sister Kavita, RN", "Ramesh Sharma tachycardia spike (114 bpm)"],
+    ["Hauz Khas", "35", "6", "12", "17", "Brother Amit (Paramedic)", "Savitri Devi bathroom fall impact trauma"],
+    ["Saket", "32", "4", "10", "18", "Rajesh Kumar (Buddy)", "Anand Verma glycemic spike (228 mg/dL)"],
+    ["Vasant Kunj", "28", "4", "8", "16", "Sister Sunita (Counselor)", "Meena Iyer sleep deficit & grief distress"],
+    ["Malviya Nagar", "24", "2", "8", "14", "Sister Kavita, RN", "Routine telehealth review (Stable)"],
+    [],
+    ["--- SECTION 4: CARE COORDINATOR WORKLOAD & RESPONSE METRICS ---"],
+    ["Coordinator Name", "Clinical Role", "Primary Sector", "Assigned Cases", "Pending", "Resolved", "Avg Response Time", "Status"],
+    ["Sister Kavita, RN", "Clinical Specialist Lead", "Greater Kailash", "14", "3", "11", "2.4 hrs", "Active"],
+    ["Brother Amit", "Field Paramedic Lead", "Hauz Khas", "12", "2", "10", "3.1 hrs", "Active"],
+    ["Rajesh Kumar", "Community Health Buddy Lead", "Saket", "10", "3", "7", "4.2 hrs", "Active"],
+    ["Sister Sunita", "Tele-care Counselor Lead", "Vasant Kunj", "8", "1", "7", "2.6 hrs", "Active"],
+    ["Dr. V.K. Kapoor", "Attending Physician Lead", "Citywide Tele-Triage", "6", "2", "4", "3.8 hrs", "Active"]
+  ];
+
+  const csvContent = "data:text/csv;charset=utf-8," + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
   link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "CareConnect_Operations_Report.csv");
+  link.setAttribute("download", `CareConnect_Operations_Clinical_Report_${durationLabel.replace(/\s+/g, '_')}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  showToast("Operations report exported as CSV successfully!", "success");
+
+  addOpsAuditRecord("Cohort", `Exported detailed clinical operations report (${durationLabel}) as CSV`, 'Operations Manager');
+  showToast(`Operations clinical dataset report exported successfully (${durationLabel})!`, "success");
 }
 
-function exportOpsAuditLogs() {
-  const csvContent = "data:text/csv;charset=utf-8,"
-    + "Timestamp,User,Role,Action,Details,Related Senior,IP Address\n"
-    + "28 Oct 2026 10:24 AM,Ananya,Coordinator,Assigned to Rishabh,Missed medication,Sharma Ji,192.168.1.12\n"
-    + "28 Oct 2026 09:15 AM,OM (You),Operations Manager,Marked as In Progress,Reduced activity,Verma Ji,192.168.1.15\n"
-    + "27 Oct 2026 08:40 AM,Rishabh,Coordinator,Added follow-up note,Pain reported,Kapoor Ji,192.168.1.18\n"
-    + "27 Oct 2026 11:20 AM,Megha,Coordinator,Changed priority,Sleep issues,Iyer Ji,192.168.1.21\n"
-    + "26 Oct 2026 04:15 PM,Karan,Coordinator,Marked as Resolved,Mood changes,Singh Ji,192.168.1.19\n"
-    + "26 Oct 2026 02:30 PM,OM (You),Operations Manager,Generated team report,System analytics,-,192.168.1.15\n"
-    + "25 Oct 2026 10:45 AM,Amrita,Coordinator,Assigned to Ananya,Fall risk detected,Patel Ji,192.168.1.14\n"
-    + "25 Oct 2026 09:32 AM,Rishabh,Coordinator,Added medication details,Irregular vitals,Rao Ji,192.168.1.18\n";
 
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "CareConnect_Audit_Trail.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  showToast("Audit logs exported as CSV successfully!", "success");
-}
 
-// 13. Team Management Form Task Assignment Handler
+
 function handleOpsAssignTaskSubmit(e) {
   if (e && e.preventDefault) e.preventDefault();
   const seniorSelect = document.getElementById('ops-task-senior-select') || document.querySelector('#ops-subview-team select');
@@ -2211,7 +2850,7 @@ function initOpsCharts() {
     state.charts.opsTeamWorkload = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Ananya (28%)', 'Rishabh (24%)', 'Amrita (20%)', 'Megha (16%)', 'Karan (12%)'],
+        labels: ['Sister Kavita (28%)', 'Brother Amit (24%)', 'Rajesh Kumar (20%)', 'Sister Sunita (16%)', 'Dr. V.K. Kapoor (12%)'],
         datasets: [{
           data: [14, 12, 10, 8, 6],
           backgroundColor: ['#00a896', '#3b82f6', '#f59e0b', '#a855f7', '#f43f5e'],

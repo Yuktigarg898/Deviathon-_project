@@ -2961,8 +2961,6 @@
             </button>
           </div>
         </div>
-
-        </div>
       </div>
 
       
@@ -3364,7 +3362,7 @@
                 <div><span class="text-slate-500">Full Name:</span> <strong id="report-patient-name" class="text-slate-800">Ramesh Sharma</strong></div>
                 <div><span class="text-slate-500">Username:</span> <code id="report-patient-username" class="text-purple-700 bg-purple-50 px-1 rounded">@senior_ramesh</code></div>
                 <div><span class="text-slate-500">Age / Gender:</span> <span id="report-patient-age-gender" class="text-slate-800">74 Yrs • Male</span></div>
-                <div><span class="text-slate-500">Blood Group:</span> <strong id="report-patient-blood-group" class="text-rose-600 font-extrabold">B +ve</strong></div>
+                <div><span class="text-slate-500">Blood Group:</span> <strong id="report-patient-blood" class="text-rose-600 font-extrabold">B +ve</strong></div>
               </div>
             </div>
 
@@ -3372,7 +3370,7 @@
               <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Medical Supervision</div>
               <div class="space-y-1 text-xs">
                 <div><span class="text-slate-500">Consultant:</span> <strong id="report-patient-doctor" class="text-slate-800">Dr. V.K. Kapoor (Fortis)</strong></div>
-                <div><span class="text-slate-500">Next Review:</span> <span id="report-patient-review-date" class="text-slate-800">15 Nov 2026</span></div>
+                <div><span class="text-slate-500">Next Review:</span> <span id="report-patient-next-review" class="text-slate-800">15 Nov 2026</span></div>
                 <div><span class="text-slate-500">Assigned Nurse:</span> <span id="report-patient-nurse" class="text-slate-800">Sister Kavita, RN</span></div>
                 <div><span class="text-slate-500">Location:</span> <span id="report-patient-location" class="text-slate-800">Greater Kailash, Delhi</span></div>
               </div>
@@ -3405,7 +3403,7 @@
               <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2 flex items-center">
                 <i class="fa-solid fa-notes-medical text-teal-600 mr-2"></i> Chronic Medical Conditions
               </h4>
-              <ul id="report-chronic-list" class="space-y-1.5 text-xs text-slate-700">
+              <ul id="report-chronic-conditions" class="space-y-1.5 text-xs text-slate-700">
                 <!-- Dynamically populated chronic list -->
               </ul>
             </div>
@@ -3446,7 +3444,7 @@
                     <th class="p-3 text-right">Adherence</th>
                   </tr>
                 </thead>
-                <tbody id="report-medications-table" class="divide-y divide-slate-100">
+                <tbody id="report-medications-tbody" class="divide-y divide-slate-100">
                   <!-- Dynamically populated medications -->
                 </tbody>
               </table>

@@ -2023,7 +2023,10 @@ function switchFamilyTab(tab) {
 
   const currentPatient = (state.patients || []).find(p => p.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
   if (currentPatient) {
-    if (tab === 'summary') renderFamilyAnalyzeSummary(currentPatient);
+    if (tab === 'summary') {
+      renderFamilyAnalyzeSummary(currentPatient);
+      setTimeout(initFamilyVitalsChart, 60);
+    }
     if (tab === 'report') renderFamilySeniorReport(currentPatient);
     if (tab === 'history') renderFamilyAssessmentHistory(currentPatient);
   }
@@ -2669,9 +2672,9 @@ function renderFamilySeniorReport(p) {
   if (patUser) patUser.textContent = `@${p.username}`;
 
   const patAge = document.getElementById('report-patient-age-gender');
-  if (patAge) patAge.textContent = `${p.age} Yrs / ${p.gender}`;
+  if (patAge) patAge.textContent = `${p.age} Yrs • ${p.gender}`;
 
-  const patBlood = document.getElementById('report-patient-blood');
+  const patBlood = document.getElementById('report-patient-blood') || document.getElementById('report-patient-blood-group');
   if (patBlood) patBlood.textContent = medHistory.bloodGroup || 'B +ve';
 
   const patContact = document.getElementById('report-patient-contact');
@@ -2687,51 +2690,125 @@ function renderFamilySeniorReport(p) {
   const patDoctor = document.getElementById('report-patient-doctor');
   if (patDoctor) patDoctor.textContent = medHistory.doctor || 'Dr. V.K. Kapoor (Fortis Escorts)';
 
-  const patNextReview = document.getElementById('report-patient-next-review');
+  const patNextReview = document.getElementById('report-patient-next-review') || document.getElementById('report-patient-review-date');
   if (patNextReview) patNextReview.textContent = medHistory.nextReview || '15 Nov 2026';
 
+  // Emergency Contact Details
+  const ec = p.emergencyContact || {};
+  const ecName = document.getElementById('report-emergency-name');
+  if (ecName) ecName.textContent = ec.name ? `${ec.name} (${ec.relation || 'Caregiver'})` : 'Rahul Sharma (Son)';
+  const ecPhone = document.getElementById('report-emergency-phone');
+  if (ecPhone) ecPhone.textContent = ec.phone || '+91 98711-20931';
+  const ecAlt = document.getElementById('report-emergency-alt');
+  if (ecAlt) ecAlt.textContent = ec.altPhone || '+91 98110-55441';
+
+  // Dynamically populate Current Physiological Vitals Grid (6 Clinical Cards)
+  const vitalsGrid = document.getElementById('report-vitals-grid');
+  if (vitalsGrid) {
+    const isBpSpike = v.bpStatus && (v.bpStatus.includes('Spike') || v.bpStatus.includes('Critical'));
+    const isHrSpike = v.hrStatus && (v.hrStatus.includes('Spike') || v.hrStatus.includes('Tachycardia'));
+    
+    vitalsGrid.innerHTML = `
+      <div class="p-3.5 rounded-2xl ${isBpSpike ? 'bg-rose-50 border-2 border-rose-300 shadow-sm' : 'bg-slate-50 border border-slate-200'}">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span class="font-bold">Blood Pressure</span>
+          <i class="fa-solid fa-heart-pulse text-rose-500"></i>
+        </div>
+        <div class="text-base sm:text-lg font-black text-slate-900 font-mono">${v.bp || '120/80 mmHg'}</div>
+        <span class="text-[10px] font-extrabold ${isBpSpike ? 'text-rose-700 bg-rose-100 px-1.5 py-0.5 rounded' : 'text-slate-500'}">
+          ${v.bpStatus || 'Normal Range'}
+        </span>
+      </div>
+
+      <div class="p-3.5 rounded-2xl ${isHrSpike ? 'bg-rose-50 border-2 border-rose-300 shadow-sm' : 'bg-slate-50 border border-slate-200'}">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span class="font-bold">Heart Rate</span>
+          <i class="fa-solid fa-wave-square text-rose-500"></i>
+        </div>
+        <div class="text-base sm:text-lg font-black text-slate-900 font-mono">${v.hr || '72 bpm'}</div>
+        <span class="text-[10px] font-extrabold ${isHrSpike ? 'text-rose-700 bg-rose-100 px-1.5 py-0.5 rounded' : 'text-emerald-700'}">
+          ${v.hrStatus || 'Stable Pulse'}
+        </span>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-sky-50 border border-sky-200">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span class="font-bold">Oxygen (SpO2)</span>
+          <i class="fa-solid fa-lungs text-sky-500"></i>
+        </div>
+        <div class="text-base sm:text-lg font-black text-slate-900 font-mono">${v.spo2 || '98%'}</div>
+        <span class="text-[10px] font-extrabold text-sky-800">
+          ${v.spo2Status || 'Optimal Saturation'}
+        </span>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span class="font-bold">Blood Glucose</span>
+          <i class="fa-solid fa-droplet text-amber-500"></i>
+        </div>
+        <div class="text-base sm:text-lg font-black text-slate-900 font-mono">${v.glucose || '110 mg/dL'}</div>
+        <span class="text-[10px] font-extrabold text-amber-800">Fasting / Pre-Meal</span>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-teal-50 border border-teal-200">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span class="font-bold">Body Temp</span>
+          <i class="fa-solid fa-temperature-half text-teal-500"></i>
+        </div>
+        <div class="text-base sm:text-lg font-black text-slate-900 font-mono">${v.temp || '98.4 °F'}</div>
+        <span class="text-[10px] font-extrabold text-teal-800">Afebrile Normal</span>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span class="font-bold">BMI / Weight</span>
+          <i class="fa-solid fa-weight-scale text-indigo-500"></i>
+        </div>
+        <div class="text-base sm:text-lg font-black text-slate-900 font-mono">${v.bmi ? `BMI ${v.bmi}` : 'BMI 24.8'}</div>
+        <span class="text-[10px] font-extrabold text-indigo-800">${v.weight || '68 kg'} (Normal)</span>
+      </div>
+    `;
+  }
+
   // Chronic Conditions
-  const conditionsEl = document.getElementById('report-chronic-conditions');
+  const conditionsEl = document.getElementById('report-chronic-conditions') || document.getElementById('report-chronic-list');
   if (conditionsEl && medHistory.chronicConditions) {
     conditionsEl.innerHTML = medHistory.chronicConditions.map(c => `
-      <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 text-xs font-semibold">
-        <i class="fa-solid fa-notes-medical text-teal-600 mr-1"></i>${c}
-      </span>
+      <li class="flex items-center space-x-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200 font-bold text-xs text-slate-800">
+        <span class="w-2.5 h-2.5 rounded-full bg-teal-500 flex-shrink-0"></span>
+        <span>${c}</span>
+      </li>
     `).join('');
+  }
+
+  // Allergies & Surgeries
+  const allergiesEl = document.getElementById('report-allergies-text');
+  if (allergiesEl && medHistory.allergies) {
+    allergiesEl.textContent = medHistory.allergies.join(', ');
+  }
+  const surgeriesEl = document.getElementById('report-surgeries-text');
+  if (surgeriesEl && medHistory.surgeries) {
+    surgeriesEl.textContent = medHistory.surgeries.join(', ');
   }
 
   // Medications Table
-  const medsTbody = document.getElementById('report-medications-tbody');
+  const medsTbody = document.getElementById('report-medications-tbody') || document.getElementById('report-medications-table');
   if (medsTbody && medHistory.medications) {
     medsTbody.innerHTML = medHistory.medications.map(m => `
-      <tr class="border-b border-slate-100 hover:bg-slate-50/50">
-        <td class="py-2.5 px-3 font-bold text-slate-800">${m.name}</td>
-        <td class="py-2.5 px-3 text-slate-600">${m.dosage}</td>
-        <td class="py-2.5 px-3 text-slate-600">${m.schedule}</td>
-        <td class="py-2.5 px-3 text-slate-500">${m.purpose}</td>
-        <td class="py-2.5 px-3 font-semibold text-emerald-700">${m.adherence || '95%'}</td>
+      <tr class="border-b border-slate-100 hover:bg-slate-50/70 transition-colors">
+        <td class="py-3 px-3.5 font-black text-slate-900">${m.name}</td>
+        <td class="py-3 px-3.5 font-bold text-slate-700 font-mono text-xs">${m.dosage}</td>
+        <td class="py-3 px-3.5 text-slate-600 font-medium">${m.schedule}</td>
+        <td class="py-3 px-3.5 text-slate-500 font-medium">${m.purpose}</td>
+        <td class="py-3 px-3.5 text-right">
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+            ${m.adherence || '95%'} Verified ✓
+          </span>
+        </td>
       </tr>
     `).join('');
   }
-
-  // Checkup Vitals
-  const vBp = document.getElementById('report-vital-bp');
-  if (vBp) vBp.textContent = v.bp || '120/80 mmHg';
-
-  const vHr = document.getElementById('report-vital-hr');
-  if (vHr) vHr.textContent = v.hr || '72 bpm';
-
-  const vSpo2 = document.getElementById('report-vital-spo2');
-  if (vSpo2) vSpo2.textContent = v.spo2 || '98%';
-
-  const vGlucose = document.getElementById('report-vital-glucose');
-  if (vGlucose) vGlucose.textContent = v.glucose || '110 mg/dL';
-
-  const vTemp = document.getElementById('report-vital-temp');
-  if (vTemp) vTemp.textContent = v.temp || '98.4 °F';
-
-  const vBmi = document.getElementById('report-vital-bmi');
-  if (vBmi) vBmi.textContent = v.bmi ? `BMI ${v.bmi} (${v.weight || '68kg'})` : 'BMI 24.8 (Normal)';
 }
 
 // 5. Render Tab 3: Assessment History (Timeline)

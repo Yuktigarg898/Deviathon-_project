@@ -2808,26 +2808,184 @@ function updateOpsDashboard() {
   showToast(`Dashboard updated: ${metrics.cityName} • ${dayLabel}`, 'info');
 }
 
-function handleOpsDashboardDayChange(val) {
-  currentOpsDayFilter = val;
-  const datePicker = document.getElementById('ops-dashboard-datepicker');
-  if (val === 'custom') {
-    if (datePicker) {
-      datePicker.classList.remove('hidden');
-      datePicker.focus();
+// ============================================================================
+// INTERACTIVE OPERATIONS CALENDAR & DAY ENGINE
+// ============================================================================
+let currentCalYear = 2026;
+let currentCalMonth = 9; // 0-indexed: 9 = October
+let selectedCalDate = 30; // 30 Oct 2026
+const CAL_MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+function toggleOpsCalendarPopover(forceState) {
+  const popover = document.getElementById('ops-calendar-popover');
+  if (!popover) return;
+  const isHidden = popover.classList.contains('hidden');
+  const show = typeof forceState === 'boolean' ? forceState : isHidden;
+
+  if (show) {
+    popover.classList.remove('hidden');
+    renderOpsCalendarGrid(currentCalYear, currentCalMonth, selectedCalDate);
+    if (soundEngine && typeof soundEngine.playTone === 'function') {
+      soundEngine.playTone(600, 'sine', 0.05);
     }
   } else {
-    if (datePicker) {
-      datePicker.classList.add('hidden');
-    }
-    updateOpsDashboard();
+    popover.classList.add('hidden');
   }
 }
 
-function handleOpsDashboardCustomDate(dateVal) {
-  currentOpsCustomDate = dateVal || '2026-10-30';
-  updateOpsDashboard();
+function renderOpsCalendarGrid(year, month, selectedDay) {
+  const grid = document.getElementById('ops-cal-days-grid');
+  const title = document.getElementById('ops-cal-month-title');
+  if (title) {
+    title.textContent = CAL_MONTH_NAMES[month] + ' ' + year;
+  }
+  if (!grid) return;
+
+  const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  let html = '';
+
+  // Previous month trailing days (muted)
+  for (let i = firstDayIndex - 1; i >= 0; i--) {
+    const prevDay = prevMonthDays - i;
+    html += '<button type="button" disabled class="p-2 text-slate-300 text-center rounded-xl cursor-not-allowed opacity-40">' + prevDay + '</button>';
+  }
+
+  // Current month active days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const isSelected = (day === selectedDay && month === currentCalMonth && year === currentCalYear);
+    const isToday = (day === 30 && month === 9 && year === 2026);
+
+    let btnClass = 'p-2 rounded-xl text-center transition-all cursor-pointer font-bold ';
+    if (isSelected) {
+      btnClass += 'bg-[#00a896] text-white shadow-md font-extrabold ring-2 ring-teal-300 scale-105';
+    } else if (isToday) {
+      btnClass += 'bg-teal-50 text-teal-700 hover:bg-teal-100 font-extrabold border border-teal-200';
+    } else {
+      btnClass += 'hover:bg-slate-100 text-slate-700';
+    }
+
+    html += '<button type="button" onclick="selectOpsCalendarDay(' + day + ')" class="' + btnClass + '">' + day + '</button>';
+  }
+
+  grid.innerHTML = html;
 }
+
+function selectOpsCalendarDay(day) {
+  selectedCalDate = day;
+  currentOpsDayFilter = 'custom';
+  currentOpsCustomDate = currentCalYear + '-' + String(currentCalMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+
+  const monthShort = CAL_MONTH_NAMES[currentCalMonth].substring(0, 3);
+  const displayLabel = day + ' ' + monthShort + ' ' + currentCalYear;
+
+  const labelEl = document.getElementById('ops-calendar-selected-label');
+  if (labelEl) labelEl.textContent = displayLabel;
+
+  const hintEl = document.getElementById('ops-cal-selected-hint');
+  if (hintEl) hintEl.textContent = displayLabel + ' selected';
+
+  updateOpsCalPresetButtons(null);
+  renderOpsCalendarGrid(currentCalYear, currentCalMonth, selectedCalDate);
+  updateOpsDashboard();
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(650, 'sine', 0.08);
+  }
+}
+
+function changeOpsCalendarMonth(delta) {
+  currentCalMonth += delta;
+  if (currentCalMonth < 0) {
+    currentCalMonth = 11;
+    currentCalYear--;
+  } else if (currentCalMonth > 11) {
+    currentCalMonth = 0;
+    currentCalYear++;
+  }
+  renderOpsCalendarGrid(currentCalYear, currentCalMonth, selectedCalDate);
+}
+
+function selectOpsCalendarPreset(preset) {
+  currentOpsDayFilter = preset;
+  let labelText = 'Today (30 Oct 2026)';
+
+  if (preset === 'today') {
+    currentCalYear = 2026;
+    currentCalMonth = 9;
+    selectedCalDate = 30;
+    currentOpsCustomDate = '2026-10-30';
+    labelText = 'Today (30 Oct 2026)';
+  } else if (preset === 'yesterday') {
+    currentCalYear = 2026;
+    currentCalMonth = 9;
+    selectedCalDate = 29;
+    currentOpsCustomDate = '2026-10-29';
+    labelText = 'Yesterday (29 Oct 2026)';
+  } else if (preset === '7days') {
+    labelText = 'Last 7 Days (24 - 30 Oct)';
+  } else if (preset === '30days') {
+    labelText = 'Last 30 Days (Oct 2026)';
+  }
+
+  const labelEl = document.getElementById('ops-calendar-selected-label');
+  if (labelEl) labelEl.textContent = labelText;
+
+  const hintEl = document.getElementById('ops-cal-selected-hint');
+  if (hintEl) hintEl.textContent = labelText + ' selected';
+
+  updateOpsCalPresetButtons(preset);
+  renderOpsCalendarGrid(currentCalYear, currentCalMonth, selectedCalDate);
+  updateOpsDashboard();
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(550, 'sine', 0.08);
+  }
+}
+
+function updateOpsCalPresetButtons(activePreset) {
+  const presets = ['today', 'yesterday', '7days', '30days'];
+  presets.forEach(p => {
+    const btn = document.getElementById('cal-preset-' + p);
+    if (btn) {
+      if (p === activePreset) {
+        btn.className = 'py-1.5 px-2 rounded-xl text-center transition-all bg-white text-slate-900 shadow-sm font-extrabold';
+      } else {
+        btn.className = 'py-1.5 px-2 rounded-xl text-center text-slate-600 hover:text-slate-900 transition-all font-bold';
+      }
+    }
+  });
+}
+
+// Backwards compatibility wrappers
+function handleOpsDashboardDayChange(val) {
+  selectOpsCalendarPreset(val);
+}
+
+function handleOpsDashboardCustomDate(dateVal) {
+  if (!dateVal) return;
+  const parts = dateVal.split('-');
+  if (parts.length === 3) {
+    currentCalYear = parseInt(parts[0], 10);
+    currentCalMonth = parseInt(parts[1], 10) - 1;
+    selectOpsCalendarDay(parseInt(parts[2], 10));
+  }
+}
+
+// Global outside-click listener to auto-close calendar popover
+document.addEventListener('click', function(e) {
+  const popover = document.getElementById('ops-calendar-popover');
+  const trigger = document.getElementById('ops-calendar-trigger-btn');
+  if (!popover || popover.classList.contains('hidden')) return;
+  if (!popover.contains(e.target) && (!trigger || !trigger.contains(e.target))) {
+    popover.classList.add('hidden');
+  }
+});
 
 function renderOpsTeamTableForCity(coords) {
   const tbody = document.getElementById('ops-team-table-body');

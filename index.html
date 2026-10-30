@@ -2410,10 +2410,10 @@
 
 
     <!-- ========================================================================= -->
-    <section id="view-operations" class="hidden flex-grow flex flex-col md:flex-row min-h-screen bg-[#f8fafc] w-full text-slate-800">
+    <section id="view-operations" class="hidden flex-grow flex flex-col md:flex-row md:h-screen md:overflow-hidden bg-[#f8fafc] w-full text-slate-800">
 
       <!-- ================= LEFT SIDEBAR ================= -->
-      <aside class="w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col justify-between p-4 z-20">
+      <aside class="w-full md:w-64 lg:w-72 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col justify-between p-4 z-20 md:h-screen md:overflow-y-auto select-none custom-scrollbar">
         <div>
           <!-- Logo & Branding -->
           <div class="flex items-center space-x-3 pb-6 mb-4 border-b border-slate-100 cursor-pointer" onclick="navigateRole('login')">
@@ -2442,6 +2442,14 @@
               class="ops-nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all">
               <i class="fa-solid fa-bell w-4 text-center text-amber-500"></i>
               <span data-i18n="ops_nav_alerts">Alerts & Cases</span>
+            </button>
+
+            <!-- LIVE TRANSIT & PROOF TRACK -->
+            <button type="button" onclick="switchOpsTab('tracking')" id="ops-nav-tracking"
+              class="ops-nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all">
+              <i class="fa-solid fa-route w-4 text-center text-teal-600"></i>
+              <span class="flex-1 text-left" data-i18n="ops_nav_tracking">Transit & Proof Track</span>
+              <span class="px-1.5 py-0.5 rounded-md text-[9px] font-black bg-rose-100 text-rose-700 animate-pulse">LIVE</span>
             </button>
 
             <button type="button" onclick="switchOpsTab('team')" id="ops-nav-team"
@@ -2488,10 +2496,10 @@
       </aside>
 
       <!-- ================= MAIN CONTENT AREA ================= -->
-      <div class="flex-1 flex flex-col min-w-0 bg-[#f8fafc] overflow-x-hidden">
+      <div class="flex-1 flex flex-col min-w-0 bg-[#f8fafc] md:h-screen md:overflow-y-auto custom-scrollbar overflow-x-hidden relative">
 
         <!-- TOP BAR -->
-        <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+        <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs flex-shrink-0">
           <!-- Left: Global Search Input (Properly Closed!) -->
           <div class="relative w-72 sm:w-80 lg:w-96">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
@@ -2568,8 +2576,7 @@
             <div class="relative">
               <button type="button" onclick="toggleOpsUserDropdown()"
                 class="flex items-center space-x-2.5 p-1 sm:px-2.5 sm:py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all bg-white shadow-xs">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80"
-                  alt="Operations Manager" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-teal-500/30">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-600 text-white font-extrabold flex items-center justify-center text-[11px] ring-2 ring-teal-500/30 shadow-xs">OM</div>
                 <div class="hidden sm:block text-left">
                   <div class="text-xs font-extrabold text-slate-800 leading-tight">Operations Manager</div>
                   <div class="text-[10px] text-teal-600 font-semibold flex items-center space-x-1">
@@ -2584,8 +2591,7 @@
               <div id="ops-user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2.5 z-50 animate-scaleUp">
                 <!-- User Info Header -->
                 <div class="p-2.5 mb-2 bg-slate-50 rounded-xl flex items-center space-x-3 border border-slate-100">
-                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80"
-                    alt="Operations Manager" class="w-10 h-10 rounded-full object-cover">
+                  <div class="w-10 h-10 rounded-full bg-teal-700 text-white font-black flex items-center justify-center text-sm shadow-xs">OM</div>
                   <div class="overflow-hidden">
                     <div class="text-xs font-bold text-slate-900 truncate">Operations Manager</div>
                     <div class="text-[11px] text-slate-500 truncate">om@careconnect.com</div>
@@ -3902,7 +3908,7 @@
                     <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
                       <tr class="hover:bg-slate-50/80">
                         <td class="p-3.5 pl-4 font-bold text-slate-900 flex items-center space-x-2">
-                          <img src="https://images.unsplash.com/photo-1594824813571-638f026385a7?w=60&auto=format&fit=crop&q=80" class="w-6 h-6 rounded-full object-cover">
+                          <div class="w-6 h-6 rounded-full bg-teal-600 text-white text-[10px] font-black flex items-center justify-center">AN</div>
                           <span>Ananya</span>
                         </td>
                         <td class="p-3.5 font-bold">14</td>
@@ -3913,7 +3919,7 @@
                       </tr>
                       <tr class="hover:bg-slate-50/80">
                         <td class="p-3.5 pl-4 font-bold text-slate-900 flex items-center space-x-2">
-                          <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=60&auto=format&fit=crop&q=80" class="w-6 h-6 rounded-full object-cover">
+                          <div class="w-6 h-6 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center">RS</div>
                           <span>Rishabh</span>
                         </td>
                         <td class="p-3.5 font-bold">12</td>
@@ -3924,7 +3930,7 @@
                       </tr>
                       <tr class="hover:bg-slate-50/80">
                         <td class="p-3.5 pl-4 font-bold text-slate-900 flex items-center space-x-2">
-                          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=60&auto=format&fit=crop&q=80" class="w-6 h-6 rounded-full object-cover">
+                          <div class="w-6 h-6 rounded-full bg-purple-600 text-white text-[10px] font-black flex items-center justify-center">AM</div>
                           <span>Amrita</span>
                         </td>
                         <td class="p-3.5 font-bold">10</td>
@@ -3935,7 +3941,7 @@
                       </tr>
                       <tr class="hover:bg-slate-50/80">
                         <td class="p-3.5 pl-4 font-bold text-slate-900 flex items-center space-x-2">
-                          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=60&auto=format&fit=crop&q=80" class="w-6 h-6 rounded-full object-cover">
+                          <div class="w-6 h-6 rounded-full bg-amber-600 text-white text-[10px] font-black flex items-center justify-center">MG</div>
                           <span>Megha</span>
                         </td>
                         <td class="p-3.5 font-bold">8</td>
@@ -3946,7 +3952,7 @@
                       </tr>
                       <tr class="hover:bg-slate-50/80">
                         <td class="p-3.5 pl-4 font-bold text-slate-900 flex items-center space-x-2">
-                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80" class="w-6 h-6 rounded-full object-cover">
+                          <div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-[10px] font-black flex items-center justify-center">KR</div>
                           <span>Karan</span>
                         </td>
                         <td class="p-3.5 font-bold">6</td>
@@ -4530,8 +4536,7 @@
             <div id="ops-pane-profile" class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm max-w-2xl">
               <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6 pb-6 border-b border-slate-100">
                 <div class="flex flex-col items-center">
-                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80"
-                    alt="Operations Manager" class="w-24 h-24 rounded-full object-cover ring-4 ring-teal-500/20 shadow-md">
+                  <div class="w-24 h-24 rounded-full bg-teal-700 text-white text-2xl font-black flex items-center justify-center ring-4 ring-teal-500/20 shadow-md">OM</div>
                   <button type="button" onclick="showToast('Photo upload simulated successfully.', 'info')"
                     class="mt-3 text-xs font-bold text-teal-600 hover:text-teal-800 transition-colors">
                     Change Photo
@@ -4612,6 +4617,936 @@
             </div>
 
           </div>
+          <!-- ========================================================================= -->
+          <!-- TAB: LIVE TRANSIT & PROOF TRACK                                          -->
+          <!-- ========================================================================= -->
+          <div id="ops-subview-tracking" class="ops-subview hidden space-y-6">
+
+            <!-- Top Header & Live Dispatch Status Ribbon -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-rose-100 text-rose-700 border border-rose-200 flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                    <span>LIVE SATELLITE DISPATCH</span>
+                  </span>
+                  <span class="text-xs text-slate-400 font-medium">Pan-India Rapid Transit Fleet • Mission Control</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0e294b] tracking-tight mt-1.5">Care Coordinator Transit & Proof Track</h1>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Real-time transport telematics, GPS transit corridor, and cryptographic care delivery proof.</p>
+              </div>
+
+              <!-- Dispatch Simulation & Action Controls -->
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="stepOpsTransitSimulation()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 shadow-xs flex items-center space-x-1.5 transition-all">
+                  <i class="fa-solid fa-forward-step text-teal-600"></i>
+                  <span>Step Transit Forward</span>
+                </button>
+                <button type="button" onclick="toggleOpsTransitAutoPlay()" id="ops-transit-autoplay-btn" class="px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white text-xs font-extrabold shadow-sm flex items-center space-x-1.5 transition-all">
+                  <i class="fa-solid fa-play" id="ops-transit-play-icon"></i>
+                  <span id="ops-transit-play-text">Auto-Simulate Transit</span>
+                </button>
+                <button type="button" onclick="openOpsProofCertificateModal()" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-extrabold shadow-xs flex items-center space-x-1.5 transition-all">
+                  <i class="fa-solid fa-certificate text-emerald-600"></i>
+                  <span>View Proof Certificate</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Dispatches Selector Banner -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center space-x-2">
+                  <i class="fa-solid fa-satellite-dish text-teal-600"></i>
+                  <span>Active Dispatches & Coordinators (Click to Switch Senior)</span>
+                </span>
+                <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full" id="ops-tracking-count-pill">3 Dispatches Active</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="ops-dispatch-selector-container">
+                <!-- Dynamically rendered via renderOpsDispatchPills() -->
+              </div>
+            </div>
+
+            <!-- Main Split: Left Column (Vo Kese Gya + Location Track) & Right Column (Proof Track Dossier) -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+              <!-- Left 7 cols: 1. VO KESE GYA SENIOR TAK (Transit Mode) & 2. LOCATION TRACK (Live Route Map) -->
+              <div class="xl:col-span-7 space-y-6">
+
+                <!-- 1. TRANSIT MODE CARD ("Vo Kese Gya Senior Tak") -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+                  <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+                    <div class="flex items-center space-x-2.5">
+                      <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-black text-lg shadow-xs" id="ops-transit-vehicle-icon-box">
+                        <i class="fa-solid fa-motorcycle" id="ops-transit-vehicle-icon"></i>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Transport & Transit Mode (Vo Kese Gya)</div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900" id="ops-transit-vehicle-title">Rapid EV Medical Two-Wheeler (#DL-01-EV-4421)</h3>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-black bg-blue-100 text-blue-800" id="ops-transit-status-pill">
+                      In Transit • ETA 4m 30s
+                    </span>
+                  </div>
+
+                  <!-- Telematics Metrics 4-Box Grid -->
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Transit Speed</span>
+                        <i class="fa-solid fa-gauge-high text-teal-600"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ops-transit-speed">38 km/h</div>
+                      <div class="text-[10px] text-emerald-600 font-bold">Signal Priority Active</div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Battery / Charge</span>
+                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ops-transit-battery">84% LFP</div>
+                      <div class="text-[10px] text-slate-500 font-medium">68 km range reserve</div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Distance Left</span>
+                        <i class="fa-solid fa-arrows-left-right text-indigo-500"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ops-transit-distance">1.4 km</div>
+                      <div class="text-[10px] text-slate-500 font-medium">of 4.2 km corridor</div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Live ETA</span>
+                        <i class="fa-solid fa-stopwatch text-rose-500"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-rose-600 mt-0.5 font-mono" id="ops-transit-eta">04:18</div>
+                      <div class="text-[10px] text-rose-700 font-bold animate-pulse">Approaching Doorstep</div>
+                    </div>
+                  </div>
+
+                  <!-- Transit Corridor & Stowed Medical Equipment -->
+                  <div class="bg-gradient-to-r from-teal-50/70 via-slate-50 to-blue-50/70 p-3.5 rounded-xl border border-slate-200">
+                    <div class="text-xs font-bold text-slate-800 mb-2 flex items-center justify-between">
+                      <span class="flex items-center space-x-2">
+                        <i class="fa-solid fa-kit-medical text-teal-600"></i>
+                        <span>Medical Equipment Stowed on Transit Vehicle:</span>
+                      </span>
+                      <span class="text-[10px] text-slate-400 font-mono">Payload Checked: 16:08</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-700">
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-heart-pulse text-rose-500"></i><span>12-Lead Bluetooth ECG Device</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-lungs text-blue-500"></i><span>2L Emergency O2 Cylinder + Mask</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-droplet text-amber-500"></i><span>Point-of-Care Glucometer & Troponin</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-pills text-purple-500"></i><span>Cold-Chain Emergency Meds Pack</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-tablet-screen-button text-teal-600"></i><span>Biometric Satellite Tablet & Bodycam</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. LOCATION TRACK CARD (Live Route Map & GPS Corridor) -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+                  <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+                    <div class="flex items-center space-x-2.5">
+                      <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-black text-lg shadow-xs">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Location Track • Live GPS Corridor</div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900" id="ops-route-title">Saket Triage Hub ➔ B-42 Greater Kailash 1</h3>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" id="ops-gps-coords">
+                        28.5355° N, 77.2410° E
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Stylized Live Vector Route Track Canvas / Map Container -->
+                  <div class="relative w-full h-72 sm:h-80 rounded-2xl bg-gradient-to-tr from-slate-900 via-[#0d1b2a] to-[#1b263b] p-4 text-white overflow-hidden shadow-inner border border-slate-700 flex flex-col justify-between">
+                    
+                    <!-- HUD Top Bar -->
+                    <div class="flex items-center justify-between z-10 text-xs">
+                      <div class="flex items-center space-x-2 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-600 text-slate-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="font-bold">GPS Accuracy: ±3.2m (Dual-band RTK Lock)</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <button type="button" onclick="triggerOpsSirenPing()" class="px-2.5 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-[11px] transition-all shadow-sm flex items-center space-x-1">
+                          <i class="fa-solid fa-bullhorn text-xs"></i>
+                          <span>Signal Priority</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Live Graphical SVG Corridor & Moving Vehicle Marker -->
+                    <div class="relative flex-1 my-3 flex items-center justify-center">
+                      <svg class="w-full h-full max-h-44" viewBox="0 0 700 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Route Polyline (Roadway Corridor) -->
+                        <path d="M 50 140 C 180 140, 240 40, 380 40 C 500 40, 560 130, 650 130" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" opacity="0.3"/>
+                        <path id="ops-svg-route-path" d="M 50 140 C 180 140, 240 40, 380 40 C 500 40, 560 130, 650 130" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"/>
+
+                        <!-- Waypoint 1: Triage Hub -->
+                        <g transform="translate(50, 140)">
+                          <circle r="14" fill="#0284c7" fill-opacity="0.2"/>
+                          <circle r="7" fill="#0284c7"/>
+                          <text x="0" y="26" fill="#93c5fd" font-size="11" font-weight="bold" text-anchor="middle">Saket Hub</text>
+                        </g>
+
+                        <!-- Waypoint 2: Chirag Delhi -->
+                        <g transform="translate(260, 75)">
+                          <circle r="10" fill="#10b981" fill-opacity="0.2"/>
+                          <circle r="5" fill="#10b981"/>
+                          <text x="0" y="-14" fill="#6ee7b7" font-size="10" font-weight="bold" text-anchor="middle">Chirag Flyover</text>
+                        </g>
+
+                        <!-- Waypoint 3: Geofence Gate -->
+                        <g transform="translate(480, 55)">
+                          <circle r="10" fill="#f59e0b" fill-opacity="0.2"/>
+                          <circle r="5" fill="#f59e0b"/>
+                          <text x="0" y="-14" fill="#fcd34d" font-size="10" font-weight="bold" text-anchor="middle">GK-1 Geofence</text>
+                        </g>
+
+                        <!-- Waypoint 4: Senior Residence -->
+                        <g transform="translate(650, 130)">
+                          <circle r="16" fill="#f43f5e" fill-opacity="0.25"/>
+                          <circle r="8" fill="#f43f5e"/>
+                          <text x="0" y="26" fill="#fda4af" font-size="11" font-weight="bold" text-anchor="middle">Senior Home</text>
+                        </g>
+
+                        <!-- Live Moving Vehicle Group (Position dynamic in JS) -->
+                        <g id="ops-svg-moving-marker" transform="translate(380, 40)" class="transition-all duration-700 ease-out">
+                          <circle r="18" fill="#10b981" fill-opacity="0.3" class="animate-ping"/>
+                          <circle r="14" fill="#00a896" stroke="#ffffff" stroke-width="2.5"/>
+                          <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="black" text-anchor="middle" id="ops-svg-vehicle-emoji">🛵</text>
+                        </g>
+                      </svg>
+                    </div>
+
+                    <!-- HUD Bottom Milestone Status Bar -->
+                    <div class="grid grid-cols-4 gap-2 z-10 text-[11px] font-semibold">
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-1">
+                        <span class="text-emerald-400 font-bold block">1. Hub Departed</span>
+                        <span class="text-slate-400 text-[10px]">16:10 IST</span>
+                      </div>
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-2">
+                        <span class="text-emerald-400 font-bold block">2. Chirag Pass</span>
+                        <span class="text-slate-400 text-[10px]">16:14 IST</span>
+                      </div>
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-3">
+                        <span class="text-amber-400 font-bold block">3. In GK-1 Zone</span>
+                        <span class="text-slate-400 text-[10px]">Active</span>
+                      </div>
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-4">
+                        <span class="text-slate-400 font-bold block">4. Doorstep</span>
+                        <span class="text-slate-400 text-[10px]">Target 16:22</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right 5 cols: 3. PROOF TRACK (Care Delivery & Verification Dossier) -->
+              <div class="xl:col-span-5 space-y-6">
+
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+                  <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center space-x-2.5">
+                      <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-black text-lg shadow-xs">
+                        <i class="fa-solid fa-shield-halved"></i>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Proof Track • Visit & Care Dossier</div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900" id="ops-proof-senior-title">Senior: Ramesh Sharma</h3>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 flex items-center space-x-1" id="ops-proof-status-pill">
+                      <i class="fa-solid fa-check"></i>
+                      <span>Verified Fix</span>
+                    </span>
+                  </div>
+
+                  <!-- Scheduled Date & Time Slot Ribbon (From Operator Assignment) -->
+                  <div class="p-2.5 rounded-xl bg-indigo-50/80 border border-indigo-200 text-xs flex items-center justify-between text-indigo-950 font-bold">
+                    <span class="flex items-center space-x-1.5">
+                      <i class="fa-regular fa-calendar-check text-indigo-600"></i>
+                      <span>Scheduled Visit Slot:</span>
+                    </span>
+                    <span id="ops-proof-scheduled-slot" class="font-extrabold text-indigo-800">30 Oct 2026 • 02:00 PM - 04:00 PM</span>
+                  </div>
+
+                  <!-- Action: Record / Submit Live On-Site Visit Proof Button -->
+                  <button type="button" onclick="openOpsSubmitVisitProofModal()"
+                    class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-black text-xs shadow-md transition-all flex items-center justify-center space-x-2 active:scale-[0.99] cursor-pointer">
+                    <i class="fa-solid fa-clipboard-check text-sm"></i>
+                    <span>Record / Submit Live On-Site Visit Proof</span>
+                  </button>
+
+                  <!-- Proof 1: Satellite Geofence GPS Fix -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-location-crosshairs text-teal-600"></i>
+                        <span>1. Doorstep GPS & Geofence Check-in</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800" id="ops-proof-geofence-dist">8.4m from Doorstep</span>
+                    </div>
+                    <div class="text-[11px] text-slate-600">
+                      Satellite GNSS lock confirmed within senior residence boundary: <strong class="text-slate-900" id="ops-proof-address">B-42, GK-1, New Delhi</strong>.
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-1 font-mono flex items-center justify-between">
+                      <span id="ops-proof-gps-time">Fix Timestamp: Today, 16:22:14 IST</span>
+                      <span id="ops-proof-hash">Hash: 0x89e2...c419</span>
+                    </div>
+                  </div>
+
+                  <!-- Proof 2: On-Site Bluetooth Biometric Vitals & Clinical Checkup -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-heart-pulse text-rose-500"></i>
+                        <span>2. Bedside Vitals & Clinical Checkups</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-100 text-blue-800">Direct Sensor Sync</span>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 text-center mb-2.5">
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">Blood Press.</span>
+                        <span class="text-xs font-black text-slate-800" id="ops-proof-bp">136/88</span>
+                      </div>
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">Pulse</span>
+                        <span class="text-xs font-black text-emerald-700" id="ops-proof-hr">82 bpm</span>
+                      </div>
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">SpO2</span>
+                        <span class="text-xs font-black text-teal-700" id="ops-proof-spo2">98%</span>
+                      </div>
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">Glucose</span>
+                        <span class="text-xs font-black text-amber-700" id="ops-proof-sugar">142 mg/dL</span>
+                      </div>
+                    </div>
+                    <!-- Checkups checklist -->
+                    <div class="bg-white p-2 rounded-lg border border-slate-200 space-y-1 text-[11px] text-slate-700" id="ops-proof-checkups-list">
+                      <div class="flex items-center space-x-1.5 text-emerald-800 font-semibold">
+                        <i class="fa-solid fa-check-circle text-emerald-600 text-xs"></i>
+                        <span>Physical mobility & fall risk checked (Ambulatory)</span>
+                      </div>
+                      <div class="flex items-center space-x-1.5 text-emerald-800 font-semibold">
+                        <i class="fa-solid fa-check-circle text-emerald-600 text-xs"></i>
+                        <span>7-Day medication refill box reviewed & administered</span>
+                      </div>
+                      <div class="flex items-center space-x-1.5 text-emerald-800 font-semibold">
+                        <i class="fa-solid fa-check-circle text-emerald-600 text-xs"></i>
+                        <span>Hydration & oral electrolyte therapy completed</span>
+                      </div>
+                    </div>
+                    <div class="text-[10px] text-slate-500 mt-1.5 flex items-center justify-between">
+                      <span id="ops-proof-device">Device: OMRON-BLE-9921 / AccuChek</span>
+                      <span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check text-[9px] mr-1"></i>Calibrated</span>
+                    </div>
+                  </div>
+
+                  <!-- Proof 3: Verified Bedside Photo Proof with Elder ("Pic with Elder") -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-camera text-indigo-600"></i>
+                        <span>3. Bedside Photo Proof (On-Site Verification)</span>
+                      </span>
+                      <button type="button" onclick="document.getElementById('ops-direct-photo-input').click()"
+                        class="text-[10px] font-bold text-teal-700 hover:text-teal-900 bg-teal-50 px-2 py-0.5 rounded border border-teal-200 flex items-center space-x-1 cursor-pointer">
+                        <i class="fa-solid fa-upload text-[9px]"></i>
+                        <span>Upload Pic</span>
+                      </button>
+                      <input type="file" id="ops-direct-photo-input" accept="image/*" class="hidden" onchange="handleDirectPhotoUpload(event)">
+                    </div>
+
+                    <!-- Photo Preview Container with Security Watermark Overlay -->
+                    <div class="relative w-full h-44 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-inner group">
+                      <img id="ops-proof-visit-photo-img" src="senior-nurse-photo.png?v=2" alt="Bedside Visit Verification Photo" class="w-full h-full object-cover">
+                      
+                      <!-- Geotag Watermark Overlay -->
+                      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex flex-col justify-between p-2.5 text-white pointer-events-none">
+                        <div class="flex items-center justify-between">
+                          <span class="px-2 py-0.5 rounded bg-emerald-600/90 backdrop-blur-md text-[9px] font-black uppercase tracking-wider flex items-center space-x-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                            <span>PHYSICAL ON-SITE PROOF</span>
+                          </span>
+                          <span class="text-[9px] font-mono bg-black/60 px-1.5 py-0.5 rounded text-slate-200" id="ops-proof-photo-watermark-time">30-OCT-2026 16:22 IST</span>
+                        </div>
+                        <div>
+                          <div class="text-xs font-black tracking-tight" id="ops-proof-photo-watermark-senior">Elder: Ramesh Sharma • B-42 GK-1</div>
+                          <div class="text-[10px] text-slate-300 font-mono mt-0.5" id="ops-proof-photo-watermark-gps">GPS: 28.5355° N, 77.2410° E (±2.8m Accuracy)</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Proof 4: Clinical Visit Summary -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-file-lines text-teal-600"></i>
+                        <span>4. Clinical Visit Summary & Observations</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800">Visit Completed</span>
+                    </div>
+                    <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs text-slate-700 leading-relaxed font-medium" id="ops-proof-visit-summary">
+                      "Visited Ramesh Sharma ji for scheduled afternoon health check-in. Elder reported morning dizziness. Administered oral electrolyte therapy and assisted with evening prescribed medications. All vital signs checked and verified within safe limits. Reviewed medicine organizer for the next 7 days. Senior is comfortable and resting. Family notified via CareConnect portal."
+                    </div>
+                    <div class="text-[10px] text-slate-500 font-bold mt-1 text-right" id="ops-proof-coordinator-sign">
+                      — Recorded by Sister Kavita Verma, RN
+                    </div>
+                  </div>
+
+                  <!-- Proof 5: Senior / Caregiver 4-Digit Handshake OTP -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-key text-amber-500"></i>
+                        <span>5. Senior Handshake Token & OTP</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800">Identity Confirmed</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200">
+                      <div class="text-xs text-slate-600">
+                        <span class="text-[10px] font-bold text-slate-400 block uppercase">4-Digit Security Handshake</span>
+                        <span class="font-extrabold text-slate-900" id="ops-proof-senior-otp-name">Ramesh Sharma (Senior)</span>
+                      </div>
+                      <div class="flex items-center space-x-1 font-mono text-sm font-black text-teal-800" id="ops-proof-otp-digits">
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center font-black">7</span>
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center font-black">1</span>
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center font-black">9</span>
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center font-black">4</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Proof 6: Resolution Certificate Action -->
+                  <div class="p-3.5 bg-emerald-50/70 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <div>
+                      <div class="text-xs font-black text-emerald-900" id="ops-proof-outcome-badge">Stabilized • Hospitalization Averted</div>
+                      <div class="text-[10px] text-emerald-700 font-medium">Estimated emergency triage cost saved: ₹45,000</div>
+                    </div>
+                    <button type="button" onclick="openOpsProofCertificateModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer">
+                      <i class="fa-solid fa-file-shield text-xs"></i>
+                      <span>View Certificate</span>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================================================================= -->
+          <!-- TAB 8: PROFILE & ACCOUNT SETTINGS (EXACT DESIGN SPEC)                     -->
+          <!-- ========================================================================= -->
+          <div id="ops-subview-profile" class="ops-subview hidden space-y-6">
+
+            <!-- Sub-Tabs Navigation for Settings View -->
+            <div class="flex items-center space-x-2 border-b border-slate-200 overflow-x-auto pb-1 text-xs font-bold">
+              <button onclick="switchOpsProfileTab('profile')" id="btn-ops-ptab-profile" class="ops-ptab-btn px-4 py-2 border-b-2 border-teal-600 text-teal-800">Profile</button>
+              <button onclick="switchOpsProfileTab('settings')" id="btn-ops-ptab-settings" class="ops-ptab-btn px-4 py-2 text-slate-500 hover:text-slate-800">Account Settings</button>
+              <button onclick="switchOpsProfileTab('notifications')" id="btn-ops-ptab-notifications" class="ops-ptab-btn px-4 py-2 text-slate-500 hover:text-slate-800">Notifications</button>
+              <button onclick="switchOpsProfileTab('help')" id="btn-ops-ptab-help" class="ops-ptab-btn px-4 py-2 text-slate-500 hover:text-slate-800">Help & Support</button>
+            </div>
+
+            <!-- Profile Details Card (Design Matched) -->
+            <div id="ops-pane-profile" class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm max-w-2xl">
+              <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6 pb-6 border-b border-slate-100">
+                <div class="flex flex-col items-center">
+                  <div class="w-24 h-24 rounded-full bg-teal-700 text-white text-2xl font-black flex items-center justify-center ring-4 ring-teal-500/20 shadow-md">OM</div>
+                  <button type="button" onclick="showToast('Photo upload simulated successfully.', 'info')"
+                    class="mt-3 text-xs font-bold text-teal-600 hover:text-teal-800 transition-colors">
+                    Change Photo
+                  </button>
+                </div>
+
+                <div class="flex-1 w-full space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Full Name</label>
+                    <input type="text" value="Operations Manager" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-50">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Email</label>
+                    <input type="email" value="om@careconnect.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-50">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Phone Number</label>
+                    <input type="text" value="+91 98765 43210" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-50">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Role</label>
+                    <input type="text" value="Operations Manager" readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-100 text-slate-500 cursor-not-allowed">
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end">
+                <button type="button" onclick="showToast('Profile settings saved successfully!', 'success')"
+                  class="px-5 py-2.5 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white text-xs font-extrabold shadow-md transition-all">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+
+            <!-- Account Settings Card (Design Matched) -->
+            <div id="ops-pane-settings" class="hidden bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm max-w-2xl space-y-5">
+              <h3 class="font-extrabold text-base text-slate-900 border-b border-slate-100 pb-3">Account Preferences</h3>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Language</label>
+                <select id="ops-account-lang-select" onchange="setAppLanguage(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-50 focus:bg-white focus:outline-none">
+                  <option value="en" selected>English</option>
+                  <option value="hi">हिन्दी (Hindi)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Time Zone</label>
+                <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-50 focus:bg-white focus:outline-none">
+                  <option selected>(UTC+05:30) India Standard Time</option>
+                  <option>(UTC+00:00) UTC Universal</option>
+                  <option>(UTC-05:00) Eastern Time (US)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Date Format</label>
+                <input type="text" value="DD MMM YYYY (e.g., 28 Oct 2026)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold bg-slate-50">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Theme</label>
+                <div class="inline-flex items-center space-x-2 px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-800">
+                  <i class="fa-regular fa-sun text-amber-500 text-sm"></i>
+                  <span>Light</span>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button type="button" onclick="showToast('Preferences updated successfully!', 'success')"
+                  class="px-5 py-2.5 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white text-xs font-extrabold shadow-md transition-all">
+                  Update Preferences
+                </button>
+              </div>
+            </div>
+
+          </div>
+          <!-- ========================================================================= -->
+          <!-- TAB: LIVE TRANSIT & PROOF TRACK                                          -->
+          <!-- ========================================================================= -->
+          <div id="ops-subview-tracking" class="ops-subview hidden space-y-6">
+
+            <!-- Top Header & Live Dispatch Status Ribbon -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-rose-100 text-rose-700 border border-rose-200 flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                    <span>LIVE SATELLITE DISPATCH</span>
+                  </span>
+                  <span class="text-xs text-slate-400 font-medium">Pan-India Rapid Transit Fleet • Mission Control</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0e294b] tracking-tight mt-1.5">Care Coordinator Transit & Proof Track</h1>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Real-time transport telematics, GPS transit corridor, and cryptographic care delivery proof.</p>
+              </div>
+
+              <!-- Dispatch Simulation & Action Controls -->
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="stepOpsTransitSimulation()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 shadow-xs flex items-center space-x-1.5 transition-all">
+                  <i class="fa-solid fa-forward-step text-teal-600"></i>
+                  <span>Step Transit Forward</span>
+                </button>
+                <button type="button" onclick="toggleOpsTransitAutoPlay()" id="ops-transit-autoplay-btn" class="px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white text-xs font-extrabold shadow-sm flex items-center space-x-1.5 transition-all">
+                  <i class="fa-solid fa-play" id="ops-transit-play-icon"></i>
+                  <span id="ops-transit-play-text">Auto-Simulate Transit</span>
+                </button>
+                <button type="button" onclick="openOpsProofCertificateModal()" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-extrabold shadow-xs flex items-center space-x-1.5 transition-all">
+                  <i class="fa-solid fa-certificate text-emerald-600"></i>
+                  <span>View Proof Certificate</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Dispatches Selector Banner -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center space-x-2">
+                  <i class="fa-solid fa-satellite-dish text-teal-600"></i>
+                  <span>Active Dispatches & Coordinators (Click to Switch Senior)</span>
+                </span>
+                <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full" id="ops-tracking-count-pill">3 Dispatches Active</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="ops-dispatch-selector-container">
+                <!-- Dynamically rendered via renderOpsDispatchPills() -->
+              </div>
+            </div>
+
+            <!-- Main Split: Left Column (Vo Kese Gya + Location Track) & Right Column (Proof Track Dossier) -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+              <!-- Left 7 cols: 1. VO KESE GYA SENIOR TAK (Transit Mode) & 2. LOCATION TRACK (Live Route Map) -->
+              <div class="xl:col-span-7 space-y-6">
+
+                <!-- 1. TRANSIT MODE CARD ("Vo Kese Gya Senior Tak") -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+                  <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+                    <div class="flex items-center space-x-2.5">
+                      <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-black text-lg shadow-xs" id="ops-transit-vehicle-icon-box">
+                        <i class="fa-solid fa-motorcycle" id="ops-transit-vehicle-icon"></i>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Transport & Transit Mode (Vo Kese Gya)</div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900" id="ops-transit-vehicle-title">Rapid EV Medical Two-Wheeler (#DL-01-EV-4421)</h3>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-black bg-blue-100 text-blue-800" id="ops-transit-status-pill">
+                      In Transit • ETA 4m 30s
+                    </span>
+                  </div>
+
+                  <!-- Telematics Metrics 4-Box Grid -->
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Transit Speed</span>
+                        <i class="fa-solid fa-gauge-high text-teal-600"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ops-transit-speed">38 km/h</div>
+                      <div class="text-[10px] text-emerald-600 font-bold">Signal Priority Active</div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Battery / Charge</span>
+                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ops-transit-battery">84% LFP</div>
+                      <div class="text-[10px] text-slate-500 font-medium">68 km range reserve</div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Distance Left</span>
+                        <i class="fa-solid fa-arrows-left-right text-indigo-500"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ops-transit-distance">1.4 km</div>
+                      <div class="text-[10px] text-slate-500 font-medium">of 4.2 km corridor</div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div class="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+                        <span>Live ETA</span>
+                        <i class="fa-solid fa-stopwatch text-rose-500"></i>
+                      </div>
+                      <div class="text-base sm:text-lg font-black text-rose-600 mt-0.5 font-mono" id="ops-transit-eta">04:18</div>
+                      <div class="text-[10px] text-rose-700 font-bold animate-pulse">Approaching Doorstep</div>
+                    </div>
+                  </div>
+
+                  <!-- Transit Corridor & Stowed Medical Equipment -->
+                  <div class="bg-gradient-to-r from-teal-50/70 via-slate-50 to-blue-50/70 p-3.5 rounded-xl border border-slate-200">
+                    <div class="text-xs font-bold text-slate-800 mb-2 flex items-center justify-between">
+                      <span class="flex items-center space-x-2">
+                        <i class="fa-solid fa-kit-medical text-teal-600"></i>
+                        <span>Medical Equipment Stowed on Transit Vehicle:</span>
+                      </span>
+                      <span class="text-[10px] text-slate-400 font-mono">Payload Checked: 16:08</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-700">
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-heart-pulse text-rose-500"></i><span>12-Lead Bluetooth ECG Device</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-lungs text-blue-500"></i><span>2L Emergency O2 Cylinder + Mask</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-droplet text-amber-500"></i><span>Point-of-Care Glucometer & Troponin</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-pills text-purple-500"></i><span>Cold-Chain Emergency Meds Pack</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-tablet-screen-button text-teal-600"></i><span>Biometric Satellite Tablet & Bodycam</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. LOCATION TRACK CARD (Live Route Map & GPS Corridor) -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+                  <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+                    <div class="flex items-center space-x-2.5">
+                      <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-black text-lg shadow-xs">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Location Track • Live GPS Corridor</div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900" id="ops-route-title">Saket Triage Hub ➔ B-42 Greater Kailash 1</h3>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" id="ops-gps-coords">
+                        28.5355° N, 77.2410° E
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Stylized Live Vector Route Track Canvas / Map Container -->
+                  <div class="relative w-full h-72 sm:h-80 rounded-2xl bg-gradient-to-tr from-slate-900 via-[#0d1b2a] to-[#1b263b] p-4 text-white overflow-hidden shadow-inner border border-slate-700 flex flex-col justify-between">
+                    
+                    <!-- HUD Top Bar -->
+                    <div class="flex items-center justify-between z-10 text-xs">
+                      <div class="flex items-center space-x-2 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-600 text-slate-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="font-bold">GPS Accuracy: ±3.2m (Dual-band RTK Lock)</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <button type="button" onclick="triggerOpsSirenPing()" class="px-2.5 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-[11px] transition-all shadow-sm flex items-center space-x-1">
+                          <i class="fa-solid fa-bullhorn text-xs"></i>
+                          <span>Signal Priority</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Live Graphical SVG Corridor & Moving Vehicle Marker -->
+                    <div class="relative flex-1 my-3 flex items-center justify-center">
+                      <svg class="w-full h-full max-h-44" viewBox="0 0 700 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Route Polyline (Roadway Corridor) -->
+                        <path d="M 50 140 C 180 140, 240 40, 380 40 C 500 40, 560 130, 650 130" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" opacity="0.3"/>
+                        <path id="ops-svg-route-path" d="M 50 140 C 180 140, 240 40, 380 40 C 500 40, 560 130, 650 130" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"/>
+
+                        <!-- Waypoint 1: Triage Hub -->
+                        <g transform="translate(50, 140)">
+                          <circle r="14" fill="#0284c7" fill-opacity="0.2"/>
+                          <circle r="7" fill="#0284c7"/>
+                          <text x="0" y="26" fill="#93c5fd" font-size="11" font-weight="bold" text-anchor="middle">Saket Hub</text>
+                        </g>
+
+                        <!-- Waypoint 2: Chirag Delhi -->
+                        <g transform="translate(260, 75)">
+                          <circle r="10" fill="#10b981" fill-opacity="0.2"/>
+                          <circle r="5" fill="#10b981"/>
+                          <text x="0" y="-14" fill="#6ee7b7" font-size="10" font-weight="bold" text-anchor="middle">Chirag Flyover</text>
+                        </g>
+
+                        <!-- Waypoint 3: Geofence Gate -->
+                        <g transform="translate(480, 55)">
+                          <circle r="10" fill="#f59e0b" fill-opacity="0.2"/>
+                          <circle r="5" fill="#f59e0b"/>
+                          <text x="0" y="-14" fill="#fcd34d" font-size="10" font-weight="bold" text-anchor="middle">GK-1 Geofence</text>
+                        </g>
+
+                        <!-- Waypoint 4: Senior Residence -->
+                        <g transform="translate(650, 130)">
+                          <circle r="16" fill="#f43f5e" fill-opacity="0.25"/>
+                          <circle r="8" fill="#f43f5e"/>
+                          <text x="0" y="26" fill="#fda4af" font-size="11" font-weight="bold" text-anchor="middle">Senior Home</text>
+                        </g>
+
+                        <!-- Live Moving Vehicle Group (Position dynamic in JS) -->
+                        <g id="ops-svg-moving-marker" transform="translate(380, 40)" class="transition-all duration-700 ease-out">
+                          <circle r="18" fill="#10b981" fill-opacity="0.3" class="animate-ping"/>
+                          <circle r="14" fill="#00a896" stroke="#ffffff" stroke-width="2.5"/>
+                          <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="black" text-anchor="middle" id="ops-svg-vehicle-emoji">🛵</text>
+                        </g>
+                      </svg>
+                    </div>
+
+                    <!-- HUD Bottom Milestone Status Bar -->
+                    <div class="grid grid-cols-4 gap-2 z-10 text-[11px] font-semibold">
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-1">
+                        <span class="text-emerald-400 font-bold block">1. Hub Departed</span>
+                        <span class="text-slate-400 text-[10px]">16:10 IST</span>
+                      </div>
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-2">
+                        <span class="text-emerald-400 font-bold block">2. Chirag Pass</span>
+                        <span class="text-slate-400 text-[10px]">16:14 IST</span>
+                      </div>
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-3">
+                        <span class="text-amber-400 font-bold block">3. In GK-1 Zone</span>
+                        <span class="text-slate-400 text-[10px]">Active</span>
+                      </div>
+                      <div class="bg-slate-800/80 px-2 py-1.5 rounded-lg border border-slate-700 text-center" id="ops-wp-4">
+                        <span class="text-slate-400 font-bold block">4. Doorstep</span>
+                        <span class="text-slate-400 text-[10px]">Target 16:22</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right 5 cols: 3. PROOF TRACK (Care Delivery & Verification Dossier) -->
+              <div class="xl:col-span-5 space-y-6">
+
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+                  <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                    <div class="flex items-center space-x-2.5">
+                      <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-black text-lg shadow-xs">
+                        <i class="fa-solid fa-shield-halved"></i>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Proof Track • Visit & Care Dossier</div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900" id="ops-proof-senior-title">Senior: Ramesh Sharma</h3>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 flex items-center space-x-1" id="ops-proof-status-pill">
+                      <i class="fa-solid fa-check"></i>
+                      <span>Verified Fix</span>
+                    </span>
+                  </div>
+
+                  <!-- Proof 1: Satellite Geofence GPS Fix -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-location-crosshairs text-teal-600"></i>
+                        <span>1. Satellite GPS Arrival Geofence</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800" id="ops-proof-geofence-dist">8.4m from Doorstep</span>
+                    </div>
+                    <div class="text-[11px] text-slate-600">
+                      Satellite GNSS lock confirmed within senior residence boundary: <strong class="text-slate-900" id="ops-proof-address">B-42, GK-1, New Delhi</strong>.
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-1 font-mono flex items-center justify-between">
+                      <span id="ops-proof-gps-time">Fix Timestamp: Today, 16:22:14 IST</span>
+                      <span id="ops-proof-hash">Hash: 0x89e2...c419</span>
+                    </div>
+                  </div>
+
+                  <!-- Proof 2: On-Site Bluetooth Biometric Vitals Sync -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-heart-pulse text-rose-500"></i>
+                        <span>2. Bedside Bluetooth Vitals Stream</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-100 text-blue-800">Direct Sensor Sync</span>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 text-center">
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">Blood Press.</span>
+                        <span class="text-xs font-black text-slate-800" id="ops-proof-bp">136/88</span>
+                      </div>
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">Pulse</span>
+                        <span class="text-xs font-black text-emerald-700" id="ops-proof-hr">82 bpm</span>
+                      </div>
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">SpO2</span>
+                        <span class="text-xs font-black text-teal-700" id="ops-proof-spo2">98%</span>
+                      </div>
+                      <div class="bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold block uppercase">Glucose</span>
+                        <span class="text-xs font-black text-amber-700" id="ops-proof-sugar">142 mg/dL</span>
+                      </div>
+                    </div>
+                    <div class="text-[10px] text-slate-500 mt-1.5 flex items-center justify-between">
+                      <span id="ops-proof-device">Device: OMRON-BLE-9921 / AccuChek</span>
+                      <span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check text-[9px] mr-1"></i>Calibrated</span>
+                    </div>
+                  </div>
+
+                  <!-- Proof 3: Senior / Caregiver 4-Digit Handshake OTP -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-key text-amber-500"></i>
+                        <span>3. Senior Handshake Token & OTP</span>
+                      </span>
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800">Identity Confirmed</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200">
+                      <div class="text-xs text-slate-600">
+                        <span class="text-[10px] font-bold text-slate-400 block uppercase">4-Digit Security Handshake</span>
+                        <span class="font-extrabold text-slate-900" id="ops-proof-senior-otp-name">Ramesh Sharma (Senior)</span>
+                      </div>
+                      <div class="flex items-center space-x-1 font-mono text-sm font-black text-teal-800" id="ops-proof-otp-digits">
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center">7</span>
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center">1</span>
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center">9</span>
+                        <span class="w-6 h-7 bg-teal-50 border border-teal-200 rounded flex items-center justify-center">4</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Proof 4: Clinical Audio Debrief & Coordinator Voice Note -->
+                  <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-microphone-lines text-teal-600"></i>
+                        <span>4. Coordinator Clinical Audio Debrief</span>
+                      </span>
+                      <button type="button" onclick="playOpsAudioDebrief()" class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-[10px] flex items-center space-x-1 shadow-2xs">
+                        <i class="fa-solid fa-play text-[9px]" id="ops-audio-play-icon"></i>
+                        <span id="ops-audio-play-label">Play Voice Note</span>
+                      </button>
+                    </div>
+                    <!-- Audio Wave Visualizer -->
+                    <div class="h-6 bg-white rounded-lg border border-slate-200 px-3 flex items-center justify-center space-x-1 mb-2">
+                      <span class="w-1 bg-teal-500 rounded-full h-2 transition-all duration-300" id="ops-wave-1"></span>
+                      <span class="w-1 bg-teal-600 rounded-full h-4 transition-all duration-300" id="ops-wave-2"></span>
+                      <span class="w-1 bg-teal-500 rounded-full h-3 transition-all duration-300" id="ops-wave-3"></span>
+                      <span class="w-1 bg-teal-400 rounded-full h-5 transition-all duration-300" id="ops-wave-4"></span>
+                      <span class="w-1 bg-teal-600 rounded-full h-2 transition-all duration-300" id="ops-wave-5"></span>
+                      <span class="w-1 bg-teal-500 rounded-full h-4 transition-all duration-300" id="ops-wave-6"></span>
+                      <span class="w-1 bg-teal-400 rounded-full h-3 transition-all duration-300" id="ops-wave-7"></span>
+                    </div>
+                    <p class="text-[11px] text-slate-600 italic bg-white p-2.5 rounded-lg border border-slate-200 leading-relaxed" id="ops-proof-audio-transcript">
+                      "Senior had mild postural dizziness after skipping morning fluids. Administered oral electrolyte therapy and monitored vitals for 25 mins. Vitals restored to safe baseline. Family alerted via app. Hospitalization avoided."
+                    </p>
+                    <div class="text-[10px] text-slate-500 font-bold mt-1 text-right" id="ops-proof-coordinator-sign">
+                      — Recorded by Sister Kavita Verma, RN
+                    </div>
+                  </div>
+
+                  <!-- Proof 5: Resolution Certificate Action -->
+                  <div class="p-3.5 bg-emerald-50/70 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <div>
+                      <div class="text-xs font-black text-emerald-900" id="ops-proof-outcome-badge">Stabilized • Hospitalization Averted</div>
+                      <div class="text-[10px] text-emerald-700 font-medium">Estimated emergency triage cost saved: ₹45,000</div>
+                    </div>
+                    <button type="button" onclick="openOpsProofCertificateModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm transition-all flex items-center space-x-1.5">
+                      <i class="fa-solid fa-file-shield text-xs"></i>
+                      <span>View Certificate</span>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
 
         </main>
       </div>
@@ -4650,12 +5585,41 @@
           <div>
             <label class="block font-bold text-slate-700 mb-1.5">Select Care Coordinator</label>
             <select id="ops-assign-coordinator-select" class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none">
+              <option value="Sister Kavita, RN">Sister Kavita, RN (Clinical Specialist &bull; Active)</option>
+              <option value="Brother Amit">Brother Amit (Trauma & Mobility &bull; Active)</option>
+              <option value="Rajesh Kumar">Rajesh Kumar (Field Care Buddy &bull; Active)</option>
               <option value="Ananya">Ananya (Clinical Specialist &bull; 3 Pending)</option>
               <option value="Rishabh">Rishabh (Care Nurse &bull; 2 Pending)</option>
               <option value="Amrita">Amrita (Tele-care Specialist &bull; 3 Pending)</option>
               <option value="Karan">Karan (Field Coordinator &bull; 2 Pending)</option>
               <option value="Megha" disabled>Megha (On Leave)</option>
             </select>
+          </div>
+
+          <!-- Preferable Visit Date & Time Slot (User Specification) -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1.5 flex items-center space-x-1">
+                <i class="fa-regular fa-calendar text-teal-600"></i>
+                <span>Preferable Visit Date</span>
+              </label>
+              <input type="date" id="ops-assign-date" value="2026-10-31"
+                class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl font-medium text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1.5 flex items-center space-x-1">
+                <i class="fa-regular fa-clock text-teal-600"></i>
+                <span>Preferable Time Slot</span>
+              </label>
+              <select id="ops-assign-timeslot"
+                class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl font-medium text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">
+                <option value="09:00 AM - 11:00 AM">Morning: 09:00 AM - 11:00 AM</option>
+                <option value="11:00 AM - 01:00 PM">Midday: 11:00 AM - 01:00 PM</option>
+                <option value="02:00 PM - 04:00 PM" selected>Afternoon: 02:00 PM - 04:00 PM</option>
+                <option value="04:00 PM - 06:00 PM">Evening: 04:00 PM - 06:00 PM</option>
+                <option value="Immediate (<30m)">Urgent / Immediate (&lt;30m)</option>
+              </select>
+            </div>
           </div>
 
           <!-- Priority -->
@@ -4903,12 +5867,17 @@
             Close
           </button>
           <div class="flex items-center space-x-2">
-            <button type="button" onclick="triggerSimulatedCall('Sharma Ji', '+91 98765 43210'); closeOpsAlertDetail()" class="px-3.5 py-2 rounded-xl bg-teal-50 text-teal-700 hover:bg-teal-100 font-bold text-xs flex items-center space-x-1.5">
+            <button type="button" onclick="triggerSimulatedCall('Care Coordinator Sister Kavita', '+91 98765 43210'); closeOpsAlertDetail()" class="px-3.5 py-2 rounded-xl bg-teal-50 text-teal-700 hover:bg-teal-100 font-bold text-xs flex items-center space-x-1.5">
               <i class="fa-solid fa-phone"></i>
-              <span>Call Senior</span>
+              <span>Call Care Coordinator</span>
             </button>
-            <button type="button" onclick="showToast('Nurse dispatched successfully for Sharma Ji', 'success'); closeOpsAlertDetail()" class="px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-extrabold text-xs shadow-md">
-              Dispatch Nurse
+            <button type="button" onclick="const seniorName = document.getElementById('ops-detail-senior')?.textContent || 'Ramesh Sharma'; closeOpsAlertDetail(); triggerOpsDispatchNurse(); openOpsTrackingForSenior(seniorName);" class="px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-extrabold text-xs shadow-md flex items-center space-x-1.5">
+              <i class="fa-solid fa-truck-medical"></i>
+              <span>Dispatch & Track</span>
+            </button>
+            <button type="button" onclick="const seniorName = document.getElementById('ops-detail-senior')?.textContent || 'Ramesh Sharma'; closeOpsAlertDetail(); openOpsTrackingForSenior(seniorName);" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center space-x-1.5 transition-all">
+              <i class="fa-solid fa-route text-teal-600"></i>
+              <span>Track Transit</span>
             </button>
           </div>
         </div>
@@ -4916,6 +5885,210 @@
     </div>
 
     <!-- 5. HELP & SUPPORT MODAL -->
+    
+    <!-- 6. PROOF DOSSIER & RESOLUTION CERTIFICATE MODAL -->
+    
+    <!-- 7. RECORD & SUBMIT ON-SITE VISIT PROOF MODAL (USER SPECIFICATION) -->
+    <div id="modal-ops-submit-visit-proof" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 animate-scaleUp">
+        <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-black text-base shadow-xs">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </span>
+            <div>
+              <h3 class="font-extrabold text-base text-slate-900">Record On-Site Visit Proof & Evidence</h3>
+              <p class="text-[11px] text-slate-400 font-semibold">Live doorstep check-in, vitals, photo proof & clinical summary</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeOpsSubmitVisitProofModal()" class="text-slate-400 hover:text-slate-600 p-1">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <form id="ops-submit-visit-proof-form" onsubmit="submitOpsVisitProof(event)" class="py-4 space-y-4 text-xs">
+          <!-- Senior Info & Scheduled Slot Header -->
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-slate-400 uppercase font-black">Elder & Address</div>
+              <div class="font-black text-sm text-slate-900" id="modal-proof-senior-name">Ramesh Sharma</div>
+              <div class="text-[11px] text-slate-500" id="modal-proof-address">B-42, Greater Kailash 1, New Delhi</div>
+            </div>
+            <div class="text-right">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-indigo-100 text-indigo-800" id="modal-proof-slot-badge">
+                Slot: 02:00 PM - 04:00 PM
+              </span>
+              <div class="text-[10px] text-slate-400 mt-1" id="modal-proof-coord-name">Coord: Sister Kavita, RN</div>
+            </div>
+          </div>
+
+          <!-- Step 1: Live Doorstep GPS Location -->
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+                <i class="fa-solid fa-location-crosshairs text-teal-600"></i>
+                <span>1. Live Doorstep GPS Location Stamp</span>
+              </span>
+              <button type="button" onclick="fetchLiveDoorstepLocation()"
+                class="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[10px] font-bold shadow-2xs flex items-center space-x-1 cursor-pointer">
+                <i class="fa-solid fa-crosshairs text-[9px]"></i>
+                <span>Fetch Live GPS Now</span>
+              </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500">Live Latitude</label>
+                <input type="text" id="modal-proof-lat" value="28.5355" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-mono text-xs">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500">Live Longitude</label>
+                <input type="text" id="modal-proof-lng" value="77.2410" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-mono text-xs">
+              </div>
+            </div>
+            <div class="text-[10px] text-emerald-700 font-bold flex items-center justify-between" id="modal-proof-gps-status">
+              <span><i class="fa-solid fa-circle-check text-[9px] mr-1"></i>Geofence verified within 4.8m of doorstep</span>
+              <span class="font-mono text-slate-400">RTK Lock: ±2.8m</span>
+            </div>
+          </div>
+
+          <!-- Step 2: Elder Vitals & Clinical Checkup -->
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <div class="font-bold text-slate-800 flex items-center space-x-1.5">
+              <i class="fa-solid fa-heart-pulse text-rose-500"></i>
+              <span>2. Elder Vitals & Bedside Measurements</span>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500">BP (mmHg)</label>
+                <input type="text" id="modal-proof-bp-input" value="136/88" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500">Pulse (bpm)</label>
+                <input type="number" id="modal-proof-hr-input" value="82" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500">SpO2 (%)</label>
+                <input type="number" id="modal-proof-spo2-input" value="98" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500">Sugar (mg/dL)</label>
+                <input type="number" id="modal-proof-sugar-input" value="142" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-center">
+              </div>
+            </div>
+            <div class="space-y-1 pt-1 text-[11px] text-slate-700">
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input type="checkbox" id="modal-proof-chk-mobility" checked class="rounded text-teal-600 accent-teal-600">
+                <span>Physical mobility & fall risk checked (Elder is alert & ambulatory)</span>
+              </label>
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input type="checkbox" id="modal-proof-chk-meds" checked class="rounded text-teal-600 accent-teal-600">
+                <span>7-Day medication organizer verified & morning dose confirmed</span>
+              </label>
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input type="checkbox" id="modal-proof-chk-hydration" checked class="rounded text-teal-600 accent-teal-600">
+                <span>Oral hydration & nutrition therapy completed</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 3: Bedside Photo Proof with Elder ("Upload Pic") -->
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+                <i class="fa-solid fa-camera text-indigo-600"></i>
+                <span>3. Upload Photo with Elder (Strong Proof Evidence)</span>
+              </span>
+              <label for="modal-proof-photo-file" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-[10px] font-bold shadow-2xs flex items-center space-x-1 cursor-pointer">
+                <i class="fa-solid fa-folder-open text-teal-600"></i>
+                <span>Choose Image</span>
+              </label>
+              <input type="file" id="modal-proof-photo-file" accept="image/*" class="hidden" onchange="previewModalProofPhoto(event)">
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-24 h-20 rounded-lg bg-slate-900 border border-slate-300 overflow-hidden flex-shrink-0 relative">
+                <img id="modal-proof-photo-preview" src="senior-nurse-photo.png?v=2" alt="Preview" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 inset-x-0 bg-black/70 text-[8px] text-white text-center font-mono py-0.5">GEO-TAGGED</div>
+              </div>
+              <div class="text-[11px] text-slate-600 flex-1">
+                <div class="font-bold text-slate-900">Bedside Verification Snapshot</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Captures physical presence of coordinator with elder at their residence. Automatic cryptographic timestamp and coordinates stamped.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Visit Summary ("even summarize a visit karega") -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+              <span class="flex items-center space-x-1">
+                <i class="fa-solid fa-file-pen text-teal-600"></i>
+                <span>4. Clinical Visit Summary & Debrief</span>
+              </span>
+              <span class="text-[10px] text-slate-400">Visible to Operator & Family</span>
+            </label>
+            <textarea id="modal-proof-summary-input" rows="3" required
+              class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none leading-relaxed">Visited Ramesh Sharma ji for scheduled afternoon health check-in. Elder reported morning dizziness. Administered oral electrolyte therapy and assisted with evening prescribed medications. All vital signs checked and verified within safe limits. Reviewed medicine organizer for the next 7 days. Senior is comfortable and resting. Family notified via CareConnect portal.</textarea>
+          </div>
+
+          <!-- Step 5: Senior Handshake OTP Token -->
+          <div class="flex items-center justify-between p-2.5 bg-teal-50/70 rounded-xl border border-teal-200">
+            <div>
+              <div class="font-bold text-teal-900">5. Senior Handshake OTP Token</div>
+              <div class="text-[10px] text-teal-700">Elder verifies coordinator visit completion with 4-digit code.</div>
+            </div>
+            <input type="text" id="modal-proof-otp-input" maxlength="4" value="7194"
+              class="w-20 px-2 py-1.5 bg-white border border-teal-300 rounded-lg text-center font-mono font-black text-sm text-teal-900 tracking-widest focus:ring-2 focus:ring-teal-500 focus:outline-none">
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
+            <button type="button" onclick="closeOpsSubmitVisitProofModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-bold text-xs cursor-pointer">
+              Cancel
+            </button>
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-extrabold text-xs shadow-md shadow-teal-500/20 flex items-center space-x-1.5 cursor-pointer">
+              <i class="fa-solid fa-shield-check"></i>
+              <span>Seal & Verify Visit Evidence</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-ops-proof-certificate" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-scaleUp">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div class="flex items-center space-x-3">
+            <img src="careconnect-emblem.png" alt="CareConnect" class="w-9 h-9 object-contain rounded-xl shadow-xs border border-slate-100 p-0.5">
+            <div>
+              <h3 class="font-extrabold text-base text-slate-900">Care Delivery Proof & Resolution Certificate</h3>
+              <p class="text-[11px] text-slate-400 font-semibold">Cryptographically Verified Clinical Intervention Dossier</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeOpsProofCertificateModal()" class="text-slate-400 hover:text-slate-600 p-1">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <div class="py-5 space-y-4 text-xs text-slate-700" id="ops-certificate-content">
+          <!-- Populated dynamically via renderOpsProofCertificate() -->
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <button type="button" onclick="closeOpsProofCertificateModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-bold text-xs">
+            Close
+          </button>
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="exportOpsProofJSON()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center space-x-1.5">
+              <i class="fa-solid fa-code text-xs"></i>
+              <span>Export Audit JSON</span>
+            </button>
+            <button type="button" onclick="window.print()" class="px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-extrabold text-xs shadow-md flex items-center space-x-1.5">
+              <i class="fa-solid fa-print text-xs"></i>
+              <span>Print Certificate</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="modal-ops-help" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">

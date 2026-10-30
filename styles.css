@@ -688,7 +688,7 @@
   gap: 4px;
 }
 
-<<<<<<< HEAD
+
 /* =========================================================================
    PROFILE MANAGEMENT & FAMILY CARE CIRCLE STYLES
    ========================================================================= */
@@ -714,157 +714,43 @@
 
 .profile-field-input:focus {
   outline: none;
+  border-color: #7c3aed;
   background-color: #ffffff;
-  border-color: #00a896;
-  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.15);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
-/* =========================================================================
-   DAILY HEALTH IMPROVEMENT TASKS & RX STYLES
-   ========================================================================= */
-
-.rx-task-card {
-  transition: all 0.22s ease-in-out;
-  border: 1.5px solid #e2e8f0;
+.channel-pill-checkbox:checked + label {
+  background-color: #7c3aed;
+  color: #ffffff;
+  border-color: #7c3aed;
 }
 
-.rx-task-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(14, 41, 75, 0.06);
+.channel-pill-checkbox:checked + label i {
+  color: #ffffff;
 }
-
-.rx-task-card.task-completed {
-  background: #f0fdf4 !important;
-  border-color: #86efac !important;
-}
-
-.rx-task-card.task-completed .task-title-text {
-  text-decoration: line-through;
-  color: #15803d;
-}
-
-.rx-task-checkbox {
-  width: 1.45rem;
-  height: 1.45rem;
-  border-radius: 0.45rem;
-  cursor: pointer;
-  accent-color: #10b981;
-}
-
-.streak-flame {
-  display: inline-block;
-  animation: pulseFlame 1.8s infinite ease-in-out;
-}
-
-@keyframes pulseFlame {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15) rotate(-3deg); }
-}
-
-/* =========================================================================
-   SENIOR DIAGNOSTIC REPORT PRINT STYLES
-   ========================================================================= */
-
-@media print {
-  /* Hide all UI navigation, buttons, background views and overlays */
-  #global-header,
-  #view-login,
-  #view-coordinator,
-  #view-senior,
-  #view-family,
-  #view-operations,
-  #mobile-role-nav,
-  footer,
-  .no-print,
-  #voice-assistant-card,
-  #senior-greeting,
-  #senior-subgreeting,
-  #senior-family-members-list,
-  #modal-call,
-  #modal-dispatch,
-  #modal-resolve,
-  #modal-profile-management,
-  #modal-family-care-circle,
-  button,
-  .rx-task-checkbox {
-    display: none !important;
-  }
-
-=======
 
 /* ========================================================================== */
 /* PRINT STYLES FOR ELEGANT CLINICAL ASSESSMENT SLIP & PDF                    */
 /* ========================================================================== */
 @media print {
->>>>>>> f33f462 (Your changes)
   body {
     background: #ffffff !important;
     color: #0f172a !important;
     font-size: 11pt !important;
-<<<<<<< HEAD
     margin: 0 !important;
     padding: 0 !important;
   }
 
-  /* When modal report sheet is printed */
-  #modal-clinical-report-sheet {
-    display: block !important;
-    position: static !important;
-    background: transparent !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    box-shadow: none !important;
-  }
-
-  #modal-clinical-report-sheet > div {
-    max-width: 100% !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  #clinical-report-sheet-scroll {
-    background: transparent !important;
-    padding: 0 !important;
-    overflow: visible !important;
-  }
-
-  #clinical-report-sheet-content {
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0.5rem !important;
-    margin: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /* Tables and cards print styling */
-  table {
-    border-collapse: collapse !important;
-    width: 100% !important;
-  }
-
-  th, td {
-    border-color: #cbd5e1 !important;
-  }
-
-  .print-page-break {
-    page-break-before: always;
-  }
-
-  .print-avoid-break {
-    page-break-inside: avoid;
-=======
-  }
   body * {
     visibility: hidden !important;
   }
+
+  /* When modal simple assessment slip is printed */
   #modal-simple-assessment,
   #modal-simple-assessment * {
     visibility: visible !important;
   }
+
   #modal-simple-assessment {
     position: absolute !important;
     left: 0 !important;
@@ -875,27 +761,54 @@
     background: transparent !important;
     box-shadow: none !important;
   }
+
   #modal-simple-assessment > div {
     max-width: 100% !important;
     width: 100% !important;
     box-shadow: none !important;
     border: none !important;
   }
+
   #simple-assessment-slip-content,
   #simple-assessment-slip-content * {
     visibility: visible !important;
   }
+
   #simple-assessment-slip-content {
     max-height: none !important;
     overflow: visible !important;
     padding: 0 !important;
   }
+
+  /* When modal clinical report sheet is printed */
+  #modal-clinical-report-sheet,
+  #modal-clinical-report-sheet * {
+    visibility: visible !important;
+  }
+
+  #modal-clinical-report-sheet {
+    display: block !important;
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
+
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+
   /* Hide interactive modal topbar & buttons when printing */
   .no-print,
   #modal-simple-assessment button,
   #modal-simple-assessment .bg-gradient-to-r,
   #modal-simple-assessment .border-t {
     display: none !important;
->>>>>>> f33f462 (Your changes)
   }
 }

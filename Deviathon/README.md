@@ -139,23 +139,58 @@ All four views share reactive state:
 
 ## 🚀 How to Run and Test
 
-* **Option 1 (One-Click Launcher)**: Double-click [run.bat](file:///c:/Users/krish/OneDrive/Desktop/Deviathon/run.bat) in the project folder.
-* **Option 2 (Instant in Browser)**: Double-click [index.html](file:///c:/Users/krish/OneDrive/Desktop/Deviathon/index.html) in your browser.
-* **Option 3 (Python Server)**: Run `python server.py` and open [http://127.0.0.1:5000](http://127.0.0.1:5000).
+* **Option 1 (One-Click Launcher)**: Double-click `run.bat` in the project root.
+* **Option 2 (Python Server)**: Run `python server.py` and open [http://127.0.0.1:5000](http://127.0.0.1:5000).
+* **Option 3 (Direct Browser Access)**: Double-click `index.html` to open directly in Chrome/Edge.
 
 ---
 
-## 📁 Project File Directory
+## 📁 Clean & Structured Project Directory
 
 ```
-c:\Users\krish\OneDrive\Desktop\Deviathon\
-├── index.html               # Main portal with exact role selection landing page & 4 views
-├── app.js                   # State engine, Hindi/English dictionary, audio synthesis & charts
-├── styles.css               # Animations, waveforms, custom scrollbars, styling
-├── server.py                # Python Flask web server & mock REST API backend
-├── run.bat                  # One-click Windows launcher
-├── senior-nurse-photo.png   # Clean, photorealistic photo of senior & nurse (text-free)
-├── leaf-top-right.png       # Botanical corner accent
-├── leaf-bottom-right.png    # Botanical corner accent
-└── README.md                # Full technical & user guide documentation
+Deviathon/
+│
+├── index.html                  # Main Web Application UI (Single Page App with 4 specialized roles)
+├── app.js                      # Core Frontend Logic (Client controller, Bilingual NLP, State, Audio)
+├── styles.css                  # Custom Application Stylesheet & Design System
+│
+├── server.py                   # Local Flask Backend API & Web Server (All 22 endpoints)
+├── nlp_extractor.py            # Bilingual (Hindi/English) Geriatric Clinical NLP Extractor
+├── ml_engine.py                # Random Forest ML Inference Engine (90,000 dataset trained model)
+├── train_risk_model.py         # ML Model Training Script
+├── patient_data_seed.py        # Seed Data for High/Medium/Low Risk Patients & Alerts
+│
+├── run.bat                     # Easy 1-click startup batch script for Windows
+├── README.md                   # Project Documentation
+├── .gitignore                  # Git Ignore configuration
+│
+├── ml_model/                   # Trained ML Models directory
+│   ├── elder_risk_rf_model.pkl # Trained Random Forest Model
+│   └── feature_cols.pkl        # Model Feature Column Names
+│
+├── assets/                     # Cleanly organized media assets
+│   ├── careconnect-logo.png
+│   ├── careconnect-emblem.png
+│   ├── favicon.ico
+│   ├── senior-nurse-clean.png
+│   ├── senior-nurse-photo.png
+│   ├── senior-nurse-photo.jpg
+│   ├── landing-left-visual.png
+│   ├── leaf-bottom-right.png
+│   └── leaf-top-right.png
+│
+├── tests/                      # Automated Verification & Test Suites (23 tests)
+│   ├── test_mandatory_inputs_suite.py
+│   ├── test_separated_badges.py
+│   ├── test_coordinator_flow.py
+│   ├── test_clinical_report_sheet.py
+│   ├── test_clinical_sheet_modal_flow.py
+│   ├── test_coordinator_ml_and_proofs.py
+│   ├── test_reminders_alarm_flow.py
+│   └── ...
+│
+└── screenshots/                # Audit & Verification Screenshots (Archived cleanly)
+    ├── screenshot_all_mandatory_green.png
+    ├── screenshot_age_gender_green_initial.png
+    └── ...
 ```

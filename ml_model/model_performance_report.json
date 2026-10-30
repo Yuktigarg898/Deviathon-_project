@@ -1,0 +1,154 @@
+{
+  "dataset_name": "elderhealth_assessment_dataset_corrected_updated.csv",
+  "total_records": 800,
+  "feature_count": 23,
+  "target_classes": [
+    "High",
+    "Low",
+    "Moderate"
+  ],
+  "models": {
+    "random_forest": {
+      "test_accuracy": 0.875,
+      "macro_f1": 0.843,
+      "cv_accuracy_5fold": 0.8387,
+      "classification_report": {
+        "High": {
+          "precision": 0.6818181818181818,
+          "recall": 0.8333333333333334,
+          "f1-score": 0.75,
+          "support": 18.0
+        },
+        "Low": {
+          "precision": 0.8809523809523809,
+          "recall": 0.8809523809523809,
+          "f1-score": 0.8809523809523809,
+          "support": 42.0
+        },
+        "Moderate": {
+          "precision": 0.9166666666666666,
+          "recall": 0.88,
+          "f1-score": 0.8979591836734694,
+          "support": 100.0
+        },
+        "accuracy": 0.875,
+        "macro avg": {
+          "precision": 0.8264790764790764,
+          "recall": 0.8647619047619047,
+          "f1-score": 0.8429705215419502,
+          "support": 160.0
+        },
+        "weighted avg": {
+          "precision": 0.8808712121212121,
+          "recall": 0.875,
+          "f1-score": 0.8768494897959183,
+          "support": 160.0
+        }
+      }
+    },
+    "logistic_regression": {
+      "test_accuracy": 0.9,
+      "macro_f1": 0.8774,
+      "cv_accuracy_5fold": 0.8788,
+      "classification_report": {
+        "High": {
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1-score": 0.8,
+          "support": 18.0
+        },
+        "Low": {
+          "precision": 0.926829268292683,
+          "recall": 0.9047619047619048,
+          "f1-score": 0.9156626506024096,
+          "support": 42.0
+        },
+        "Moderate": {
+          "precision": 0.9565217391304348,
+          "recall": 0.88,
+          "f1-score": 0.9166666666666666,
+          "support": 100.0
+        },
+        "accuracy": 0.9,
+        "macro avg": {
+          "precision": 0.8500058913632614,
+          "recall": 0.9282539682539682,
+          "f1-score": 0.8774431057563588,
+          "support": 160.0
+        },
+        "weighted avg": {
+          "precision": 0.9161187698833511,
+          "recall": 0.9,
+          "f1-score": 0.903278112449799,
+          "support": 160.0
+        }
+      }
+    },
+    "ensemble": {
+      "test_accuracy": 0.8938,
+      "macro_f1": 0.8715,
+      "cv_accuracy_5fold": 0.8762,
+      "classification_report": {
+        "High": {
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1-score": 0.8,
+          "support": 18.0
+        },
+        "Low": {
+          "precision": 0.925,
+          "recall": 0.8809523809523809,
+          "f1-score": 0.9024390243902439,
+          "support": 42.0
+        },
+        "Moderate": {
+          "precision": 0.946236559139785,
+          "recall": 0.88,
+          "f1-score": 0.9119170984455959,
+          "support": 100.0
+        },
+        "accuracy": 0.89375,
+        "macro avg": {
+          "precision": 0.845967741935484,
+          "recall": 0.9203174603174603,
+          "f1-score": 0.8714520409452801,
+          "support": 160.0
+        },
+        "weighted avg": {
+          "precision": 0.9092103494623656,
+          "recall": 0.89375,
+          "f1-score": 0.8968384304309364,
+          "support": 160.0
+        }
+      }
+    },
+    "health_score_regressor": {
+      "test_r2": 0.9033
+    }
+  },
+  "top_feature_importances": {
+    "adl_score": 0.16281250279928383,
+    "num_dependent_activities": 0.13672740244243559,
+    "num_comorbidities": 0.10337729284006374,
+    "toileting": 0.08278063603045271,
+    "age": 0.06889940575776742,
+    "heart_disease": 0.05503580391851234,
+    "moving": 0.04872548978131639,
+    "arthritis": 0.0431754591201224,
+    "pain_level": 0.041417697609703985,
+    "BMI": 0.041204012398930914,
+    "weight_kg": 0.037365027933269714,
+    "height_cm": 0.03290467670746238,
+    "hypertension": 0.030893775695906577,
+    "medication_count": 0.03029859818151418,
+    "hearing_impairment": 0.03027580962080099,
+    "polypharmacy_flag": 0.010312789250240833,
+    "diabetes": 0.010061909170362166,
+    "respiratory_disease": 0.008822172326453336,
+    "dependency_status": 0.007885910650309505,
+    "walking": 0.00776077397940229,
+    "is_female": 0.005982278779387661,
+    "pain_present": 0.00313194652818224,
+    "eating": 0.00014862847811884658
+  }
+}

@@ -6,14 +6,16 @@ echo =======================================================================
 echo Launching local server and opening web browser...
 echo.
 
-REM Try to launch python server if available
 where python >nul 2>nul
 if %ERRORLEVEL% EQU 0 (
     start http://localhost:5000
     python server.py
 ) else (
-    REM If python not in PATH, try local AppData path
-    if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
+    where py >nul 2>nul
+    if %ERRORLEVEL% EQU 0 (
+        start http://localhost:5000
+        py server.py
+    ) else if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
         start http://localhost:5000
         "%LOCALAPPDATA%\Python\bin\python.exe" server.py
     ) else (
@@ -22,4 +24,3 @@ if %ERRORLEVEL% EQU 0 (
     )
 )
 pause
-

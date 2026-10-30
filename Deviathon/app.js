@@ -656,6 +656,32 @@ const soundEngine = {
       this.alarmInterval = null;
     }
   },
+  phoneRingInterval: null,
+  startPhoneRinging() {
+    this.stopPhoneRinging();
+    this.init();
+    const playPhoneRingCadence = () => {
+      // Realistic dual-frequency telephone ringtone (440Hz + 480Hz)
+      this.playTone(440, 'sine', 0.8, 0);
+      this.playTone(480, 'sine', 0.8, 0);
+      setTimeout(() => {
+        this.playTone(440, 'sine', 0.8, 0);
+        this.playTone(480, 'sine', 0.8, 0);
+      }, 1000);
+    };
+    playPhoneRingCadence();
+    this.phoneRingInterval = setInterval(playPhoneRingCadence, 3000);
+  },
+  stopPhoneRinging() {
+    if (this.phoneRingInterval) {
+      clearInterval(this.phoneRingInterval);
+      this.phoneRingInterval = null;
+    }
+  },
+  playCallConnectedTone() {
+    this.playTone(587.33, 'sine', 0.18, 0);    // D5
+    this.playTone(880.00, 'sine', 0.35, 0.15); // A5
+  },
   playTone(freq, type, duration, delay = 0) {
     if (!state.audioEnabled) return;
     try {
@@ -703,15 +729,35 @@ const soundEngine = {
 // APPLICATION INITIALIZATION
 // ==================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  const savedLang = localStorage.getItem('careconnect_lang') || 'en';
-  setAppLanguage(savedLang, false);
+    const savedLang = localStorage.getItem('careconnect_lang') || 'en';
+    setAppLanguage(savedLang, false);
 
-  navigateRole('login', false);
-  renderCoordinatorAlerts();
-  renderOpsTeamTable();
-  populateOpsIncidentStream();
+    // Check URL hash for direct portal entry
+    const directHash = window.location.hash.replace('#', '').toLowerCase();
+
+    if (directHash === 'coordinator') {
+        if (typeof enterDashboard === 'function') {
+            enterDashboard('coordinator');
+        } else {
+            navigateRole('coordinator');
+        }
+    } else if (
+        directHash === 'senior' ||
+        directHash === 'family' ||
+        directHash === 'operations'
+    ) {
+        if (typeof enterDashboard === 'function') {
+            enterDashboard(directHash);
+        } else {
+            navigateRole(directHash);
+        }
+    } else {
+        navigateRole('login', false);
+    }
+
+    renderCoordinatorAlerts();
+    renderOpsTeamTable();
 });
-
 
 function populateOpsIncidentStream() {
   const container = document.getElementById('ops-incident-stream');
@@ -753,7 +799,8 @@ function navigateRole(role) {
     coordinator: document.getElementById('view-coordinator'),
     senior: document.getElementById('view-senior'),
     family: document.getElementById('view-family'),
-    operations: document.getElementById('view-operations')
+    operations: document.getElementById('view-operations'),
+    add_reminder: document.getElementById('view-add-reminder')
   };
 
   const header = document.getElementById('global-header');
@@ -775,14 +822,12 @@ function navigateRole(role) {
     if (header) header.classList.add('hidden');
     if (mobileNav) mobileNav.classList.add('hidden');
     document.title = "CareConnect - Connected Healthcare & Elder Support";
-  } else if (role === 'operations') {
+  } else if (role === 'operations' || role === 'coordinator') {
     if (header) header.classList.add('hidden');
     if (mobileNav) mobileNav.classList.add('hidden');
     document.title = "CareConnect Operations Manager Command Center";
     switchOpsTab('dashboard');
-    setTimeout(renderOpsDashboardEldersTable, 100);
     setTimeout(initOpsCharts, 120);
-    setTimeout(renderOpsCasesTable, 150);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     if (header) header.classList.remove('hidden');
@@ -909,6 +954,14 @@ function toggleAudioEffects() {
       icon.className = 'fa-solid fa-volume-xmark text-sm text-slate-400';
       showToast('Audio muted', 'info');
     }
+  }
+
+  const drwSoundBtn = document.getElementById('drawer-sound-btn');
+  if (drwSoundBtn) {
+    drwSoundBtn.textContent = state.audioEnabled ? 'Audio: ON' : 'Audio: MUTED';
+    drwSoundBtn.className = state.audioEnabled 
+      ? 'px-3 py-1 rounded-xl text-xs font-bold bg-white border border-slate-300 text-teal-700 hover:bg-teal-50'
+      : 'px-3 py-1 rounded-xl text-xs font-bold bg-rose-50 border border-rose-300 text-rose-700 hover:bg-rose-100';
   }
 }
 
@@ -1175,6 +1228,21 @@ function confirmDispatch() {
   
   // Log incident in Ops stream
   addOpsIncidentLog(`Dispatch initiated: ${nurse} en route to senior`);
+
+  // Sync to Care Coordinator duty schedule & update Dynamic KPIs
+  if (nurse.includes('Kavita')) {
+    const sName = document.getElementById('dispatch-modal-senior-name')?.textContent || 'Ramesh Sharma';
+    const seniors = getCoordinatorSeniors();
+    const s = seniors.find(x => sName.includes(x.name)) || seniors[0];
+    if (s) {
+      s.taskStatus = 'assigned';
+      s.assignedOperator = 'Sister Kavita, RN';
+      s.assignedAction = '🏠 Doorstep Home Visit';
+      saveCoordinatorSeniors(seniors);
+      updateCoordinatorDynamicKPIs();
+      if (typeof renderCoordinatorAssignedTasks === 'function') renderCoordinatorAssignedTasks();
+    }
+  }
 }
 
 // Resolve Modal
@@ -1358,14 +1426,6 @@ function updateLanguageSwitcherButtons(lang) {
       opsEn.className = 'px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800';
     }
   }
-
-  // Operations Account Settings select
-  const accSel = document.getElementById('ops-account-lang-select');
-  if (accSel) {
-    accSel.value = lang;
-  }
-
-
 
   // Senior portal buttons
   const btnEn = document.getElementById('lang-btn-en');
@@ -7401,12 +7461,22 @@ async function predictElderRiskAssessment() {
 
       renderAssessmentResult(data.result, payload, data.alert_created);
       
+      // 1. Save Assessment snapshot to Elder History with ML Prediction and Full Clinical Sheet
+      if (typeof saveElderAssessmentToHistory === 'function') {
+        saveElderAssessmentToHistory(payload, data.result, prof);
+      }
+
+      // 2. Form reset back to blank for next session (age and gender stay auto-detected)
+      if (typeof resetElderAssessmentForm === 'function') {
+        resetElderAssessmentForm(true);
+      }
+
       // If alert was created, refresh Coordinator queue in background
       if (typeof refreshCoordinatorQueue === 'function') {
         refreshCoordinatorQueue();
       }
 
-      showToast(`Health Risk Prediction Complete: ${data.result.predicted_risk_level} Risk`, 
+      showToast(`Health Risk Prediction Complete: ${data.result.predicted_risk_level} Risk! Archived to History & Form Reset for next checkup.`, 
         data.result.predicted_risk_level === 'High' ? 'danger' : (data.result.predicted_risk_level === 'Medium' ? 'warning' : 'success'));
     } else {
       showToast('Prediction error: ' + (data.error || 'Server responded with error'), 'danger');
@@ -9205,35 +9275,7 @@ function selectRoleForAuth(role) {
 
   // Render role-specific signup fields with language resolution
   if (roleFieldsContainer) {
-    const lang = state.currentLanguage || 'en';
-    roleFieldsContainer.innerHTML = typeof cfg.signupFieldsHtml === 'object'
-      ? (cfg.signupFieldsHtml[lang] || cfg.signupFieldsHtml.en)
-      : cfg.signupFieldsHtml;
-  }
-
-  // Onboarding Signin Tab: Add patient and caregiver dual brackets card if Family role
-  const existingSigninCard = document.getElementById('auth-family-signin-patient-card');
-  if (existingSigninCard) existingSigninCard.remove();
-
-  if (role === 'family') {
-    const formSignin = document.getElementById('auth-form-signin');
-    if (formSignin) {
-      const card = document.createElement('div');
-      card.id = 'auth-family-signin-patient-card';
-      card.className = 'p-3 bg-purple-50/90 border border-purple-200 rounded-2xl space-y-1.5 mb-2 shadow-sm';
-      card.innerHTML = `
-        <div class="text-xs font-bold text-slate-800 flex flex-wrap items-center gap-1.5">
-          <span class="text-slate-500 font-semibold">Linked Patient:</span>
-          <span class="text-purple-950 font-extrabold text-sm">Ramesh Sharma</span>
-          <span class="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">[Father • 74 Yrs • Male]</span>
-        </div>
-        <div class="text-xs font-medium text-slate-600 flex flex-wrap items-center gap-1 pt-1 border-t border-purple-200/60">
-          <span class="text-slate-500 font-semibold">Connected Person:</span>
-          <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">[Caregiver: Rahul Sharma • Male • 42 Yrs]</span>
-        </div>
-      `;
-      formSignin.insertBefore(card, formSignin.firstChild);
-    }
+    roleFieldsContainer.innerHTML = cfg.signupFieldsHtml;
   }
 
   // Switch to signin tab
@@ -9268,6 +9310,10 @@ function switchAuthTab(tab) {
 
   if (panelOtp) panelOtp.classList.add('hidden');
 
+  const curLang = (typeof state !== 'undefined' && state.currentLanguage) || 'en';
+  const role = selectedAuthRole || 'senior';
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+
   if (tab === 'signin') {
     if (tabSignin) tabSignin.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm';
     if (tabSignup) tabSignup.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-800';
@@ -9278,6 +9324,18 @@ function switchAuthTab(tab) {
     if (tabSignin) tabSignin.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-800';
     if (formSignin) formSignin.classList.add('hidden');
     if (formSignup) formSignup.classList.remove('hidden');
+
+    // Populate role fields and button text
+    const roleFieldsContainer = document.getElementById('signup-role-specific-fields');
+    if (roleFieldsContainer && cfg.signupFieldsHtml) {
+      roleFieldsContainer.innerHTML = typeof cfg.signupFieldsHtml === 'object' ? (cfg.signupFieldsHtml[curLang] || cfg.signupFieldsHtml.en) : cfg.signupFieldsHtml;
+    }
+    const btnSignupLabel = document.getElementById('btn-signup-label');
+    if (btnSignupLabel) {
+      btnSignupLabel.textContent = (curLang === 'hi')
+        ? `${getRoleDisplayName(role, 'hi')} खाता बनाएं एवं पोर्टल खोलें`
+        : `Create Account & Enter ${getRoleDisplayName(role, 'en')} Portal`;
+    }
   }
 }
 
@@ -9332,10 +9390,14 @@ function sendPasswordResetOtp() {
   if (banner) banner.classList.remove('hidden');
 
   // Auto-fill OTP fields for seamless testing
-  document.getElementById('otp-d1').value = activeOtpCode[0];
-  document.getElementById('otp-d2').value = activeOtpCode[1];
-  document.getElementById('otp-d3').value = activeOtpCode[2];
-  document.getElementById('otp-d4').value = activeOtpCode[3];
+  const d1 = document.getElementById('otp-d1');
+  const d2 = document.getElementById('otp-d2');
+  const d3 = document.getElementById('otp-d3');
+  const d4 = document.getElementById('otp-d4');
+  if (d1) d1.value = activeOtpCode[0];
+  if (d2) d2.value = activeOtpCode[1];
+  if (d3) d3.value = activeOtpCode[2];
+  if (d4) d4.value = activeOtpCode[3];
 
   let seconds = 30;
   if (otpTimerInterval) clearInterval(otpTimerInterval);
@@ -9346,6 +9408,15 @@ function sendPasswordResetOtp() {
       clearInterval(otpTimerInterval);
     }
   }, 1000);
+
+  // Notify backend API
+  try {
+    fetch('/api/auth/otp/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipient: recipient, role: selectedAuthRole })
+    }).catch(() => {});
+  } catch(e) {}
 
   showToast(`OTP ${activeOtpCode} dispatched to ${recipient}`, 'success');
 }
@@ -9363,15 +9434,27 @@ function verifyOtpAndLogin() {
     return;
   }
 
+  const role = selectedAuthRole || 'senior';
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+
   soundEngine.playSuccessChime();
   showToast('OTP verified successfully! Access granted.', 'success');
-  const cfg = authRoleConfigs[selectedAuthRole];
-  enterDashboard(selectedAuthRole, {
-    name: cfg.defaultName,
-    email: cfg.defaultEmail,
-    role: selectedAuthRole,
+
+  // Check if profile exists in localStorage
+  let prof = null;
+  try {
+    prof = JSON.parse(localStorage.getItem(`careconnect_profile_${role}`));
+  } catch(e) {}
+  const userName = (prof && prof.name) ? prof.name : cfg.defaultName;
+  const parts = userName.split(' ');
+  const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : userName.substring(0, 2).toUpperCase();
+
+  enterDashboard(role, {
+    name: userName,
+    email: (prof && prof.email) ? prof.email : cfg.defaultEmail,
+    role: role,
     badge: cfg.defaultBadge,
-    initials: cfg.avatarInitials
+    initials: initials
   });
 }
 
@@ -9386,15 +9469,55 @@ function handleSignInSubmit(e) {
     return;
   }
 
-  const cfg = authRoleConfigs[selectedAuthRole];
+  const role = selectedAuthRole || 'senior';
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+
+  // Check if this user registered in localStorage
+  let matchedUser = null;
+  try {
+    const users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
+    matchedUser = users.find(u => u.role === role && (u.email.toLowerCase() === email.toLowerCase() || u.email === email));
+  } catch(err) {}
+
+  let prof = null;
+  try {
+    prof = JSON.parse(localStorage.getItem(`careconnect_profile_${role}`));
+  } catch(e) {}
+
+  const userName = matchedUser ? matchedUser.name : (prof && prof.name ? prof.name : cfg.defaultName);
+  const parts = userName.split(' ');
+  const userInitials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : userName.substring(0, 2).toUpperCase();
+
   soundEngine.playSuccessChime();
-  enterDashboard(selectedAuthRole, {
-    name: cfg.defaultName,
+
+  // Update UI headers
+  if (role === 'coordinator') {
+    const topName = document.getElementById('coord-topbar-name');
+    const greetName = document.getElementById('coord-greeting-name');
+    if (topName) topName.textContent = userName;
+    if (greetName) greetName.textContent = userName;
+  } else if (role === 'senior') {
+    const greetEl = document.getElementById('senior-greeting');
+    if (greetEl) greetEl.textContent = `Good Morning, ${userName} ji! 👋`;
+  }
+
+  // Inform backend via REST API
+  try {
+    fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: role, email: email, password: password })
+    }).catch(() => {});
+  } catch (e) {}
+
+  enterDashboard(role, {
+    name: userName,
     email: email,
-    role: selectedAuthRole,
+    role: role,
     badge: cfg.defaultBadge,
-    initials: cfg.avatarInitials
+    initials: userInitials
   });
+  showToast(`Welcome back, ${userName}!`, 'success');
 }
 
 // 9. Handle Google OAuth Sign In Simulation
@@ -9441,37 +9564,98 @@ function handleSignUpSubmit(e) {
     return;
   }
 
-  const cfg = authRoleConfigs[selectedAuthRole];
+  const role = selectedAuthRole || 'senior';
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
   soundEngine.playSuccessChime();
   
   // Compute initials
   const parts = name.split(' ');
   const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
 
-  // Create initial profile for the new user marking profileCompleted as false
+  // Extract role-specific extra fields
+  let extraData = {};
+  if (role === 'senior') {
+    const ageVal = parseInt(document.getElementById('signup-age')?.value) || 74;
+    const genderVal = document.getElementById('signup-gender')?.value || 'Male';
+    const contactVal = document.getElementById('signup-contact')?.value || '';
+    extraData = { age: ageVal, gender: genderVal, contact: contactVal };
+  } else if (role === 'coordinator') {
+    const desigVal = document.getElementById('signup-designation')?.value || 'Registered Nurse (RN)';
+    const licVal = document.getElementById('signup-license')?.value || 'RN-DL-49201';
+    extraData = { designation: desigVal, license: licVal };
+  } else if (role === 'family') {
+    const relVal = document.getElementById('signup-relation')?.value || 'Son';
+    const seniorVal = document.getElementById('signup-linked-senior')?.value || 'Ramesh Sharma';
+    extraData = { relation: relVal, linkedSenior: seniorVal };
+  } else if (role === 'operations') {
+    const cityVal = document.getElementById('signup-city')?.value || 'Delhi NCR';
+    const secKeyVal = document.getElementById('signup-seckey')?.value || 'OPS-SEC-9981';
+    extraData = { city: cityVal, secKey: secKeyVal };
+  }
+
+  // Create initial profile for the new user
   const newProfile = {
-    role: selectedAuthRole,
+    role: role,
     name: name,
     email: email,
     dob: '',
-    age: '',
-    gender: '',
     phone: '',
-    profileCompleted: false,
-    isNewUser: true
+    profileCompleted: true,
+    isNewUser: false,
+    ...extraData
   };
   try {
-    localStorage.setItem(`careconnect_profile_${selectedAuthRole}`, JSON.stringify(newProfile));
-    sessionStorage.removeItem('careconnect_dismiss_profile_prompt');
+    localStorage.setItem(`careconnect_profile_${role}`, JSON.stringify(newProfile));
+    
+    // Store in registered users directory
+    let users = [];
+    try {
+      users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
+    } catch(err) { users = []; }
+    users = users.filter(u => !(u.email === email && u.role === role));
+    users.push({
+      name: name,
+      email: email,
+      password: password,
+      role: role,
+      extra: extraData
+    });
+    localStorage.setItem('careconnect_users', JSON.stringify(users));
   } catch (err) {
-    console.error('Failed to initialize new user profile in localStorage:', err);
+    console.error('Failed to save user profile in localStorage:', err);
   }
 
-  enterDashboard(selectedAuthRole, {
+  // Non-blocking fetch to backend API
+  try {
+    fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: role, name: name, email: email, ...extraData })
+    }).catch(() => {});
+  } catch (e) {}
+
+  // Update UI headers & badges according to role
+  if (role === 'coordinator') {
+    const topName = document.getElementById('coord-topbar-name');
+    const greetName = document.getElementById('coord-greeting-name');
+    if (topName) topName.textContent = name;
+    if (greetName) greetName.textContent = name;
+  } else if (role === 'senior') {
+    const greetEl = document.getElementById('senior-greeting');
+    if (greetEl) greetEl.textContent = `Good Morning, ${name} ji! 👋`;
+    const vitalsMeta = document.getElementById('senior-vitals-meta-badge');
+    if (vitalsMeta) vitalsMeta.textContent = `${extraData.age || 74} Yrs • ${extraData.gender || 'Male'} • New Delhi`;
+    const ageInput = document.getElementById('assess-age');
+    if (ageInput && extraData.age) ageInput.value = extraData.age;
+    const genderInput = document.getElementById('assess-gender');
+    if (genderInput && extraData.gender) genderInput.value = extraData.gender;
+  }
+
+  enterDashboard(role, {
     name: name,
     email: email,
-    role: selectedAuthRole,
-    badge: `${getRoleDisplayName(selectedAuthRole)} (New Member)`,
+    role: role,
+    badge: `${getRoleDisplayName(role)}`,
     initials: initials
   });
 
@@ -9495,7 +9679,7 @@ function enterDashboard(role, userObj) {
   if (viewLogin) viewLogin.classList.add('hidden');
 
   // Hide all other role views; show strictly the active role view
-  const allViews = ['coordinator', 'senior', 'family', 'operations'];
+  const allViews = ['coordinator', 'senior', 'family', 'operations', 'add_reminder'];
   allViews.forEach(v => {
     const el = document.getElementById(`view-${v}`);
     if (el) {
@@ -9507,10 +9691,10 @@ function enterDashboard(role, userObj) {
     }
   });
 
-  // Reveal Global Header (hidden for Operations Manager which has its own command center top bar & sidebar)
+  // Reveal Global Header (hidden for Operations Manager & Coordinator which have their own dedicated command center top bar & sidebar)
   const header = document.getElementById('global-header');
   if (header) {
-    if (role === 'operations') {
+    if (role === 'operations' || role === 'coordinator') {
       header.classList.add('hidden');
     } else {
       header.classList.remove('hidden');
@@ -9562,7 +9746,15 @@ function enterDashboard(role, userObj) {
     switchOpsTab('dashboard');
     setTimeout(initOpsCharts, 120);
   } else if (role === 'coordinator') {
-    renderCoordinatorAlerts();
+    if (typeof initMedcareCoordinatorDashboard === 'function') {
+      initMedcareCoordinatorDashboard();
+    } else if (typeof renderCoordinatorAssignedTasks === 'function') {
+      renderCoordinatorAssignedTasks();
+    } else if (typeof renderCoordinatorHub === 'function') {
+      renderCoordinatorHub();
+    } else {
+      renderCoordinatorAlerts();
+    }
   } else if (role === 'senior') {
     setTimeout(() => {
       if (typeof restoreAssessmentDraft === 'function') {
@@ -9596,7 +9788,7 @@ function logout(notify = true) {
   }
 
   // Hide all operational dashboards
-  const allViews = ['coordinator', 'senior', 'family', 'operations'];
+  const allViews = ['coordinator', 'senior', 'family', 'operations', 'add_reminder'];
   allViews.forEach(v => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.classList.add('hidden');
@@ -9634,6 +9826,439 @@ function loginAs(role) {
 // ==================================================================// VOICE HEALTH INPUT ASSISTANT, MANDATORY VALIDATION & PERSISTENT AUTO-SAVE
 // ==================================================================
 const STORAGE_KEY_ASSESSMENT_DRAFT = 'careconnect_elder_assessment_draft';
+
+// =========================================================================
+// ELDER ASSESSMENT HISTORY, PERSISTENCE VAULT & BLANK RESET SYSTEM
+// =========================================================================
+
+const STORAGE_KEY_ASSESSMENT_HISTORY = 'careconnect_elder_assessment_history';
+
+// 1. Get All Elder Assessments from History (with baseline fallback)
+function getElderAssessmentHistory() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_ASSESSMENT_HISTORY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading assessment history:', e);
+  }
+
+  // Pre-seed baseline assessment for Ramesh Sharma so history is immediately rich
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { name: 'Ramesh Sharma', age: 74, gender: 'Male' };
+  const baselinePayload = {
+    seniorName: prof.name || 'Ramesh Sharma',
+    age: prof.age || 74,
+    gender: prof.gender || 'Male',
+    height_cm: 165,
+    weight_kg: 68,
+    bp_systolic: 136,
+    bp_diastolic: 84,
+    heart_rate: 74,
+    spo2: 97,
+    sleep_hours: 6.5,
+    pain_present: 1,
+    pain_level: 3.5,
+    pain_location: 'Knee',
+    walking_independent: 1,
+    eating_independent: 1,
+    moving_independent: 1,
+    toileting_independent: 1,
+    medication_count: 3,
+    missed_doses: 0,
+    is_diabetic: 0,
+    blood_glucose: 112,
+    hearing_difficulty: 0,
+    hearing_aid_used: 0,
+    has_hypertension: 1,
+    has_arthritis: 1,
+    has_heart_disease: 0,
+    has_respiratory: 0
+  };
+
+  const baselineResult = {
+    predicted_risk_level: 'Medium',
+    risk_score: 48,
+    confidence: 0.94,
+    top_factors: [
+      'Borderline BP Systolic (136 mmHg)',
+      'Mild Knee Osteoarthritis Discomfort',
+      'Hypertension Medication Adherence Required'
+    ],
+    recommendations: [
+      'Continue morning amlodipine daily',
+      '15 minutes low-impact knee mobility exercises',
+      'Maintain adequate hydration & 7 hours sleep'
+    ],
+    clinical_summary: 'Elder baseline geriatric screen: Moderate cardiovascular and musculoskeletal stability.'
+  };
+
+  const baselineSheet = (typeof generateClinicalReportSheetHtml === 'function')
+    ? generateClinicalReportSheetHtml(baselineResult, baselinePayload, prof)
+    : '';
+
+  const baselineEntry = {
+    id: 'cc_assess_baseline',
+    timestamp: new Date(Date.now() - 86400000).toISOString(),
+    dateTimeFormatted: new Date(Date.now() - 86400000).toLocaleString('en-IN', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: true
+    }),
+    dateTimeFormattedHi: new Date(Date.now() - 86400000).toLocaleString('hi-IN', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: true
+    }),
+    patientName: prof.name || 'Ramesh Sharma',
+    patientAge: prof.age || 74,
+    patientGender: prof.gender || 'Male',
+    riskLevel: 'Medium',
+    riskScore: 48,
+    confidence: 0.94,
+    topFactors: baselineResult.top_factors,
+    recommendations: baselineResult.recommendations,
+    vitals: {
+      bp: '136/84 mmHg',
+      hr: 74,
+      spo2: 97,
+      sleep: 6.5,
+      pain: 'Knee (Level 3.5)',
+      glucose: 112
+    },
+    payload: baselinePayload,
+    result: baselineResult,
+    prof: prof,
+    sheetHtml: baselineSheet
+  };
+
+  const initialList = [baselineEntry];
+  try {
+    localStorage.setItem(STORAGE_KEY_ASSESSMENT_HISTORY, JSON.stringify(initialList));
+  } catch (e) {
+    console.warn('Could not seed baseline history:', e);
+  }
+  return initialList;
+}
+
+// 2. Save an Assessment to History
+function saveElderAssessmentToHistory(payload, result, prof) {
+  try {
+    const history = getElderAssessmentHistory();
+    const now = new Date();
+    const profObj = prof || ((typeof getUserProfile === 'function') ? getUserProfile('senior') : { name: 'Ramesh Sharma', age: 74, gender: 'Male' });
+
+    let sheetHtml = '';
+    if (typeof generateClinicalReportSheetHtml === 'function') {
+      sheetHtml = generateClinicalReportSheetHtml(result, payload, profObj);
+    }
+
+    const entry = {
+      id: 'cc_assess_' + Date.now(),
+      timestamp: now.toISOString(),
+      dateTimeFormatted: now.toLocaleString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      }),
+      dateTimeFormattedHi: now.toLocaleString('hi-IN', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      }),
+      patientName: profObj.name || payload.seniorName || 'Ramesh Sharma',
+      patientAge: payload.age || profObj.age || 74,
+      patientGender: payload.gender || profObj.gender || 'Male',
+      riskLevel: result.predicted_risk_level || 'Low',
+      riskScore: result.risk_score || 25,
+      confidence: result.confidence || 0.94,
+      topFactors: result.top_factors || [],
+      recommendations: result.recommendations || [],
+      vitals: {
+        bp: `${payload.bp_systolic || 120}/${payload.bp_diastolic || 80} mmHg`,
+        hr: payload.heart_rate || 72,
+        spo2: payload.spo2 || 98,
+        sleep: payload.sleep_hours || 7.0,
+        pain: payload.pain_present ? `${payload.pain_location || 'Body'} (Level ${payload.pain_level || 0})` : 'No Pain',
+        glucose: payload.blood_glucose || 105
+      },
+      payload: payload,
+      result: result,
+      prof: profObj,
+      sheetHtml: sheetHtml
+    };
+
+    history.unshift(entry);
+    localStorage.setItem(STORAGE_KEY_ASSESSMENT_HISTORY, JSON.stringify(history));
+    console.log('Saved assessment to history:', entry.id, 'Total history entries:', history.length);
+    return entry;
+  } catch (err) {
+    console.error('Failed to save assessment to history:', err);
+    return null;
+  }
+}
+
+// 3. Reset Elder Assessment Form to Blank (Post Assessment)
+function resetElderAssessmentForm(keepProfile = true) {
+  // Clear metric inputs
+  const idsToBlank = [
+    'assess-height', 'assess-weight', 'assess-bp-sys', 'assess-bp-dia',
+    'assess-hr', 'assess-spo2', 'assess-sleep', 'assess-med-count', 'assess-sugar'
+  ];
+  idsToBlank.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = '';
+      el.classList.remove('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50', 'ring-teal-400');
+    }
+  });
+
+  // Reset pain
+  setPainPresent(false);
+  const painLocEl = document.getElementById('assess-pain-loc');
+  if (painLocEl) painLocEl.value = 'None';
+  updatePainSlider(0);
+
+  // Reset ADL Dropdowns
+  ['assess-walk', 'assess-eat', 'assess-move', 'assess-toilet'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '1';
+  });
+
+  // Reset Missed Doses & Diabetic
+  const missedEl = document.getElementById('assess-missed-doses');
+  if (missedEl) missedEl.value = '0';
+  const diabEl = document.getElementById('assess-diabetic');
+  if (diabEl) {
+    diabEl.value = '0';
+    toggleSugarInput('0');
+  }
+
+  // Reset Hearing
+  const hearEl = document.getElementById('assess-hearing');
+  if (hearEl) hearEl.value = '0';
+
+  // Uncheck chronic conditions
+  ['chk-htn', 'chk-arth', 'chk-heart', 'chk-resp'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = false;
+  });
+
+  // Age and Gender stay auto-detected from profile (GREEN)
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { age: 74, gender: 'Male' };
+  const ageEl = document.getElementById('assess-age');
+  if (ageEl) ageEl.value = prof.age || 74;
+  const genderEl = document.getElementById('assess-gender');
+  if (genderEl) genderEl.value = prof.gender || 'Male';
+
+  // Clear draft storage so form starts fresh for next session
+  try {
+    localStorage.removeItem(STORAGE_KEY_ASSESSMENT_DRAFT);
+    localStorage.removeItem('careconnect_elder_cumulative_nlp');
+  } catch (e) {
+    console.warn('Error clearing draft storage:', e);
+  }
+  cumulativeExtracted = {};
+
+  const badgeText = document.getElementById('assess-autosave-text');
+  if (badgeText) {
+    badgeText.textContent = 'Form Reset Ready (फॉर्म नए चेकअप के लिए तैयार)';
+  }
+
+  const alertBox = document.getElementById('assessment-validation-alert');
+  if (alertBox) alertBox.classList.add('hidden');
+
+  const bmiBadge = document.getElementById('bmi-badge');
+  if (bmiBadge) {
+    bmiBadge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600';
+    bmiBadge.textContent = 'BMI: --';
+  }
+
+  updateAssessmentProgressMeter();
+
+  const missingWrap = document.getElementById('voice-missing-fields-tags');
+  if (missingWrap) missingWrap.innerHTML = '';
+  const statusText = document.getElementById('voice-status-text');
+  if (statusText) statusText.innerText = 'Ready for new voice or manual checkup';
+
+  renderChecklistGrid({}, []);
+}
+
+// 4. Open Elder Assessment History Modal
+function openElderAssessmentHistoryModal() {
+  const modal = document.getElementById('modal-elder-assessment-history');
+  if (!modal) {
+    console.warn('modal-elder-assessment-history not found');
+    return;
+  }
+  renderElderAssessmentHistoryList();
+  modal.classList.remove('hidden');
+  if (typeof soundEngine !== 'undefined' && soundEngine.playTone) {
+    soundEngine.playTone(520, 'sine', 0.1);
+  }
+}
+
+// 5. Close Elder Assessment History Modal
+function closeElderAssessmentHistoryModal() {
+  const modal = document.getElementById('modal-elder-assessment-history');
+  if (modal) modal.classList.add('hidden');
+}
+
+// 6. Render Assessment History List Cards
+function renderElderAssessmentHistoryList() {
+  const container = document.getElementById('elder-assessment-history-list');
+  if (!container) return;
+
+  const history = getElderAssessmentHistory();
+  if (!history || history.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center bg-white rounded-2xl border border-slate-200">
+        <i class="fa-solid fa-clock-rotate-left text-slate-300 text-4xl mb-3"></i>
+        <h4 class="font-bold text-slate-700">No Assessment History Found</h4>
+        <p class="text-xs text-slate-500 mt-1">Complete your first health assessment to archive your clinical sheet.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const isHindi = (typeof state !== 'undefined' && state.seniorLanguage === 'hi');
+
+  container.innerHTML = history.map((entry, idx) => {
+    const isHigh = (entry.riskLevel === 'High');
+    const isMed = (entry.riskLevel === 'Medium');
+    const isLow = (entry.riskLevel === 'Low');
+
+    const badgeClass = isHigh
+      ? 'bg-rose-100 text-rose-800 border-rose-300'
+      : (isMed ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-emerald-100 text-emerald-800 border-emerald-300');
+
+    const badgeIcon = isHigh
+      ? 'fa-triangle-exclamation text-rose-600'
+      : (isMed ? 'fa-triangle-exclamation text-amber-600' : 'fa-circle-check text-emerald-600');
+
+    const dateLabel = isHindi ? (entry.dateTimeFormattedHi || entry.dateTimeFormatted) : entry.dateTimeFormatted;
+    const v = entry.vitals || {};
+
+    const factorsHtml = (entry.topFactors || []).slice(0, 3).map(f => `
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+        <i class="fa-solid fa-circle-dot text-[8px] text-teal-500 mr-1.5"></i> ${f}
+      </span>
+    `).join('');
+
+    return `
+      <div class="p-5 bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-3.5">
+        
+        <!-- Card Header: Date & Risk Level Badge -->
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 border border-teal-200 flex items-center justify-center text-xs font-black">
+              #${history.length - idx}
+            </span>
+            <div>
+              <div class="text-xs sm:text-sm font-black text-slate-900">${dateLabel}</div>
+              <div class="text-[11px] text-slate-500 font-medium">90,000 Dataset Geriatric ML Model</div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <span class="px-3 py-1 rounded-full text-xs font-black border flex items-center gap-1.5 ${badgeClass}">
+              <i class="fa-solid ${badgeIcon}"></i>
+              <span>${entry.riskLevel} Risk (${entry.riskScore}/100)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Vitals Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 pt-2 border-t border-slate-100 text-xs">
+          <div class="p-2 bg-slate-50 rounded-xl text-center">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Blood Pressure</span>
+            <span class="font-extrabold text-slate-800">${v.bp || '--'}</span>
+          </div>
+          <div class="p-2 bg-slate-50 rounded-xl text-center">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Heart Rate</span>
+            <span class="font-extrabold text-slate-800">${v.hr ? v.hr + ' bpm' : '--'}</span>
+          </div>
+          <div class="p-2 bg-slate-50 rounded-xl text-center">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">SpO2 Oxygen</span>
+            <span class="font-extrabold text-slate-800">${v.spo2 ? v.spo2 + '%' : '--'}</span>
+          </div>
+          <div class="p-2 bg-slate-50 rounded-xl text-center">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Sleep Hours</span>
+            <span class="font-extrabold text-slate-800">${v.sleep ? v.sleep + ' hrs' : '--'}</span>
+          </div>
+          <div class="p-2 bg-slate-50 rounded-xl text-center">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Pain Status</span>
+            <span class="font-extrabold text-slate-800">${v.pain || 'None'}</span>
+          </div>
+          <div class="p-2 bg-slate-50 rounded-xl text-center">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Blood Glucose</span>
+            <span class="font-extrabold text-slate-800">${v.glucose ? v.glucose + ' mg/dL' : '--'}</span>
+          </div>
+        </div>
+
+        <!-- Top ML Factors -->
+        ${factorsHtml ? `
+        <div class="flex items-center flex-wrap gap-1.5 pt-1">
+          <span class="text-[10px] text-slate-400 font-bold uppercase mr-1">ML Factors:</span>
+          ${factorsHtml}
+        </div>
+        ` : ''}
+
+        <!-- Action: View Clinical Sheet Snapshot -->
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2">
+          <span class="text-xs text-slate-500 font-medium">
+            <i class="fa-solid fa-user-doctor text-teal-600 mr-1"></i> Patient: <strong>${entry.patientName}</strong> (${entry.patientAge}y, ${entry.patientGender})
+          </span>
+          <button onclick="viewClinicalSheetFromHistory('${entry.id}')"
+            class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black flex items-center gap-2 shadow-sm transition-all hover:shadow">
+            <i class="fa-solid fa-file-waveform"></i>
+            <span>View Clinical Sheet (उस समय की रिपोर्ट देखें)</span>
+          </button>
+        </div>
+
+      </div>
+    `;
+  }).join('');
+}
+
+// 7. View Exact Clinical Sheet Saved at that time
+function viewClinicalSheetFromHistory(historyId) {
+  const history = getElderAssessmentHistory();
+  const entry = history.find(h => h.id === historyId);
+  if (!entry) {
+    showToast('Historical report not found', 'danger');
+    return;
+  }
+
+  const modal = document.getElementById('modal-clinical-report-sheet');
+  const container = document.getElementById('clinical-report-sheet-content');
+  if (!modal || !container) {
+    showToast('Report sheet modal not found', 'danger');
+    return;
+  }
+
+  // Load exact sheet HTML saved at that time
+  const sheetContent = entry.sheetHtml || generateClinicalReportSheetHtml(entry.result, entry.payload, entry.prof);
+  container.innerHTML = sheetContent;
+  modal.classList.remove('hidden');
+
+  const scrollContainer = document.getElementById('clinical-report-sheet-scroll');
+  if (scrollContainer) scrollContainer.scrollTop = 0;
+
+  if (typeof soundEngine !== 'undefined' && soundEngine.playTone) {
+    soundEngine.playTone(600, 'sine', 0.12);
+  }
+  showToast(`Showing clinical diagnostic sheet snapshot from ${entry.dateTimeFormatted}`, 'info');
+}
+
+// Global window aliases
+window.openElderAssessmentHistoryModal = openElderAssessmentHistoryModal;
+window.closeElderAssessmentHistoryModal = closeElderAssessmentHistoryModal;
+window.renderElderAssessmentHistoryList = renderElderAssessmentHistoryList;
+window.viewClinicalSheetFromHistory = viewClinicalSheetFromHistory;
+window.resetElderAssessmentForm = resetElderAssessmentForm;
+window.saveElderAssessmentToHistory = saveElderAssessmentToHistory;
+window.getElderAssessmentHistory = getElderAssessmentHistory;
+
 
 // 1. Auto-Save Assessment Draft to LocalStorage
 function saveAssessmentDraft() {
@@ -9827,20 +10452,172 @@ function updateAssessmentProgressMeter() {
 }
 
 // 5. Mandatory Validation Before Submission
+// Compute real-time checklist state from current DOM inputs & assessmentState
+function computeChecklistFromFormDom() {
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { age: 74, gender: 'Male' };
+  const hVal = parseFloat(document.getElementById('assess-height')?.value);
+  const wVal = parseFloat(document.getElementById('assess-weight')?.value);
+  const bpSys = parseFloat(document.getElementById('assess-bp-sys')?.value);
+  const bpDia = parseFloat(document.getElementById('assess-bp-dia')?.value);
+  const hrVal = parseFloat(document.getElementById('assess-hr')?.value);
+  const spo2Val = parseFloat(document.getElementById('assess-spo2')?.value);
+  const sleepVal = parseFloat(document.getElementById('assess-sleep')?.value);
+  const walkVal = document.getElementById('assess-walk')?.value;
+  const eatVal = document.getElementById('assess-eat')?.value;
+  const moveVal = document.getElementById('assess-move')?.value;
+  const toiletVal = document.getElementById('assess-toilet')?.value;
+  const medVal = document.getElementById('assess-med-count')?.value;
+  const missedVal = document.getElementById('assess-missed-doses')?.value;
+  const diabVal = document.getElementById('assess-diabetic')?.value;
+  const sugarVal = parseFloat(document.getElementById('assess-sugar')?.value);
+  const hearVal = document.getElementById('assess-hearing')?.value;
+
+  const painLoc = document.getElementById('assess-pain-loc')?.value || 'None';
+  const painPres = (typeof assessmentState !== 'undefined' && assessmentState.painPresent);
+  const painLvl = (typeof assessmentState !== 'undefined') ? assessmentState.painLevel : 0;
+
+  const hasHtn = document.getElementById('chk-htn')?.checked;
+  const hasArth = document.getElementById('chk-arth')?.checked;
+  const hasHeart = document.getElementById('chk-heart')?.checked;
+  const hasResp = document.getElementById('chk-resp')?.checked;
+
+  const hasHeight = (!isNaN(hVal) && hVal >= 100 && hVal <= 230);
+  const hasWeight = (!isNaN(wVal) && wVal >= 30 && wVal <= 200);
+  const hasBp = (!isNaN(bpSys) && bpSys >= 70 && bpSys <= 240 && !isNaN(bpDia) && bpDia >= 40 && bpDia <= 140);
+  const hasHr = (!isNaN(hrVal) && hrVal >= 40 && hrVal <= 180);
+  const hasSpo2 = (!isNaN(spo2Val) && spo2Val >= 70 && spo2Val <= 100);
+  const hasPain = (!painPres) || (painPres && painLoc !== 'None' && painLoc !== '' && painLvl >= 1);
+  const hasSleep = (!isNaN(sleepVal) && sleepVal >= 2 && sleepVal <= 16);
+  const hasWalk = (walkVal !== '' && walkVal !== undefined && walkVal !== null);
+  const hasEat = (eatVal !== '' && eatVal !== undefined && eatVal !== null);
+  const hasMove = (moveVal !== '' && moveVal !== undefined && moveVal !== null);
+  const hasToilet = (toiletVal !== '' && toiletVal !== undefined && toiletVal !== null);
+  const hasMeds = (medVal !== '' && !isNaN(parseFloat(medVal)) && missedVal !== '' && missedVal !== undefined);
+  const hasSugar = (diabVal === '0') || (diabVal === '1' && !isNaN(sugarVal) && sugarVal >= 40);
+  const hasHearing = (hearVal !== '' && hearVal !== undefined && hearVal !== null);
+  const hasDiseases = (hasHtn || hasArth || hasHeart || hasResp || (typeof cumulativeExtracted !== 'undefined' && cumulativeExtracted.chronic_conditions_none));
+
+  return {
+    age: { title: "Age (उम्र)", status: "provided", value: `${prof.age || 74} Yrs` },
+    gender: { title: "Gender (लिंग)", status: "provided", value: prof.gender || "Male" },
+    height: {
+      title: "Height (लंबाई)",
+      status: hasHeight ? "provided" : "missing",
+      value: hasHeight ? `${hVal} cm` : null,
+      question_hi: "Aapki lambai (height) kitne centimeter ya feet-inch hai?",
+      question_en: "What is your height in centimeters or feet and inches?"
+    },
+    weight: {
+      title: "Weight (वजन)",
+      status: hasWeight ? "provided" : "missing",
+      value: hasWeight ? `${wVal} kg` : null,
+      question_hi: "Aapka vajan (body weight) kitne kilo (kg) hai?",
+      question_en: "What is your body weight in kilograms?"
+    },
+    bp: {
+      title: "Blood Pressure (रक्तचाप)",
+      status: hasBp ? "provided" : "missing",
+      value: hasBp ? `BP ${bpSys}/${bpDia}` : null,
+      question_hi: "Aapka Blood Pressure (upar aur neeche ka BP) kitna hai?",
+      question_en: "What is your Blood Pressure (systolic and diastolic) reading?"
+    },
+    hr: {
+      title: "Pulse Rate (धड़कन)",
+      status: hasHr ? "provided" : "missing",
+      value: hasHr ? `${hrVal} bpm` : null,
+      question_hi: "Aapki dil ki dhadkan (heart rate pulse) kitni hai?",
+      question_en: "What is your heart rate or pulse in beats per minute?"
+    },
+    spo2: {
+      title: "Oxygen SpO2 (ऑक्सीजन)",
+      status: hasSpo2 ? "provided" : "missing",
+      value: hasSpo2 ? `${spo2Val}%` : null,
+      question_hi: "Aapka oxygen saturation level (SpO2) kitne percent hai?",
+      question_en: "What is your oxygen saturation level (SpO2 percentage)?"
+    },
+    pain: {
+      title: "Pain Status (दर्द)",
+      status: hasPain ? "provided" : "missing",
+      value: painPres ? `${painLoc} (Level ${painLvl})` : "No Pain",
+      question_hi: "Kya shareer me dard hai jaise ghutne ya kamar me, aur severity level kitna hai?",
+      question_en: "Do you have any pain (such as in knees, back, or chest) and what is the severity level?"
+    },
+    sleep: {
+      title: "Sleep (नींद)",
+      status: hasSleep ? "provided" : "missing",
+      value: hasSleep ? `${sleepVal} hrs` : null,
+      question_hi: "Aap rozana kitne ghante sote hain?",
+      question_en: "How many hours of sleep do you get each night?"
+    },
+    adl_walk: {
+      title: "Walking (चलना)",
+      status: hasWalk ? "provided" : "missing",
+      value: walkVal === '1' ? "Independent" : "Needs Help",
+      question_hi: "Chalna kaisa hai - khud chal lete hain ya walker/lathi lagti hai?",
+      question_en: "Can you walk independently or do you require a walker or stick?"
+    },
+    adl_eat: {
+      title: "Eating (खाना)",
+      status: hasEat ? "provided" : "missing",
+      value: eatVal === '1' ? "Independent" : "Dependent",
+      question_hi: "Khana khud kha lete hain ya kisi ki madad lagti hai?",
+      question_en: "Can you eat meals independently or do you need assistance?"
+    },
+    adl_move: {
+      title: "Transfer (उठना)",
+      status: hasMove ? "provided" : "missing",
+      value: moveVal === '1' ? "Independent" : "Needs Help",
+      question_hi: "Bistar ya kursi se uthne baithne me kya sahara lagta hai?",
+      question_en: "Can you get out of bed or a chair by yourself?"
+    },
+    adl_toilet: {
+      title: "Toilet (शौचालय)",
+      status: hasToilet ? "provided" : "missing",
+      value: toiletVal === '1' ? "Independent" : "Dependent",
+      question_hi: "Toilet khud ja pate hain ya sahara chahiye?",
+      question_en: "Can you use the toilet independently or do you require help?"
+    },
+    meds: {
+      title: "Meds & Doses (दवाइयां)",
+      status: hasMeds ? "provided" : "missing",
+      value: hasMeds ? `${medVal} meds (${missedVal === '0' ? 'All taken' : missedVal + ' missed'})` : null,
+      question_hi: "Rozana kitni dawai lete hain aur kya sab samay par le li?",
+      question_en: "How many daily medicines do you take and were all doses taken today?"
+    },
+    sugar: {
+      title: "Diabetes & Sugar (शुगर)",
+      status: hasSugar ? "provided" : "missing",
+      value: diabVal === '1' ? `Diabetic (${sugarVal || '--'} mg/dL)` : "Non-Diabetic",
+      question_hi: "Kya aapko Diabetes (sugar) hai aur sugar level kitna hai?",
+      question_en: "Do you have diabetes and what is your current blood sugar level?"
+    },
+    hearing: {
+      title: "Hearing (सुनना)",
+      status: hasHearing ? "provided" : "missing",
+      value: hearVal === '0' ? "Normal" : (hearVal === '1' ? "Mild Difficulty" : "Hearing Aid"),
+      question_hi: "Sunne ki kshamta kaisi hai - normal, thoda kam ya hearing aid lagate hain?",
+      question_en: "How is your hearing ability - normal, mild difficulty, or hearing aid?"
+    },
+    diseases: {
+      title: "Diseases (पुरानी बीमारियां)",
+      status: hasDiseases ? "provided" : "missing",
+      value: [hasHtn ? 'HTN' : null, hasArth ? 'Arthritis' : null, hasHeart ? 'Heart' : null, hasResp ? 'Asthma' : null].filter(Boolean).join(', ') || 'Assessed',
+      question_hi: "Kya aapko High BP, Gathiya, Dil ki bimari ya Dama jaisi koi bimari hai?",
+      question_en: "Do you have conditions such as High BP, Arthritis, Heart disease, or Asthma?"
+    }
+  };
+}
+
+// 5. Mandatory 19-Parameter Assessment Input Validator (Audio or Text Form)
 function validateAssessmentInputsBeforeSubmit() {
   const missing = [];
-  const fieldsToCheck = [
-    { id: 'assess-age', label: 'Age (उम्र)' },
-    { id: 'assess-gender', label: 'Gender (लिंग)' },
-    { id: 'assess-height', label: 'Height (लंबाई cm)' },
-    { id: 'assess-weight', label: 'Weight (वजन kg)' },
-    { id: 'assess-bp-sys', label: 'BP Systolic (ऊपर का BP)' },
-    { id: 'assess-bp-dia', label: 'BP Diastolic (नीचे का BP)' },
-    { id: 'assess-hr', label: 'Heart Rate (धड़कन / पल्स)' },
-    { id: 'assess-spo2', label: 'Oxygen SpO2 (ऑक्सीजन %)' },
-    { id: 'assess-sleep', label: 'Sleep Hours (नींद के घंटे)' },
-    { id: 'assess-med-count', label: 'Daily Medicine Count (दवा संख्या)' }
-  ];
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { age: 74, gender: 'Male' };
+
+  // 1. Age and Gender are auto-detected from profile and always valid
+  const ageEl = document.getElementById('assess-age');
+  if (ageEl && !ageEl.value.trim()) ageEl.value = prof.age || 74;
+  const genderEl = document.getElementById('assess-gender');
+  if (genderEl && !genderEl.value.trim()) genderEl.value = prof.gender || 'Male';
 
   // Remove previous error highlights
   document.querySelectorAll('.input-field-error').forEach(el => {
@@ -9848,43 +10625,144 @@ function validateAssessmentInputsBeforeSubmit() {
   });
 
   let firstErrorElement = null;
-
-  fieldsToCheck.forEach(item => {
-    const el = document.getElementById(item.id);
-    const val = el ? el.value.toString().trim() : '';
-    const isNumeric = (item.id !== 'assess-gender');
-    if (!el || val === '' || (isNumeric && isNaN(parseFloat(val)))) {
-      missing.push(item.label);
-      if (el) {
-        el.classList.add('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
-        if (!firstErrorElement) firstErrorElement = el;
-      }
+  const flagError = (elementId, labelText) => {
+    missing.push(labelText);
+    const el = document.getElementById(elementId);
+    if (el) {
+      el.classList.add('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
+      if (!firstErrorElement) firstErrorElement = el;
     }
-  });
+  };
 
-  // If diabetic is 1, sugar reading is mandatory
-  const isDiabetic = document.getElementById('assess-diabetic')?.value === '1';
-  if (isDiabetic) {
+  // 2. Height (100 - 230 cm)
+  const hEl = document.getElementById('assess-height');
+  const hVal = parseFloat(hEl?.value);
+  if (!hEl || isNaN(hVal) || hVal < 100 || hVal > 230) {
+    flagError('assess-height', 'Height / लंबाई (100-230 cm)');
+  }
+
+  // 3. Weight (30 - 200 kg)
+  const wEl = document.getElementById('assess-weight');
+  const wVal = parseFloat(wEl?.value);
+  if (!wEl || isNaN(wVal) || wVal < 30 || wVal > 200) {
+    flagError('assess-weight', 'Weight / वजन (30-200 kg)');
+  }
+
+  // 4. BP Systolic (70 - 240 mmHg)
+  const bpSysEl = document.getElementById('assess-bp-sys');
+  const bpSysVal = parseFloat(bpSysEl?.value);
+  if (!bpSysEl || isNaN(bpSysVal) || bpSysVal < 70 || bpSysVal > 240) {
+    flagError('assess-bp-sys', 'BP Systolic / ऊपर का BP (70-240 mmHg)');
+  }
+
+  // 5. BP Diastolic (40 - 140 mmHg)
+  const bpDiaEl = document.getElementById('assess-bp-dia');
+  const bpDiaVal = parseFloat(bpDiaEl?.value);
+  if (!bpDiaEl || isNaN(bpDiaVal) || bpDiaVal < 40 || bpDiaVal > 140) {
+    flagError('assess-bp-dia', 'BP Diastolic / नीचे का BP (40-140 mmHg)');
+  }
+
+  // 6. Heart Rate / Pulse (40 - 180 bpm)
+  const hrEl = document.getElementById('assess-hr');
+  const hrVal = parseFloat(hrEl?.value);
+  if (!hrEl || isNaN(hrVal) || hrVal < 40 || hrVal > 180) {
+    flagError('assess-hr', 'Heart Rate / पल्स धड़कन (40-180 bpm)');
+  }
+
+  // 7. Oxygen SpO2 (70 - 100 %)
+  const spo2El = document.getElementById('assess-spo2');
+  const spo2Val = parseFloat(spo2El?.value);
+  if (!spo2El || isNaN(spo2Val) || spo2Val < 70 || spo2Val > 100) {
+    flagError('assess-spo2', 'Oxygen SpO2 / ऑक्सीजन (70-100%)');
+  }
+
+  // 8. Pain Status, Location & Severity (Mandatory)
+  if (assessmentState.painPresent) {
+    const painLocEl = document.getElementById('assess-pain-loc');
+    if (!painLocEl || !painLocEl.value || painLocEl.value === 'None') {
+      flagError('assess-pain-loc', 'Pain Location / दर्द का स्थान (Knee/Back/etc.)');
+    }
+    const sliderEl = document.getElementById('assess-pain-slider');
+    const pLevel = parseFloat(assessmentState.painLevel);
+    if (isNaN(pLevel) || pLevel < 1) {
+      flagError('assess-pain-slider', 'Pain Severity / दर्द का स्तर (1-10)');
+    }
+  }
+
+  // 9. Sleep Duration (2 - 16 hrs)
+  const sleepEl = document.getElementById('assess-sleep');
+  const sleepVal = parseFloat(sleepEl?.value);
+  if (!sleepEl || isNaN(sleepVal) || sleepVal < 2 || sleepVal > 16) {
+    flagError('assess-sleep', 'Sleep Duration / नींद के घंटे (2-16 hrs)');
+  }
+
+  // 10. Able to Walk (Functional Independence)
+  const walkEl = document.getElementById('assess-walk');
+  if (!walkEl || walkEl.value === '') {
+    flagError('assess-walk', 'Able to Walk / चलने में स्वतंत्रता');
+  }
+
+  // 11. Eat Themselves (Eating Independence)
+  const eatEl = document.getElementById('assess-eat');
+  if (!eatEl || eatEl.value === '') {
+    flagError('assess-eat', 'Eat Themselves / खाना खुद खाते हैं');
+  }
+
+  // 12. Move / Transfer (Bed or Chair)
+  const moveEl = document.getElementById('assess-move');
+  if (!moveEl || moveEl.value === '') {
+    flagError('assess-move', 'Move Transfer / उठना-बैठना');
+  }
+
+  // 13. Use Toilet Independently
+  const toiletEl = document.getElementById('assess-toilet');
+  if (!toiletEl || toiletEl.value === '') {
+    flagError('assess-toilet', 'Use Toilet Independently / शौचालय');
+  }
+
+  // 14. Daily Prescription Count (>= 0)
+  const medEl = document.getElementById('assess-med-count');
+  const medVal = parseFloat(medEl?.value);
+  if (!medEl || isNaN(medVal) || medVal < 0) {
+    flagError('assess-med-count', 'Daily Prescription Count / दवा संख्या');
+  }
+
+  // 15. Doses Taken Today / Missed Doses
+  const missedEl = document.getElementById('assess-missed-doses');
+  if (!missedEl || missedEl.value === '') {
+    flagError('assess-missed-doses', 'Doses Taken Today / आज दवाएं लीं या छूटीं');
+  }
+
+  // 16. Diabetic or Not & Blood Sugar
+  const diabEl = document.getElementById('assess-diabetic');
+  if (!diabEl || diabEl.value === '') {
+    flagError('assess-diabetic', 'Diabetic or Not / मधुमेह स्थिति');
+  } else if (diabEl.value === '1') {
     const sugarEl = document.getElementById('assess-sugar');
-    if (!sugarEl || sugarEl.value.toString().trim() === '' || isNaN(parseFloat(sugarEl.value))) {
-      missing.push('Blood Glucose (शुगर स्तर mg/dL)');
-      if (sugarEl) {
-        sugarEl.classList.add('input-field-error', 'ring-2', 'ring-rose-500', 'bg-rose-50');
-        if (!firstErrorElement) firstErrorElement = sugarEl;
-      }
+    const sugarVal = parseFloat(sugarEl?.value);
+    if (!sugarEl || isNaN(sugarVal) || sugarVal < 40 || sugarVal > 500) {
+      flagError('assess-sugar', 'Blood Glucose / शुगर स्तर (40-500 mg/dL)');
     }
+  }
+
+  // 17. Hearing Levels
+  const hearEl = document.getElementById('assess-hearing');
+  if (!hearEl || hearEl.value === '') {
+    flagError('assess-hearing', 'Hearing Level / सुनने की क्षमता');
   }
 
   const alertBox = document.getElementById('assessment-validation-alert');
   const missingListContainer = document.getElementById('assessment-missing-fields-list');
 
   if (missing.length > 0) {
-    soundEngine.playTone(300, 'sawtooth', 0.25);
+    if (typeof soundEngine !== 'undefined' && soundEngine.playTone) {
+      soundEngine.playTone(320, 'sawtooth', 0.25);
+    }
     if (alertBox) alertBox.classList.remove('hidden');
     if (missingListContainer) {
       missingListContainer.innerHTML = missing.map(m => `
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-200 text-rose-900 border border-rose-300">
-          <i class="fa-solid fa-circle-exclamation mr-1 text-[10px]"></i> ${m}
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-200 text-rose-900 border border-rose-300 shadow-2xs">
+          <i class="fa-solid fa-circle-exclamation mr-1.5 text-rose-700"></i> ${m}
         </span>
       `).join('');
     }
@@ -9894,7 +10772,15 @@ function validateAssessmentInputsBeforeSubmit() {
       firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    showToast(`कृपया सभी आवश्यक संकेत भरें (${missing.length} fields missing)`, 'danger');
+    showToast(`Mandatory parameters required: Please complete ${missing[0]} (${missing.length} missing)`, 'danger');
+
+    // Announce missing inputs aloud via elder speech assistant
+    const isHi = (typeof state !== 'undefined' && state.seniorLanguage === 'hi');
+    const speechPrompt = isHi
+      ? `AI जांच के लिए कृपया ${missing.slice(0, 2).join(' और ')} की जानकारी ऑडियो या फॉर्म में अवश्य भरें।`
+      : `Please provide mandatory clinical input for ${missing.slice(0, 2).join(' and ')} before running AI assessment.`;
+    playElderSpeech(speechPrompt, isHi ? 'hi-IN' : 'en-US');
+
     return false;
   } else {
     if (alertBox) alertBox.classList.add('hidden');
@@ -9953,15 +10839,39 @@ window.__resetCumulativeVoiceState = function () {
   const statusBadge = document.getElementById('voice-status-text');
   if (statusBadge) statusBadge.innerText = 'Voice Assistant Ready';
 
-  // Reset checklist badges to missing
-  const badgeKeys = ['age', 'gender', 'body', 'vitals', 'pain', 'sleep', 'adl_walk', 'adl_eat', 'adl_move', 'adl_toilet', 'meds', 'sugar', 'hearing', 'diseases'];
+  // Reset checklist badges to missing (EXCEPT Age and Gender which are always auto-detected and GREEN)
+  const badgeKeys = ['age', 'gender', 'height', 'weight', 'bp', 'hr', 'spo2', 'pain', 'sleep', 'adl_walk', 'adl_eat', 'adl_move', 'adl_toilet', 'meds', 'sugar', 'hearing', 'diseases'];
   badgeKeys.forEach(k => {
-    const b = document.getElementById(`badge-chk-${k}`);
-    if (b) {
-      b.className = 'voice-check-badge status-missing';
+    const b = document.getElementById(`badge-chk-${k}`) || document.getElementById(`badge-chk-${k.replace(/_/g, '-')}`);
+    if (!b) return;
+
+    if (k === 'age' || k === 'gender') {
+      b.className = 'voice-check-badge status-provided';
+      b.style.background = '#f0fdf4';
+      b.style.borderColor = 'rgba(16, 185, 129, 0.6)';
+      b.style.color = '#047857';
+      const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { age: 74, gender: 'Male' };
+      const curAge = document.getElementById('assess-age')?.value || prof.age || 74;
+      const curGender = document.getElementById('assess-gender')?.value || prof.gender || 'Male';
+      const labelSpan = b.querySelector('.badge-tag-label');
       const statusSpan = b.querySelector('.badge-tag-status');
-      if (statusSpan) statusSpan.innerHTML = '? Needs Info';
+      if (labelSpan) {
+        labelSpan.innerHTML = k === 'age'
+          ? `<i class="fa-solid fa-cake-candles"></i> Age: ${curAge}y`
+          : `<i class="fa-solid fa-venus-mars"></i> Gender: ${curGender}`;
+      }
+      if (statusSpan) {
+        statusSpan.innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check text-emerald-600"></i> Auto-detected</span>`;
+      }
+      return;
     }
+
+    b.className = 'voice-check-badge status-missing';
+    b.style.background = '';
+    b.style.borderColor = '';
+    b.style.color = '';
+    const statusSpan = b.querySelector('.badge-tag-status');
+    if (statusSpan) statusSpan.innerHTML = '? Needs Info';
   });
   const lblNext = document.getElementById('lbl-ask-next');
   if (lblNext) lblNext.innerText = 'Ask Next Question';
@@ -10609,8 +11519,10 @@ function applyExtractedEntities(result) {
 
     if (missingWrap) {
       missingWrap.innerHTML = '';
-      if (missing_fields && missing_fields.length > 0) {
-        missing_fields.forEach(f => {
+      // Exclude age and gender from missing badges since they are auto-detected
+      const cleanMissingFields = (missing_fields || []).filter(f => f !== 'age' && f !== 'gender');
+      if (cleanMissingFields.length > 0) {
+        cleanMissingFields.forEach(f => {
           const pill = document.createElement('span');
           pill.className = 'missing-pill';
           pill.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Needs Info: ${f.replace('_', ' ').toUpperCase()}`;
@@ -10621,9 +11533,10 @@ function applyExtractedEntities(result) {
   }
 
   if (statusText) {
-    statusText.innerText = is_ready_for_assessment
+    const cleanRemaining = (missing_fields || []).filter(f => f !== 'age' && f !== 'gender').length;
+    statusText.innerText = (cleanRemaining === 0 || is_ready_for_assessment)
       ? 'All parameters completed! Ready for AI Assessment.'
-      : `Details updated! ${missing_fields.length} parameter(s) remaining.`;
+      : `Details updated! ${cleanRemaining} parameter(s) remaining.`;
   }
 
   // Speak Assistant Response Aloud
@@ -10645,16 +11558,59 @@ function applyExtractedEntities(result) {
 
 // 9. Render Clinical Checklist Grid Badges
 function renderChecklistGrid(checklist, inquiries) {
-  const badgeKeys = ['age', 'gender', 'body', 'vitals', 'pain', 'sleep', 'adl_walk', 'adl_eat', 'adl_move', 'adl_toilet', 'meds', 'sugar', 'hearing', 'diseases'];
+  if (!checklist || Object.keys(checklist).length === 0) {
+    if (typeof computeChecklistFromFormDom === 'function') {
+      checklist = computeChecklistFromFormDom();
+    }
+  }
+
+  const badgeKeys = ['age', 'gender', 'height', 'weight', 'bp', 'hr', 'spo2', 'pain', 'sleep', 'adl_walk', 'adl_eat', 'adl_move', 'adl_toilet', 'meds', 'sugar', 'hearing', 'diseases'];
 
   badgeKeys.forEach(k => {
-    const badge = document.getElementById(`badge-chk-${k}`);
+    const badge = document.getElementById(`badge-chk-${k}`) || document.getElementById(`badge-chk-${k.replace(/_/g, '-')}`);
     if (!badge) return;
-    const item = checklist[k];
-    if (!item) return;
+
+    // Age & Gender are ALWAYS auto-detected from profile (GREEN) and never missing
+    if (k === 'age' || k === 'gender') {
+      badge.className = 'voice-check-badge status-provided';
+      badge.style.background = '#f0fdf4';
+      badge.style.borderColor = 'rgba(16, 185, 129, 0.6)';
+      badge.style.color = '#047857';
+      const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { age: 74, gender: 'Male' };
+      const curAge = document.getElementById('assess-age')?.value || prof.age || 74;
+      const curGender = document.getElementById('assess-gender')?.value || prof.gender || 'Male';
+      const labelSpan = badge.querySelector('.badge-tag-label');
+      const statusSpan = badge.querySelector('.badge-tag-status');
+      if (labelSpan) {
+        labelSpan.innerHTML = k === 'age'
+          ? `<i class="fa-solid fa-cake-candles"></i> Age: ${curAge}y`
+          : `<i class="fa-solid fa-venus-mars"></i> Gender: ${curGender}`;
+      }
+      if (statusSpan) {
+        statusSpan.innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check text-emerald-600"></i> Auto-detected</span>`;
+      }
+      badge.onclick = () => {
+        showToast(k === 'age' ? `Age auto-linked to Profile: ${curAge} Years` : `Gender auto-linked to Profile: ${curGender}`, 'info');
+      };
+      return;
+    }
+
+    const item = checklist ? checklist[k] : null;
+    if (!item) {
+      badge.className = 'voice-check-badge status-missing';
+      badge.style.background = '';
+      badge.style.borderColor = '';
+      badge.style.color = '';
+      const statusSpan = badge.querySelector('.badge-tag-status');
+      if (statusSpan) statusSpan.innerHTML = '? Needs Info';
+      return;
+    }
 
     const isAnswered = item.status === 'provided';
     badge.className = `voice-check-badge ${isAnswered ? 'status-provided' : 'status-missing'}`;
+    badge.style.background = isAnswered ? '#f0fdf4' : '';
+    badge.style.borderColor = isAnswered ? 'rgba(16, 185, 129, 0.5)' : '';
+    badge.style.color = isAnswered ? '#047857' : '';
 
     let valDisplay = '';
     if (isAnswered && item.value !== null && item.value !== undefined) {
@@ -10731,9 +11687,15 @@ function initAssessmentDraftAutoSaveListeners() {
   if (form) {
     form.addEventListener('input', () => {
       saveAssessmentDraft();
+      if (typeof renderChecklistGrid === 'function' && typeof computeChecklistFromFormDom === 'function') {
+        renderChecklistGrid(computeChecklistFromFormDom());
+      }
     });
     form.addEventListener('change', () => {
       saveAssessmentDraft();
+      if (typeof renderChecklistGrid === 'function' && typeof computeChecklistFromFormDom === 'function') {
+        renderChecklistGrid(computeChecklistFromFormDom());
+      }
     });
   }
 
@@ -10742,6 +11704,11 @@ function initAssessmentDraftAutoSaveListeners() {
 
   // Initialize Elder Voice Assistant
   initElderVoiceAssistant();
+
+  // Initial render of checklist grid from current DOM / restored draft
+  if (typeof renderChecklistGrid === 'function' && typeof computeChecklistFromFormDom === 'function') {
+    renderChecklistGrid(computeChecklistFromFormDom());
+  }
 }
 
 // Auto-run draft listeners and voice assistant on load
@@ -11171,32 +12138,695 @@ function generateClinicalReportSheetHtml(res, payload, prof) {
   `;
 }
 
-function openClinicalReportSheet() {
-  const modal = document.getElementById('modal-clinical-report-sheet');
-  const container = document.getElementById('clinical-report-sheet-content');
-  if (!modal || !container) return;
+// =========================================================================
+// COHORT SENIORS CLINICAL DATASET (DATASET-BACKED PATIENT PROFILES)
+// =========================================================================
+let currentReportSheetSeniorId = 'SNR-101';
 
-  const prof = getUserProfile('senior');
-  const payload = assessmentState.lastPayload || getCurrentAssessmentData();
-  
-  // If no prediction yet, construct a reasonable default prediction object
-  const res = assessmentState.lastPrediction || {
+const cohortSeniorsClinicalData = {
+  'SNR-101': {
+    prof: {
+      name: 'Ramesh Sharma',
+      age: 74,
+      gender: 'Male',
+      dob: '1952-04-12',
+      bloodGroup: 'B+ (Rh Positive)',
+      phone: '+91 98110-44912',
+      email: 'ramesh.sharma52@example.com',
+      address: 'C-42, Greater Kailash Part 1, South Delhi - 110048',
+      doctor: 'Dr. Alok Mehta, MD (Cardiology, Max Healthcare)',
+      allergies: 'Penicillin, Sulfonamides (Mild rash)',
+      emergencyNotes: 'Rahul Sharma (Son) • +91 98711-20931 (Lives 4 km away)'
+    },
+    payload: {
+      age: 74,
+      gender: 'Male',
+      bp_systolic: 158,
+      bp_diastolic: 96,
+      heart_rate: 114,
+      spo2: 94,
+      blood_glucose: 138,
+      height_cm: 168,
+      weight_kg: 72.5,
+      sleep_hours: 4.5,
+      pain_present: 1,
+      pain_level: 5,
+      pain_location: 'Precordial chest tightness & fatigue',
+      medication_count: 4,
+      missed_doses: 2,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 1,
+      has_hypertension: 1,
+      has_cardiac: 1,
+      has_respiratory: 1
+    },
+    res: {
+      predicted_risk_level: 'High',
+      predicted_risk_level_hi: 'उच्च जोखिम (High Risk)',
+      risk_score: 98,
+      predicted_probability: 0.98,
+      status_tag_en: 'CRITICAL CLINICAL ALERT — STAGE 2 HYPERTENSION & TACHYCARDIA',
+      status_tag_hi: 'तत्काल चिकित्सकीय ध्यान आवश्यक — उच्च रक्तचाप व हृदय गति वृद्धि',
+      alert_reason_summary: 'Resting Heart Rate spiked to 114 bpm + SpO2 dropped to 94% + Zero motion detected 4 hrs + missed 08:00 AM check-in.',
+      alert_reason_summary_hi: 'हृदय गति 114 bpm तक बढ़ गई है, ऑक्सीजन स्तर 94% हो गया है और सुबह का चेक-इन नहीं हुआ।',
+      suggested_action_summary: 'Immediate 2-way call & dispatch Sister Kavita for urgent doorstep evaluation, family consultation, and telemetry stabilization.',
+      contact_method: 'Immediate 2-way call + Doorstep home visit'
+    }
+  },
+  'SNR-102': {
+    prof: {
+      name: 'Savitri Devi',
+      age: 81,
+      gender: 'Female',
+      dob: '1945-09-20',
+      bloodGroup: 'O+ (Rh Positive)',
+      phone: '+91 98103-99210',
+      email: 'savitri.devi45@example.com',
+      address: 'Enclave 4, Hauz Khas, New Delhi - 110016',
+      doctor: 'Dr. Sunita Rao, MD (Orthopedics & Geriatrics)',
+      allergies: 'NSAIDs (Gastric sensitivity)',
+      emergencyNotes: 'Priya Verma (Daughter) • +91 99100-33421 (Contact immediately on falls)'
+    },
+    payload: {
+      age: 81,
+      gender: 'Female',
+      bp_systolic: 142,
+      bp_diastolic: 88,
+      heart_rate: 88,
+      spo2: 97,
+      blood_glucose: 110,
+      height_cm: 154,
+      weight_kg: 52.0,
+      sleep_hours: 5.0,
+      pain_present: 1,
+      pain_level: 7,
+      pain_location: 'Right Hip & Pelvic Contusion (Bathroom Fall)',
+      medication_count: 3,
+      missed_doses: 1,
+      walking_independent: 0,
+      eating_independent: 1,
+      moving_independent: 0,
+      toileting_independent: 0,
+      has_diabetes: 0,
+      has_hypertension: 1,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'High',
+      predicted_risk_level_hi: 'उच्च जोखिम (High Risk)',
+      risk_score: 92,
+      predicted_probability: 0.92,
+      status_tag_en: 'ACUTE TRAUMA / IMPACT SENSOR DISPATCH',
+      status_tag_hi: 'आपातकालीन गिरना / आघात सेंसर चेतावनी',
+      alert_reason_summary: 'Bathroom motion impact sensor triggered. Voice note: sudden dizziness & acute hip discomfort on standing. ADL Mobility 2/4.',
+      alert_reason_summary_hi: 'बाथरूम में गिरने का सेंसर ट्रिगर हुआ। खड़े होने पर चक्कर और कूल्हे में गंभीर दर्द की शिकायत।',
+      suggested_action_summary: 'Dispatch Brother Amit for physical hip mobility exam, assist with transfer, and inform daughter Priya Verma.',
+      contact_method: 'Urgent Doorstep Visit & Paramedic Assessment'
+    }
+  },
+  'SNR-103': {
+    prof: {
+      name: 'Anand Verma',
+      age: 78,
+      gender: 'Male',
+      dob: '1948-11-05',
+      bloodGroup: 'A+ (Rh Positive)',
+      phone: '+91 98734-11823',
+      email: 'anand.verma@example.com',
+      address: 'Sector 3, Pocket C, Saket, New Delhi - 110017',
+      doctor: 'Dr. Rajesh Bhalla, MD (Endocrinology)',
+      allergies: 'None reported',
+      emergencyNotes: 'Deepak Verma (Son) • +91 98112-99881'
+    },
+    payload: {
+      age: 78,
+      gender: 'Male',
+      bp_systolic: 132,
+      bp_diastolic: 84,
+      heart_rate: 76,
+      spo2: 98,
+      blood_glucose: 228,
+      height_cm: 172,
+      weight_kg: 84.0,
+      sleep_hours: 6.0,
+      pain_present: 0,
+      pain_level: 0,
+      pain_location: 'None',
+      medication_count: 5,
+      missed_doses: 3,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 1,
+      has_hypertension: 1,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'High',
+      predicted_risk_level_hi: 'उच्च जोखिम (High Risk)',
+      risk_score: 84,
+      predicted_probability: 0.84,
+      status_tag_en: 'ACUTE HYPERGLYCEMIA & MEDICATION OMISSION',
+      status_tag_hi: 'अति-शर्करा स्तर व इंसुलिन खुराक छूटना',
+      alert_reason_summary: 'Consecutive 2 missed evening insulin doses + Glucometer reading spiked to 228 mg/dL.',
+      alert_reason_summary_hi: 'लगातार 2 शाम की इंसुलिन खुराक छूटी और शुगर 228 mg/dL तक पहुंच गई।',
+      suggested_action_summary: 'Brother Amit dispatched for doorstep insulin supervision, ketone check, and family diet counseling.',
+      contact_method: 'Doorstep Insulin & Vitals Verification'
+    }
+  },
+  'SNR-104': {
+    prof: {
+      name: 'Meena Iyer',
+      age: 72,
+      gender: 'Female',
+      dob: '1954-03-18',
+      bloodGroup: 'AB+ (Rh Positive)',
+      phone: '+91 98188-77219',
+      email: 'meena.iyer72@example.com',
+      address: 'Pocket B, Vasant Kunj, New Delhi - 110070',
+      doctor: 'Dr. N. K. Sharma (Psychiatry & Gerontology)',
+      allergies: 'Dust, Pollen',
+      emergencyNotes: 'Karthik Iyer (Son in Bengaluru) • +91 97400-55120'
+    },
+    payload: {
+      age: 72,
+      gender: 'Female',
+      bp_systolic: 124,
+      bp_diastolic: 80,
+      heart_rate: 72,
+      spo2: 98,
+      blood_glucose: 105,
+      height_cm: 158,
+      weight_kg: 58.0,
+      sleep_hours: 4.0,
+      pain_present: 1,
+      pain_level: 3,
+      pain_location: 'Tension headache & neck tightness',
+      medication_count: 2,
+      missed_doses: 0,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 0,
+      has_hypertension: 0,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'Medium',
+      predicted_risk_level_hi: 'मध्यम जोखिम (Medium Risk)',
+      risk_score: 78,
+      predicted_probability: 0.78,
+      status_tag_en: 'PSYCHOSOCIAL ALERT — SEVERE ISOLATION & DEPRESSION',
+      status_tag_hi: 'मनोसामाजिक चेतावनी — एकाकीपन व अवसाद के लक्षण',
+      alert_reason_summary: 'Hindi voice note classified by NLP engine as severe loneliness & depression sentiment. Isolated living condition with son living out of state.',
+      alert_reason_summary_hi: 'आवाज नोट में गंभीर अकेलेपन और अवसाद की भावना पाई गई। बेटा बेंगलुरु में रहता है।',
+      suggested_action_summary: 'Sunita Mehra assigned for psycho-social counseling and scheduled tele-call with son Karthik Iyer.',
+      contact_method: 'Urgent Family Tele-Call & Video Counseling'
+    }
+  },
+  'SNR-105': {
+    prof: {
+      name: 'Harish Patel',
+      age: 76,
+      gender: 'Male',
+      dob: '1950-08-14',
+      bloodGroup: 'B+ (Rh Positive)',
+      phone: '+91 98199-33812',
+      email: 'harish.patel@example.com',
+      address: 'Main Market, Malviya Nagar, New Delhi - 110017',
+      doctor: 'Dr. V. K. Taneja (Internal Medicine)',
+      allergies: 'None',
+      emergencyNotes: 'Sneha Patel (Daughter) • +91 98200-44910'
+    },
+    payload: {
+      age: 76,
+      gender: 'Male',
+      bp_systolic: 148,
+      bp_diastolic: 90,
+      heart_rate: 80,
+      spo2: 96,
+      blood_glucose: 132,
+      height_cm: 165,
+      weight_kg: 76.0,
+      sleep_hours: 6.5,
+      pain_present: 0,
+      pain_level: 0,
+      pain_location: 'None',
+      medication_count: 3,
+      missed_doses: 1,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 1,
+      has_hypertension: 1,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'Medium',
+      predicted_risk_level_hi: 'मध्यम जोखिम (Medium Risk)',
+      risk_score: 62,
+      predicted_probability: 0.62,
+      status_tag_en: 'MODERATE HYPERTENSION & DEHYDRATION ALERT',
+      status_tag_hi: 'मध्यम उच्च रक्तचाप व निर्जलीकरण चेतावनी',
+      alert_reason_summary: 'Moderate blood pressure elevation (148/90) + Dehydration alert (only 2 glasses of water logged).',
+      alert_reason_summary_hi: 'रक्तचाप 148/90 तक बढ़ा और पानी की कमी (दिन में सिर्फ 2 गिलास पानी)।',
+      suggested_action_summary: 'Rajesh Kumar completed hydration protocol and salt restriction guidance. Monitoring telemetry baseline.',
+      contact_method: 'Attendant Doorstep Check & Hydration Log'
+    }
+  },
+  'SNR-106': {
+    prof: {
+      name: 'Nirmala Joshi',
+      age: 80,
+      gender: 'Female',
+      dob: '1946-06-10',
+      bloodGroup: 'O- (Rh Negative)',
+      phone: '+91 98101-77889',
+      email: 'nirmala.joshi@example.com',
+      address: 'Block C, Defence Colony, New Delhi - 110024',
+      doctor: 'Dr. Rajiv Anand, MS (Orthopedics)',
+      allergies: 'Codeine',
+      emergencyNotes: 'Amit Joshi (Son) • +91 98101-77889'
+    },
+    payload: {
+      age: 80,
+      gender: 'Female',
+      bp_systolic: 130,
+      bp_diastolic: 82,
+      heart_rate: 74,
+      spo2: 97,
+      blood_glucose: 112,
+      height_cm: 152,
+      weight_kg: 64.0,
+      sleep_hours: 6.0,
+      pain_present: 1,
+      pain_level: 6,
+      pain_location: 'Bilateral Knees (Severe Osteoarthritis)',
+      medication_count: 4,
+      missed_doses: 0,
+      walking_independent: 0,
+      eating_independent: 1,
+      moving_independent: 0,
+      toileting_independent: 1,
+      has_diabetes: 0,
+      has_hypertension: 1,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'Medium',
+      predicted_risk_level_hi: 'मध्यम जोखिम (Medium Risk)',
+      risk_score: 54,
+      predicted_probability: 0.54,
+      status_tag_en: 'CHRONIC JOINT ARTHRITIS & MOBILITY DEFICIT',
+      status_tag_hi: 'पुराना गठिया व गतिशीलता में कठिनाई',
+      alert_reason_summary: 'ADL mobility score 2/4 (severe knee stiffness, requires walker) + requested walking buddy support.',
+      alert_reason_summary_hi: 'घुटनों में गंभीर दर्द और अकड़न, वॉकर की जरूरत।',
+      suggested_action_summary: 'Sister Kavita conducted physical exam and prescribed isometric physiotherapy exercises.',
+      contact_method: 'Physiotherapy & Mobility Assistance'
+    }
+  },
+  'SNR-107': {
+    prof: {
+      name: 'Om Prakash Gupta',
+      age: 70,
+      gender: 'Male',
+      dob: '1956-01-25',
+      bloodGroup: 'B+ (Rh Positive)',
+      phone: '+91 98711-33221',
+      email: 'op.gupta@example.com',
+      address: 'Part 2, Lajpat Nagar, New Delhi - 110024',
+      doctor: 'Dr. Sandeep Chhabra (Pulmonology)',
+      allergies: 'None',
+      emergencyNotes: 'Vikas Gupta (Son) • +91 98711-33221'
+    },
+    payload: {
+      age: 70,
+      gender: 'Male',
+      bp_systolic: 122,
+      bp_diastolic: 80,
+      heart_rate: 70,
+      spo2: 98,
+      blood_glucose: 108,
+      height_cm: 170,
+      weight_kg: 70.0,
+      sleep_hours: 7.0,
+      pain_present: 0,
+      pain_level: 0,
+      pain_location: 'None',
+      medication_count: 2,
+      missed_doses: 0,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 0,
+      has_hypertension: 0,
+      has_cardiac: 0,
+      has_respiratory: 1
+    },
+    res: {
+      predicted_risk_level: 'Medium',
+      predicted_risk_level_hi: 'मध्यम जोखिम (Medium Risk)',
+      risk_score: 42,
+      predicted_probability: 0.42,
+      status_tag_en: 'POST-BRONCHITIS CONVALESCENCE — STABILIZING',
+      status_tag_hi: 'ब्रोन्काइटिस के बाद सुधार — स्थिति स्थिर',
+      alert_reason_summary: 'Recovering from mild seasonal bronchitis; daily vitals stabilizing with cough syrup regimen. SpO2 optimal at 98%.',
+      alert_reason_summary_hi: 'मौसमी खांसी से स्वस्थ हो रहे हैं। ऑक्सीजन 98% स्थिर।',
+      suggested_action_summary: 'Rajesh Kumar completed post-flu family check. Continue warm fluids and steam inhalation.',
+      contact_method: 'Post-Recovery Tele-Check'
+    }
+  },
+  'SNR-108': {
+    prof: {
+      name: 'Kanta Devi',
+      age: 73,
+      gender: 'Female',
+      dob: '1953-12-08',
+      bloodGroup: 'A+ (Rh Positive)',
+      phone: '+91 98114-55667',
+      email: 'kanta.devi@example.com',
+      address: 'Block A, Green Park, New Delhi - 110016',
+      doctor: 'Dr. Meenakshi Sundaram (Family Medicine)',
+      allergies: 'None',
+      emergencyNotes: 'Pooja Sharma (Daughter) • +91 98114-55667'
+    },
+    payload: {
+      age: 73,
+      gender: 'Female',
+      bp_systolic: 118,
+      bp_diastolic: 78,
+      heart_rate: 68,
+      spo2: 99,
+      blood_glucose: 102,
+      height_cm: 156,
+      weight_kg: 56.0,
+      sleep_hours: 7.5,
+      pain_present: 0,
+      pain_level: 0,
+      pain_location: 'None',
+      medication_count: 1,
+      missed_doses: 0,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 0,
+      has_hypertension: 0,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'Low',
+      predicted_risk_level_hi: 'कम जोखिम (Low Risk)',
+      risk_score: 26,
+      predicted_probability: 0.26,
+      status_tag_en: 'STABLE OUTPATIENT — OPTIMAL GERIATRIC HEALTH',
+      status_tag_hi: 'सुरक्षित स्वास्थ्य — उत्कृष्ट शारीरिक स्थिति',
+      alert_reason_summary: 'Optimal cardiovascular parameters, completed 45-min morning walking habit, 100% check-in compliance.',
+      alert_reason_summary_hi: 'सभी स्वास्थ्य संकेतक उत्कृष्ट। 45 मिनट सुबह की सैर पूरी की।',
+      suggested_action_summary: 'Maintain current active lifestyle and routine weekly health tele-check.',
+      contact_method: 'Routine Wellness Check'
+    }
+  },
+  'SNR-109': {
+    prof: {
+      name: 'Baldev Raj',
+      age: 75,
+      gender: 'Male',
+      dob: '1951-07-02',
+      bloodGroup: 'O+ (Rh Positive)',
+      phone: '+91 98109-11223',
+      email: 'baldev.raj@example.com',
+      address: 'Enclave, Greater Kailash 2, New Delhi - 110048',
+      doctor: 'Dr. K. L. Kapoor (Cardiology)',
+      allergies: 'None',
+      emergencyNotes: 'Sanjay Raj (Son) • +91 98109-11223'
+    },
+    payload: {
+      age: 75,
+      gender: 'Male',
+      bp_systolic: 120,
+      bp_diastolic: 78,
+      heart_rate: 72,
+      spo2: 99,
+      blood_glucose: 98,
+      height_cm: 169,
+      weight_kg: 69.0,
+      sleep_hours: 8.0,
+      pain_present: 0,
+      pain_level: 0,
+      pain_location: 'None',
+      medication_count: 2,
+      missed_doses: 0,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 0,
+      has_hypertension: 0,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'Low',
+      predicted_risk_level_hi: 'कम जोखिम (Low Risk)',
+      risk_score: 18,
+      predicted_probability: 0.18,
+      status_tag_en: 'HEALTHY GERIATRIC INDEPENDENCE',
+      status_tag_hi: 'स्वस्थ व आत्मनिर्भर वरिष्ठ नागरिक',
+      alert_reason_summary: 'Healthy routine, all daily medications logged, zero pain reported, family actively supporting.',
+      alert_reason_summary_hi: 'नियमित दिनचर्या, कोई दर्द नहीं, परिवार का पूरा सहयोग।',
+      suggested_action_summary: 'Continue routine wellness logging and bi-weekly check-ins.',
+      contact_method: 'Bi-Weekly Telemetry Review'
+    }
+  },
+  'SNR-110': {
+    prof: {
+      name: 'Sushila Mehra',
+      age: 71,
+      gender: 'Female',
+      dob: '1955-02-14',
+      bloodGroup: 'AB+ (Rh Positive)',
+      phone: '+91 98118-22990',
+      email: 'sushila.mehra@example.com',
+      address: 'Siri Fort Road, New Delhi - 110049',
+      doctor: 'Dr. Anita Goel (Geriatrics)',
+      allergies: 'None',
+      emergencyNotes: 'Tarun Mehra (Son) • +91 98118-22990'
+    },
+    payload: {
+      age: 71,
+      gender: 'Female',
+      bp_systolic: 116,
+      bp_diastolic: 76,
+      heart_rate: 70,
+      spo2: 99,
+      blood_glucose: 94,
+      height_cm: 155,
+      weight_kg: 54.0,
+      sleep_hours: 8.0,
+      pain_present: 0,
+      pain_level: 0,
+      pain_location: 'None',
+      medication_count: 1,
+      missed_doses: 0,
+      walking_independent: 1,
+      eating_independent: 1,
+      moving_independent: 1,
+      toileting_independent: 1,
+      has_diabetes: 0,
+      has_hypertension: 0,
+      has_cardiac: 0,
+      has_respiratory: 0
+    },
+    res: {
+      predicted_risk_level: 'Low',
+      predicted_risk_level_hi: 'कम जोखिम (Low Risk)',
+      risk_score: 14,
+      predicted_probability: 0.14,
+      status_tag_en: 'EXEMPLARY HEALTH STATUS — LOW RISK',
+      status_tag_hi: 'आदर्श स्वास्थ्य स्थिति — न्यूनतम जोखिम',
+      alert_reason_summary: 'Exemplary vital indicators, active daily morning routine, excellent cognitive & physical mobility scores.',
+      alert_reason_summary_hi: 'सभी संकेतक आदर्श, सक्रिय जीवनशैली और उत्कृष्ट शारीरिक स्वास्थ्य।',
+      suggested_action_summary: 'Continue regular preventive care and monthly community health workshops.',
+      contact_method: 'Monthly Health Check-in'
+    }
+  }
+};
+
+function getSeniorClinicalReportData(seniorId) {
+  // 1. Direct match by ID in cohort dataset
+  if (seniorId && cohortSeniorsClinicalData[seniorId]) {
+    return cohortSeniorsClinicalData[seniorId];
+  }
+
+  // 2. Match by Senior Name in cohort dataset
+  if (seniorId) {
+    for (const [id, data] of Object.entries(cohortSeniorsClinicalData)) {
+      if (data.prof.name.toLowerCase() === String(seniorId).toLowerCase()) {
+        return data;
+      }
+    }
+  }
+
+  // 3. Match in dynamic coordinator seniors list (supports new users)
+  const coordSeniors = (typeof getCoordinatorSeniors === 'function') ? getCoordinatorSeniors() : defaultCoordinatorSeniors;
+  const match = coordSeniors.find(s => s.id === seniorId || s.name.toLowerCase() === String(seniorId).toLowerCase());
+
+  if (match) {
+    if (cohortSeniorsClinicalData[match.id]) {
+      return cohortSeniorsClinicalData[match.id];
+    }
+    const bpParts = (match.vitals && match.vitals.bp) ? match.vitals.bp.split('/') : ['120', '80'];
+    const hrVal = (match.vitals && match.vitals.hr) ? parseInt(match.vitals.hr) : 72;
+    const spo2Val = (match.vitals && match.vitals.spo2) ? parseInt(match.vitals.spo2) : 98;
+    const glucVal = (match.vitals && match.vitals.glucose) ? parseInt(match.vitals.glucose) : 105;
+    const score = match.mlScore || 25;
+    const isHigh = score >= 80;
+    const isMed = score >= 40 && score < 80;
+
+    return {
+      prof: {
+        name: match.name,
+        age: match.age || 70,
+        gender: match.gender || 'Senior',
+        dob: match.dob || '1954-01-01',
+        bloodGroup: match.bloodGroup || 'B+',
+        phone: match.phone || '+91 98110-44912',
+        email: match.email || 'senior.member@careconnect.ai',
+        address: match.location || 'Civil Lines, North Delhi (NCR Cluster)',
+        doctor: match.doctor || 'Dr. Alok Mehta, MD (Senior Geriatrician)',
+        allergies: match.allergies || 'None reported',
+        emergencyNotes: match.familyContact || 'Family Care Circle Registered'
+      },
+      payload: {
+        age: match.age || 70,
+        gender: match.gender || 'Senior',
+        bp_systolic: parseInt(bpParts[0]) || 120,
+        bp_diastolic: parseInt(bpParts[1]) || 80,
+        heart_rate: hrVal,
+        spo2: spo2Val,
+        blood_glucose: glucVal,
+        height_cm: match.height_cm || 165,
+        weight_kg: match.weight_kg || 65,
+        sleep_hours: match.sleep_hours || 7.5,
+        pain_present: match.pain_present || 0,
+        pain_level: match.pain_level || 0,
+        pain_location: match.pain_location || 'None',
+        medication_count: match.medication_count || 3,
+        missed_doses: (match.vitals && match.vitals.missedDoses) ? match.vitals.missedDoses : 0,
+        walking_independent: 1,
+        eating_independent: 1,
+        moving_independent: 1,
+        toileting_independent: 1,
+        has_diabetes: match.has_diabetes || 0,
+        has_hypertension: match.has_hypertension || 0,
+        has_cardiac: match.has_cardiac || 0,
+        has_respiratory: match.has_respiratory || 0
+      },
+      res: {
+        predicted_risk_level: isHigh ? 'High' : (isMed ? 'Medium' : 'Low'),
+        predicted_risk_level_hi: isHigh ? 'उच्च जोखिम (High Risk)' : (isMed ? 'मध्यम जोखिम (Medium Risk)' : 'कम जोखिम (Low Risk)'),
+        risk_score: score,
+        predicted_probability: (score / 100).toFixed(2),
+        status_tag_en: isHigh ? 'CRITICAL CLINICAL OBSERVATION' : (isMed ? 'ACTIVE HEALTH MONITORING' : 'NEW ENROLLED MEMBER — STABLE BASELINE'),
+        status_tag_hi: isHigh ? 'तत्काल चिकित्सकीय ध्यान आवश्यक' : (isMed ? 'सक्रिय स्वास्थ्य निगरानी' : 'नए नामांकित सदस्य — सामान्य स्वास्थ्य'),
+        alert_reason_summary: match.reason || 'Telemetry parameters evaluated by CareConnect Random Forest classification engine.',
+        alert_reason_summary_hi: 'स्वास्थ्य संकेतकों का मूल्यांकन किया गया।',
+        suggested_action_summary: match.assignedAction ? `Dispatch ${match.assignedOperator || 'Field Operator'} for ${match.assignedAction}.` : 'Maintain daily active telemetry logs and routine check-in.',
+        contact_method: match.assignedAction || 'Daily automated check-in'
+      }
+    };
+  }
+
+  // 4. Default Fallback (Logged in senior or new registered user profile)
+  const currentSenior = (typeof getUserProfile === 'function') ? getUserProfile('senior') : {};
+  const currentPayload = (typeof assessmentState !== 'undefined' && assessmentState.lastPayload) ? assessmentState.lastPayload : ((typeof getCurrentAssessmentData === 'function') ? getCurrentAssessmentData() : {});
+  const currentPred = (typeof assessmentState !== 'undefined' && assessmentState.lastPrediction) ? assessmentState.lastPrediction : {
     predicted_risk_level: 'Low',
     predicted_risk_level_hi: 'कम जोखिम (Low Risk)',
-    risk_score: 32,
+    risk_score: 28,
     predicted_probability: 0.18,
-    status_tag_en: 'Routine Outpatient Telemetry',
-    status_tag_hi: 'नियमित स्वास्थ्य निगरानी',
-    alert_reason_summary: 'All telemetry vital signs are within normal geriatric ranges.',
+    status_tag_en: 'Active Outpatient Baseline Normal',
+    status_tag_hi: 'नियमित स्वास्थ्य निगरानी — सुरक्षित सीमा',
+    alert_reason_summary: 'All telemetry physiological vital signs are within geriatric safe thresholds.',
     alert_reason_summary_hi: 'सभी स्वास्थ्य संकेतक सुरक्षित सीमा में हैं।',
-    suggested_action_summary: 'Maintain hydration, daily walk, and regular medication schedule.',
+    suggested_action_summary: 'Maintain hydration, daily walking habit, and adherence to prescription schedule.',
     contact_method: 'Daily automated check-in'
   };
 
-  soundEngine.playTone(550, 'sine', 0.1);
-  container.innerHTML = generateClinicalReportSheetHtml(res, payload, prof);
-  modal.classList.remove('hidden');
+  return {
+    prof: {
+      name: currentSenior.name || 'Enrolled Senior Citizen',
+      age: currentSenior.age || 72,
+      gender: currentSenior.gender || 'Senior',
+      dob: currentSenior.dob || '1952-05-15',
+      bloodGroup: currentSenior.bloodGroup || 'B+',
+      phone: currentSenior.phone || '+91 98110-44912',
+      email: currentSenior.email || 'senior@careconnect.ai',
+      address: currentSenior.address || 'Civil Lines, North Delhi - 110054',
+      doctor: currentSenior.doctor || 'Dr. Alok Mehta, MD (Cardiology)',
+      allergies: currentSenior.allergies || 'None reported',
+      emergencyNotes: currentSenior.emergencyNotes || 'Family Circle Registered'
+    },
+    payload: currentPayload,
+    res: currentPred
+  };
 }
+
+function openClinicalReportSheet(seniorId) {
+  const modal = document.getElementById('modal-clinical-report-sheet');
+  const container = document.getElementById('clinical-report-sheet-content');
+  if (!modal || !container) {
+    console.warn('Clinical report sheet modal or content element not found in DOM');
+    return;
+  }
+
+  let targetId = seniorId;
+  if (!targetId || targetId === 'undefined' || targetId === 'null') {
+    targetId = currentReportSheetSeniorId || 'SNR-101';
+  }
+  currentReportSheetSeniorId = targetId;
+
+  const reportData = getSeniorClinicalReportData(targetId);
+
+  if (typeof soundEngine !== 'undefined' && soundEngine.playTone) {
+    soundEngine.playTone(550, 'sine', 0.1);
+  }
+
+  container.innerHTML = generateClinicalReportSheetHtml(reportData.res, reportData.payload, reportData.prof);
+  modal.classList.remove('hidden');
+
+  const scrollContainer = document.getElementById('clinical-report-sheet-scroll');
+  if (scrollContainer) {
+    scrollContainer.scrollTop = 0;
+  }
+}
+
+// Global Aliases so both old and new invocation forms work seamlessly everywhere
+function openClinicalReportSheetModal(seniorId) {
+  return openClinicalReportSheet(seniorId);
+}
+
+function openClinicalSheet(seniorId) {
+  return openClinicalReportSheet(seniorId);
+}
+
+window.openClinicalReportSheet = openClinicalReportSheet;
+window.openClinicalReportSheetModal = openClinicalReportSheetModal;
+window.openClinicalSheet = openClinicalSheet;
 
 function closeClinicalReportSheet() {
   const modal = document.getElementById('modal-clinical-report-sheet');
@@ -11205,7 +12835,7 @@ function closeClinicalReportSheet() {
 
 function printClinicalReportSheet() {
   soundEngine.playTone(600, 'sine', 0.1);
-  openClinicalReportSheet();
+  openClinicalReportSheet(currentReportSheetSeniorId);
   const container = document.getElementById('clinical-report-sheet-content');
   if (!container) return;
 
@@ -11657,24 +13287,54 @@ function deleteReminder(id) {
   showToast('Reminder deleted / रिमाइंडर हटाया गया', 'info');
 }
 
-function openAddReminderModal() {
-  const modal = document.getElementById('modal-add-reminder');
-  if (modal) {
-    soundEngine.playTone(550, 'sine', 0.1);
-    modal.classList.remove('hidden');
+function openAddReminderPage() {
+  if (typeof toggleSlideDrawer === 'function') toggleSlideDrawer(false);
+  
+  const allViews = ['coordinator', 'senior', 'family', 'operations'];
+  allViews.forEach(v => {
+    const el = document.getElementById(`view-${v}`);
+    if (el) el.classList.add('hidden');
+  });
+
+  const page = document.getElementById('view-add-reminder');
+  if (page) page.classList.remove('hidden');
+
+  const header = document.getElementById('global-header');
+  if (header) header.classList.remove('hidden');
+
+  if (typeof renderSeniorReminders === 'function') {
+    renderSeniorReminders(currentRemindersFilter || 'all');
   }
+  if (typeof updateHydrationUi === 'function') {
+    updateHydrationUi();
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeAddReminderPage() {
+  const page = document.getElementById('view-add-reminder');
+  if (page) page.classList.add('hidden');
+
+  const senior = document.getElementById('view-senior');
+  if (senior) senior.classList.remove('hidden');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openAddReminderModal() {
+  openAddReminderPage();
 }
 
 function closeAddReminderModal() {
-  const modal = document.getElementById('modal-add-reminder');
-  if (modal) modal.classList.add('hidden');
+  closeAddReminderPage();
 }
 
 function applyReminderPreset(presetKey) {
-  const titleInput = document.getElementById('rem-input-title');
-  const catInput = document.getElementById('rem-input-category');
-  const timeInput = document.getElementById('rem-input-time');
-  const notesInput = document.getElementById('rem-input-notes');
+  const titleInput = document.getElementById('rem-page-input-title') || document.getElementById('rem-input-title');
+  const catInput = document.getElementById('rem-page-input-category') || document.getElementById('rem-input-category');
+  const timeInput = document.getElementById('rem-page-input-time') || document.getElementById('rem-input-time');
+  const notesInput = document.getElementById('rem-page-input-notes') || document.getElementById('rem-input-notes');
 
   const presets = {
     water_morning: {
@@ -11715,13 +13375,13 @@ function applyReminderPreset(presetKey) {
     },
     walk: {
       title: 'Evening Gentle Walk / शाम की हल्की सैर',
-      cat: 'other',
+      cat: 'walk',
       time: '17:30',
       notes: '15-20 minutes gentle walk for joint mobility and fresh air.'
     },
     bp: {
       title: 'Blood Pressure & Vitals Check / बीपी जांच',
-      cat: 'other',
+      cat: 'bp',
       time: '18:00',
       notes: 'Check blood pressure with digital cuff and log readings.'
     }
@@ -11735,15 +13395,25 @@ function applyReminderPreset(presetKey) {
   if (timeInput) timeInput.value = p.time;
   if (notesInput) notesInput.value = p.notes;
 
+  // Also sync modal inputs if present
+  const mTitle = document.getElementById('rem-input-title');
+  const mCat = document.getElementById('rem-input-category');
+  const mTime = document.getElementById('rem-input-time');
+  const mNotes = document.getElementById('rem-input-notes');
+  if (mTitle) mTitle.value = p.title;
+  if (mCat) mCat.value = p.cat;
+  if (mTime) mTime.value = p.time;
+  if (mNotes) mNotes.value = p.notes;
+
   soundEngine.playTone(700, 'sine', 0.1);
 }
 
 function handleSaveNewReminder(e) {
   if (e) e.preventDefault();
-  const title = document.getElementById('rem-input-title')?.value.trim();
-  const category = document.getElementById('rem-input-category')?.value || 'other';
-  const time = document.getElementById('rem-input-time')?.value || '08:00';
-  const notes = document.getElementById('rem-input-notes')?.value.trim();
+  const title = (document.getElementById('rem-page-input-title')?.value || document.getElementById('rem-input-title')?.value || '').trim();
+  const category = document.getElementById('rem-page-input-category')?.value || document.getElementById('rem-input-category')?.value || 'other';
+  const time = document.getElementById('rem-page-input-time')?.value || document.getElementById('rem-input-time')?.value || '08:00';
+  const notes = (document.getElementById('rem-page-input-notes')?.value || document.getElementById('rem-input-notes')?.value || '').trim();
 
   if (!title) {
     showToast('Please enter reminder title / कृपया शीर्षक दर्ज करें', 'warning');
@@ -11784,14 +13454,26 @@ function handleSaveNewReminder(e) {
 
   const reminders = getSeniorReminders();
   reminders.push(newReminder);
-  // Sort reminders by time
   reminders.sort((a, b) => a.time.localeCompare(b.time));
   saveSeniorReminders(reminders);
   renderSeniorReminders(currentRemindersFilter);
 
-  closeAddReminderModal();
+  // Reset form inputs for next reminder
+  const tInput = document.getElementById('rem-page-input-title') || document.getElementById('rem-input-title');
+  if (tInput) tInput.value = '';
+  const nInput = document.getElementById('rem-page-input-notes') || document.getElementById('rem-input-notes');
+  if (nInput) nInput.value = '';
+
+  const remSec = document.getElementById('senior-reminders-section');
+  if (remSec) {
+    remSec.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const modal = document.getElementById('modal-add-reminder');
+  if (modal && !modal.classList.contains('hidden')) modal.classList.add('hidden');
+
   soundEngine.playSuccessChime();
-  showToast(`Reminder saved: ${title} at ${newReminder.timeDisplay}`, 'success');
+  showToast(`Reminder saved: ${title} at ${newReminder.timeDisplay}! ⏰`, 'success');
 }
 
 function scrollToRemindersSection() {
@@ -11998,165 +13680,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 300);
 });
-
-
-// =====================================================================// CHECKBOX MULTI-SELECT & BULK ACTIONS ENGINE
-// =====================================================================
-function handleOpsCaseCheckboxChange() {
-  const checkboxes = document.querySelectorAll('.ops-case-checkbox:checked');
-  const totalCheckboxes = document.querySelectorAll('.ops-case-checkbox');
-  const count = checkboxes.length;
-  const toolbar = document.getElementById('ops-cases-bulk-toolbar');
-  const countSpan = document.getElementById('ops-bulk-count');
-  const selectAll = document.getElementById('ops-cases-select-all');
-
-  if (countSpan) countSpan.textContent = count;
-
-  if (toolbar) {
-    if (count > 0) {
-      toolbar.classList.remove('hidden');
-    } else {
-      toolbar.classList.add('hidden');
-    }
-  }
-
-  if (selectAll && totalCheckboxes.length > 0) {
-    selectAll.checked = count === totalCheckboxes.length;
-    selectAll.indeterminate = count > 0 && count < totalCheckboxes.length;
-  }
-}
-
-function toggleOpsSelectAllCases(checked) {
-  const checkboxes = document.querySelectorAll('.ops-case-checkbox');
-  checkboxes.forEach(cb => {
-    cb.checked = checked;
-  });
-  handleOpsCaseCheckboxChange();
-}
-
-function clearOpsBulkSelection() {
-  const selectAll = document.getElementById('ops-cases-select-all');
-  if (selectAll) {
-    selectAll.checked = false;
-    selectAll.indeterminate = false;
-  }
-  const checkboxes = document.querySelectorAll('.ops-case-checkbox');
-  checkboxes.forEach(cb => {
-    cb.checked = false;
-  });
-  handleOpsCaseCheckboxChange();
-}
-
-function getSelectedOpsCaseSeniors() {
-  const checkboxes = document.querySelectorAll('.ops-case-checkbox:checked');
-  const seniors = [];
-  checkboxes.forEach(cb => {
-    const senior = cb.getAttribute('data-senior');
-    if (senior) seniors.push(senior);
-  });
-  return seniors;
-}
-
-function executeOpsBulkAssign() {
-  const seniors = getSelectedOpsCaseSeniors();
-  if (seniors.length === 0) {
-    showToast('Please select at least one alert to assign.', 'warning');
-    return;
-  }
-
-  const coordSelect = document.getElementById('ops-bulk-assign-coord');
-  const chosenCoord = coordSelect ? coordSelect.value : 'Sister Kavita, RN';
-
-  seniors.forEach(seniorName => {
-    const item = OPS_ALL_32_ALERTS.find(a => a.senior === seniorName);
-    if (item) {
-      item.coordinator = chosenCoord;
-      item.status = 'In Progress';
-    }
-  });
-
-  if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
-    soundEngine.playSuccessChime();
-  }
-
-  renderOpsCasesTable();
-  clearOpsBulkSelection();
-  showToast('Successfully assigned ' + seniors.length + ' cases to ' + chosenCoord + '!', 'success');
-}
-
-function executeOpsBulkDispatch() {
-  const seniors = getSelectedOpsCaseSeniors();
-  if (seniors.length === 0) {
-    showToast('Please select at least one alert to dispatch.', 'warning');
-    return;
-  }
-
-  if (soundEngine && typeof soundEngine.playTone === 'function') {
-    soundEngine.playTone(784, 'sine', 0.15);
-    setTimeout(() => soundEngine.playTone(880, 'sine', 0.18), 180);
-    setTimeout(() => soundEngine.playTone(1046, 'sine', 0.25), 380);
-  }
-
-  seniors.forEach(seniorName => {
-    const item = OPS_ALL_32_ALERTS.find(a => a.senior === seniorName);
-    if (item) {
-      item.status = 'Dispatched (12m)';
-    }
-  });
-
-  renderOpsCasesTable();
-  clearOpsBulkSelection();
-  showToast('Emergency clinical nurses dispatched for ' + seniors.length + ' seniors!', 'success');
-}
-
-function executeOpsBulkResolve() {
-  const seniors = getSelectedOpsCaseSeniors();
-  if (seniors.length === 0) {
-    showToast('Please select at least one alert to resolve.', 'warning');
-    return;
-  }
-
-  if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
-    soundEngine.playSuccessChime();
-  }
-
-  seniors.forEach(seniorName => {
-    const item = OPS_ALL_32_ALERTS.find(a => a.senior === seniorName);
-    if (item) {
-      item.status = 'Resolved';
-    }
-  });
-
-  renderOpsCasesTable();
-  clearOpsBulkSelection();
-  showToast('Marked ' + seniors.length + ' selected cases as Resolved!', 'success');
-}
-
-function executeOpsBulkExport() {
-  const seniors = getSelectedOpsCaseSeniors();
-  if (seniors.length === 0) {
-    showToast('Please select at least one alert to export.', 'warning');
-    return;
-  }
-
-  const selectedAlerts = OPS_ALL_32_ALERTS.filter(a => seniors.includes(a.senior));
-
-  let csvContent = 'CareConnect - Selected Alerts Export Sheet\n';
-  csvContent += 'Generated On: ' + new Date().toLocaleString() + '\n';
-  csvContent += 'Selected Records: ' + selectedAlerts.length + '\n\n';
-  csvContent += 'Case ID,Senior Name,Age,Area,Risk Level,Issue Category,Clinical Description,Time Logged,Status,Assigned Coordinator,Emergency Phone\n';
-
-  selectedAlerts.forEach(a => {
-    csvContent += '"' + a.id + '","' + a.senior + '","' + a.age + '","' + a.area + '","' + a.risk + '","' + a.issueCategory + '","' + a.issue + '","' + a.time + '","' + a.status + '","' + a.coordinator + '","' + a.phone + '"\n';
-  });
-
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'CareConnect_Selected_' + selectedAlerts.length + '_Alerts_' + new Date().toISOString().slice(0, 10) + '.csv';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  showToast('Exported ' + selectedAlerts.length + ' selected cases to CSV!', 'success');
-}

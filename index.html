@@ -10,6 +10,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2pdf.js CDN for Direct Client-side PDF Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts: Plus Jakarta Sans, Inter & Noto Sans Devanagari -->
@@ -615,39 +617,34 @@
 
     <!-- ========================================================================= -->
     <!-- 1. CARE COORDINATOR VIEW                                                  -->
-    <!-- Features: Daily Priority Queue, Patient Dossier (Medical History, Checkups,-->
-    <!-- Assessments, User Inputs), and Auto Emergency Contact Notifications      -->
+    <!-- Requirement: A ranked daily list of seniors to prioritise, with the       -->
+    <!-- reason for each alert and a suggested action.                             -->
     <!-- ========================================================================= -->
     <section id="view-coordinator" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
       <!-- Top Title & Action Bar -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <div class="flex items-center space-x-2">
             <span
               class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
               Role: Care Coordinator
             </span>
-            <span class="text-xs text-slate-500">Shift Zone: South Delhi & NCR Cluster • Sister Kavita, RN</span>
+            <span class="text-xs text-slate-500">Shift Zone: South Delhi & NCR Cluster</span>
           </div>
           <h2 class="text-2xl font-extrabold text-[#0e294b] mt-1 font-sans">
-            Care Coordinator Portal & Clinical Command Center
+            Daily Senior Priority Triage Queue
           </h2>
           <p class="text-xs sm:text-sm text-slate-500">
-            Prioritised senior triage queue, patient medical history, checkup telemetry, senior inputs, and automated emergency family notifications.
+            Intelligently ranked order of vulnerable elders requiring proactive clinical or buddy contact today.
           </p>
         </div>
 
-        <!-- Quick Action Buttons -->
-        <div class="flex flex-wrap items-center gap-2">
-          <button onclick="openRaiseCriticalModal()"
-            class="inline-flex items-center px-3.5 py-2 border border-rose-400 text-xs font-bold rounded-xl text-white bg-rose-600 hover:bg-rose-700 transition-all shadow-md shadow-rose-600/20">
-            <i class="fa-solid fa-triangle-exclamation mr-1.5 animate-pulse"></i>
-            <span>Raise Critical Alert</span>
-          </button>
+        <!-- Quick Simulation Button to show incoming emergency live! -->
+        <div class="flex items-center space-x-2">
           <button onclick="simulateIncomingAlert()"
             class="inline-flex items-center px-3.5 py-2 border border-rose-300 text-xs font-bold rounded-xl text-rose-700 bg-rose-50 hover:bg-rose-100 transition-all shadow-sm">
             <i class="fa-solid fa-circle-exclamation mr-1.5 text-rose-500 animate-bounce"></i>
-            <span>Simulate Emergency</span>
+            <span>Simulate Incoming Emergency</span>
           </button>
           <button onclick="refreshCoordinatorQueue()"
             class="inline-flex items-center px-3 py-2 border border-slate-200 text-xs font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition-all shadow-sm"
@@ -664,262 +661,85 @@
         </div>
       </div>
 
-      <!-- CRITICAL EMERGENCY BROADCAST BANNER (Appears when a Critical case is active) -->
-      <div id="coordinator-critical-emergency-banner" class="mb-6 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-700 to-red-800 text-white p-4 sm:p-5 shadow-lg border border-rose-400 animate-pulse hidden">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex items-start sm:items-center space-x-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl flex-shrink-0 text-white">
-              <i class="fa-solid fa-circle-exclamation animate-bounce"></i>
-            </div>
-            <div>
-              <div class="flex items-center space-x-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-white text-rose-800">
-                  CRITICAL CASE ACTIVE
-                </span>
-                <span id="banner-critical-time" class="text-xs text-rose-100">Live Incident</span>
-              </div>
-              <h3 id="banner-critical-title" class="text-base sm:text-lg font-extrabold mt-0.5">
-                Ramesh Sharma (@senior_ramesh) • Tachycardia & Inactivity
-              </h3>
-              <p id="banner-critical-desc" class="text-xs sm:text-sm text-rose-100 mt-0.5 line-clamp-1">
-                Resting HR spiked to 114 bpm with zero motion for 4 hrs. Automated emergency SMS & WhatsApp sent to son Rahul.
-              </p>
-            </div>
+      <!-- Quick Metrics Summary Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm flex items-center space-x-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-triangle-exclamation"></i>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-400/20 text-emerald-100 border border-emerald-400/30">
-              <i class="fa-solid fa-check-double mr-1.5 text-emerald-300"></i>
-              Family Notified (SMS & WhatsApp)
+          <div>
+            <div id="stat-critical-count" class="text-xl font-extrabold text-rose-600">2</div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Critical Priority</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-amber-200 shadow-sm flex items-center space-x-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <div>
+            <div id="stat-high-count" class="text-xl font-extrabold text-amber-600">2</div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">High Attention</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-teal-200 shadow-sm flex items-center space-x-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-teal-100 text-[#00a896] flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-user-clock"></i>
+          </div>
+          <div>
+            <div id="stat-active-cases" class="text-xl font-extrabold text-[#00a896]">4</div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Pending Today</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm flex items-center space-x-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <div id="stat-resolved-count" class="text-xl font-extrabold text-emerald-600">18</div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Handled / Safe</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div
+        class="bg-white rounded-xl border border-slate-200 p-3 mb-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <div class="relative flex-grow sm:w-72">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">
+              <i class="fa-solid fa-magnifying-glass"></i>
             </span>
-            <button onclick="openPatientDossier('PAT-101')"
-              class="px-3 py-1.5 bg-white text-rose-800 hover:bg-rose-50 rounded-xl text-xs font-extrabold shadow-sm transition-all flex items-center space-x-1">
-              <i class="fa-solid fa-folder-open"></i>
-              <span>Open Patient Dossier</span>
-            </button>
-            <button onclick="openCallModal('ALT-1091', 'Rahul Sharma (Son)', '+91 98711-20931')"
-              class="px-3 py-1.5 bg-rose-900/60 hover:bg-rose-900 text-white rounded-xl text-xs font-bold border border-rose-400/40 transition-all flex items-center space-x-1">
-              <i class="fa-solid fa-phone"></i>
-              <span>Call Contact</span>
-            </button>
+            <input id="coordinator-search-input" oninput="filterCoordinatorAlerts()" type="text"
+              placeholder="Search senior name, alert cause, area..."
+              class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
           </div>
+          <select id="coordinator-priority-filter" onchange="filterCoordinatorAlerts()"
+            class="border border-slate-300 rounded-lg text-xs py-1.5 px-2 bg-white text-slate-700">
+            <option value="all">All Priorities</option>
+            <option value="critical">🚨 Critical Only</option>
+            <option value="high">⚠️ High Attention</option>
+            <option value="moderate">🟡 Moderate Review</option>
+          </select>
+        </div>
+
+        <div class="text-xs font-semibold text-slate-500 flex items-center space-x-2">
+          <span>Ranking Algorithm:</span>
+          <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono">Biometric Delta + Inactivity +
+            Sentiment</span>
         </div>
       </div>
 
-      <!-- THREE MAIN TABS FOR CARE COORDINATOR -->
-      <div class="flex items-center space-x-2 border-b border-slate-200 mb-6 pb-2 overflow-x-auto">
-        <button id="coord-tab-btn-queue" onclick="switchCoordinatorTab('queue')"
-          class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 bg-teal-600 text-white shadow-sm">
-          <i class="fa-solid fa-list-check"></i>
-          <span>Priority Triage Queue</span>
-          <span id="coord-badge-queue" class="px-2 py-0.5 rounded-full text-[10px] bg-white text-teal-800 font-extrabold">4</span>
-        </button>
-
-        <button id="coord-tab-btn-patients" onclick="switchCoordinatorTab('patients')"
-          class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
-          <i class="fa-solid fa-hospital-user text-indigo-500"></i>
-          <span>Patients & Health Records</span>
-          <span id="coord-badge-patients" class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-100 text-indigo-800 font-extrabold">5</span>
-        </button>
-
-        <button id="coord-tab-btn-notifications" onclick="switchCoordinatorTab('notifications')"
-          class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
-          <i class="fa-solid fa-bell text-rose-500"></i>
-          <span>Emergency Contact Dispatch Log</span>
-          <span id="coord-badge-notifications" class="px-2 py-0.5 rounded-full text-[10px] bg-rose-100 text-rose-800 font-extrabold">2</span>
-        </button>
+      <!-- Ranked List of Seniors Container -->
+      <div id="coordinator-alert-list" class="space-y-4">
+        <!-- Rendered dynamically by app.js -->
       </div>
-
-      <!-- ========================================================================= -->
-      <!-- TAB 1: PRIORITY TRIAGE QUEUE                                              -->
-      <!-- ========================================================================= -->
-      <div id="coord-tab-content-queue">
-        <!-- Quick Metrics Summary Bar -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-          <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm flex items-center space-x-3">
-            <div
-              class="w-10 h-10 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-lg">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <div>
-              <div id="stat-critical-count" class="text-xl font-extrabold text-rose-600">2</div>
-              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Critical Priority</div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-4 border border-amber-200 shadow-sm flex items-center space-x-3">
-            <div
-              class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
-              <i class="fa-solid fa-bell"></i>
-            </div>
-            <div>
-              <div id="stat-high-count" class="text-xl font-extrabold text-amber-600">2</div>
-              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">High Attention</div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-4 border border-teal-200 shadow-sm flex items-center space-x-3">
-            <div
-              class="w-10 h-10 rounded-lg bg-teal-100 text-[#00a896] flex items-center justify-center font-bold text-lg">
-              <i class="fa-solid fa-user-clock"></i>
-            </div>
-            <div>
-              <div id="stat-active-cases" class="text-xl font-extrabold text-[#00a896]">4</div>
-              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Pending Today</div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm flex items-center space-x-3">
-            <div
-              class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg">
-              <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div>
-              <div id="stat-resolved-count" class="text-xl font-extrabold text-emerald-600">18</div>
-              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Handled / Safe</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Filters & Search Toolbar -->
-        <div
-          class="bg-white rounded-xl border border-slate-200 p-3 mb-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div class="flex items-center space-x-2 w-full sm:w-auto">
-            <div class="relative flex-grow sm:w-72">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </span>
-              <input id="coordinator-search-input" oninput="filterCoordinatorAlerts()" type="text"
-                placeholder="Search senior username, name, cause, area..."
-                class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-            </div>
-            <select id="coordinator-priority-filter" onchange="filterCoordinatorAlerts()"
-              class="border border-slate-300 rounded-lg text-xs py-1.5 px-2 bg-white text-slate-700">
-              <option value="all">All Priorities</option>
-              <option value="critical">🚨 Critical Only</option>
-              <option value="high">⚠️ High Attention</option>
-              <option value="moderate">🟡 Moderate Review</option>
-            </select>
-          </div>
-
-          <div class="text-xs font-semibold text-slate-500 flex items-center space-x-2">
-            <span>Triage Engine:</span>
-            <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono">Random Forest ML + Real-time Biometric Delta</span>
-          </div>
-        </div>
-
-        <!-- Ranked List of Seniors Container -->
-        <div id="coordinator-alert-list" class="space-y-4">
-          <!-- Rendered dynamically by app.js -->
-        </div>
-      </div>
-
-      <!-- ========================================================================= -->
-      <!-- TAB 2: PATIENTS & HEALTH DOSSIER (मरीज़ डेटा, मेडिकल हिस्ट्री व इनपुट्स)   -->
-      <!-- ========================================================================= -->
-      <div id="coord-tab-content-patients" class="hidden">
-        <!-- AI ML TIER CLASSIFICATION BAR -->
-        <div class="bg-gradient-to-r from-slate-900 via-[#0e294b] to-slate-800 text-white rounded-2xl p-4 sm:p-5 mb-5 shadow-md border border-slate-700">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div class="flex items-center space-x-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold uppercase tracking-wider bg-teal-500/20 text-teal-300 border border-teal-400/30">
-                  ApnaSa 90,000 Records Random Forest Engine
-                </span>
-                <span class="text-xs text-slate-300">Live Clinical Risk Classification</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold mt-1">
-                Patients Categorized by Machine Learning Predicted Tiers
-              </h3>
-              <p class="text-xs text-slate-300 mt-0.5">
-                Evaluates Patient Data + Medical History + Medical Assessments + Senior Inputs to classify into <strong>Critical</strong>, <strong>Moderate</strong>, or <strong>Normal</strong> Tiers. Critical cases auto-raise emergency alarms & notify family contacts.
-              </p>
-            </div>
-
-            <!-- Quick Tier Stats Pills -->
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="setTierFilter('all')" id="tier-pill-all"
-                class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-white text-slate-900 border border-white shadow-sm transition-all">
-                All Tiers (5)
-              </button>
-              <button onclick="setTierFilter('CRITICAL')" id="tier-pill-critical"
-                class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-rose-600/30 text-rose-300 hover:bg-rose-600 hover:text-white border border-rose-500/50 transition-all flex items-center space-x-1">
-                <span>🚨 Critical (3)</span>
-              </button>
-              <button onclick="setTierFilter('NORMAL')" id="tier-pill-normal"
-                class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600 hover:text-white border border-emerald-500/50 transition-all flex items-center space-x-1">
-                <span>🟢 Normal (1)</span>
-              </button>
-              <button onclick="setTierFilter('MODERATE')" id="tier-pill-moderate"
-                class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-amber-600/30 text-amber-300 hover:bg-amber-600 hover:text-white border border-amber-500/50 transition-all flex items-center space-x-1">
-                <span>🟡 Moderate (1)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Patient Directory Controls -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 mb-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
-          <div class="flex items-center space-x-2 w-full md:w-auto flex-grow max-w-lg">
-            <div class="relative flex-grow">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">
-                <i class="fa-solid fa-user-magnifying-glass"></i>
-              </span>
-              <input id="coord-patient-search" oninput="filterCoordinatorPatients()" type="text"
-                placeholder="Search by @username, patient name, medical condition, or city..."
-                class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <select id="coord-patient-status-filter" onchange="filterCoordinatorPatients()"
-              class="border border-slate-300 rounded-xl text-xs py-2 px-3 bg-white text-slate-700 font-semibold">
-              <option value="all">All Tiers (सभी टियर्स)</option>
-              <option value="CRITICAL">🚨 Critical Tier (गंभीर जोखिम)</option>
-              <option value="NORMAL">🟢 Normal Tier (सामान्य / सुरक्षित)</option>
-              <option value="MODERATE">🟡 Moderate Tier (मध्यम निगरानी)</option>
-            </select>
-          </div>
-
-          <div class="flex items-center space-x-2 w-full md:w-auto justify-end">
-            <button onclick="openRaiseCriticalModal()"
-              class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
-              <i class="fa-solid fa-bolt"></i>
-              <span>Simulate Tier Escalation & Notify</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Patient Cards Grid -->
-        <div id="coordinator-patients-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <!-- Rendered dynamically by app.js -->
-        </div>
-      </div>
-
-      <!-- ========================================================================= -->
-      <!-- TAB 3: EMERGENCY CONTACT NOTIFICATIONS LOG (आपातकालीन सूचना रिकॉर्ड)         -->
-      <!-- ========================================================================= -->
-      <div id="coord-tab-content-notifications" class="hidden">
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 mb-6 shadow-sm">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
-            <div>
-              <h3 class="text-base font-extrabold text-[#0e294b] flex items-center space-x-2">
-                <i class="fa-solid fa-paper-plane text-rose-500"></i>
-                <span>Automated Emergency Contact Dispatch Audit Trail</span>
-              </h3>
-              <p class="text-xs text-slate-500 mt-0.5">
-                Real-time multi-channel notifications (SMS, WhatsApp & App Push) transmitted to emergency family contacts upon critical events.
-              </p>
-            </div>
-            <button onclick="openRaiseCriticalModal()"
-              class="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5 flex-shrink-0">
-              <i class="fa-solid fa-bullhorn"></i>
-              <span>Dispatch Emergency Notice</span>
-            </button>
-          </div>
-
-          <div id="coordinator-notifications-list" class="space-y-3.5 mt-4">
-            <!-- Rendered dynamically by app.js -->
-          </div>
-        </div>
-      </div>
-
     </section>
 
 
@@ -975,9 +795,10 @@
           <!-- Senior Greeting with Warm Avatar -->
           <div class="flex items-center space-x-4 text-center sm:text-left">
             <div class="relative">
-              <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80"
-                alt="Ramesh Sharma"
-                class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-sky-300 shadow-md">
+              <div
+                class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-700 text-white font-black text-2xl sm:text-3xl flex items-center justify-center border-4 border-sky-200 shadow-md flex-shrink-0">
+                <span id="senior-view-initials">RS</span>
+              </div>
               <span class="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white"
                 title="Connected"></span>
             </div>
@@ -1941,26 +1762,41 @@
     <!-- Requirement: A short weekly wellbeing summary and an immediate alert     -->
     <!-- only when something is serious.                                           -->
     <!-- ========================================================================= -->
-    <section id="view-family" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
-      <!-- Header Banner with Senior Context -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <div class="flex items-center space-x-2">
-            <span
-              class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">
-              Role: Family Member
-            </span>
-            <span class="text-xs text-slate-500">Connected to: Ramesh Sharma (Father)</span>
+        <!-- ========================================================================= -->
+    <!-- 3. FAMILY MEMBER PORTAL (परिवार का वेलबीइंग व हेल्थ मॉनिटर)               -->
+    <!-- Features: Senior Health Report, AI Analyze Summary, Assessment History     -->
+    <!-- ========================================================================= -->
+    <section id="view-family" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
+      <!-- Top Context Banner & Senior Switcher -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-5 sm:p-6 rounded-3xl shadow-xl border border-purple-700/50">
+        <div class="flex items-center space-x-4">
+          <div id="family-senior-avatar-badge"
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-purple-700 via-purple-800 to-indigo-900 text-white font-black text-2xl sm:text-3xl flex items-center justify-center border-2 border-purple-300 shadow-md flex-shrink-0">
+            <span id="family-senior-initials">RS</span>
           </div>
-          <h2 class="text-2xl font-extrabold text-[#0e294b] mt-1 font-sans">
-            Dad's Wellbeing & Safety Monitor
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-500">
-            Filtered peace of mind: Weekly wellness digest & immediate alerts only when urgent clinical intervention is
-            needed.
-          </p>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-purple-500/30 text-purple-200 border border-purple-400/40">
+                Role: Family Member
+              </span>
+              <span id="family-senior-tier-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-500/30 text-rose-300 border border-rose-400/40 flex items-center space-x-1">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                <span>🚨 Critical Risk Tier (Score 80/100)</span>
+              </span>
+            </div>
+            <h2 id="family-senior-name-heading" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+              Ramesh Sharma <span class="text-lg sm:text-xl font-bold text-purple-200">[Father • 74 Yrs • Male]</span>
+            </h2>
+            <div id="family-caregiver-heading" class="text-xs sm:text-sm text-purple-200 font-bold mt-0.5">
+              [Caregiver: Rahul Sharma • Male • 42 Yrs]
+            </div>
+            <p id="family-senior-meta-sub" class="text-xs text-purple-200 font-medium">
+              @senior_ramesh • South Delhi (Greater Kailash, C-42) • Primary Nurse: Sister Kavita, RN
+            </p>
+          </div>
         </div>
 
+<<<<<<< HEAD
         <div class="flex items-center space-x-2">
           <!-- Notification Filter Preference Badge -->
           <span
@@ -1974,12 +1810,144 @@
             <i class="fa-solid fa-user-gear mr-1.5 text-purple-600"></i>
             <span>Family Profile</span>
           </button>
+=======
+        <!-- Right Side: Senior Selector Dropdown & Quick Actions -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2.5">
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-purple-300/30">
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-[10px] font-bold text-purple-200 uppercase tracking-wider">
+                <i class="fa-solid fa-user-group mr-1"></i> Switch Linked Senior:
+              </label>
+              <!-- Carousel Quick Slide Arrows in Top Banner -->
+              <div class="flex items-center space-x-1">
+                <button onclick="slideFamilyPatient(-1)" class="w-5 h-5 rounded-md bg-white/15 hover:bg-purple-600 text-white flex items-center justify-center text-[9px] transition-colors" title="Slide to Previous Elder">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <span id="banner-slide-pill" class="text-[9px] font-bold font-mono px-1 rounded bg-black/30 text-purple-200">1/5</span>
+                <button onclick="slideFamilyPatient(1)" class="w-5 h-5 rounded-md bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center text-[9px] transition-colors" title="Slide to Next Elder (1st -> 2nd -> 3rd -> 1st)">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+            <select id="family-senior-selector" onchange="changeFamilyLinkedSenior(this.value)"
+              class="bg-slate-900 text-white text-xs font-bold rounded-xl px-3 py-1.5 border border-purple-400/50 focus:ring-2 focus:ring-purple-400">
+              <optgroup label="🏠 Sharma Household (Same Caretaker: Rahul Sharma)">
+                <option value="PAT-101">Ramesh Sharma [Father • 74 Yrs • Male]</option>
+                <option value="PAT-102">Savitri Devi [Mother • 81 Yrs • Female]</option>
+              </optgroup>
+              <optgroup label="🌐 Extended Network Households">
+                <option value="PAT-103">Anand Verma [Uncle • 78 Yrs • Male]</option>
+                <option value="PAT-104">Meena Iyer [Aunt • 72 Yrs • Female]</option>
+                <option value="PAT-105">Harish Patel [Father • 76 Yrs • Male]</option>
+              </optgroup>
+            </select>
+            <div id="family-selector-caregiver-sub" class="text-[11px] font-bold text-purple-200 mt-1">[Caregiver: Rahul Sharma • Male • 42 Yrs]</div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button onclick="openSimpleAssessmentModal()"
+              class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold border border-white/20 transition-all flex items-center space-x-1.5 shadow-sm"
+              title="View & Print Simple Assessment Slip">
+              <i class="fa-solid fa-file-waveform"></i>
+              <span class="hidden sm:inline">Assessment Slip</span>
+            </button>
+            <button onclick="simulateFamilyCallCoordinator()"
+              class="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white text-xs font-bold shadow-md transition-all flex items-center space-x-1.5"
+              title="Call Care Coordinator (Sister Kavita, RN)">
+              <i class="fa-solid fa-phone"></i>
+              <span>Call Care Coordinator</span>
+            </button>
+          </div>
+>>>>>>> f33f462 (Your changes)
         </div>
       </div>
 
-      <!-- CRITICAL / SERIOUS ALERT CARD (Shown ONLY when an alert is serious) -->
+      
+      <!-- ========================================================================= -->
+      <!-- MULTI-PATIENT INTERACTIVE CAROUSEL SLIDER (स्लाइडर: एक परिवार, अनेक मरीज़) -->
+      <!-- Allows smooth sliding forward & backward: 1st -> 2nd -> 3rd -> 1st          -->
+      <!-- ========================================================================= -->
+      <div id="family-seniors-carousel-panel" class="mb-6 bg-white rounded-3xl p-4 sm:p-5 border border-purple-200/90 shadow-md">
+        <!-- Carousel Header Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-base font-bold shadow-sm flex-shrink-0">
+              <i class="fa-solid fa-people-roof"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-xs sm:text-sm font-extrabold text-[#0e294b]">
+                  Family Seniors Carousel <span class="text-purple-600 font-bold">(मल्टीपल मरीज़ स्लाइडर)</span>
+                </h3>
+                <!-- Household Filter Pills: Same Caretaker vs All -->
+                <div class="inline-flex items-center bg-purple-100/80 p-0.5 rounded-xl border border-purple-200 text-[10px]">
+                  <button id="btn-carousel-filter-household" onclick="setFamilyCarouselFilter('household')"
+                    class="px-2.5 py-1 rounded-lg font-bold transition-all bg-purple-700 text-white shadow-xs flex items-center space-x-1">
+                    <i class="fa-solid fa-house-chimney-user text-[9px]"></i>
+                    <span>Same Caretaker (2 Patients: Father & Mother)</span>
+                  </button>
+                  <button id="btn-carousel-filter-all" onclick="setFamilyCarouselFilter('all')"
+                    class="px-2.5 py-1 rounded-lg font-bold transition-all text-purple-900 hover:bg-purple-200/60 flex items-center space-x-1">
+                    <i class="fa-solid fa-users text-[9px]"></i>
+                    <span>All Network Elders (5)</span>
+                  </button>
+                </div>
+              </div>
+              <p id="carousel-scope-desc" class="text-[11px] text-slate-500 font-medium mt-1">
+                <i class="fa-solid fa-circle-info text-purple-600 mr-1"></i>
+                <strong class="text-purple-950">Same Caretaker Household:</strong> Rahul Sharma is primary caretaker for 2 elders in this family (Ramesh Sharma & Savitri Devi). Slide to switch between them!
+              </p>
+            </div>
+          </div>
+
+          <!-- Carousel Controls -->
+          <div class="flex items-center space-x-2 self-start sm:self-center">
+            <!-- Auto-slide tour toggle -->
+            <button onclick="toggleFamilyAutoSlide()" id="btn-family-autoslide"
+              class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold border border-purple-200 transition-all flex items-center space-x-1.5 shadow-sm"
+              title="Toggle automatic slideshow between household seniors">
+              <i class="fa-solid fa-play text-[10px]" id="icon-family-autoslide"></i>
+              <span id="label-family-autoslide">Auto Slide Tour</span>
+            </button>
+
+            <!-- Previous Slide Button -->
+            <button onclick="slideFamilyPatient(-1)"
+              class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-purple-700 hover:text-white text-slate-700 flex items-center justify-center text-xs font-bold transition-all shadow-sm active:scale-95"
+              title="Slide to Previous Senior (e.g. 2nd -> 1st or loops to last)">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <!-- Counter Badge -->
+            <div id="carousel-slide-counter-badge"
+              class="px-3 py-1.5 rounded-xl bg-purple-900 text-white text-xs font-extrabold font-mono shadow-sm flex items-center space-x-1.5">
+              <i class="fa-solid fa-user text-purple-300 text-[10px]"></i>
+              <span id="carousel-slide-counter-text">1 / 5</span>
+            </div>
+
+            <!-- Next Slide Button -->
+            <button onclick="slideFamilyPatient(1)"
+              class="w-9 h-9 rounded-xl bg-purple-700 hover:bg-purple-800 text-white flex items-center justify-center text-xs font-bold transition-all shadow-md active:scale-95"
+              title="Slide to Next Senior (1st -> 2nd -> 3rd -> 1st)">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5 Interactive Senior Cards Strip -->
+        <div id="family-patients-carousel-strip" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <!-- Populated dynamically by app.js with active ring, brackets, avatar, tier & vitals -->
+        </div>
+
+        <!-- Carousel Slide Dots Indicator (Clickable) -->
+        <div id="family-carousel-dots" class="flex items-center justify-center space-x-2 mt-4 pt-3 border-t border-slate-100">
+          <!-- Populated dynamically by app.js: e.g. ● ○ ○ ○ ○ -->
+        </div>
+      </div>
+
+
+      <!-- CRITICAL / SERIOUS ALERT CARD (Shown ONLY when an alert is active) -->
       <div id="family-serious-alert-card"
-        class="bg-gradient-to-r from-rose-600 to-rose-700 text-white rounded-3xl p-6 sm:p-7 shadow-xl shadow-rose-600/25 mb-8 border-2 border-rose-400 relative overflow-hidden transition-all duration-300">
+        class="bg-gradient-to-r from-rose-600 via-rose-700 to-red-800 text-white rounded-3xl p-5 sm:p-6 shadow-xl shadow-rose-600/25 mb-6 border-2 border-rose-400 relative overflow-hidden transition-all duration-300">
         <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
 
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -1990,17 +1958,16 @@
             </div>
             <div>
               <div
-                class="inline-flex items-center space-x-2 bg-rose-900/60 px-2.5 py-0.5 rounded-md text-xs font-black uppercase tracking-wider text-rose-200 mb-1">
-                <span>Immediate Critical Alert</span>
+                class="inline-flex items-center space-x-2 bg-rose-950/60 px-2.5 py-0.5 rounded-md text-xs font-black uppercase tracking-wider text-rose-200 mb-1">
+                <span>🚨 Immediate Critical Alert Dispatched</span>
                 <span>•</span>
                 <span id="family-alert-time">Today, 08:30 AM</span>
               </div>
               <h3 id="family-alert-title" class="text-lg sm:text-xl font-bold">
-                Ramesh did not check in & Blood Pressure Spiked (158/96 mmHg)
+                Ramesh Sharma: Resting HR Spiked to 114 bpm & BP 158/96 mmHg
               </h3>
-              <p id="family-alert-desc" class="text-xs sm:text-sm text-rose-100 mt-1 max-w-2xl leading-relaxed">
-                Suggested clinical response initiated: Care Coordinator Kavita is on a 2-way call and Field Nurse Sister
-                Kavita has been dispatched.
+              <p id="family-alert-desc" class="text-xs sm:text-sm text-rose-100 mt-1 max-w-3xl leading-relaxed">
+                Suggested clinical response initiated: Care Coordinator Sister Kavita placed a 2-way call and Field Nurse has been dispatched to Greater Kailash. Automated SMS & WhatsApp notification delivered to Rahul Sharma (Son).
               </p>
             </div>
           </div>
@@ -2010,204 +1977,444 @@
             <button onclick="simulateFamilyCallDad()"
               class="px-4 py-2.5 rounded-xl bg-white text-rose-700 hover:bg-rose-50 text-xs font-bold shadow-md transition-all flex items-center space-x-1.5">
               <i class="fa-solid fa-phone"></i>
-              <span>Call Dad</span>
+              <span>Direct Dial</span>
             </button>
             <button onclick="simulateFamilyCallCoordinator()"
-              class="px-4 py-2.5 rounded-xl bg-rose-900/60 hover:bg-rose-900 text-white border border-rose-400 text-xs font-bold transition-all flex items-center space-x-1.5">
+              class="px-4 py-2.5 rounded-xl bg-rose-950/70 hover:bg-rose-950 text-white border border-rose-400 text-xs font-bold transition-all flex items-center space-x-1.5">
               <i class="fa-solid fa-user-nurse"></i>
-              <span>Talk to Coordinator</span>
+              <span>Talk to Nurse</span>
             </button>
             <button onclick="dismissFamilyAlert()"
               class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
-              title="Acknowledge">
+              title="Acknowledge & Dismiss">
               <i class="fa-solid fa-check"></i>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- NORMAL SAFE STATUS BANNER (Shown when everything is fine) -->
+      <!-- NORMAL SAFE STATUS BANNER (Shown when senior vitals are peaceful) -->
       <div id="family-calm-status-banner"
-        class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-5 mb-8 flex items-center justify-between">
+        class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
         <div class="flex items-center space-x-3.5">
-          <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg">
+          <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg flex-shrink-0">
             <i class="fa-solid fa-circle-check"></i>
           </div>
           <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-emerald-800">Status: Safe & Peaceful</div>
-            <div class="text-sm font-semibold text-slate-800">No serious issues detected. Dad checked in today and is
-              doing well!</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-emerald-800">Status: Safe Baseline & Normal Vitals</div>
+            <div id="family-calm-status-text" class="text-sm font-semibold text-slate-800">
+              No serious issues detected. Senior checked in on schedule and physiological parameters are normal.
+            </div>
           </div>
         </div>
         <button onclick="simulateSeriousEmergencyForFamily()"
-          class="text-xs font-bold text-rose-600 hover:text-rose-800 underline">
-          Test Serious Alert Mode
+          class="text-xs font-bold text-rose-600 hover:text-rose-800 underline flex-shrink-0">
+          Simulate Critical Alert Mode
         </button>
       </div>
 
-      <!-- SHORT WEEKLY WELLBEING SUMMARY (Required) -->
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
+      <!-- ========================================================================= -->
+      <!-- THREE MAIN TABS: 1. Analyze Summary | 2. Health Report | 3. Assessment History -->
+      <!-- ========================================================================= -->
+      <div class="flex items-center space-x-2 border-b border-slate-200 mb-6 pb-2 overflow-x-auto">
+        <button id="family-tab-btn-summary" onclick="switchFamilyTab('summary')"
+          class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 bg-purple-700 text-white shadow-sm">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>1. Analyze Summary (एनालिसिस समरी)</span>
+        </button>
 
-        <!-- Summary Header with Health Index Score -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
-          <div>
-            <div class="flex items-center space-x-2">
-              <span
-                class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded">Weekly
-                Digest</span>
-              <span class="text-xs text-slate-400">Past 7 Days (Oct 22 - Oct 29)</span>
+        <button id="family-tab-btn-report" onclick="switchFamilyTab('report')"
+          class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-file-waveform text-teal-600"></i>
+          <span>2. Senior Health Report (हेल्थ रिपोर्ट)</span>
+        </button>
+
+        <button id="family-tab-btn-history" onclick="switchFamilyTab('history')"
+          class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i>
+          <span>3. Assessment History (असेसमेंट हिस्ट्री)</span>
+          <span id="family-badge-history-count" class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-100 text-indigo-800 font-extrabold">4</span>
+        </button>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 1: ANALYZE SUMMARY (क्लिनिकल एनालिसिस व वेलबीइंग समरी)               -->
+      <!-- ========================================================================= -->
+      <div id="family-tab-content-summary">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-6">
+          
+          <!-- Summary Top Title with Health Index Score -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
+                  AI Clinical Digest
+                </span>
+                <span class="text-xs text-slate-400">Past 7 Days Wellbeing Analysis</span>
+              </div>
+              <h3 id="family-summary-heading" class="text-xl font-extrabold text-[#0e294b] mt-1">Short Weekly Wellbeing Summary</h3>
+              <p id="family-summary-paragraph" class="text-xs sm:text-sm text-slate-500">
+                Concise overview of your senior's vital signs, mood, medication adherence, and sleep trajectory.
+              </p>
             </div>
-            <h3 class="text-xl font-extrabold text-[#0e294b] mt-1">Short Weekly Wellbeing Summary</h3>
-            <p class="text-xs sm:text-sm text-slate-500">Concise overview of Dad's vital signs, mood, medication, and
-              sleep.</p>
+
+            <!-- Health Score Badge -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 flex items-center space-x-3">
+              <div id="family-health-score-circle"
+                class="w-12 h-12 rounded-full border-4 border-emerald-500 flex items-center justify-center font-extrabold text-slate-900 text-lg">
+                88
+              </div>
+              <div>
+                <div class="text-[11px] font-bold text-slate-400 uppercase">Overall Health Score</div>
+                <div id="family-health-score-label" class="text-xs font-bold text-emerald-700">Healthy & Stable (+3%)</div>
+              </div>
+            </div>
           </div>
 
-          <!-- Overall Weekly Health Score Badge -->
-          <div class="bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 flex items-center space-x-3">
-            <div
-              class="w-12 h-12 rounded-full border-4 border-emerald-500 flex items-center justify-center font-extrabold text-slate-900 text-lg">
-              88
+          <!-- AI Model Clinical Risk Explanation Banner -->
+          <div id="family-ai-analysis-banner" class="my-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start space-x-3.5">
+            <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg flex-shrink-0">
+              <i class="fa-solid fa-brain"></i>
             </div>
             <div>
-              <div class="text-[11px] font-bold text-slate-400 uppercase">Overall Score</div>
-              <div class="text-xs font-bold text-emerald-700">Healthy & Stable (+3%)</div>
+              <h4 class="text-xs sm:text-sm font-extrabold text-amber-950">
+                AI Clinical Model Analysis: Key Risk Drivers & Observations
+              </h4>
+              <p id="family-ai-analysis-text" class="text-xs text-amber-900 mt-1 leading-relaxed">
+                Elevated blood pressure (158/96 mmHg) detected alongside resting heart rate spike (114 bpm). Oxygen saturation is at 94.0%. Functional mobility requires grab bar / cane assistance. Sister Kavita has adjusted monitoring protocol.
+              </p>
             </div>
           </div>
+
+          <!-- 7-Day Quick Day-by-Day Consistency Strip -->
+          <div class="my-6">
+            <div class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+              <span id="family-consistency-label">7-Day Daily Check-in Consistency:</span>
+              <span id="family-consistency-percentage" class="text-emerald-700 font-bold">100% (7/7 days verified)</span>
+            </div>
+            <div id="family-consistency-strip-container" class="grid grid-cols-7 gap-2 text-center">
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">Thu</div>
+                <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">Fri</div>
+                <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">Sat</div>
+                <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+              </div>
+              <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">Sun</div>
+                <div class="text-amber-600 text-sm mt-1"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="text-[10px] font-semibold text-slate-700 mt-1">Tired</div>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">Mon</div>
+                <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">Tue</div>
+                <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+              </div>
+              <div class="bg-purple-50 border border-purple-300 rounded-xl p-2.5 ring-2 ring-purple-500/30">
+                <div class="text-[10px] font-bold text-purple-800 uppercase">Today</div>
+                <div class="text-purple-600 text-sm mt-1"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="text-[10px] font-bold text-purple-800 mt-1">Active</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Core Wellness Pillar Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+                <i class="fa-solid fa-pills text-blue-500 mr-1.5"></i> Medication Adherence
+              </div>
+              <div id="family-stat-meds" class="text-xl font-extrabold text-slate-900">93%</div>
+              <p id="family-stat-meds-sub" class="text-[11px] text-slate-500 mt-0.5">Missed 1 morning dose on Sunday; refilled on Monday.</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+                <i class="fa-solid fa-bed text-purple-500 mr-1.5"></i> Sleep Rest Cycle
+              </div>
+              <div id="family-stat-sleep" class="text-xl font-extrabold text-slate-900">5.2 hrs/night</div>
+              <p id="family-stat-sleep-sub" class="text-[11px] text-slate-500 mt-0.5">Restless sleep cycle; 2 nighttime awakenings noted.</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+                <i class="fa-solid fa-face-smile text-amber-500 mr-1.5"></i> Mood & Voice Sentiment
+              </div>
+              <div id="family-stat-mood" class="text-xl font-extrabold text-slate-900">86% Positive</div>
+              <p id="family-stat-mood-sub" class="text-[11px] text-slate-500 mt-0.5">Voice transcript reported dizziness & chest heaviness.</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+                <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Resting Heart Rate
+              </div>
+              <div id="family-stat-hr" class="text-xl font-extrabold text-slate-900">114 bpm (Spike)</div>
+              <p id="family-stat-hr-sub" class="text-[11px] text-slate-500 mt-0.5">7-day baseline: 72 bpm. Monitored for arrhythmia.</p>
+            </div>
+          </div>
+
+          <!-- Weekly Mood & Blood Pressure Trend Chart -->
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-slate-700">7-Day Vitals & Sentiment Trajectory</span>
+              <span class="text-[11px] text-slate-400">Systolic Blood Pressure (mmHg) vs Mood Rating (1-5)</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="familyVitalsChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Coordinator's Personal Weekly Note -->
+          <div class="bg-teal-50/70 border border-teal-200 rounded-2xl p-4 flex items-start space-x-3.5">
+            <div
+              class="w-10 h-10 rounded-full bg-[#00a896] text-white flex items-center justify-center flex-shrink-0 font-bold text-sm">
+              NK
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold text-teal-900">Weekly Clinical Care Note from Sister Kavita, RN</span>
+                <span class="text-[10px] text-slate-500">Today, 08:45 AM</span>
+              </div>
+              <p id="family-coordinator-note-text" class="text-xs text-slate-700 mt-1 leading-relaxed">
+                "Ramesh ji has been in wonderful spirits this week, but this morning his resting heart rate spiked to 114 bpm with elevated BP (158/96). We immediately called him, advised resting on the recliner, and dispatched field assistance. You don't need to panic — our medical team is actively managing his care!"
+              </p>
+            </div>
+          </div>
+
         </div>
 
-        <!-- 7-Day Quick Day-by-Day Consistency Strip -->
-        <div class="my-6">
-          <div class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
-            <span>7-Day Daily Check-in Consistency:</span>
-            <span class="text-emerald-700 font-bold">100% (7/7 days verified)</span>
-          </div>
-          <div class="grid grid-cols-7 gap-2 text-center">
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
-              <div class="text-[10px] font-bold text-slate-500 uppercase">Thu</div>
-              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
-              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
-            </div>
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
-              <div class="text-[10px] font-bold text-slate-500 uppercase">Fri</div>
-              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
-              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
-            </div>
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
-              <div class="text-[10px] font-bold text-slate-500 uppercase">Sat</div>
-              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
-              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
-            </div>
-            <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
-              <div class="text-[10px] font-bold text-slate-500 uppercase">Sun</div>
-              <div class="text-amber-600 text-sm mt-1"><i class="fa-solid fa-triangle-exclamation"></i></div>
-              <div class="text-[10px] font-semibold text-slate-700 mt-1">Tired</div>
-            </div>
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
-              <div class="text-[10px] font-bold text-slate-500 uppercase">Mon</div>
-              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
-              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
-            </div>
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
-              <div class="text-[10px] font-bold text-slate-500 uppercase">Tue</div>
-              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
-              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
-            </div>
-            <div class="bg-teal-50 border border-teal-300 rounded-xl p-2.5 ring-2 ring-teal-500/30">
-              <div class="text-[10px] font-bold text-teal-800 uppercase">Today</div>
-              <div class="text-teal-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
-              <div class="text-[10px] font-bold text-teal-800 mt-1">Active</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4 Summary Insight Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
-              <i class="fa-solid fa-pills text-blue-500 mr-1.5"></i> Medication Adherence
-            </div>
-            <div class="text-xl font-extrabold text-slate-900">93%</div>
-            <p class="text-[11px] text-slate-500 mt-0.5">Missed 1 evening BP dose on Sunday; refilled on Monday.</p>
-          </div>
-
-          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
-              <i class="fa-solid fa-bed text-purple-500 mr-1.5"></i> Sleep Quality
-            </div>
-            <div class="text-xl font-extrabold text-slate-900">7.2 hrs/night</div>
-            <p class="text-[11px] text-slate-500 mt-0.5">Consistent rest cycle; deep sleep improved by 14%.</p>
-          </div>
-
-          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
-              <i class="fa-solid fa-face-smile text-amber-500 mr-1.5"></i> Mood & Voice Sentiment
-            </div>
-            <div class="text-xl font-extrabold text-slate-900">86% Positive</div>
-            <p class="text-[11px] text-slate-500 mt-0.5">Cheerful on 5 days; 1 voice note reported mild fatigue.</p>
-          </div>
-
-          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
-              <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Average Resting HR
-            </div>
-            <div class="text-xl font-extrabold text-slate-900">72 bpm</div>
-            <p class="text-[11px] text-slate-500 mt-0.5">Within normal healthy adult range (68 - 76 bpm).</p>
-          </div>
-        </div>
-
-        <!-- Weekly Mood & Blood Pressure Trend Chart -->
-        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-slate-700">7-Day Vitals & Sentiment Trajectory</span>
-            <span class="text-[11px] text-slate-400">Systolic Blood Pressure (mmHg) vs Mood Rating (1-5)</span>
-          </div>
-          <div class="h-48 w-full">
-            <canvas id="familyVitalsChart"></canvas>
-          </div>
-        </div>
-
-        <!-- Coordinator's Personal Weekly Note -->
-        <div class="bg-teal-50/70 border border-teal-200 rounded-2xl p-4 flex items-start space-x-3.5">
-          <div
-            class="w-10 h-10 rounded-full bg-[#00a896] text-white flex items-center justify-center flex-shrink-0 font-bold text-sm">
-            NK
-          </div>
+        <!-- Quick Message / Loving Note to Senior -->
+        <div
+          class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs font-bold text-teal-900">Weekly Care Note from Nurse Kavita</span>
-              <span class="text-[10px] text-slate-500">Oct 28</span>
-            </div>
-            <p class="text-xs text-slate-700 mt-1 leading-relaxed">
-              "Ramesh ji has been in wonderful spirits this week. He regularly did his evening park walks. We adjusted
-              his hydration schedule so his morning blood pressure remains well regulated. You don't need to worry—I'm
-              monitoring him closely every day!"
-            </p>
+            <h4 class="text-sm font-bold text-[#0e294b]">Send a loving message to your Senior</h4>
+            <p class="text-xs text-slate-500">Will be read aloud to them on their companion view in Hindi/English.</p>
+          </div>
+          <div class="flex items-center space-x-2 w-full sm:w-auto">
+            <input id="family-message-input" type="text" placeholder="e.g. Papa, take rest, we are coming this evening!"
+              class="text-xs border border-slate-300 rounded-xl px-3 py-2 w-full sm:w-72 focus:ring-2 focus:ring-purple-500">
+            <button onclick="sendFamilyMessageToDad()"
+              class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-all flex-shrink-0">
+              Send
+            </button>
           </div>
         </div>
-
       </div>
 
-      <!-- Quick Message / Note to Senior -->
-      <div
-        class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <h4 class="text-sm font-bold text-[#0e294b]">Send a loving message to Dad</h4>
-          <p class="text-xs text-slate-500">Will be read aloud to him on his Senior view or spoken via IVR.</p>
-        </div>
-        <div class="flex items-center space-x-2 w-full sm:w-auto">
-          <input id="family-message-input" type="text" placeholder="e.g. Hi Dad, kids are excited to visit Sunday!"
-            class="text-xs border border-slate-300 rounded-xl px-3 py-2 w-full sm:w-72 focus:ring-2 focus:ring-purple-500">
-          <button onclick="sendFamilyMessageToDad()"
-            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-all flex-shrink-0">
-            Send
-          </button>
+      <!-- ========================================================================= -->
+      <!-- TAB 2: SENIOR HEALTH REPORT (सीनियर की हेल्थ रिपोर्ट)                    -->
+      <!-- ========================================================================= -->
+      <div id="family-tab-content-report" class="hidden">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-6 space-y-6">
+          
+          <!-- Report Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-3">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 uppercase tracking-wider">
+                Official Clinical Health Dossier
+              </span>
+              <h3 id="report-senior-name-title" class="text-xl font-extrabold text-[#0e294b] mt-1">
+                Medical & Vitals Report: Ramesh Sharma
+              </h3>
+              <p class="text-xs text-slate-500">
+                Verified telemetry from Home IoT hub, doctor consultations, and nurse checkups.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 self-start sm:self-center">
+              <button onclick="downloadPatientAssessmentPdf()"
+                class="px-4 py-2 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1.5 shadow-md shadow-purple-500/20 active:scale-[0.98]">
+                <i class="fa-solid fa-file-pdf text-rose-300"></i>
+                <span>Download Assessment Report (PDF)</span>
+              </button>
+              <button onclick="openSimpleAssessmentModal()"
+                class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm">
+                <i class="fa-solid fa-eye text-teal-300"></i>
+                <span>Preview & Print Slip</span>
+              </button>
+              <button onclick="downloadSimpleAssessmentReport()"
+                class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 border border-slate-300 shadow-sm"
+                title="Download Plain Text Summary">
+                <i class="fa-solid fa-file-lines text-slate-500"></i>
+                <span>.txt</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section 1: Demographics & Emergency Contacts -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Patient Demographics</div>
+              <div class="space-y-1 text-xs">
+                <div><span class="text-slate-500">Full Name:</span> <strong id="report-patient-name" class="text-slate-800">Ramesh Sharma</strong></div>
+                <div><span class="text-slate-500">Username:</span> <code id="report-patient-username" class="text-purple-700 bg-purple-50 px-1 rounded">@senior_ramesh</code></div>
+                <div><span class="text-slate-500">Age / Gender:</span> <span id="report-patient-age-gender" class="text-slate-800">74 Yrs • Male</span></div>
+                <div><span class="text-slate-500">Blood Group:</span> <strong id="report-patient-blood-group" class="text-rose-600 font-extrabold">B +ve</strong></div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Medical Supervision</div>
+              <div class="space-y-1 text-xs">
+                <div><span class="text-slate-500">Consultant:</span> <strong id="report-patient-doctor" class="text-slate-800">Dr. V.K. Kapoor (Fortis)</strong></div>
+                <div><span class="text-slate-500">Next Review:</span> <span id="report-patient-review-date" class="text-slate-800">15 Nov 2026</span></div>
+                <div><span class="text-slate-500">Assigned Nurse:</span> <span id="report-patient-nurse" class="text-slate-800">Sister Kavita, RN</span></div>
+                <div><span class="text-slate-500">Location:</span> <span id="report-patient-location" class="text-slate-800">Greater Kailash, Delhi</span></div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Designated Emergency Contact</div>
+              <div class="space-y-1 text-xs">
+                <div><span class="text-slate-500">Contact:</span> <strong id="report-emergency-name" class="text-purple-800">Rahul Sharma (Son)</strong></div>
+                <div><span class="text-slate-500">Phone:</span> <strong id="report-emergency-phone" class="text-slate-800 font-mono">+91 98711-20931</strong></div>
+                <div><span class="text-slate-500">Alt Phone:</span> <span id="report-emergency-alt" class="text-slate-700">+91 98110-55441</span></div>
+                <div><span class="text-slate-500">Channels:</span> <span class="text-emerald-700 font-bold">SMS, WhatsApp, Push</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Current Vitals Telemetry Snapshot -->
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 flex items-center">
+              <i class="fa-solid fa-heart-pulse text-rose-500 mr-2"></i> Current Physiological Vitals
+            </h4>
+            <div id="report-vitals-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <!-- Dynamically populated vitals cards -->
+            </div>
+          </div>
+
+          <!-- Section 3: Diagnosed Chronic Conditions & Allergies -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2 flex items-center">
+                <i class="fa-solid fa-notes-medical text-teal-600 mr-2"></i> Chronic Medical Conditions
+              </h4>
+              <ul id="report-chronic-list" class="space-y-1.5 text-xs text-slate-700">
+                <!-- Dynamically populated chronic list -->
+              </ul>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2 flex items-center">
+                <i class="fa-solid fa-hand-dots text-rose-500 mr-2"></i> Known Allergies & Surgical Notes
+              </h4>
+              <div class="space-y-2 text-xs">
+                <div>
+                  <span class="font-bold text-slate-600">Allergies:</span>
+                  <span id="report-allergies-text" class="text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Sulfa antibiotics</span>
+                </div>
+                <div>
+                  <span class="font-bold text-slate-600">Previous Surgeries:</span>
+                  <span id="report-surgeries-text" class="text-slate-700">Appendectomy (1998), Right Eye Cataract (2021)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Prescribed Medications & Adherence Schedule -->
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 flex items-center justify-between">
+              <span class="flex items-center">
+                <i class="fa-solid fa-pills text-blue-600 mr-2"></i> Prescribed Medications & Adherence
+              </span>
+              <span class="text-[11px] text-slate-500 font-normal">Active Regimen Verified by Clinical Pharmacist</span>
+            </h4>
+            <div class="overflow-x-auto rounded-2xl border border-slate-200">
+              <table class="w-full text-left text-xs text-slate-700">
+                <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
+                  <tr>
+                    <th class="p-3">Medication</th>
+                    <th class="p-3">Dosage</th>
+                    <th class="p-3">Schedule</th>
+                    <th class="p-3">Purpose</th>
+                    <th class="p-3 text-right">Adherence</th>
+                  </tr>
+                </thead>
+                <tbody id="report-medications-table" class="divide-y divide-slate-100">
+                  <!-- Dynamically populated medications -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 3: ASSESSMENT HISTORY (असेसमेंट व चेकअप हिस्ट्री)                      -->
+      <!-- ========================================================================= -->
+      <div id="family-tab-content-history" class="hidden">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-6">
+          
+          <!-- History Header & Category Filter Pills -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-100 gap-4">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 uppercase tracking-wider">
+                Audit Timeline
+              </span>
+              <h3 class="text-xl font-extrabold text-[#0e294b] mt-1">
+                Senior Assessment History & Voice Transcripts
+              </h3>
+              <p class="text-xs text-slate-500">
+                Chronological timeline of daily vitals checkups, functional ADL independence tests, pain, sleep, and senior voice notes.
+              </p>
+            </div>
+
+            <!-- Filter Pills for History -->
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="filterFamilyAssessments('all')" id="family-filter-btn-all"
+                class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-700 text-white shadow-sm transition-all">
+                All Records
+              </button>
+              <button onclick="filterFamilyAssessments('vitals')" id="family-filter-btn-vitals"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                Vitals Checkups
+              </button>
+              <button onclick="filterFamilyAssessments('adl')" id="family-filter-btn-adl"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                ADL Mobility
+              </button>
+              <button onclick="filterFamilyAssessments('pain_sleep')" id="family-filter-btn-pain_sleep"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                Pain & Sleep
+              </button>
+              <button onclick="filterFamilyAssessments('voice')" id="family-filter-btn-voice"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                Voice Notes
+              </button>
+            </div>
+          </div>
+
+          <!-- Chronological Assessment Cards Timeline Container -->
+          <div id="family-assessment-timeline-list" class="mt-6 space-y-4">
+            <!-- Dynamically populated assessment timeline cards -->
+          </div>
+
+        </div>
+      </div>
+
     </section>
 
 
+<<<<<<< HEAD
 <!-- ========================================================================= -->
     <!-- 4. OPERATIONS MANAGER PORTAL (HIGH-FIDELITY MATCH TO DESIGN SPEC)           -->
+=======
+
+>>>>>>> f33f462 (Your changes)
     <!-- ========================================================================= -->
     <section id="view-operations" class="hidden flex-grow flex flex-col md:flex-row min-h-screen bg-[#f8fafc] w-full text-slate-800">
 
@@ -4399,414 +4606,6 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- MODAL: Comprehensive Patient Clinical Dossier & Senior Inputs Viewer       -->
-  <!-- Shows: Username, Medical History, Checkups, Assessments, Senior Inputs     -->
-  <!-- ========================================================================= -->
-  <div id="modal-patient-dossier" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-200 my-auto overflow-hidden animate-scaleUp">
-      
-      <!-- Dossier Header -->
-      <div class="bg-gradient-to-r from-slate-900 via-[#0e294b] to-slate-800 text-white p-5 sm:p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="flex items-center space-x-4">
-            <img id="dossier-avatar" src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80"
-              alt="Patient Avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-teal-400 shadow-md">
-            <div>
-              <div class="flex items-center space-x-2">
-                <span id="dossier-username-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-teal-500/30 text-teal-300 border border-teal-400/30">
-                  @senior_ramesh
-                </span>
-                <span id="dossier-status-pill" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-600 text-white">
-                  🚨 CRITICAL CASE
-                </span>
-              </div>
-              <h3 id="dossier-patient-name" class="text-xl sm:text-2xl font-extrabold mt-1">Ramesh Sharma</h3>
-              <p id="dossier-patient-sub" class="text-xs text-slate-300 mt-0.5">
-                74 Yrs • Male • South Delhi (GK-1) • Assigned Nurse: Sister Kavita, RN
-              </p>
-            </div>
-          </div>
-
-          <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 border-t sm:border-t-0 pt-3 sm:pt-0 border-white/10">
-            <button onclick="closePatientDossier()" class="text-slate-400 hover:text-white p-1 rounded-lg">
-              <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <div class="text-right">
-              <div class="text-[11px] text-slate-300 font-semibold">Triage Score</div>
-              <div id="dossier-triage-score" class="text-xl font-extrabold text-rose-400">98 / 100</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Emergency Contact Strip in Header -->
-        <div class="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div class="flex items-center space-x-2 text-slate-200">
-            <i class="fa-solid fa-shield-heart text-rose-400"></i>
-            <span>Emergency Contact:</span>
-            <strong id="dossier-emergency-contact-text" class="text-white">Rahul Sharma (Son) • +91 98711-20931</strong>
-          </div>
-          <div class="flex items-center space-x-2">
-            <button id="dossier-btn-call-contact" onclick="dossierCallEmergencyContact()"
-              class="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-all">
-              <i class="fa-solid fa-phone mr-1"></i> Call Contact
-            </button>
-            <button id="dossier-btn-notify-contact" onclick="dossierSendNotificationToContact()"
-              class="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 rounded-lg text-xs font-bold transition-all">
-              <i class="fa-brands fa-whatsapp mr-1 text-emerald-400"></i> Send Alert
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dossier Sub-Navigation Tabs -->
-      <div class="bg-slate-50 border-b border-slate-200 px-6 flex items-center space-x-4 overflow-x-auto text-xs font-bold">
-        <button id="dossier-subtab-btn-history" onclick="switchDossierSubtab('history')"
-          class="py-3 border-b-2 border-teal-600 text-teal-800 transition-all flex items-center space-x-1.5">
-          <i class="fa-solid fa-notes-medical"></i>
-          <span>Medical History (मेडिकल हिस्ट्री)</span>
-        </button>
-        <button id="dossier-subtab-btn-checkups" onclick="switchDossierSubtab('checkups')"
-          class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all flex items-center space-x-1.5">
-          <i class="fa-solid fa-stethoscope"></i>
-          <span>Checkups & Vitals (चेकअप्स)</span>
-        </button>
-        <button id="dossier-subtab-btn-assessments" onclick="switchDossierSubtab('assessments')"
-          class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all flex items-center space-x-1.5">
-          <i class="fa-solid fa-chart-line"></i>
-          <span>Assessments (असेसमेंट)</span>
-        </button>
-        <button id="dossier-subtab-btn-inputs" onclick="switchDossierSubtab('inputs')"
-          class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all flex items-center space-x-1.5">
-          <i class="fa-solid fa-comment-dots text-indigo-600"></i>
-          <span>User's Given Input (यूजर का इनपुट)</span>
-          <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-indigo-100 text-indigo-800 font-extrabold">Live</span>
-        </button>
-      </div>
-
-      <!-- Dossier Body Content Container -->
-      <div class="p-5 sm:p-6 max-h-[60vh] overflow-y-auto">
-        
-        <!-- 1. MEDICAL HISTORY SUBTAB -->
-        <div id="dossier-subcontent-history" class="space-y-5">
-          <div>
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Chronic Conditions (पुरानी बीमारियां)</h4>
-            <div id="dossier-conditions-container" class="flex flex-wrap gap-2">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-
-          <div>
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Prescribed Active Medications (दवाइयों का विवरण)</h4>
-            <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                  <tr>
-                    <th class="py-2.5 px-3">Medication Name</th>
-                    <th class="py-2.5 px-3">Dosage</th>
-                    <th class="py-2.5 px-3">Schedule / Timing</th>
-                    <th class="py-2.5 px-3">Purpose</th>
-                    <th class="py-2.5 px-3 text-right">Adherence</th>
-                  </tr>
-                </thead>
-                <tbody id="dossier-medications-table" class="divide-y divide-slate-100 text-slate-700">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-              <h5 class="text-xs font-bold text-slate-700 mb-1 flex items-center space-x-1.5">
-                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
-                <span>Known Allergies (एलर्जी)</span>
-              </h5>
-              <p id="dossier-allergies-text" class="text-xs text-slate-600">Sulfa antibiotics (causes skin rash)</p>
-            </div>
-            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-              <h5 class="text-xs font-bold text-slate-700 mb-1 flex items-center space-x-1.5">
-                <i class="fa-solid fa-hospital text-indigo-500"></i>
-                <span>Past Surgeries & Hospitalizations</span>
-              </h5>
-              <p id="dossier-surgeries-text" class="text-xs text-slate-600">Appendectomy (1998), Cataract Surgery (2021)</p>
-            </div>
-          </div>
-
-          <div class="bg-teal-50/60 p-3.5 rounded-xl border border-teal-200 flex items-center justify-between text-xs">
-            <div>
-              <span class="font-bold text-teal-900">Attending Physician:</span>
-              <span id="dossier-doctor-text" class="text-teal-800 ml-1">Dr. V.K. Kapoor (Fortis Escorts)</span>
-            </div>
-            <div>
-              <span class="font-bold text-teal-900">Next Clinical Review:</span>
-              <span id="dossier-review-text" class="text-teal-800 ml-1 font-mono font-bold">15 Nov 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. CHECKUPS & VITALS SUBTAB -->
-        <div id="dossier-subcontent-checkups" class="hidden space-y-5">
-          <div>
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Latest Biometric Checkup & Vitals Snapshot</h4>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="dossier-latest-vitals-cards">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-
-          <div>
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Historical Checkup Timeline (हाल के चेकअप्स)</h4>
-            <div id="dossier-checkup-timeline" class="space-y-3">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. ASSESSMENTS SUBTAB -->
-        <div id="dossier-subcontent-assessments" class="hidden space-y-5">
-          <!-- ADL Score Card -->
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center space-x-2">
-              <i class="fa-solid fa-person-walking text-teal-600"></i>
-              <span>Functional Independence (ADL Domains)</span>
-            </h4>
-            <div id="dossier-adl-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-
-          <!-- Pain & Sleep -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <h4 class="text-xs font-bold text-rose-700 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
-                <i class="fa-solid fa-heart-pulse"></i>
-                <span>Pain Profile (दर्द का मूल्यांकन)</span>
-              </h4>
-              <div class="flex items-center space-x-3 my-2">
-                <div id="dossier-pain-score-badge" class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 font-extrabold text-lg flex items-center justify-center">
-                  4/10
-                </div>
-                <div>
-                  <div id="dossier-pain-location" class="text-xs font-bold text-slate-800">Lower Back & Left Knee</div>
-                  <div id="dossier-pain-sensation" class="text-[11px] text-slate-500">Dull ache (धीमा दर्द व जकड़न)</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <h4 class="text-xs font-bold text-indigo-700 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
-                <i class="fa-solid fa-moon"></i>
-                <span>Sleep Monitoring (नींद)</span>
-              </h4>
-              <div class="flex items-center space-x-3 my-2">
-                <div id="dossier-sleep-badge" class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold text-lg flex items-center justify-center">
-                  5.2h
-                </div>
-                <div>
-                  <div id="dossier-sleep-quality" class="text-xs font-bold text-slate-800">Restless Sleep Pattern</div>
-                  <div class="text-[11px] text-slate-500">2 nighttime awakenings detected</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- AI ML Risk Prediction Box -->
-          <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-4 rounded-xl border border-teal-200">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-teal-900 uppercase tracking-wider">AI Geriatric ML Risk Prediction</span>
-              <span class="text-[10px] font-mono text-teal-700">ApnaSa 90,000 Records Model</span>
-            </div>
-            <div class="mt-2 flex items-center space-x-3">
-              <div id="dossier-ai-risk-badge" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-rose-600 text-white">
-                HIGH RISK (84.2%)
-              </div>
-              <p id="dossier-ai-risk-reasons" class="text-xs text-slate-700 font-medium">
-                Tachycardia spike (114 bpm) + Missed 08:00 AM check-in + 4hr immobility
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. USER'S GIVEN INPUT SUBTAB -->
-        <div id="dossier-subcontent-inputs" class="hidden space-y-4">
-          <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200 mb-4">
-            <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center space-x-2">
-              <i class="fa-solid fa-microphone-lines text-indigo-600"></i>
-              <span>Patient's Self-Reported Voice Notes & Check-in Messages</span>
-            </h4>
-            <p class="text-xs text-indigo-700 mt-0.5">
-              Care coordinators can inspect verbatim Hindi & English voice note transcripts, one-tap responses, and missed-calls submitted directly by the senior.
-            </p>
-          </div>
-
-          <div id="dossier-user-inputs-list" class="space-y-3.5">
-            <!-- Rendered dynamically by app.js -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Dossier Footer Action Bar -->
-      <div class="bg-slate-100 p-4 sm:p-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-2">
-          <button id="dossier-btn-raise-alert" onclick="dossierRaiseCriticalAlert()"
-            class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-extrabold shadow-md transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-bell animate-pulse"></i>
-            <span>Raise Critical Alert & Notify Family</span>
-          </button>
-          <button onclick="openCallModal('DOSSIER-CALL', currentDossierPatient.name, currentDossierPatient.phone)"
-            class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-phone"></i>
-            <span>2-Way Call Senior</span>
-          </button>
-          <button onclick="openDispatchModal('DOSSIER-DISPATCH', currentDossierPatient.name)"
-            class="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-person-walking-arrow-right"></i>
-            <span>Dispatch Specialist</span>
-          </button>
-        </div>
-
-        <button onclick="closePatientDossier()"
-          class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-200 rounded-xl">
-          Close Dossier
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: Raise Critical Alert & Notify Emergency Contacts Dialog            -->
-  <!-- ========================================================================= -->
-  <div id="modal-raise-critical" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-rose-200 animate-scaleUp">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-          <div>
-            <h3 class="text-base font-extrabold text-[#0e294b]">Raise Critical Alert & Notify Family</h3>
-            <p class="text-xs text-slate-500">Auto-elevates priority and dispatches multi-channel alerts</p>
-          </div>
-        </div>
-        <button onclick="closeRaiseCriticalModal()" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="space-y-4 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Select Patient / Senior</label>
-          <select id="raise-critical-patient-select" onchange="onRaiseCriticalPatientChange()"
-            class="w-full border border-slate-300 rounded-xl p-2.5 text-xs bg-white text-slate-800 font-medium">
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Clinical Reason for Emergency Alert</label>
-          <select id="raise-critical-predefined-reason" onchange="onPredefinedReasonChange()"
-            class="w-full border border-slate-300 rounded-xl p-2 text-xs bg-slate-50 text-slate-700 mb-1.5">
-            <option value="custom">-- Choose or Write Reason --</option>
-            <option value="Spike in resting heart rate (>114 bpm) + Inactivity detected for 4 hours">Spike in resting HR (>114 bpm) + 4hr Inactivity</option>
-            <option value="Bathroom impact sensor triggered + Senior reported sharp fall pain">Fall impact sensor triggered + Acute pain</option>
-            <option value="Senior reported severe chest heaviness and dizziness via Hindi voice note">Chest heaviness & dizziness via voice note</option>
-            <option value="Consecutive missed insulin doses + Blood glucose spiked to 228 mg/dL">Missed insulin + Blood glucose 228 mg/dL</option>
-          </select>
-          <textarea id="raise-critical-reason" rows="2"
-            placeholder="Describe the clinical trigger, vitals anomaly, or sensor event..."
-            class="w-full border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-rose-500 text-slate-800"></textarea>
-        </div>
-
-        <!-- Emergency Contact Card Preview -->
-        <div class="bg-rose-50/80 p-3.5 rounded-xl border border-rose-200">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="font-extrabold text-rose-900">Designated Emergency Contact:</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-200 text-rose-900">Auto-Dispatched</span>
-          </div>
-          <div id="raise-critical-contact-info" class="text-xs text-rose-950 font-medium">
-            <strong>Rahul Sharma (Son)</strong> • +91 98711-20931 (GK-1, New Delhi)
-          </div>
-          <div class="mt-2 pt-2 border-t border-rose-200/60 flex items-center space-x-3 text-[11px] text-rose-800">
-            <label class="flex items-center space-x-1 cursor-pointer">
-              <input type="checkbox" id="chk-send-sms" checked class="rounded border-rose-300 text-rose-600">
-              <span>SMS Alert</span>
-            </label>
-            <label class="flex items-center space-x-1 cursor-pointer">
-              <input type="checkbox" id="chk-send-whatsapp" checked class="rounded border-rose-300 text-rose-600">
-              <span>WhatsApp Alert</span>
-            </label>
-            <label class="flex items-center space-x-1 cursor-pointer">
-              <input type="checkbox" id="chk-send-push" checked class="rounded border-rose-300 text-rose-600">
-              <span>Family App Push</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Notification Message Live Preview -->
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-            <i class="fa-brands fa-whatsapp text-emerald-600 mr-1"></i> SMS & WhatsApp Preview:
-          </div>
-          <p id="raise-critical-preview-text" class="text-[11px] font-mono text-slate-700 bg-white p-2 rounded-lg border border-slate-200 leading-relaxed">
-            🚨 CareConnect CRITICAL ALERT: Emergency alert raised for Ramesh Sharma.
-          </p>
-        </div>
-      </div>
-
-      <div class="mt-6 flex items-center justify-end space-x-2">
-        <button onclick="closeRaiseCriticalModal()"
-          class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">
-          Cancel
-        </button>
-        <button onclick="confirmRaiseCriticalAlert()"
-          class="px-5 py-2.5 text-xs font-extrabold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-all flex items-center space-x-1.5">
-          <i class="fa-solid fa-paper-plane"></i>
-          <span>Raise Alert & Dispatch Notifications</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: Emergency Notification Dispatched Confirmation Receipt              -->
-  <!-- ========================================================================= -->
-  <div id="modal-notif-receipt" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center animate-scaleUp">
-      <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-3xl mb-4">
-        <i class="fa-solid fa-circle-check"></i>
-      </div>
-      <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
-        🚨 Emergency Escalation Complete
-      </span>
-      <h3 class="text-lg font-extrabold text-[#0e294b] mt-2">Emergency Contacts Notified!</h3>
-      <p id="receipt-contact-desc" class="text-xs text-slate-500 mt-1">
-        SMS & WhatsApp dispatched to Rahul Sharma (+91 98711-20931).
-      </p>
-
-      <div class="my-4 p-3 bg-slate-50 rounded-xl border border-slate-200 text-left text-xs space-y-1 text-slate-700">
-        <div class="flex items-center justify-between">
-          <span>SMS Gateway:</span>
-          <strong class="text-emerald-600 font-mono">DELIVERED (0s)</strong>
-        </div>
-        <div class="flex items-center justify-between">
-          <span>WhatsApp Business API:</span>
-          <strong class="text-emerald-600 font-mono">DELIVERED & READ</strong>
-        </div>
-        <div class="flex items-center justify-between">
-          <span>Family Member Portal:</span>
-          <strong class="text-rose-600 font-mono">CRITICAL BANNER FLASHING</strong>
-        </div>
-      </div>
-
-      <button onclick="closeNotifReceiptModal()"
-        class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-md transition-all">
-        Back to Coordinator Dashboard
-      </button>
-    </div>
-  </div>
-
   <!-- Global Footer -->
   <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
@@ -4825,6 +4624,7 @@
   <script src="app.js"></script>
 
   <!-- ========================================================================= -->
+<<<<<<< HEAD
   <!-- MODAL: UNIVERSAL PROFILE MANAGEMENT (FOR ALL 4 PORTALS)                   -->
   <!-- ========================================================================= -->
   <div id="modal-profile-management"
@@ -5243,6 +5043,56 @@
         </div>
       </form>
 
+=======
+  <!-- MODAL: SIMPLE HEALTH ASSESSMENT REPORT (CONCISE SLIP - NOT WHOLE PORTAL) -->
+  <!-- ========================================================================= -->
+  <div id="modal-simple-assessment" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-6 animate-scaleUp">
+      <!-- Modal Top Bar -->
+      <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-4 sm:p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/30 text-purple-200 flex items-center justify-center text-lg border border-purple-400/40">
+            <i class="fa-solid fa-file-waveform"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-extrabold text-white">Simple Health Assessment Report</h3>
+            <p class="text-[11px] text-purple-200">Concise physiological & functional clinical assessment summary</p>
+          </div>
+        </div>
+        <button onclick="closeSimpleAssessmentModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Printable Assessment Slip Container -->
+      <div id="simple-assessment-slip-content" class="p-5 sm:p-6 text-xs text-slate-800 space-y-4 max-h-[70vh] overflow-y-auto font-sans">
+        <!-- Dynamically injected simple assessment summary slip -->
+      </div>
+
+      <!-- Modal Footer Action Buttons -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-[11px] text-slate-500 italic">
+          <i class="fa-solid fa-shield-halved text-emerald-600 mr-1"></i> Isolated assessment summary (Portal elements excluded)
+        </span>
+        <div class="flex items-center space-x-2">
+          <button onclick="closeSimpleAssessmentModal()" class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-200 rounded-xl transition-colors">
+            Close
+          </button>
+          <button onclick="downloadPatientAssessmentPdf()" class="px-4 py-2 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1.5 shadow-sm">
+            <i class="fa-solid fa-file-pdf text-rose-300"></i>
+            <span>Download PDF</span>
+          </button>
+          <button onclick="printSimpleAssessmentSlipOnly()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm">
+            <i class="fa-solid fa-print"></i>
+            <span>Print / Save PDF</span>
+          </button>
+          <button onclick="downloadSimpleAssessmentReport()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 border border-slate-300 shadow-sm" title="Plain text format">
+            <i class="fa-solid fa-file-lines text-slate-500"></i>
+            <span>.txt</span>
+          </button>
+        </div>
+      </div>
+>>>>>>> f33f462 (Your changes)
     </div>
   </div>
 

@@ -128,7 +128,8 @@ new_card_return = """    const matchedPatient = getPatientByNameOrId(item.patien
                 </span>
               </div>
               <div class="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span><i class="fa-solid fa-location-dot text-teal-600 mr-1"></i>${item.location}</span>
+                <span><i class="fa-solid fa-
+                location-dot text-teal-600 mr-1"></i>${item.location}</span>
                 <span class="text-indigo-700 font-medium"><i class="fa-solid fa-shield-heart text-rose-500 mr-1"></i>${emergencyContactStr}</span>
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i>${item.timeAgo}</span>
                 ${item.priority === 'critical' ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300"><i class="fa-solid fa-check-double mr-1 text-emerald-600"></i>SMS/WhatsApp Dispatched</span>' : ''}

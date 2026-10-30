@@ -1,0 +1,348 @@
+// VIEW 1: CARE COORDINATOR LOGIC
+// Requirement: A ranked daily list of seniors to prioritise, with the reason
+// for each alert and a suggested action.
+// =========================================================================
+function renderCoordinatorAlerts() {
+  const container = document.getElementById('coordinator-alert-list');
+  if (!container) return;
+
+  const searchInput = document.getElementById('coordinator-search-input');
+  const priorityFilter = document.getElementById('coordinator-priority-filter');
+  
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const filter = priorityFilter ? priorityFilter.value : 'all';
+
+  // Filter alerts
+  let list = state.alerts.filter(item => {
+    if (item.status === 'resolved') return false;
+    if (filter !== 'all' && item.priority !== filter) return false;
+    if (query) {
+      const match = item.seniorName.toLowerCase().includes(query) ||
+                    item.reason.toLowerCase().includes(query) ||
+                    item.location.toLowerCase().includes(query);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  // Sort strictly by priority rank
+  list.sort((a, b) => a.rank - b.rank);
+
+  // Update Summary Stats
+  const critCount = state.alerts.filter(a => a.priority === 'critical' && a.status !== 'resolved').length;
+  const highCount = state.alerts.filter(a => a.priority === 'high' && a.status !== 'resolved').length;
+  const totalActive = state.alerts.filter(a => a.status !== 'resolved').length;
+  const totalResolved = state.resolvedAlerts.length;
+
+  document.getElementById('stat-critical-count').textContent = critCount;
+  document.getElementById('stat-high-count').textContent = highCount;
+  document.getElementById('stat-active-cases').textContent = totalActive;
+  document.getElementById('stat-resolved-count').textContent = totalResolved;
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white rounded-2xl p-12 text-center border border-slate-200">
+        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-2xl mb-3">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-base font-bold text-slate-800">Priority Queue Clear!</h3>
+        <p class="text-xs text-slate-500 mt-1">All seniors for this filter have been attended to or verified safe.</p>
+        <button onclick="refreshCoordinatorQueue()" class="mt-4 px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-bold shadow-sm">
+          Reset Filter & Sync
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(item => {
+    // Style configurations based on priority
+    let borderClass = 'border-slate-200';
+    let badgeClass = 'bg-slate-100 text-slate-700';
+    let rankBadgeClass = 'bg-slate-800 text-white';
+    let pulseEffect = '';
+
+    if (item.priority === 'critical') {
+      borderClass = 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20';
+      badgeClass = 'bg-rose-100 text-rose-800 border border-rose-200';
+      rankBadgeClass = 'bg-rose-600 text-white shadow-md shadow-rose-600/30';
+      pulseEffect = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span>';
+    } else if (item.priority === 'high') {
+      borderClass = 'border-amber-300 bg-amber-50/15';
+      badgeClass = 'bg-amber-100 text-amber-800 border border-amber-200';
+      rankBadgeClass = 'bg-amber-600 text-white';
+    } else {
+      borderClass = 'border-slate-200';
+      badgeClass = 'bg-blue-100 text-blue-800';
+      rankBadgeClass = 'bg-blue-600 text-white';
+    }
+
+    return `
+      <div class="bg-white rounded-2xl border-2 ${borderClass} p-5 sm:p-6 shadow-sm hover:shadow-md transition-all">
+        <!-- Top Row: Rank Badge, Senior Info, Priority Score -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div class="flex items-center space-x-3.5">
+            <!-- Priority Rank Number -->
+            <div class="w-10 h-10 rounded-xl ${rankBadgeClass} flex items-center justify-center font-extrabold text-sm flex-shrink-0" title="Daily Priority Rank #${item.rank}">
+              #${item.rank}
+            </div>
+
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">${item.seniorName}</h3>
+                <span class="text-xs text-slate-500">(${item.age} Yrs • ${item.gender})</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${badgeClass}">
+                  ${pulseEffect} ${item.priority.toUpperCase()} PRIORITY
+                </span>
+              </div>
+              <div class="text-xs text-slate-500 mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span><i class="fa-solid fa-location-dot text-teal-600 mr-1"></i>${item.location}</span>
+                <span><i class="fa-solid fa-user-group text-indigo-500 mr-1"></i>${item.familyContact}</span>
+                <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i>${item.timeAgo}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Score & Care Specialist Pill -->
+          <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100">
+            <div class="text-xs font-semibold text-slate-500">Triage Risk Score:</div>
+            <div class="font-extrabold text-sm sm:text-base ${item.priority === 'critical' ? 'text-rose-600' : 'text-slate-800'}">
+              ${item.priorityScore} / 100
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Row: ROOT CAUSE ALERT REASON & SUGGESTED ACTION -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          
+          <!-- 1. Reason for Alert -->
+          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+            <div class="flex items-center space-x-1.5 text-xs font-bold text-rose-700 uppercase tracking-wider mb-1.5">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Root Reason for Alert:</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+              ${item.reason}
+            </p>
+            
+            <!-- Biometric telemetry tags -->
+            <div class="mt-3 flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">BP: <strong class="text-slate-900">${item.vitals.bp}</strong></span>
+              <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">HR: <strong class="${item.priority === 'critical' ? 'text-rose-600 font-bold' : 'text-slate-900'}">${item.vitals.hr}</strong></span>
+              <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">SpO2: <strong class="text-slate-900">${item.vitals.spo2}</strong></span>
+            </div>
+          </div>
+
+          <!-- 2. Suggested Clinical Action -->
+          <div class="bg-teal-50/60 rounded-xl p-3.5 border border-teal-200/80 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center space-x-1.5 text-xs font-bold text-teal-800 uppercase tracking-wider mb-1.5">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Suggested Clinical Action:</span>
+              </div>
+              <p class="text-xs sm:text-sm text-teal-950 leading-relaxed font-semibold">
+                ${item.suggestedAction}
+              </p>
+            </div>
+            <div class="mt-2 text-[11px] text-teal-700 flex items-center justify-between">
+              <span>Assigned Specialist: <strong>${item.assignedNurse}</strong></span>
+              <span class="font-bold text-teal-800">SLA Target: &lt;15 mins</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Action Buttons: Call, Dispatch, Resolve -->
+        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center space-x-2">
+            <button onclick="openCallModal('${item.id}', '${item.seniorName}', '${item.phone}')" class="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
+              <i class="fa-solid fa-phone"></i>
+              <span>2-Way Call Senior</span>
+            </button>
+            <button onclick="openDispatchModal('${item.id}', '${item.seniorName}')" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
+              <i class="fa-solid fa-person-walking-arrow-right"></i>
+              <span>Dispatch Care Specialist</span>
+            </button>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button onclick="openResolveModal('${item.id}', '${item.seniorName}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Resolve & Mark Safe</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    `;
+  }).join('');
+}
+
+function filterCoordinatorAlerts() {
+  renderCoordinatorAlerts();
+}
+
+function refreshCoordinatorQueue() {
+  soundEngine.playSuccessChime();
+  const searchInput = document.getElementById('coordinator-search-input');
+  const priorityFilter = document.getElementById('coordinator-priority-filter');
+  if (searchInput) searchInput.value = '';
+  if (priorityFilter) priorityFilter.value = 'all';
+  renderCoordinatorAlerts();
+  showToast('Queue synced with real-time biometric feed', 'info');
+}
+
+// Interactive Call Simulation
+let callInterval = null;
+function openCallModal(alertId, name, phone) {
+  soundEngine.playPhoneRing();
+  const modal = document.getElementById('modal-call');
+  const modalName = document.getElementById('modal-call-name');
+  const modalPhone = document.getElementById('modal-call-phone');
+  const modalStatus = document.getElementById('modal-call-status');
+  const modalTimer = document.getElementById('modal-call-timer');
+
+  if (modalName) modalName.textContent = name;
+  if (modalPhone) modalPhone.textContent = `${phone} • Direct Line`;
+  if (modalStatus) modalStatus.textContent = "Connecting 2-Way Line...";
+  if (modalTimer) modalTimer.textContent = "Dialing senior home terminal...";
+
+  modal.classList.remove('hidden');
+
+  let seconds = 0;
+  if (callInterval) clearInterval(callInterval);
+  setTimeout(() => {
+    if (modalStatus) modalStatus.textContent = "Call Connected • Audio Stream Active";
+    soundEngine.playTone(600, 'sine', 0.1);
+    callInterval = setInterval(() => {
+      seconds++;
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = (seconds % 60).toString().padStart(2, '0');
+      if (modalTimer) modalTimer.textContent = `Call in progress: ${m}:${s} • Two-way audio active`;
+    }, 1000);
+  }, 1500);
+}
+
+function endSimulatedCall() {
+  if (callInterval) clearInterval(callInterval);
+  const modal = document.getElementById('modal-call');
+  if (modal) modal.classList.add('hidden');
+  soundEngine.playSuccessChime();
+  showToast('Simulated call concluded. Call log saved.', 'info');
+}
+
+// Dispatch Modal
+let currentDispatchAlertId = null;
+function openDispatchModal(alertId, name) {
+  currentDispatchAlertId = alertId;
+  const modal = document.getElementById('modal-dispatch');
+  const nameLabel = document.getElementById('dispatch-modal-senior-name');
+  if (nameLabel) nameLabel.textContent = `For: ${name}`;
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeDispatchModal() {
+  const modal = document.getElementById('modal-dispatch');
+  if (modal) modal.classList.add('hidden');
+}
+
+function confirmDispatch() {
+  const select = document.getElementById('dispatch-nurse-select');
+  const nurse = select ? select.value : 'Sister Kavita, RN';
+  soundEngine.playSuccessChime();
+  closeDispatchModal();
+  showToast(`Specialist dispatched: ${nurse}! SMS sent to family.`, 'success');
+  
+  // Log incident in Ops stream
+  addOpsIncidentLog(`Dispatch initiated: ${nurse} en route to senior`);
+}
+
+// Resolve Modal
+let currentResolveAlertId = null;
+function openResolveModal(alertId, name) {
+  currentResolveAlertId = alertId;
+  const modal = document.getElementById('modal-resolve');
+  const nameLabel = document.getElementById('resolve-modal-senior-name');
+  if (nameLabel) nameLabel.textContent = `For: ${name}`;
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeResolveModal() {
+  const modal = document.getElementById('modal-resolve');
+  if (modal) modal.classList.add('hidden');
+}
+
+function confirmResolveAlert() {
+  if (!currentResolveAlertId) return;
+  const idx = state.alerts.findIndex(a => a.id === currentResolveAlertId);
+  if (idx !== -1) {
+    const alertItem = state.alerts[idx];
+    alertItem.status = 'resolved';
+    state.resolvedAlerts.unshift({
+      id: alertItem.id,
+      seniorName: alertItem.seniorName,
+      reason: alertItem.reason,
+      resolvedBy: 'Nurse Kavita',
+      outcome: document.getElementById('resolve-outcome-category').value,
+      resolvedAt: 'Just now'
+    });
+
+    // If it was Ramesh Sharma, also clear the serious family alert!
+    if (alertItem.seniorName.includes('Ramesh')) {
+      state.seniorStatus.isSerious = false;
+      updateFamilyAlertBanner();
+    }
+
+    // Update ops metrics
+    state.opsMetrics.activeAlerts = Math.max(0, state.opsMetrics.activeAlerts - 1);
+    state.opsMetrics.resolvedAlerts++;
+    updateOpsTelemetryDisplay();
+    addOpsIncidentLog(`Resolved: Alert ${alertItem.id} for ${alertItem.seniorName} verified safe`);
+  }
+
+  closeResolveModal();
+  soundEngine.playSuccessChime();
+  renderCoordinatorAlerts();
+  updateNavPills('coordinator');
+  showToast('Alert successfully resolved & marked safe.', 'success');
+}
+
+// Simulate Incoming Emergency Live (Adds a high priority case on the fly)
+function simulateIncomingAlert() {
+  soundEngine.playEmergencySiren();
+  const newAlert = {
+    id: `ALT-${Math.floor(1100 + Math.random() * 100)}`,
+    rank: 1, // Becomes #1 rank immediately
+    priority: 'critical',
+    priorityScore: 99,
+    seniorName: 'Col. K.S. Rathore',
+    age: 82,
+    gender: 'M',
+    location: 'Defence Colony (Block A)',
+    phone: '+91 98111-77889',
+    familyContact: 'Varun Rathore (Son) • +91 99990-11223',
+    assignedNurse: 'Sister Kavita, RN',
+    timeAgo: 'Just now (LIVE TRIGGER)',
+    vitals: { bp: '168/104', hr: '122 bpm', spo2: '91%', glucose: '142 mg/dL' },
+    reason: '🚨 LIVE INCOMING: Sudden SOS trigger + Smartwatch recorded arrhythmia (122 bpm) & oxygen saturation dip to 91%.',
+    suggestedAction: 'Immediate triage dispatch to Quick-Response Emergency Squad + trigger nearest ambulance dispatch.',
+    status: 'pending'
+  };
+
+  // Bump all other ranks by 1
+  state.alerts.forEach(a => { a.rank++; });
+  state.alerts.unshift(newAlert);
+
+  state.opsMetrics.totalAlerts++;
+  state.opsMetrics.activeAlerts++;
+  state.opsMetrics.criticalAlerts++;
+  updateOpsTelemetryDisplay();
+  addOpsIncidentLog(`🚨 CRITICAL INCOMING: Col. K.S. Rathore SOS triggered in Defence Colony`);
+
+  renderCoordinatorAlerts();
+  updateNavPills(state.currentRole);
+  showToast('🚨 NEW CRITICAL EMERGENCY DETECTED! Priority queue re-ranked.', 'danger');
+}
+
+
+// =========================================================================

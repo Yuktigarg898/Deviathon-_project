@@ -1,0 +1,264 @@
+<section id="view-family" class="hidden flex-grow p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
+      <!-- Header Banner with Senior Context -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span
+              class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">
+              Role: Family Member
+            </span>
+            <span class="text-xs text-slate-500">Connected to: Ramesh Sharma (Father)</span>
+          </div>
+          <h2 class="text-2xl font-extrabold text-[#0e294b] mt-1 font-sans">
+            Dad's Wellbeing & Safety Monitor
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">
+            Filtered peace of mind: Weekly wellness digest & immediate alerts only when urgent clinical intervention is
+            needed.
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <!-- Notification Filter Preference Badge -->
+          <span
+            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+            <i class="fa-solid fa-filter text-purple-600 mr-1.5"></i> Serious Alerts Only: <strong
+              class="ml-1 text-emerald-600">Active</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- CRITICAL / SERIOUS ALERT CARD (Shown ONLY when an alert is serious) -->
+      <div id="family-serious-alert-card"
+        class="bg-gradient-to-r from-rose-600 to-rose-700 text-white rounded-3xl p-6 sm:p-7 shadow-xl shadow-rose-600/25 mb-8 border-2 border-rose-400 relative overflow-hidden transition-all duration-300">
+        <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div class="flex items-start space-x-4">
+            <div
+              class="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center text-2xl flex-shrink-0 animate-pulse">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <div
+                class="inline-flex items-center space-x-2 bg-rose-900/60 px-2.5 py-0.5 rounded-md text-xs font-black uppercase tracking-wider text-rose-200 mb-1">
+                <span>Immediate Critical Alert</span>
+                <span>•</span>
+                <span id="family-alert-time">Today, 08:30 AM</span>
+              </div>
+              <h3 id="family-alert-title" class="text-lg sm:text-xl font-bold">
+                Ramesh did not check in & Blood Pressure Spiked (158/96 mmHg)
+              </h3>
+              <p id="family-alert-desc" class="text-xs sm:text-sm text-rose-100 mt-1 max-w-2xl leading-relaxed">
+                Suggested clinical response initiated: Care Coordinator Kavita is on a 2-way call and Field Nurse Sister
+                Kavita has been dispatched.
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons for Family -->
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-2 md:pt-0">
+            <button onclick="simulateFamilyCallDad()"
+              class="px-4 py-2.5 rounded-xl bg-white text-rose-700 hover:bg-rose-50 text-xs font-bold shadow-md transition-all flex items-center space-x-1.5">
+              <i class="fa-solid fa-phone"></i>
+              <span>Call Dad</span>
+            </button>
+            <button onclick="simulateFamilyCallCoordinator()"
+              class="px-4 py-2.5 rounded-xl bg-rose-900/60 hover:bg-rose-900 text-white border border-rose-400 text-xs font-bold transition-all flex items-center space-x-1.5">
+              <i class="fa-solid fa-user-nurse"></i>
+              <span>Talk to Coordinator</span>
+            </button>
+            <button onclick="dismissFamilyAlert()"
+              class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+              title="Acknowledge">
+              <i class="fa-solid fa-check"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NORMAL SAFE STATUS BANNER (Shown when everything is fine) -->
+      <div id="family-calm-status-banner"
+        class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-5 mb-8 flex items-center justify-between">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-emerald-800">Status: Safe & Peaceful</div>
+            <div class="text-sm font-semibold text-slate-800">No serious issues detected. Dad checked in today and is
+              doing well!</div>
+          </div>
+        </div>
+        <button onclick="simulateSeriousEmergencyForFamily()"
+          class="text-xs font-bold text-rose-600 hover:text-rose-800 underline">
+          Test Serious Alert Mode
+        </button>
+      </div>
+
+      <!-- SHORT WEEKLY WELLBEING SUMMARY (Required) -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
+
+        <!-- Summary Header with Health Index Score -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded">Weekly
+                Digest</span>
+              <span class="text-xs text-slate-400">Past 7 Days (Oct 22 - Oct 29)</span>
+            </div>
+            <h3 class="text-xl font-extrabold text-[#0e294b] mt-1">Short Weekly Wellbeing Summary</h3>
+            <p class="text-xs sm:text-sm text-slate-500">Concise overview of Dad's vital signs, mood, medication, and
+              sleep.</p>
+          </div>
+
+          <!-- Overall Weekly Health Score Badge -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 flex items-center space-x-3">
+            <div
+              class="w-12 h-12 rounded-full border-4 border-emerald-500 flex items-center justify-center font-extrabold text-slate-900 text-lg">
+              88
+            </div>
+            <div>
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Overall Score</div>
+              <div class="text-xs font-bold text-emerald-700">Healthy & Stable (+3%)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7-Day Quick Day-by-Day Consistency Strip -->
+        <div class="my-6">
+          <div class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+            <span>7-Day Daily Check-in Consistency:</span>
+            <span class="text-emerald-700 font-bold">100% (7/7 days verified)</span>
+          </div>
+          <div class="grid grid-cols-7 gap-2 text-center">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Thu</div>
+              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Fri</div>
+              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Sat</div>
+              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Sun</div>
+              <div class="text-amber-600 text-sm mt-1"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <div class="text-[10px] font-semibold text-slate-700 mt-1">Tired</div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Mon</div>
+              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Tue</div>
+              <div class="text-emerald-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="text-[10px] font-semibold text-slate-700 mt-1">Great</div>
+            </div>
+            <div class="bg-teal-50 border border-teal-300 rounded-xl p-2.5 ring-2 ring-teal-500/30">
+              <div class="text-[10px] font-bold text-teal-800 uppercase">Today</div>
+              <div class="text-teal-600 text-sm mt-1"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="text-[10px] font-bold text-teal-800 mt-1">Active</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Summary Insight Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+              <i class="fa-solid fa-pills text-blue-500 mr-1.5"></i> Medication Adherence
+            </div>
+            <div class="text-xl font-extrabold text-slate-900">93%</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Missed 1 evening BP dose on Sunday; refilled on Monday.</p>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+              <i class="fa-solid fa-bed text-purple-500 mr-1.5"></i> Sleep Quality
+            </div>
+            <div class="text-xl font-extrabold text-slate-900">7.2 hrs/night</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Consistent rest cycle; deep sleep improved by 14%.</p>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+              <i class="fa-solid fa-face-smile text-amber-500 mr-1.5"></i> Mood & Voice Sentiment
+            </div>
+            <div class="text-xl font-extrabold text-slate-900">86% Positive</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Cheerful on 5 days; 1 voice note reported mild fatigue.</p>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <div class="text-xs font-bold text-slate-500 mb-1 flex items-center">
+              <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Average Resting HR
+            </div>
+            <div class="text-xl font-extrabold text-slate-900">72 bpm</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Within normal healthy adult range (68 - 76 bpm).</p>
+          </div>
+        </div>
+
+        <!-- Weekly Mood & Blood Pressure Trend Chart -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-700">7-Day Vitals & Sentiment Trajectory</span>
+            <span class="text-[11px] text-slate-400">Systolic Blood Pressure (mmHg) vs Mood Rating (1-5)</span>
+          </div>
+          <div class="h-48 w-full">
+            <canvas id="familyVitalsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Coordinator's Personal Weekly Note -->
+        <div class="bg-teal-50/70 border border-teal-200 rounded-2xl p-4 flex items-start space-x-3.5">
+          <div
+            class="w-10 h-10 rounded-full bg-[#00a896] text-white flex items-center justify-center flex-shrink-0 font-bold text-sm">
+            NK
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold text-teal-900">Weekly Care Note from Nurse Kavita</span>
+              <span class="text-[10px] text-slate-500">Oct 28</span>
+            </div>
+            <p class="text-xs text-slate-700 mt-1 leading-relaxed">
+              "Ramesh ji has been in wonderful spirits this week. He regularly did his evening park walks. We adjusted
+              his hydration schedule so his morning blood pressure remains well regulated. You don't need to worry—I'm
+              monitoring him closely every day!"
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Message / Note to Senior -->
+      <div
+        class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 class="text-sm font-bold text-[#0e294b]">Send a loving message to Dad</h4>
+          <p class="text-xs text-slate-500">Will be read aloud to him on his Senior view or spoken via IVR.</p>
+        </div>
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <input id="family-message-input" type="text" placeholder="e.g. Hi Dad, kids are excited to visit Sunday!"
+            class="text-xs border border-slate-300 rounded-xl px-3 py-2 w-full sm:w-72 focus:ring-2 focus:ring-purple-500">
+          <button onclick="sendFamilyMessageToDad()"
+            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-all flex-shrink-0">
+            Send
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. OPERATIONS MANAGER VIEW                                                -->
+    <!-- Requirement: A view of alert volumes, response times and outcomes         -->
+    <!-- across a city or team                                                     -->
+    <!-- =======================================================================

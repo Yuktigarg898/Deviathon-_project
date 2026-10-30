@@ -1,0 +1,136 @@
+// VIEW 3: FAMILY MEMBER LOGIC
+// Requirement: A short weekly wellbeing summary and an immediate alert only
+// when something is serious.
+// =========================================================================
+function updateFamilyAlertBanner() {
+  const alertCard = document.getElementById('family-serious-alert-card');
+  const calmBanner = document.getElementById('family-calm-status-banner');
+  const navDot = document.getElementById('nav-family-alert-dot');
+
+  if (!alertCard || !calmBanner) return;
+
+  if (state.seniorStatus.isSerious) {
+    alertCard.classList.remove('hidden');
+    calmBanner.classList.add('hidden');
+    if (navDot) navDot.classList.remove('hidden');
+  } else {
+    alertCard.classList.add('hidden');
+    calmBanner.classList.remove('hidden');
+    if (navDot) navDot.classList.add('hidden');
+  }
+}
+
+function dismissFamilyAlert() {
+  soundEngine.playSuccessChime();
+  state.seniorStatus.isSerious = false;
+  updateFamilyAlertBanner();
+  showToast('Alert acknowledged. Switching to calm monitoring view.', 'info');
+}
+
+function simulateSeriousEmergencyForFamily() {
+  soundEngine.playEmergencySiren();
+  state.seniorStatus.isSerious = true;
+  updateFamilyAlertBanner();
+  showToast('🚨 Serious alert simulated for Family View demonstration.', 'danger');
+}
+
+function simulateFamilyCallDad() {
+  openCallModal('DAD-CALL', 'Dad (Ramesh Sharma)', '+91 98110-44912');
+}
+
+function simulateFamilyCallCoordinator() {
+  openCallModal('COORD-CALL', 'Nurse Kavita (Care Coordinator)', '+91 98711-00122');
+}
+
+function sendFamilyMessageToDad() {
+  const input = document.getElementById('family-message-input');
+  if (!input || !input.value.trim()) return;
+  const msg = input.value.trim();
+  soundEngine.playSuccessChime();
+  input.value = '';
+  showToast(`Message sent to Dad: "${msg}" (Will be read aloud to him)`, 'success');
+}
+
+// 7-Day Vitals & Sentiment Trajectory Chart (Chart.js)
+function initFamilyVitalsChart() {
+  const canvas = document.getElementById('familyVitalsChart');
+  if (!canvas) return;
+
+  if (state.charts.familyVitals) {
+    state.charts.familyVitals.destroy();
+  }
+
+  const ctx = canvas.getContext('2d');
+  state.charts.familyVitals = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Thu (Oct 22)', 'Fri (Oct 23)', 'Sat (Oct 24)', 'Sun (Oct 25)', 'Mon (Oct 26)', 'Tue (Oct 27)', 'Today (Oct 28)'],
+      datasets: [
+        {
+          label: 'Systolic BP (mmHg)',
+          data: [126, 128, 125, 142, 130, 128, 158],
+          borderColor: '#f43f5e',
+          backgroundColor: 'rgba(244, 63, 94, 0.08)',
+          tension: 0.35,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: '#f43f5e',
+          yAxisID: 'y'
+        },
+        {
+          label: 'Mood & Energy (1 to 5)',
+          data: [4.5, 4.8, 4.6, 2.5, 4.2, 4.4, 3.0],
+          borderColor: '#14b8a6',
+          backgroundColor: 'transparent',
+          borderDash: [4, 4],
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: '#14b8a6',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } }
+        },
+        tooltip: {
+          padding: 8,
+          bodyFont: { size: 11 }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          min: 100,
+          max: 180,
+          title: { display: true, text: 'BP (mmHg)', font: { size: 9 } },
+          grid: { color: 'rgba(226, 232, 240, 0.6)' }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          min: 1,
+          max: 5,
+          title: { display: true, text: 'Mood (1-5)', font: { size: 9 } },
+          grid: { drawOnChartArea: false }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10 } }
+        }
+      }
+    }
+  });
+}
+
+
+// =========================================================================

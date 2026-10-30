@@ -688,6 +688,7 @@
   gap: 4px;
 }
 
+<<<<<<< HEAD
 /* =========================================================================
    PROFILE MANAGEMENT & FAMILY CARE CIRCLE STYLES
    ========================================================================= */
@@ -789,10 +790,18 @@
     display: none !important;
   }
 
+=======
+
+/* ========================================================================== */
+/* PRINT STYLES FOR ELEGANT CLINICAL ASSESSMENT SLIP & PDF                    */
+/* ========================================================================== */
+@media print {
+>>>>>>> f33f462 (Your changes)
   body {
     background: #ffffff !important;
     color: #0f172a !important;
     font-size: 11pt !important;
+<<<<<<< HEAD
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -847,5 +856,46 @@
 
   .print-avoid-break {
     page-break-inside: avoid;
+=======
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  #modal-simple-assessment,
+  #modal-simple-assessment * {
+    visibility: visible !important;
+  }
+  #modal-simple-assessment {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  #modal-simple-assessment > div {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  #simple-assessment-slip-content,
+  #simple-assessment-slip-content * {
+    visibility: visible !important;
+  }
+  #simple-assessment-slip-content {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  /* Hide interactive modal topbar & buttons when printing */
+  .no-print,
+  #modal-simple-assessment button,
+  #modal-simple-assessment .bg-gradient-to-r,
+  #modal-simple-assessment .border-t {
+    display: none !important;
+>>>>>>> f33f462 (Your changes)
   }
 }

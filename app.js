@@ -704,9 +704,9 @@ const soundEngine = {
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('careconnect_lang') || 'en';
-  setAppLanguage(savedLang);
+  setAppLanguage(savedLang, false);
 
-  navigateRole('login');
+  navigateRole('login', false);
   renderCoordinatorAlerts();
   renderOpsTeamTable();
   populateOpsIncidentStream();
@@ -1241,7 +1241,7 @@ function simulateIncomingAlert() {
 // =========================================================================
 
 // Unified Global Language Switcher (Zero Parallel Slashes)
-function setAppLanguage(lang) {
+function setAppLanguage(lang, notify = true) {
   if (!state) return;
   state.currentLanguage = lang;
   state.seniorLanguage = lang;
@@ -1280,7 +1280,9 @@ function setAppLanguage(lang) {
     updateHeaderUserBadge(state.currentRole);
   }
 
-  showToast(lang === 'hi' ? 'भाषा बदलकर हिन्दी कर दी गई है' : 'Language set to English', 'info');
+  if (notify) {
+    showToast(lang === 'hi' ? 'भाषा बदलकर हिन्दी कर दी गई है' : 'Language set to English', 'info');
+  }
 }
 
 // Backwards compatibility alias for Senior Portal
@@ -8600,8 +8602,10 @@ function enterDashboard(role, userObj) {
 }
 
 // 13. Sign Out / Logout Function
-function logout() {
-  soundEngine.playWarningChime();
+function logout(notify = true) {
+  if (notify && soundEngine && typeof soundEngine.playWarningChime === 'function') {
+    soundEngine.playWarningChime();
+  }
 
   // Hide all operational dashboards
   const allViews = ['coordinator', 'senior', 'family', 'operations'];
@@ -8620,13 +8624,15 @@ function logout() {
 
   backToRoleSelector();
 
-  showToast('Signed out successfully. Role selection hub opened.', 'info');
+  if (notify) {
+    showToast('Signed out successfully. Role selection hub opened.', 'info');
+  }
 }
 
 // Backward compatibility helper
-function navigateRole(role) {
+function navigateRole(role, notify = true) {
   if (role === 'login') {
-    logout();
+    logout(notify);
   } else {
     enterDashboard(role);
   }

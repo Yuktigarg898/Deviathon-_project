@@ -15265,3 +15265,168 @@ function renderFamilyTaskTrackerSummary() {
 
   container.innerHTML = html;
 }
+
+
+// ============================================================================
+// SMART WATCH WI-FI TELEMETRY & 1-TAP SOS ENGINE (स्मार्ट वॉच टेलीमेट्री एवं एसओएस)
+// ============================================================================
+
+let watchClockInterval = null;
+let currentWatchSOSData = null;
+
+function updateWatchLiveClock() {
+  const el = document.getElementById("watch-live-clock");
+  if (!el) return;
+  const now = new Date();
+  el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function openSmartWatchSetupModal() {
+  const modal = document.getElementById("modal-smartwatch-setup");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closeSmartWatchSetupModal() {
+  const modal = document.getElementById("modal-smartwatch-setup");
+  if (modal) modal.classList.add("hidden");
+}
+
+function openSmartWatchCompanionModal() {
+  const modal = document.getElementById("modal-smartwatch-companion");
+  if (modal) modal.classList.remove("hidden");
+
+  updateWatchLiveClock();
+  if (!watchClockInterval) {
+    watchClockInterval = setInterval(updateWatchLiveClock, 1000);
+  }
+}
+
+function closeSmartWatchCompanionModal() {
+  const modal = document.getElementById("modal-smartwatch-companion");
+  if (modal) modal.classList.add("hidden");
+}
+
+function resetWatchToIdle() {
+  document.getElementById("watch-screen-idle")?.classList.remove("hidden");
+  document.getElementById("watch-screen-scanning")?.classList.add("hidden");
+  document.getElementById("watch-screen-voice")?.classList.add("hidden");
+  document.getElementById("watch-screen-confirmed")?.classList.add("hidden");
+}
+
+// 1-Tap Watch SOS sequence: Scan -> Voice -> Multi-channel dispatch
+async function triggerSmartWatchSOS() {
+  // Step 1: Switch to Scanning State
+  document.getElementById("watch-screen-idle")?.classList.add("hidden");
+  document.getElementById("watch-screen-scanning")?.classList.remove("hidden");
+  document.getElementById("watch-screen-voice")?.classList.add("hidden");
+  document.getElementById("watch-screen-confirmed")?.classList.add("hidden");
+
+  // Play audio siren/chime
+  if (typeof soundEngine !== 'undefined' && soundEngine.playEmergencySiren) {
+    try { soundEngine.playEmergencySiren(); } catch(e) {}
+  }
+
+  // Simulate PPG Wrist Sensor Calculation
+  await new Promise(r => setTimeout(r, 1600));
+
+  // Step 2: Switch to Voice Input Capture State
+  document.getElementById("watch-screen-scanning")?.classList.add("hidden");
+  document.getElementById("watch-screen-voice")?.classList.remove("hidden");
+
+  // Voice recording check
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRec) {
+    try {
+      const rec = new SpeechRec();
+      rec.lang = (typeof state !== 'undefined' && state.seniorLanguage === 'hi') ? 'hi-IN' : 'en-IN';
+      rec.onresult = (evt) => {
+        const text = evt.results[0][0].transcript;
+        const transcriptEl = document.getElementById("watch-voice-transcript");
+        if (transcriptEl && text) transcriptEl.textContent = `"${text}"`;
+      };
+      rec.start();
+    } catch(e) {}
+  }
+}
+
+async function confirmAndDispatchWatchSOS() {
+  const voiceText = document.getElementById("watch-voice-transcript")?.textContent?.replace(/"/g, '') || "Mujhe ghabrahat aur chakkar aa rahe hain, seene me dard hai.";
+  
+  const payload = {
+    patient_id: "PAT-101",
+    patient_name: "Ramesh Sharma",
+    device_model: "CareConnect Watch V2 (WearOS / Galaxy)",
+    connection_type: "Wi-Fi (Home_WiFi_5G)",
+    bp_systolic: 158,
+    bp_diastolic: 96,
+    spo2: 94,
+    heart_rate: 114,
+    voice_transcript: voiceText,
+    dispatched_to: "Sister Kavita, RN (Care Coordinator) & Rahul Sharma (Son & Family)"
+  };
+
+  try {
+    const res = await fetch("/api/watch/sos-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    currentWatchSOSData = data;
+  } catch(err) {
+    console.warn("Could not dispatch to /api/watch/sos-alert:", err);
+  }
+
+  // Step 3: Switch to Confirmed State on Watch
+  document.getElementById("watch-screen-voice")?.classList.add("hidden");
+  document.getElementById("watch-screen-confirmed")?.classList.remove("hidden");
+
+  // Update Global Application State for Family and Coordinator Portals
+  if (typeof state !== 'undefined') {
+    state.seniorStatus.isSerious = true;
+    state.watchSOSActive = true;
+    state.watchSOSTelemetry = payload;
+
+    // Highlight in Coordinator alerts list
+    if (state.alerts) {
+      const rameshAlert = state.alerts.find(a => a.seniorName && a.seniorName.includes('Ramesh'));
+      if (rameshAlert) {
+        rameshAlert.priority = 'critical';
+        rameshAlert.priorityScore = 100;
+        rameshAlert.rank = 1;
+        rameshAlert.reason = '🚨 SMARTWATCH SOS VIA WI-FI: Senior triggered emergency from wrist watch. BP: 158/96 mmHg, SpO2: 94%, HR: 114 bpm. Voice distress captured.';
+        rameshAlert.suggestedAction = 'Emergency rapid response: Nearest paramedic dispatched. Care coordinator & family line engaged.';
+        if (typeof renderCoordinatorAlerts === 'function') {
+          renderCoordinatorAlerts();
+        }
+      }
+    }
+  }
+
+  // Update Family Portal SOS Banner
+  const famBanner = document.getElementById("family-watch-sos-alert-banner");
+  if (famBanner) {
+    famBanner.classList.remove("hidden");
+  }
+
+  if (typeof showToast === 'function') {
+    showToast("🚨 Smartwatch SOS Dispatched over Wi-Fi! Sister Kavita RN & Family Alerted.", "danger");
+  }
+}
+
+async function checkAndRenderFamilyWatchSOSBanner() {
+  const famBanner = document.getElementById("family-watch-sos-alert-banner");
+  if (!famBanner) return;
+  if (typeof state !== 'undefined' && state.watchSOSActive) {
+    famBanner.classList.remove("hidden");
+    return;
+  }
+  try {
+    const res = await fetch("/api/watch/latest-alert?patient_id=PAT-101");
+    const data = await res.json();
+    if (data && data.has_alert && data.alert && data.alert.status === 'active_critical') {
+      if (typeof state !== 'undefined') state.watchSOSActive = true;
+      famBanner.classList.remove("hidden");
+    }
+  } catch(e) {}
+}

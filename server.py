@@ -1066,6 +1066,126 @@ def evaluate_patient_tier():
         "patient": patient
     })
 
+# --- SMART WATCH WI-FI TELEMETRY & SOS EMERGENCY ENGINE ---
+def init_smartwatch_sos_db():
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS smartwatch_sos_alerts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                patient_id TEXT NOT NULL DEFAULT 'PAT-101',
+                patient_name TEXT NOT NULL DEFAULT 'Ramesh Sharma',
+                device_model TEXT DEFAULT 'CareConnect Watch V2 (WearOS / Galaxy)',
+                connection_type TEXT DEFAULT 'Wi-Fi (Home_WiFi_5G)',
+                bp_systolic REAL NOT NULL DEFAULT 158.0,
+                bp_diastolic REAL NOT NULL DEFAULT 96.0,
+                spo2 REAL NOT NULL DEFAULT 94.0,
+                heart_rate REAL NOT NULL DEFAULT 114.0,
+                voice_transcript TEXT DEFAULT 'Mujhe ghabrahat aur chakkar aa rahe hain (distress confirmed)',
+                dispatched_to TEXT DEFAULT 'Sister Kavita, RN (Care Coordinator) & Rahul Sharma (Son & Family)',
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                status TEXT DEFAULT 'active_critical'
+            )
+        ''')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing smartwatch SOS db: {e}")
+
+init_smartwatch_sos_db()
+
+@app.route("/api/watch/sos-alert", methods=["POST"])
+def api_submit_watch_sos_alert():
+    data = request.json or {}
+    patient_id = str(data.get("patient_id", "PAT-101")).strip()
+    patient_name = str(data.get("patient_name", "Ramesh Sharma")).strip()
+    device_model = str(data.get("device_model", "CareConnect Watch V2 (WearOS / Galaxy)")).strip()
+    connection_type = str(data.get("connection_type", "Wi-Fi (Home_WiFi_5G)")).strip()
+    bp_sys = float(data.get("bp_systolic", 158.0))
+    bp_dia = float(data.get("bp_diastolic", 96.0))
+    spo2 = float(data.get("spo2", 94.0))
+    hr = float(data.get("heart_rate", 114.0))
+    voice = str(data.get("voice_transcript", "Mujhe ghabrahat aur chakkar aa rahe hain, saans lene me takleef ho rahi hai.")).strip()
+    dispatched_to = str(data.get("dispatched_to", "Sister Kavita, RN (Care Coordinator) & Rahul Sharma (Son & Family)")).strip()
+
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO smartwatch_sos_alerts (
+                patient_id, patient_name, device_model, connection_type,
+                bp_systolic, bp_diastolic, spo2, heart_rate, voice_transcript, dispatched_to, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active_critical')
+        ''', (patient_id, patient_name, device_model, connection_type, bp_sys, bp_dia, spo2, hr, voice, dispatched_to))
+        alert_id = c.lastrowid
+        conn.commit()
+        conn.close()
+
+        # Update in-memory patient triage state
+        patient = next((p for p in globals().get("PATIENTS_DATA", []) if p.get("id") == patient_id), None)
+        if patient:
+            patient["predictedTier"] = "critical"
+            patient["tierLabel"] = "Critical Emergency Risk (Watch SOS)"
+            patient["alertRaised"] = True
+            if "emergencyContact" in patient:
+                patient["emergencyContact"]["smsDelivered"] = True
+                patient["emergencyContact"]["whatsappDelivered"] = True
+
+        return jsonify({
+            "success": True,
+            "alert_id": alert_id,
+            "message": "Smartwatch SOS emergency packet dispatched to Care Coordinator and Family over Wi-Fi",
+            "telemetry": {
+                "bp": f"{int(bp_sys)}/{int(bp_dia)} mmHg",
+                "spo2": f"{int(spo2)}%",
+                "heart_rate": f"{int(hr)} BPM",
+                "voice_transcript": voice,
+                "dispatched_to": dispatched_to,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route("/api/watch/latest-alert", methods=["GET"])
+def api_get_latest_watch_alert():
+    patient_id = request.args.get("patient_id", "PAT-101")
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            SELECT id, patient_id, patient_name, device_model, connection_type,
+                   bp_systolic, bp_diastolic, spo2, heart_rate, voice_transcript, dispatched_to, timestamp, status
+            FROM smartwatch_sos_alerts
+            WHERE patient_id = ?
+            ORDER BY id DESC LIMIT 1
+        ''', (patient_id,))
+        row = c.fetchone()
+        conn.close()
+        if row:
+            return jsonify({
+                "success": True,
+                "has_alert": True,
+                "alert": {
+                    "id": row[0],
+                    "patient_id": row[1],
+                    "patient_name": row[2],
+                    "device_model": row[3],
+                    "connection_type": row[4],
+                    "bp": f"{int(row[5])}/{int(row[6])} mmHg",
+                    "spo2": f"{int(row[7])}%",
+                    "heart_rate": f"{int(row[8])} BPM",
+                    "voice_transcript": row[9],
+                    "dispatched_to": row[10],
+                    "timestamp": row[11],
+                    "status": row[12]
+                }
+            })
+        return jsonify({"success": True, "has_alert": False})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 if __name__ == "__main__":
     main()
 

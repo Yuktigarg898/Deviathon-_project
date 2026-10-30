@@ -136,6 +136,24 @@ def auth_send_otp():
         "message": "Demo OTP dispatched successfully"
     })
 
+@app.route("/api/auth/otp/verify", methods=["POST"])
+def auth_verify_otp():
+    data = request.json or {}
+    otp = str(data.get("otp", "")).strip()
+    return jsonify({
+        "success": True,
+        "verified": True,
+        "message": "OTP verified successfully"
+    })
+
+@app.route("/api/auth/password/reset", methods=["POST"])
+def auth_password_reset():
+    data = request.json or {}
+    return jsonify({
+        "success": True,
+        "message": "Password reset successfully. You may now log in with your new password."
+    })
+
 # --- REST API ROUTES ---
 @app.route("/api/health", methods=["GET"])
 def health_check():

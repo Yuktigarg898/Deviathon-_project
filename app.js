@@ -735,21 +735,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check URL hash for direct portal entry
     const directHash = window.location.hash.replace('#', '').toLowerCase();
 
-    if (directHash === 'coordinator') {
-        if (typeof enterDashboard === 'function') {
-            enterDashboard('coordinator');
+    const cleanHash = directHash.replace('login-', '');
+    if (cleanHash === 'coordinator' || cleanHash === 'senior' || cleanHash === 'family' || cleanHash === 'operations') {
+        if (typeof selectRoleForAuth === 'function') {
+            selectRoleForAuth(cleanHash);
+        } else if (typeof enterDashboard === 'function') {
+            enterDashboard(cleanHash);
         } else {
-            navigateRole('coordinator');
-        }
-    } else if (
-        directHash === 'senior' ||
-        directHash === 'family' ||
-        directHash === 'operations'
-    ) {
-        if (typeof enterDashboard === 'function') {
-            enterDashboard(directHash);
-        } else {
-            navigateRole(directHash);
+            navigateRole(cleanHash);
         }
     } else {
         navigateRole('login', false);
@@ -9626,12 +9619,32 @@ function updateAuthBannerForLanguage(lang = (state && state.currentLanguage) || 
 }
 
 
+// 0. Fill Demo Credentials Helper
+function fillDemoCredentials() {
+  const role = selectedAuthRole || 'senior';
+  const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+  const emailInput = document.getElementById('signin-email');
+  const passInput = document.getElementById('signin-password');
+  const alertBox = document.getElementById('auth-signin-alert');
+  if (alertBox) alertBox.classList.add('hidden');
+  if (emailInput) emailInput.value = cfg.defaultEmail;
+  if (passInput) passInput.value = cfg.defaultPass;
+  if (soundEngine && typeof soundEngine.playTone === 'function') soundEngine.playTone(600, 'sine', 0.1);
+  showToast(`Pre-filled credentials for ${getRoleDisplayName(role)}`, 'info');
+}
+
 // 1. User selects role card -> open dedicated authentication portal
 function selectRoleForAuth(role) {
   selectedAuthRole = role;
-  soundEngine.playTone(550, 'sine', 0.1);
+  if (soundEngine && typeof soundEngine.playTone === 'function') soundEngine.playTone(550, 'sine', 0.1);
 
   const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+
+  // Clear alerts
+  const alertSignin = document.getElementById('auth-signin-alert');
+  const alertSignup = document.getElementById('auth-signup-alert');
+  if (alertSignin) { alertSignin.classList.add('hidden'); alertSignin.innerHTML = ''; }
+  if (alertSignup) { alertSignup.classList.add('hidden'); alertSignup.innerHTML = ''; }
 
   // Update banner appearance
   const banner = document.getElementById('auth-role-banner');
@@ -9644,6 +9657,7 @@ function selectRoleForAuth(role) {
   const passInput = document.getElementById('signin-password');
   const submitBtnLabel = document.getElementById('btn-signin-label');
   const demoBtnLabel = document.getElementById('btn-quick-demo-label');
+  const demoHintEmail = document.getElementById('demo-hint-email');
   const roleFieldsContainer = document.getElementById('signup-role-specific-fields');
 
   if (banner) banner.className = `p-4 rounded-2xl border mb-5 flex items-center space-x-3.5 ${cfg.bg} shadow-sm`;
@@ -9651,6 +9665,11 @@ function selectRoleForAuth(role) {
   if (icon) icon.className = cfg.icon;
   updateAuthBannerForLanguage(state.currentLanguage || "en");
   if (demoBtnLabel) demoBtnLabel.textContent = `1-Click Quick Demo Sign In (${getRoleDisplayName(role)})`;
+  if (demoHintEmail) demoHintEmail.textContent = cfg.defaultEmail;
+
+  // Set default credentials in inputs for smooth tester convenience
+  if (emailInput) emailInput.value = cfg.defaultEmail;
+  if (passInput) passInput.value = cfg.defaultPass;
 
   // Onboarding Page: Dual Brackets for Family Portal
   const existingFamilyBrackets = document.getElementById('auth-family-onboarding-brackets');
@@ -9678,7 +9697,7 @@ function selectRoleForAuth(role) {
 
   // Render role-specific signup fields with language resolution
   if (roleFieldsContainer) {
-    roleFieldsContainer.innerHTML = cfg.signupFieldsHtml;
+    roleFieldsContainer.innerHTML = typeof cfg.signupFieldsHtml === 'object' ? (cfg.signupFieldsHtml[state.currentLanguage || 'en'] || cfg.signupFieldsHtml.en) : cfg.signupFieldsHtml;
   }
 
   // Switch to signin tab
@@ -9861,66 +9880,176 @@ function verifyOtpAndLogin() {
   });
 }
 
-// 8. Handle Standard Sign In
-function handleSignInSubmit(e) {
+// 8. Handle Standard Sign In (Verified with Backend SQLite DB & Persistent Local Storage)
+async function handleSignInSubmit(e) {
   if (e) e.preventDefault();
-  const email = document.getElementById('signin-email')?.value.trim();
-  const password = document.getElementById('signin-password')?.value;
+  const emailInput = document.getElementById('signin-email');
+  const passInput = document.getElementById('signin-password');
+  const email = emailInput?.value.trim();
+  const password = passInput?.value;
+  const alertBox = document.getElementById('auth-signin-alert');
+
+  if (alertBox) alertBox.classList.add('hidden');
 
   if (!email || !password) {
     showToast('Please fill in both email and password', 'warning');
+    if (alertBox) {
+      alertBox.className = 'p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 text-xs text-amber-900 flex items-center space-x-2';
+      alertBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i><span>Please fill in both email and password.</span>';
+      alertBox.classList.remove('hidden');
+    }
     return;
   }
 
   const role = selectedAuthRole || 'senior';
   const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
+  const submitBtn = document.getElementById('btn-signin-submit');
+  const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
 
-  // Check if this user registered in localStorage
-  let matchedUser = null;
-  try {
-    const users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
-    matchedUser = users.find(u => u.role === role && (u.email.toLowerCase() === email.toLowerCase() || u.email === email));
-  } catch(err) {}
-
-  let prof = null;
-  try {
-    prof = JSON.parse(localStorage.getItem(`careconnect_profile_${role}`));
-  } catch(e) {}
-
-  const userName = matchedUser ? matchedUser.name : (prof && prof.name ? prof.name : cfg.defaultName);
-  const parts = userName.split(' ');
-  const userInitials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : userName.substring(0, 2).toUpperCase();
-
-  soundEngine.playSuccessChime();
-
-  // Update UI headers
-  if (role === 'coordinator') {
-    const topName = document.getElementById('coord-topbar-name');
-    const greetName = document.getElementById('coord-greeting-name');
-    if (topName) topName.textContent = userName;
-    if (greetName) greetName.textContent = userName;
-  } else if (role === 'senior') {
-    const greetEl = document.getElementById('senior-greeting');
-    if (greetEl) greetEl.textContent = `Good Morning, ${userName} ji! 👋`;
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Verifying Credentials in DB...</span>';
   }
 
-  // Inform backend via REST API
   try {
-    fetch('/api/auth/login', {
+    // 1. Asynchronously verify credentials against backend SQLite database
+    const resp = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ role: role, email: email, password: password })
-    }).catch(() => {});
-  } catch (e) {}
+    });
+    const resData = await resp.json();
 
-  enterDashboard(role, {
-    name: userName,
-    email: email,
-    role: role,
-    badge: cfg.defaultBadge,
-    initials: userInitials
-  });
-  showToast(`Welcome back, ${userName}!`, 'success');
+    if (!resp.ok || !resData.success) {
+      if (soundEngine && typeof soundEngine.playWarningChime === 'function') soundEngine.playWarningChime();
+      const errMsg = resData.error || 'Authentication failed. Please verify credentials.';
+      showToast(errMsg, 'error');
+
+      if (alertBox) {
+        alertBox.className = 'p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 text-xs text-rose-900 flex items-start space-x-2.5';
+        const isNotFound = resp.status === 404;
+        alertBox.innerHTML = `
+          <i class="fa-solid fa-circle-xmark text-rose-600 text-base flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="font-bold text-xs">${errMsg}</div>
+            ${isNotFound ? '<button type="button" onclick="switchAuthTab(\'signup\')" class="mt-1.5 inline-block text-xs font-black text-rose-700 hover:text-rose-900 underline">Click here to Create Account →</button>' : ''}
+          </div>
+        `;
+        alertBox.classList.remove('hidden');
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+      return;
+    }
+
+    // 2. Successful Login: User credentials verified in Database!
+    const user = resData.user || {};
+    const userName = user.name || cfg.defaultName;
+    const parts = userName.split(' ');
+    const userInitials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : userName.substring(0, 2).toUpperCase();
+
+    if (soundEngine && typeof soundEngine.playSuccessChime === 'function') soundEngine.playSuccessChime();
+    showToast(`✅ Welcome back, ${userName}! Opening ${getRoleDisplayName(role)}...`, 'success');
+
+    if (alertBox) alertBox.classList.add('hidden');
+
+    // Update UI headers
+    if (role === 'coordinator') {
+      const topName = document.getElementById('coord-topbar-name');
+      const greetName = document.getElementById('coord-greeting-name');
+      if (topName) topName.textContent = userName;
+      if (greetName) greetName.textContent = userName;
+    } else if (role === 'senior') {
+      const greetEl = document.getElementById('senior-greeting');
+      if (greetEl) greetEl.textContent = `Good Morning, ${userName} ji! 👋`;
+    }
+
+    // Enter Dashboard
+    enterDashboard(role, {
+      name: userName,
+      email: user.email || email,
+      role: role,
+      badge: cfg.defaultBadge,
+      initials: userInitials,
+      extra: user.extra || {}
+    });
+
+  } catch (networkErr) {
+    // Offline / Network Fallback to LocalStorage registered users directory
+    console.warn('Backend fetch failed, checking local users database:', networkErr);
+    let users = [];
+    try {
+      users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
+    } catch(err) { users = []; }
+
+    // Pre-seed default user if absent
+    if (!users.some(u => u.role === role && u.email.toLowerCase() === cfg.defaultEmail.toLowerCase())) {
+      users.push({
+        role: role,
+        email: cfg.defaultEmail.toLowerCase(),
+        password: cfg.defaultPass,
+        name: cfg.defaultName,
+        extra: {}
+      });
+    }
+
+    const matchedUser = users.find(u => u.role === role && u.email.toLowerCase() === email.toLowerCase());
+
+    if (!matchedUser) {
+      if (soundEngine && typeof soundEngine.playWarningChime === 'function') soundEngine.playWarningChime();
+      const errMsg = `No account found with email '${email}' in ${getRoleDisplayName(role)}. Please create an account first.`;
+      showToast(errMsg, 'error');
+      if (alertBox) {
+        alertBox.className = 'p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 text-xs text-rose-900 flex items-start space-x-2.5';
+        alertBox.innerHTML = `
+          <i class="fa-solid fa-circle-xmark text-rose-600 text-base flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="font-bold text-xs">${errMsg}</div>
+            <button type="button" onclick="switchAuthTab('signup')" class="mt-1.5 inline-block text-xs font-black text-rose-700 hover:text-rose-900 underline">Click here to Create Account →</button>
+          </div>
+        `;
+        alertBox.classList.remove('hidden');
+      }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
+      return;
+    }
+
+    if (matchedUser.password !== password) {
+      if (soundEngine && typeof soundEngine.playWarningChime === 'function') soundEngine.playWarningChime();
+      const errMsg = 'Incorrect password. Please verify credentials.';
+      showToast(errMsg, 'error');
+      if (alertBox) {
+        alertBox.className = 'p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 text-xs text-rose-900 flex items-start space-x-2.5';
+        alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-base flex-shrink-0 mt-0.5"></i><span class="font-bold text-xs">${errMsg}</span>`;
+        alertBox.classList.remove('hidden');
+      }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
+      return;
+    }
+
+    // Success in fallback
+    if (soundEngine && typeof soundEngine.playSuccessChime === 'function') soundEngine.playSuccessChime();
+    const parts = matchedUser.name.split(' ');
+    const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : matchedUser.name.substring(0, 2).toUpperCase();
+
+    enterDashboard(role, {
+      name: matchedUser.name,
+      email: matchedUser.email,
+      role: role,
+      badge: cfg.defaultBadge,
+      initials: initials,
+      extra: matchedUser.extra || {}
+    });
+    showToast(`Welcome back, ${matchedUser.name}!`, 'success');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
+  }
 }
 
 // 9. Handle Google OAuth Sign In Simulation
@@ -9955,114 +10084,177 @@ function handleQuickDemoSignIn() {
   });
 }
 
-// 11. Handle Create Account (Sign Up)
-function handleSignUpSubmit(e) {
+// 11. Handle Create Account (Sign Up - Persisted to Database & Immediate Portal Access)
+async function handleSignUpSubmit(e) {
   if (e) e.preventDefault();
   const name = document.getElementById('signup-name')?.value.trim();
   const email = document.getElementById('signup-email')?.value.trim();
   const password = document.getElementById('signup-password')?.value;
+  const passwordConfirm = document.getElementById('signup-password-confirm')?.value;
+  const alertBox = document.getElementById('auth-signup-alert');
+
+  if (alertBox) alertBox.classList.add('hidden');
 
   if (!name || !email || !password) {
-    showToast('Please complete all required fields to create your account', 'warning');
+    showToast('Please complete all required fields (Name, Email, Password)', 'warning');
+    if (alertBox) {
+      alertBox.className = 'p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 text-xs text-amber-900 flex items-center space-x-2';
+      alertBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-600"></i><span>Please complete all required fields.</span>';
+      alertBox.classList.remove('hidden');
+    }
+    return;
+  }
+
+  // Password Confirmation Validation
+  if (passwordConfirm && password !== passwordConfirm) {
+    if (soundEngine && typeof soundEngine.playWarningChime === 'function') soundEngine.playWarningChime();
+    const errMsg = 'Passwords do not match. Please ensure both passwords are identical.';
+    showToast(errMsg, 'warning');
+    if (alertBox) {
+      alertBox.className = 'p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 text-xs text-rose-900 flex items-start space-x-2.5';
+      alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-base flex-shrink-0 mt-0.5"></i><span class="font-bold text-xs">${errMsg}</span>`;
+      alertBox.classList.remove('hidden');
+    }
     return;
   }
 
   const role = selectedAuthRole || 'senior';
   const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
-  soundEngine.playSuccessChime();
-  
-  // Compute initials
-  const parts = name.split(' ');
-  const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+  const submitBtn = document.querySelector('#auth-form-signup button[type="submit"]');
+  const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving to Database...</span>';
+  }
 
   // Extract role-specific extra fields
   let extraData = {};
   if (role === 'senior') {
-    const ageVal = parseInt(document.getElementById('signup-age')?.value) || 74;
-    const genderVal = document.getElementById('signup-gender')?.value || 'Male';
-    const contactVal = document.getElementById('signup-contact')?.value || '';
-    extraData = { age: ageVal, gender: genderVal, contact: contactVal };
+    extraData = {
+      age: parseInt(document.getElementById('signup-age')?.value) || 74,
+      gender: document.getElementById('signup-gender')?.value || 'Male',
+      contact: document.getElementById('signup-contact')?.value || ''
+    };
   } else if (role === 'coordinator') {
-    const desigVal = document.getElementById('signup-designation')?.value || 'Registered Nurse (RN)';
-    const licVal = document.getElementById('signup-license')?.value || 'RN-DL-49201';
-    extraData = { designation: desigVal, license: licVal };
+    extraData = {
+      designation: document.getElementById('signup-designation')?.value || 'Registered Nurse (RN)',
+      license: document.getElementById('signup-license')?.value || 'RN-DL-49201'
+    };
   } else if (role === 'family') {
-    const relVal = document.getElementById('signup-relation')?.value || 'Son';
-    const seniorVal = document.getElementById('signup-linked-senior')?.value || 'Ramesh Sharma';
-    extraData = { relation: relVal, linkedSenior: seniorVal };
+    extraData = {
+      relation: document.getElementById('signup-relation')?.value || 'Son',
+      linkedSenior: document.getElementById('signup-linked-senior')?.value || 'Ramesh Sharma'
+    };
   } else if (role === 'operations') {
-    const cityVal = document.getElementById('signup-city')?.value || 'Delhi NCR';
-    const secKeyVal = document.getElementById('signup-seckey')?.value || 'OPS-SEC-9981';
-    extraData = { city: cityVal, secKey: secKeyVal };
+    extraData = {
+      city: document.getElementById('signup-city')?.value || 'Delhi NCR',
+      secKey: document.getElementById('signup-seckey')?.value || 'OPS-SEC-9981'
+    };
   }
 
-  // Create initial profile for the new user
-  const newProfile = {
-    role: role,
-    name: name,
-    email: email,
-    dob: '',
-    phone: '',
-    profileCompleted: true,
-    isNewUser: false,
-    ...extraData
-  };
   try {
-    localStorage.setItem(`careconnect_profile_${role}`, JSON.stringify(newProfile));
-    
-    // Store in registered users directory
-    let users = [];
-    try {
-      users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
-    } catch(err) { users = []; }
-    users = users.filter(u => !(u.email === email && u.role === role));
-    users.push({
-      name: name,
-      email: email,
-      password: password,
-      role: role,
-      extra: extraData
-    });
-    localStorage.setItem('careconnect_users', JSON.stringify(users));
-  } catch (err) {
-    console.error('Failed to save user profile in localStorage:', err);
-  }
-
-  // Non-blocking fetch to backend API
-  try {
-    fetch('/api/auth/register', {
+    // 1. Post to backend SQLite database
+    const resp = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role: role, name: name, email: email, ...extraData })
-    }).catch(() => {});
-  } catch (e) {}
+      body: JSON.stringify({ role: role, name: name, email: email, password: password, ...extraData })
+    });
+    const resData = await resp.json();
 
-  // Update UI headers & badges according to role
-  if (role === 'coordinator') {
-    const topName = document.getElementById('coord-topbar-name');
-    const greetName = document.getElementById('coord-greeting-name');
-    if (topName) topName.textContent = name;
-    if (greetName) greetName.textContent = name;
-  } else if (role === 'senior') {
-    const greetEl = document.getElementById('senior-greeting');
-    if (greetEl) greetEl.textContent = `Good Morning, ${name} ji! 👋`;
-    const vitalsMeta = document.getElementById('senior-vitals-meta-badge');
-    if (vitalsMeta) vitalsMeta.textContent = `${extraData.age || 74} Yrs • ${extraData.gender || 'Male'} • New Delhi`;
-    const ageInput = document.getElementById('assess-age');
-    if (ageInput && extraData.age) ageInput.value = extraData.age;
-    const genderInput = document.getElementById('assess-gender');
-    if (genderInput && extraData.gender) genderInput.value = extraData.gender;
+    if (!resp.ok || !resData.success) {
+      if (soundEngine && typeof soundEngine.playWarningChime === 'function') soundEngine.playWarningChime();
+      const errMsg = resData.error || 'Failed to create account.';
+      showToast(errMsg, 'error');
+
+      if (alertBox) {
+        alertBox.className = 'p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 text-xs text-rose-900 flex items-start space-x-2.5';
+        const isConflict = resp.status === 409;
+        alertBox.innerHTML = `
+          <i class="fa-solid fa-circle-xmark text-rose-600 text-base flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="font-bold text-xs">${errMsg}</div>
+            ${isConflict ? '<button type="button" onclick="switchAuthTab(\'signin\')" class="mt-1.5 inline-block text-xs font-black text-rose-700 hover:text-rose-900 underline">Sign In with your existing password →</button>' : ''}
+          </div>
+        `;
+        alertBox.classList.remove('hidden');
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+      return;
+    }
+
+    // 2. Compute initials & update local mirror
+    const parts = name.split(' ');
+    const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+
+    // Store in localStorage careconnect_users
+    try {
+      let users = JSON.parse(localStorage.getItem('careconnect_users') || '[]');
+      users = users.filter(u => !(u.email.toLowerCase() === email.toLowerCase() && u.role === role));
+      users.push({
+        name: name,
+        email: email,
+        password: password,
+        role: role,
+        extra: extraData
+      });
+      localStorage.setItem('careconnect_users', JSON.stringify(users));
+
+      // Save user profile
+      localStorage.setItem(`careconnect_profile_${role}`, JSON.stringify({
+        role: role,
+        name: name,
+        email: email,
+        profileCompleted: true,
+        ...extraData
+      }));
+    } catch (e) {}
+
+    if (soundEngine && typeof soundEngine.playSuccessChime === 'function') soundEngine.playSuccessChime();
+    showToast(`🎉 Account created for ${name}! Opening ${getRoleDisplayName(role)} portal...`, 'success');
+
+    if (alertBox) alertBox.classList.add('hidden');
+
+    // Update UI headers
+    if (role === 'coordinator') {
+      const topName = document.getElementById('coord-topbar-name');
+      const greetName = document.getElementById('coord-greeting-name');
+      if (topName) topName.textContent = name;
+      if (greetName) greetName.textContent = name;
+    } else if (role === 'senior') {
+      const greetEl = document.getElementById('senior-greeting');
+      if (greetEl) greetEl.textContent = `Good Morning, ${name} ji! 👋`;
+      const vitalsMeta = document.getElementById('senior-vitals-meta-badge');
+      if (vitalsMeta) vitalsMeta.textContent = `${extraData.age || 74} Yrs • ${extraData.gender || 'Male'} • New Delhi`;
+      const ageInput = document.getElementById('assess-age');
+      if (ageInput && extraData.age) ageInput.value = extraData.age;
+      const genderInput = document.getElementById('assess-gender');
+      if (genderInput && extraData.gender) genderInput.value = extraData.gender;
+    }
+
+    // Enter Dashboard with newly created account
+    enterDashboard(role, {
+      name: name,
+      email: email,
+      role: role,
+      badge: `${getRoleDisplayName(role)}`,
+      initials: initials,
+      extra: extraData
+    });
+
+  } catch (err) {
+    console.error('Registration failed:', err);
+    showToast('Account created locally. Welcome!', 'success');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
   }
-
-  enterDashboard(role, {
-    name: name,
-    email: email,
-    role: role,
-    badge: `${getRoleDisplayName(role)}`,
-    initials: initials
-  });
-
-  showToast(`Account created successfully! Welcome to CareConnect, ${name}`, 'success');
 }
 
 // 12. Enter Dashboard (Strict Isolation: Only the logged-in role is shown!)

@@ -95,19 +95,128 @@ def index():
 def static_files(filename):
     return send_from_directory(".", filename)
 
-# --- AUTHENTICATION ROUTES ---
+# --- AUTHENTICATION DATABASE & ROUTES ---
+import sqlite3
+
+USERS_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "careconnect_users.db")
+
+DEFAULT_SEED_USERS = [
+    {
+        "role": "senior",
+        "email": "ramesh.senior@careconnect.in",
+        "password": "password123",
+        "name": "Ramesh Sharma",
+        "extra": {"age": 74, "gender": "Male", "contact": "Rahul Sharma (Son) - +91 98110-44912"}
+    },
+    {
+        "role": "coordinator",
+        "email": "kavita.nurse@careconnect.org",
+        "password": "password123",
+        "name": "Sister Kavita, RN",
+        "extra": {"designation": "Registered Nurse (RN)", "license": "RN-DL-49201"}
+    },
+    {
+        "role": "family",
+        "email": "rahul.family@gmail.com",
+        "password": "password123",
+        "name": "Rahul Sharma",
+        "extra": {"relation": "Son", "linkedSenior": "Ramesh Sharma [Father • 74 Yrs • Male]"}
+    },
+    {
+        "role": "operations",
+        "email": "arun.ops@careconnect.org",
+        "password": "password123",
+        "name": "Arun Kapoor",
+        "extra": {"city": "Delhi NCR", "secKey": "OPS-SEC-9981"}
+    }
+]
+
+def init_users_db():
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                role TEXT NOT NULL,
+                email TEXT NOT NULL,
+                password TEXT NOT NULL,
+                name TEXT NOT NULL,
+                extra_json TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(role, email)
+            )
+        ''')
+        for u in DEFAULT_SEED_USERS:
+            c.execute('''
+                INSERT OR IGNORE INTO users (role, email, password, name, extra_json)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (u["role"], u["email"].lower(), u["password"], u["name"], json.dumps(u["extra"])))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing users db: {e}")
+
+init_users_db()
+
 @app.route("/api/auth/login", methods=["POST"])
 def auth_login():
     data = request.json or {}
-    role = data.get("role", "senior")
-    email = data.get("email", "")
+    role = str(data.get("role", "senior")).strip()
+    email = str(data.get("email", "")).strip().lower()
+    password = str(data.get("password", "")).strip()
+
+    if not email or not password:
+        return jsonify({"success": False, "error": "Please enter both email and password."}), 400
+
+    role_titles = {
+        "coordinator": "Care Coordinator",
+        "senior": "Senior Companion",
+        "family": "Family Member",
+        "operations": "Operations Manager"
+    }
+    portal_name = role_titles.get(role, "selected")
+
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute("SELECT id, role, email, password, name, extra_json FROM users WHERE role = ? AND email = ?", (role, email))
+        row = c.fetchone()
+        conn.close()
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Database error: {str(e)}"}), 500
+
+    if not row:
+        return jsonify({
+            "success": False,
+            "error": f"No account found with email '{email}' for {portal_name}. Please check your email or click Create Account to register."
+        }), 404
+
+    user_id, u_role, u_email, u_password, u_name, u_extra = row
+    if password != u_password:
+        return jsonify({
+            "success": False,
+            "error": "Incorrect password. Please verify your password and try again."
+        }), 401
+
+    extra_data = {}
+    try:
+        if u_extra:
+            extra_data = json.loads(u_extra)
+    except Exception:
+        pass
+
     return jsonify({
         "success": True,
-        "role": role,
-        "token": "cc_auth_token_mock_session",
+        "role": u_role,
+        "token": f"cc_auth_{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}",
+        "message": f"Welcome back, {u_name}!",
         "user": {
-            "email": email,
-            "role": role,
+            "id": user_id,
+            "email": u_email,
+            "name": u_name,
+            "role": u_role,
+            "extra": extra_data,
             "loginTime": datetime.now().isoformat()
         }
     })
@@ -115,44 +224,83 @@ def auth_login():
 @app.route("/api/auth/register", methods=["POST"])
 def auth_register():
     data = request.json or {}
-    role = data.get("role", "senior")
-    name = data.get("name", "New Member")
+    role = str(data.get("role", "senior")).strip()
+    name = str(data.get("name", "")).strip()
+    email = str(data.get("email", "")).strip().lower()
+    password = str(data.get("password", "")).strip()
+    extra = {k: v for k, v in data.items() if k not in ["role", "name", "email", "password"]}
+
+    if not name or not email or not password:
+        return jsonify({"success": False, "error": "Full Name, Email, and Password are all required."}), 400
+
+    role_titles = {
+        "coordinator": "Care Coordinator",
+        "senior": "Senior Companion",
+        "family": "Family Member",
+        "operations": "Operations Manager"
+    }
+    portal_name = role_titles.get(role, "selected")
+
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        c.execute("SELECT id FROM users WHERE role = ? AND email = ?", (role, email))
+        if c.fetchone():
+            conn.close()
+            return jsonify({
+                "success": False,
+                "error": f"An account with email '{email}' already exists for {portal_name}. Please sign in with your credentials."
+            }), 409
+
+        c.execute(
+            "INSERT INTO users (role, email, password, name, extra_json) VALUES (?, ?, ?, ?, ?)",
+            (role, email, password, name, json.dumps(extra))
+        )
+        user_id = c.lastrowid
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Database insertion error: {str(e)}"}), 500
+
     return jsonify({
         "success": True,
-        "message": f"Account created successfully for {name}",
-        "role": role,
-        "user": data
+        "message": f"Account created successfully for {name} in {portal_name}!",
+        "user": {
+            "id": user_id,
+            "role": role,
+            "email": email,
+            "name": name,
+            "extra": extra,
+            "loginTime": datetime.now().isoformat()
+        }
     })
 
-@app.route("/api/auth/otp/send", methods=["POST"])
-def auth_send_otp():
-    data = request.json or {}
-    recipient = data.get("recipient", "")
-    # Generated mock OTP
-    return jsonify({
-        "success": True,
-        "otp": "4826",
-        "recipient": recipient,
-        "message": "Demo OTP dispatched successfully"
-    })
+@app.route("/api/auth/users", methods=["GET"])
+def auth_users():
+    role = request.args.get("role")
+    try:
+        conn = sqlite3.connect(USERS_DB_PATH)
+        c = conn.cursor()
+        if role:
+            c.execute("SELECT id, role, email, name, extra_json, created_at FROM users WHERE role = ?", (role,))
+        else:
+            c.execute("SELECT id, role, email, name, extra_json, created_at FROM users")
+        rows = c.fetchall()
+        conn.close()
+        users = []
+        for r in rows:
+            users.append({
+                "id": r[0],
+                "role": r[1],
+                "email": r[2],
+                "name": r[3],
+                "extra": json.loads(r[4]) if r[4] else {},
+                "createdAt": r[5]
+            })
+        return jsonify({"success": True, "users": users, "total": len(users)})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route("/api/auth/otp/verify", methods=["POST"])
-def auth_verify_otp():
-    data = request.json or {}
-    otp = str(data.get("otp", "")).strip()
-    return jsonify({
-        "success": True,
-        "verified": True,
-        "message": "OTP verified successfully"
-    })
-
-@app.route("/api/auth/password/reset", methods=["POST"])
-def auth_password_reset():
-    data = request.json or {}
-    return jsonify({
-        "success": True,
-        "message": "Password reset successfully. You may now log in with your new password."
-    })
 
 # --- REST API ROUTES ---
 @app.route("/api/health", methods=["GET"])

@@ -2827,107 +2827,215 @@
               </div>
             </div>
 
-            <!-- Recent Alerts Table Card (Exact Design Spec) -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-              <div class="p-4 sm:p-5 flex items-center justify-between border-b border-slate-100">
-                <h3 class="font-extrabold text-sm sm:text-base text-slate-900">Recent Alerts</h3>
-                <button type="button" onclick="switchOpsTab('alerts')"
-                  class="text-xs font-bold text-teal-600 hover:text-teal-800 transition-colors flex items-center space-x-1">
-                  <span>View All</span>
-                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            <!-- ========================================================================= -->
+            <!-- ELDER CARE REPORTS & AI PREDICTIVE RISK COMMAND CENTER                    -->
+            <!-- ========================================================================= -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden p-5 sm:p-6 space-y-5">
+              
+              <!-- Header with Live ML Model Badge & Action Buttons -->
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                <div>
+                  <div class="flex items-center space-x-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00a896] to-emerald-600 text-white flex items-center justify-center text-lg shadow-md shadow-teal-500/20">
+                      <i class="fa-solid fa-hospital-user"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                        Elder Care Diagnostic Reports & AI Priority Queue
+                      </h3>
+                      <p class="text-xs text-slate-500 font-medium mt-0.5">
+                        Real-time biometric telemetry, ML-predicted risk & priority triage, and immediate inline task assignment.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Side: Model Badge & Re-run AI Prediction -->
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-teal-50 via-emerald-50 to-teal-50 border border-teal-200/90 px-3.5 py-2 rounded-2xl text-xs font-bold text-teal-800 shadow-2xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <i class="fa-solid fa-brain text-teal-600"></i>
+                    <span id="ops-model-status-badge">AI Random Forest Classifier v2.4 (94.8% AUC)</span>
+                  </div>
+
+                  <button type="button" onclick="runOpsAiModelPredictor()" id="ops-rerun-model-btn"
+                    class="inline-flex items-center space-x-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-[#00a896] to-[#008779] hover:from-[#008779] hover:to-[#006e62] text-white font-extrabold text-xs shadow-md shadow-teal-500/20 transition-all active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                    <span>Re-evaluate AI Risk</span>
+                  </button>
+
+                  <button type="button" onclick="switchOpsTab('alerts')"
+                    class="text-xs font-bold text-slate-600 hover:text-teal-700 bg-slate-100 hover:bg-teal-50 px-3.5 py-2 rounded-2xl border border-slate-200 transition-colors flex items-center space-x-1.5">
+                    <span>Full Cases (Tab 3)</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter Tabs: All, High/P1, Moderate/P2, Low/P3, Needs Assignment -->
+              <div class="flex items-center space-x-2 border-b border-slate-200 overflow-x-auto pb-1 text-xs font-bold">
+                <button type="button" onclick="filterOpsDashboardEldersTab('all')" id="tab-ops-elders-all"
+                  class="ops-elders-tab px-3.5 py-2 border-b-2 border-teal-600 text-teal-800 transition-all flex items-center space-x-1.5">
+                  <i class="fa-solid fa-users text-xs"></i>
+                  <span>All Elders (32)</span>
+                </button>
+                <button type="button" onclick="filterOpsDashboardEldersTab('high')" id="tab-ops-elders-high"
+                  class="ops-elders-tab px-3.5 py-2 text-rose-600 hover:text-rose-800 border-b-2 border-transparent transition-all flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  <span>Critical Risk • P1 (8)</span>
+                </button>
+                <button type="button" onclick="filterOpsDashboardEldersTab('moderate')" id="tab-ops-elders-mod"
+                  class="ops-elders-tab px-3.5 py-2 text-amber-600 hover:text-amber-800 border-b-2 border-transparent transition-all flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span>Moderate Risk • P2 (14)</span>
+                </button>
+                <button type="button" onclick="filterOpsDashboardEldersTab('low')" id="tab-ops-elders-low"
+                  class="ops-elders-tab px-3.5 py-2 text-emerald-600 hover:text-emerald-800 border-b-2 border-transparent transition-all flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>Stable • P3 (10)</span>
+                </button>
+                <button type="button" onclick="filterOpsDashboardEldersTab('pending')" id="tab-ops-elders-pending"
+                  class="ops-elders-tab px-3.5 py-2 text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition-all flex items-center space-x-1.5">
+                  <i class="fa-solid fa-clock text-xs text-amber-500"></i>
+                  <span>Needs Assignment (12)</span>
                 </button>
               </div>
 
-              <div class="overflow-x-auto">
+              <!-- Search and Multi-Criteria Filter Controls -->
+              <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200/90 flex flex-col md:flex-row items-center justify-between gap-3">
+                <!-- Search Box -->
+                <div class="relative w-full md:w-80">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                  <input type="text" id="ops-dash-elders-search" oninput="filterOpsDashboardEldersSearch(this.value)"
+                    placeholder="Search elder name, vitals, condition or area..."
+                    class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-700 placeholder-slate-400">
+                </div>
+
+                <!-- Dropdown Filters -->
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                  <!-- Risk Filter -->
+                  <div class="flex items-center space-x-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs shadow-2xs">
+                    <span class="font-bold text-slate-500 text-[11px]">Risk:</span>
+                    <select id="ops-dash-elders-filter-risk" onchange="filterOpsDashboardEldersSelect()" class="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer text-xs">
+                      <option value="all">All Risk Levels</option>
+                      <option value="High">High Risk</option>
+                      <option value="Moderate">Moderate Risk</option>
+                      <option value="Low">Low Risk</option>
+                    </select>
+                  </div>
+
+                  <!-- Priority Filter -->
+                  <div class="flex items-center space-x-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs shadow-2xs">
+                    <span class="font-bold text-slate-500 text-[11px]">Priority:</span>
+                    <select id="ops-dash-elders-filter-priority" onchange="filterOpsDashboardEldersSelect()" class="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer text-xs">
+                      <option value="all">All Priorities</option>
+                      <option value="P1">P1 - Critical (Immediate)</option>
+                      <option value="P2">P2 - High Priority (2h SLA)</option>
+                      <option value="P3">P3 - Routine Care</option>
+                    </select>
+                  </div>
+
+                  <!-- Area Filter -->
+                  <div class="flex items-center space-x-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs shadow-2xs">
+                    <span class="font-bold text-slate-500 text-[11px]">Area:</span>
+                    <select id="ops-dash-elders-filter-area" onchange="filterOpsDashboardEldersSelect()" class="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer text-xs">
+                      <option value="all">All Areas</option>
+                      <option value="Greater Kailash">Greater Kailash</option>
+                      <option value="Hauz Khas">Hauz Khas</option>
+                      <option value="Saket">Saket</option>
+                      <option value="Vasant Kunj">Vasant Kunj</option>
+                      <option value="Connaught Place">Connaught Place</option>
+                      <option value="Dwarka">Dwarka</option>
+                      <option value="Defence Colony">Defence Colony</option>
+                    </select>
+                  </div>
+
+                  <!-- Reset Filters -->
+                  <button type="button" onclick="resetOpsDashboardEldersFilters()"
+                    class="px-2.5 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                    title="Reset filters">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Main Elders Reports Table with Inline Task Assignment -->
+              <div class="overflow-x-auto rounded-2xl border border-slate-200/90 shadow-2xs">
                 <table class="w-full text-left text-xs">
-                  <thead class="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-bold text-[10px] border-b border-slate-100">
+                  <thead class="bg-slate-50/90 text-slate-500 uppercase tracking-wider font-extrabold text-[10px] border-b border-slate-200">
                     <tr>
-                      <th class="p-3.5 pl-4 w-10"><input type="checkbox" class="rounded text-teal-600"></th>
-                      <th class="p-3.5">Time</th>
-                      <th class="p-3.5">Senior</th>
-                      <th class="p-3.5">Risk Level</th>
-                      <th class="p-3.5">Issue</th>
+                      <th class="p-3.5 pl-4 w-10"><input type="checkbox" id="ops-dash-elders-select-all" onchange="toggleOpsSelectAllDashboardElders(this.checked)" class="rounded text-teal-600 cursor-pointer" title="Select All on page"></th>
+                      <th class="p-3.5">Elder & Biometrics Telemetry</th>
+                      <th class="p-3.5">AI Predicted Risk</th>
+                      <th class="p-3.5">ML Priority Tier</th>
                       <th class="p-3.5">Status</th>
-                      <th class="p-3.5">Assigned To</th>
-                      <th class="p-3.5 text-center">Action</th>
+                      <th class="p-3.5 min-w-[280px]">Assign Task On This Position</th>
+                      <th class="p-3.5 text-center">Diagnostic Report</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                    <!-- Row 1 -->
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
-                      <td class="p-3.5 text-slate-500 font-mono">10:24 AM</td>
-                      <td class="p-3.5 font-bold text-slate-900">Sharma Ji</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-700 border border-rose-200">High</span></td>
-                      <td class="p-3.5 text-slate-600">Missed medication</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Pending</span></td>
-                      <td class="p-3.5 font-semibold text-slate-800">Ananya</td>
-                      <td class="p-3.5 text-center">
-                        <button onclick="openOpsAlertDetail('Sharma Ji', 'High', 'Missed medication', 'Pending', 'Ananya')"
-                          class="px-3 py-1 rounded-lg text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors">
-                          View
-                        </button>
-                      </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
-                      <td class="p-3.5 text-slate-500 font-mono">09:15 AM</td>
-                      <td class="p-3.5 font-bold text-slate-900">Verma Ji</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-700 border border-amber-200">Moderate</span></td>
-                      <td class="p-3.5 text-slate-600">Reduced activity</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 text-sky-700 border border-sky-200">In Progress</span></td>
-                      <td class="p-3.5 font-semibold text-slate-800">Rishabh</td>
-                      <td class="p-3.5 text-center">
-                        <button onclick="openOpsAlertDetail('Verma Ji', 'Moderate', 'Reduced activity', 'In Progress', 'Rishabh')"
-                          class="px-3 py-1 rounded-lg text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors">
-                          View
-                        </button>
-                      </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
-                      <td class="p-3.5 text-slate-500 font-mono">08:40 AM</td>
-                      <td class="p-3.5 font-bold text-slate-900">Kapoor Ji</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-700 border border-rose-200">High</span></td>
-                      <td class="p-3.5 text-slate-600">Pain reported</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Pending</span></td>
-                      <td class="p-3.5 font-semibold text-slate-800">Amrita</td>
-                      <td class="p-3.5 text-center">
-                        <button onclick="openOpsAlertDetail('Kapoor Ji', 'High', 'Pain reported', 'Pending', 'Amrita')"
-                          class="px-3 py-1 rounded-lg text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors">
-                          View
-                        </button>
-                      </td>
-                    </tr>
-
-                    <!-- Row 4 -->
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
-                      <td class="p-3.5 text-slate-500 font-mono">07:10 AM</td>
-                      <td class="p-3.5 font-bold text-slate-900">Iyer Ji</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700 border border-emerald-200">Low</span></td>
-                      <td class="p-3.5 text-slate-600">Sleep issues</td>
-                      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Resolved</span></td>
-                      <td class="p-3.5 font-semibold text-slate-800">Megha</td>
-                      <td class="p-3.5 text-center">
-                        <button onclick="openOpsAlertDetail('Iyer Ji', 'Low', 'Sleep issues', 'Resolved', 'Megha')"
-                          class="px-3 py-1 rounded-lg text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors">
-                          View
-                        </button>
-                      </td>
-                    </tr>
+                  <tbody id="ops-dashboard-elders-tbody" class="divide-y divide-slate-100 font-medium text-slate-700 bg-white">
+                    <!-- Populated dynamically via renderOpsDashboardEldersTable() -->
                   </tbody>
                 </table>
               </div>
+
+              <!-- Pagination and Summary -->
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-slate-500">
+                <div id="ops-dash-elders-pagination-info" class="font-semibold text-slate-600">Showing 1-8 of 32 elders</div>
+                <div id="ops-dash-elders-pagination-controls" class="flex items-center space-x-1 font-bold">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- Floating Bulk Toolbar for Dashboard Elders -->
+              <div id="ops-dash-elders-bulk-toolbar" class="hidden transition-all duration-300 bg-slate-900 text-white rounded-2xl p-3 sm:p-4 shadow-xl border border-slate-700 flex flex-col md:flex-row items-center justify-between gap-3 mt-2">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    <i class="fa-solid fa-list-check"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-white"><span id="ops-dash-bulk-count" class="text-teal-400 font-extrabold text-sm">0</span> elders selected</div>
+                    <div class="text-[11px] text-slate-400">Batch operations: assign coordinator or dispatch emergency teams</div>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 justify-end">
+                  <select id="ops-dash-bulk-coord" class="bg-slate-800 text-xs text-slate-200 font-semibold px-2 py-1.5 rounded-xl border border-slate-700 focus:outline-none cursor-pointer">
+                    <option value="Sister Kavita, RN">Sister Kavita, RN</option>
+                    <option value="Brother Amit">Brother Amit</option>
+                    <option value="Sister Sunita">Sister Sunita</option>
+                    <option value="Rajesh Kumar">Rajesh Kumar</option>
+                    <option value="Dr. V.K. Kapoor">Dr. V.K. Kapoor</option>
+                  </select>
+
+                  <select id="ops-dash-bulk-task" class="bg-slate-800 text-xs text-slate-200 font-semibold px-2 py-1.5 rounded-xl border border-slate-700 focus:outline-none cursor-pointer">
+                    <option value="🚨 Emergency Nurse Dispatch">🚨 Emergency Nurse Dispatch</option>
+                    <option value="🏠 Home Nursing Visit & Triage">🏠 Home Nursing Visit & Triage</option>
+                    <option value="💊 Medication Adherence Audit">💊 Medication Adherence Audit</option>
+                    <option value="📞 Tele-Consultation Call">📞 Tele-Consultation Call</option>
+                    <option value="🤝 Daily Routine Voice Check">🤝 Daily Routine Voice Check</option>
+                  </select>
+
+                  <button type="button" onclick="executeOpsDashBulkAssign()" class="px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs transition-all shadow-sm cursor-pointer">
+                    Assign All Selected
+                  </button>
+
+                  <button type="button" onclick="executeOpsDashBulkDispatch()" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-all shadow-sm flex items-center space-x-1.5 cursor-pointer">
+                    <i class="fa-solid fa-truck-medical text-[11px]"></i>
+                    <span>Batch Dispatch</span>
+                  </button>
+
+                  <button type="button" onclick="clearOpsDashBulkSelection()" class="p-1.5 text-slate-400 hover:text-white text-xs font-bold transition-all ml-1 cursor-pointer" title="Clear selection">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                  </button>
+                </div>
+              </div>
+
             </div>
 
           </div>
 
-                    <!-- ========================================================================= -->
+          <!-- ========================================================================= -->
           <!-- TAB 2: RISK ANALYTICS                                                    -->
           <!-- ========================================================================= -->
           <div id="ops-subview-risk" class="ops-subview hidden space-y-6">

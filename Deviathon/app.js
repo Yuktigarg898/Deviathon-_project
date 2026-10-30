@@ -33,10 +33,7 @@ const state = {
     voiceNoteTranscript: null,
     isSerious: true, // Default to true so Family Member sees the serious alert demonstration immediately
   },
-  currentCoordinatorTab: 'queue',
-  currentDossierSubtab: 'history',
-  patients: [{"id": "PAT-101", "username": "senior_ramesh", "name": "Ramesh Sharma", "age": 74, "gender": "Male", "avatar": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80", "location": "South Delhi (Greater Kailash, C-42)", "phone": "+91 98110-44912", "assignedNurse": "Sister Kavita, RN", "predictedTier": "CRITICAL", "tierLabel": "🚨 CRITICAL TIER", "tierColor": "rose", "modelScore": 80, "predictedProbability": "64.3%", "modelRiskLevel": "High Risk", "alertRaised": true, "alertId": "ALT-1091", "modelDrivers": ["Borderline Oxygen Saturation: SpO2 94.0%", "Elevated Blood Pressure: 158/96 mmHg", "Tachycardia Spike: Resting Heart Rate 114 bpm", "Moderate Pain (Level 4/10) in Lower Back & Left Knee", "Mobility Dependence: Unable to walk independently (High fall hazard)", "Toileting Dependence: Requires grab bar / personal support", "Medication Adherence Gap: Missed morning check-in & dose"], "suggestedAction": "Step 1: Immediate 2-way emergency call. Step 2: Emergency family notification. Step 3: Dispatch Nurse Kavita (ETA 12m).", "emergencyContact": {"name": "Rahul Sharma", "relation": "Son (Primary Caregiver)", "phone": "+91 98711-20931", "altPhone": "+91 98110-55441 (Anita Sharma, Daughter-in-law)", "email": "rahul.sharma@example.com", "address": "C-42, Greater Kailash-1, New Delhi", "notificationStatus": "Dispatched & Delivered", "channels": ["SMS", "WhatsApp", "App Push"], "dispatchedAt": "Today, 08:31 AM", "smsDelivered": true, "whatsappDelivered": true}, "medicalHistory": {"chronicConditions": ["Type-2 Diabetes Mellitus (12 yrs)", "Stage-2 Essential Hypertension", "Mild Left Knee Osteoarthritis"], "allergies": ["Sulfa antibiotics (skin rash / allergic dermatitis)"], "surgeries": ["Appendectomy (1998)", "Right Eye Cataract (2021)"], "bloodGroup": "B +ve", "doctor": "Dr. V.K. Kapoor (Senior Cardiologist, Fortis Escorts)", "nextReview": "15 Nov 2026", "medications": [{"name": "Tab Metformin", "dosage": "500 mg", "schedule": "1-0-1 (After Meals)", "purpose": "Glycemic Control", "adherence": "89%"}, {"name": "Tab Telmisartan", "dosage": "40 mg", "schedule": "1-0-0 (Morning 8 AM)", "purpose": "Blood Pressure", "adherence": "94%"}, {"name": "Tab Atorvastatin", "dosage": "10 mg", "schedule": "0-0-1 (Night 9 PM)", "purpose": "Cardiovascular & Lipid", "adherence": "92%"}, {"name": "Tab Calcium + D3", "dosage": "500 mg", "schedule": "1-0-0 (Afternoon)", "purpose": "Bone Health", "adherence": "95%"}]}, "checkups": [{"date": "Today, 08:30 AM", "bp": "158/96 mmHg", "bpStatus": "Critical Spike", "hr": "114 bpm", "hrStatus": "Tachycardia Spike", "spo2": "94%", "spo2Status": "Borderline Low", "glucose": "138 mg/dL", "temp": "98.4 °F", "weight": "68 kg", "bmi": "24.8", "conductedBy": "Home Bluetooth IoT Hub & Sister Kavita", "notes": "Resting HR spiked suddenly from baseline 74 to 114 bpm with zero motion for 4 hours."}, {"date": "Yesterday, 06:00 PM", "bp": "134/86 mmHg", "bpStatus": "Pre-Hypertension", "hr": "78 bpm", "hrStatus": "Normal", "spo2": "97%", "spo2Status": "Healthy", "glucose": "128 mg/dL", "temp": "98.2 °F", "weight": "68 kg", "bmi": "24.8", "conductedBy": "Sister Kavita (Routine check)", "notes": "Evening post-tea reading stable. Advised light stretching."}], "assessments": {"adl": {"eating": {"score": "10/10", "status": "Fully Independent"}, "toileting": {"score": "7/10", "status": "Requires Grab Bar Support"}, "walking": {"score": "6/10", "status": "Walks with Cane / Mild Instability"}, "moving": {"score": "7/10", "status": "Slight Difficulty Rising from Bed"}}, "pain": {"score": 4, "location": "Lower Back & Left Knee", "duration": "Chronic (Aggravates on cold mornings)", "sensation": "Dull ache (धीमा दर्द व जकड़न)"}, "sleep": {"hours": 5.2, "quality": "Restless (2 nighttime awakenings)"}}, "userInputs": [{"type": "voice", "timestamp": "Today, 08:15 AM", "hindiText": "आज सुबह से चक्कर बहुत आ रहे हैं, छाती पर भारीपन महसूस हो रहा है और सीढ़ियां चढ़ने की हिम्मत नहीं हो रही...", "englishTranslation": "Feeling severe dizziness since morning, heaviness on chest, and lacking energy to climb stairs...", "sentiment": "Distressed / High Anxiety", "sentimentBadge": "bg-rose-100 text-rose-800", "duration": "18 sec"}, {"type": "one_tap", "timestamp": "Yesterday, 09:30 AM", "selection": "🤒 Tabiyat Theek Nahi (Feeling Unwell)", "recordedNote": "Morning medicine delayed by 2 hours due to dizziness", "badge": "bg-amber-100 text-amber-800"}, {"type": "missed_call", "timestamp": "2 Days Ago, 08:02 AM", "tollFree": "1800-202-CARE", "status": "Logged & Verified Safe"}]}, {"id": "PAT-102", "username": "senior_savitri", "name": "Savitri Devi", "age": 81, "gender": "Female", "avatar": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=150&auto=format&fit=crop&q=80", "location": "Hauz Khas (Enclave 4, Flat 12B)", "phone": "+91 98103-99210", "assignedNurse": "Brother Amit, Paramedic", "predictedTier": "CRITICAL", "tierLabel": "🚨 CRITICAL TIER", "tierColor": "rose", "modelScore": 62, "predictedProbability": "63.2%", "modelRiskLevel": "High Risk", "alertRaised": true, "alertId": "ALT-1088", "modelDrivers": ["Elevated Blood Pressure: 142/88 mmHg", "Severe Pain (Level 8/10) reported in Right Hip & Lumbar", "Mobility Dependence: Unable to walk independently (High fall hazard)", "Toileting Dependence: Supervised required post fall impact", "Impact shock sensor triggered in bathroom"], "suggestedAction": "Priority dispatch Paramedic Amit for fracture assessment & tele-radiology.", "emergencyContact": {"name": "Priya Verma", "relation": "Daughter", "phone": "+91 99100-33421", "altPhone": "+91 98188-44211 (Dr. Alok Verma, Son-in-law)", "email": "priya.verma@example.com", "address": "Hauz Khas Enclave, New Delhi", "notificationStatus": "Dispatched & Delivered", "channels": ["SMS", "WhatsApp", "App Push"], "dispatchedAt": "Today, 06:51 AM", "smsDelivered": true, "whatsappDelivered": true}, "medicalHistory": {"chronicConditions": ["Severe Osteoporosis (T-score -3.1)", "Post-Fall Fragility", "Mild Cognitive Impairment", "Stage-1 Hypertension"], "allergies": ["Penicillin & Cephalosporins"], "surgeries": ["Left Wrist Colles Fracture Fixation (2022)"], "bloodGroup": "O +ve", "doctor": "Dr. Sunita Aggarwal (AIIMS)", "nextReview": "22 Nov 2026", "medications": [{"name": "Tab Amlodipine", "dosage": "5 mg", "schedule": "1-0-0 (Morning)", "purpose": "Blood Pressure", "adherence": "96%"}, {"name": "Tab Alendronate", "dosage": "70 mg", "schedule": "Once Weekly (Sunday)", "purpose": "Bone Mineral", "adherence": "90%"}, {"name": "Tab Donepezil", "dosage": "5 mg", "schedule": "0-0-1 (Night)", "purpose": "Cognitive Support", "adherence": "91%"}]}, "checkups": [{"date": "Today, 06:50 AM", "bp": "142/88 mmHg", "bpStatus": "Elevated", "hr": "88 bpm", "hrStatus": "Normal", "spo2": "97%", "spo2Status": "Healthy", "glucose": "110 mg/dL", "temp": "98.2 °F", "weight": "54 kg", "bmi": "21.6", "conductedBy": "Bathroom Sensor & Brother Amit", "notes": "Fall impact event detected at 06:45 AM. Senior immobilized on bathroom rug."}], "assessments": {"adl": {"eating": {"score": "9/10", "status": "Independent"}, "toileting": {"score": "4/10", "status": "Supervised Required / High Fall Risk"}, "walking": {"score": "4/10", "status": "Unsteady Gait / High Fall Hazard"}, "moving": {"score": "5/10", "status": "Needs Bedside Support"}}, "pain": {"score": 8, "location": "Right Hip & Lumbar Spine", "duration": "Acute post-fall impact", "sensation": "Sharp stabbing pain (तेज दर्द व चुभन)"}, "sleep": {"hours": 4.8, "quality": "Frequent waking, nocturia"}}, "userInputs": [{"type": "voice", "timestamp": "Today, 06:52 AM", "hindiText": "बाथरूम में फिसल गई थी, कमर में तेज दर्द है, उठा नहीं जा रहा...", "englishTranslation": "Slipped in the bathroom, sharp pain in lower back, unable to get up...", "sentiment": "Acute Physical Pain & Distress", "sentimentBadge": "bg-rose-100 text-rose-800", "duration": "14 sec"}]}, {"id": "PAT-103", "username": "senior_anand", "name": "Anand Verma", "age": 78, "gender": "Male", "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80", "location": "Saket (Sector 3, House 104)", "phone": "+91 98734-11823", "assignedNurse": "Rajesh Kumar (Buddy)", "predictedTier": "CRITICAL", "tierLabel": "🚨 CRITICAL TIER", "tierColor": "rose", "modelScore": 53, "predictedProbability": "68.6%", "modelRiskLevel": "High Risk", "alertRaised": true, "alertId": "ALT-1074", "modelDrivers": ["Severe Hyperglycemia: Fasting Blood Glucose 228 mg/dL", "Medication Adherence Gap: Missed 2 consecutive insulin doses", "Diabetic Neuropathy tingling in soles", "Risk of Diabetic Ketoacidosis / Hyperosmolar state"], "suggestedAction": "Doorstep visit by Buddy Rajesh to verify insulin cold chain & dose administration.", "emergencyContact": {"name": "Deepak Verma", "relation": "Son", "phone": "+91 98112-99881", "altPhone": "+91 98733-11223 (Ritu Verma, Daughter)", "email": "deepak.verma@example.com", "address": "Saket, Sector 3, New Delhi", "notificationStatus": "Dispatched & Delivered", "channels": ["SMS", "WhatsApp"], "dispatchedAt": "Today, 07:20 AM", "smsDelivered": true, "whatsappDelivered": true}, "medicalHistory": {"chronicConditions": ["Uncontrolled Type-2 Diabetes (HbA1c 9.2%)", "Chronic Kidney Disease Stage 2", "Diabetic Peripheral Neuropathy"], "allergies": ["None documented"], "surgeries": ["Coronary Angioplasty (2017)"], "bloodGroup": "A +ve", "doctor": "Dr. Pradeep Batra (Max Saket)", "nextReview": "10 Nov 2026", "medications": [{"name": "Inj Insulin Glargine", "dosage": "16 units", "schedule": "0-0-1 (Night 10 PM)", "purpose": "Basal Glycemic", "adherence": "72% (Missed 2 days)"}, {"name": "Tab Linagliptin", "dosage": "5 mg", "schedule": "1-0-0 (Morning)", "purpose": "Glucose Control", "adherence": "95%"}, {"name": "Tab Pregabalin", "dosage": "75 mg", "schedule": "0-0-1 (Night)", "purpose": "Neuropathy Pain", "adherence": "88%"}]}, "checkups": [{"date": "Today, 07:15 AM", "bp": "132/84 mmHg", "bpStatus": "Normal", "hr": "76 bpm", "hrStatus": "Normal", "spo2": "98%", "spo2Status": "Healthy", "glucose": "228 mg/dL", "glucoseStatus": "Severe Hyperglycemia", "temp": "98.6 °F", "weight": "72 kg", "bmi": "25.2", "conductedBy": "Bluetooth Glucometer Sync", "notes": "Fasting blood sugar 228 mg/dL. Consecutive 2-day missed evening insulin reminder."}], "assessments": {"adl": {"eating": {"score": "10/10", "status": "Independent"}, "toileting": {"score": "9/10", "status": "Independent"}, "walking": {"score": "8/10", "status": "Independent"}, "moving": {"score": "9/10", "status": "Independent"}}, "pain": {"score": 3, "location": "Bilateral Soles / Feet", "duration": "Nightly burning sensation", "sensation": "Burning neuropathy (पैरों में जलन)"}, "sleep": {"hours": 6.5, "quality": "Fair"}}, "userInputs": [{"type": "one_tap", "timestamp": "Today, 08:30 AM", "selection": "💊 Took Medicine (Dawa le li)", "recordedNote": "Oral tablets taken; insulin dose compliance pending confirmation", "badge": "bg-emerald-100 text-emerald-800"}, {"type": "voice", "timestamp": "Yesterday, 08:15 PM", "hindiText": "पैरों में बहुत झनझनाहट हो रही है और बहुत प्यास लग रही है...", "englishTranslation": "Feet are tingling severely and feeling unusually thirsty...", "sentiment": "Discomfort / Neuropathy Symptom", "sentimentBadge": "bg-amber-100 text-amber-800", "duration": "12 sec"}]}, {"id": "PAT-104", "username": "senior_meena", "name": "Meena Iyer", "age": 72, "gender": "Female", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80", "location": "Vasant Kunj (Pocket B, Apt 302)", "phone": "+91 98188-77219", "assignedNurse": "Sister Sunita, Counselor", "predictedTier": "MODERATE", "tierLabel": "🟡 MODERATE TIER", "tierColor": "amber", "modelScore": 25, "predictedProbability": "38.9%", "modelRiskLevel": "Medium Risk", "alertRaised": false, "modelDrivers": ["Severe Sleep Deficit: Only 4.1 hours of sleep", "Bereavement anniversary emotional distress voice note", "Cardiovascular parameters remain stable (BP 124/80, HR 72, SpO2 98%)"], "suggestedAction": "15-minute compassionate reassurance tele-consult with Buddy Sunita & family notification.", "emergencyContact": {"name": "Karthik Iyer", "relation": "Son (Bengaluru)", "phone": "+91 97400-55120", "altPhone": "+91 98188-99001", "email": "karthik.iyer@example.com", "address": "Indiranagar, Bengaluru (Outstation Family)", "notificationStatus": "Monitoring Only (No Alert Raised)", "channels": ["Routine Portal"], "dispatchedAt": null, "smsDelivered": false, "whatsappDelivered": false}, "medicalHistory": {"chronicConditions": ["Hypothyroidism", "Mild Depressive Episodes (Post-bereavement)", "Cervical Spondylosis"], "allergies": ["Dust mite & pollen"], "surgeries": ["None"], "bloodGroup": "B +ve", "doctor": "Dr. Rashmi Sen (Medanta)", "nextReview": "30 Nov 2026", "medications": [{"name": "Tab Thyronorm", "dosage": "50 mcg", "schedule": "1-0-0 (7 AM)", "purpose": "Thyroid", "adherence": "98%"}, {"name": "Tab Escitalopram", "dosage": "10 mg", "schedule": "1-0-0 (Morning)", "purpose": "Mood", "adherence": "93%"}]}, "checkups": [{"date": "Today, 08:00 AM", "bp": "124/80 mmHg", "bpStatus": "Optimal", "hr": "72 bpm", "hrStatus": "Normal", "spo2": "98%", "spo2Status": "Healthy", "glucose": "105 mg/dL", "temp": "98.1 °F", "weight": "58 kg", "bmi": "23.2", "conductedBy": "Self-Monitoring IoT Cuff", "notes": "Hemodynamic parameters stable. Mood assessment flagged low."}], "assessments": {"adl": {"eating": {"score": "9/10", "status": "Independent"}, "toileting": {"score": "9/10", "status": "Independent"}, "walking": {"score": "9/10", "status": "Independent"}, "moving": {"score": "9/10", "status": "Independent"}}, "pain": {"score": 2, "location": "Neck / Upper Shoulder", "duration": "Postural stiffness", "sensation": "Mild tightness (गर्दन में हल्की जकड़न)"}, "sleep": {"hours": 4.1, "quality": "Insomnia (Difficulty falling asleep)"}}, "userInputs": [{"type": "voice", "timestamp": "Today, 07:15 AM", "hindiText": "आज अकेलापन बहुत लग रहा है, किसी से बात करने का मन है...", "englishTranslation": "Feeling very lonely today, wish to speak with someone...", "sentiment": "Severe Sadness & Disorientation", "sentimentBadge": "bg-purple-100 text-purple-800", "duration": "16 sec"}]}, {"id": "PAT-105", "username": "senior_harish", "name": "Harish Patel", "age": 76, "gender": "Male", "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80", "location": "Malviya Nagar (Block E-12)", "phone": "+91 98199-33812", "assignedNurse": "Sister Kavita, RN", "predictedTier": "NORMAL", "tierLabel": "🟢 NORMAL TIER", "tierColor": "emerald", "modelScore": 9, "predictedProbability": "18.2%", "modelRiskLevel": "Low Risk", "alertRaised": false, "modelDrivers": ["All vital signs, mobility, sleep, and medication adherence are within healthy normal ranges.", "Blood pressure normal: 122/80 mmHg, Heart rate: 72 bpm, SpO2: 98%", "Functional ADLs 100% independent (Eating, Walking, Toileting, Moving)", "Zero missed medication doses in past 30 days"], "suggestedAction": "Routine monitoring & Bluetooth cuff weekly sync. No intervention required.", "emergencyContact": {"name": "Sneha Patel", "relation": "Daughter", "phone": "+91 98200-44910", "altPhone": "+91 98199-22110 (Manoj Patel, Son)", "email": "sneha.patel@example.com", "address": "Malviya Nagar, New Delhi", "notificationStatus": "Standby (No Alert Raised - Alarm Fatigue Averted)", "channels": ["Routine Portal"], "dispatchedAt": null, "smsDelivered": false, "whatsappDelivered": false}, "medicalHistory": {"chronicConditions": ["Well-Controlled Hypertension", "Benign Prostatic Hyperplasia (BPH)", "Mild Dyslipidemia"], "allergies": ["No known drug allergies"], "surgeries": ["None"], "bloodGroup": "AB +ve", "doctor": "Dr. R.K. Mehta (Max Smart Super)", "nextReview": "05 Dec 2026", "medications": [{"name": "Tab Telmisartan", "dosage": "40 mg", "schedule": "1-0-0 (Morning)", "purpose": "Blood Pressure", "adherence": "98%"}, {"name": "Tab Silodosin", "dosage": "8 mg", "schedule": "0-0-1 (Night)", "purpose": "Urinary Flow", "adherence": "96%"}, {"name": "Tab Rosuvastatin", "dosage": "10 mg", "schedule": "0-0-1 (Night)", "purpose": "Lipids", "adherence": "94%"}]}, "checkups": [{"date": "Today, 07:30 AM", "bp": "122/80 mmHg", "bpStatus": "Optimal Normal", "hr": "72 bpm", "hrStatus": "Normal", "spo2": "98%", "spo2Status": "Healthy", "glucose": "108 mg/dL", "temp": "98.2 °F", "weight": "70 kg", "bmi": "24.2", "conductedBy": "Home Bluetooth IoT Hub", "notes": "Morning checkup completed smoothly. Vitals in optimal green range."}], "assessments": {"adl": {"eating": {"score": "10/10", "status": "Independent"}, "toileting": {"score": "10/10", "status": "Independent"}, "walking": {"score": "10/10", "status": "Independent"}, "moving": {"score": "10/10", "status": "Independent"}}, "pain": {"score": 0, "location": "None", "duration": "None", "sensation": "No Pain (दर्द मुक्त)"}, "sleep": {"hours": 7.5, "quality": "Sound & Peaceful"}}, "userInputs": [{"type": "one_tap", "timestamp": "Today, 07:45 AM", "selection": "😊 Feeling Great (Sab Badhiya Hai)", "recordedNote": "Morning tea and walk completed without difficulty", "badge": "bg-emerald-100 text-emerald-800"}, {"type": "missed_call", "timestamp": "Today, 07:46 AM", "tollFree": "1800-202-CARE", "status": "Logged & Verified Safe"}]}],
-  emergencyNotifications: [{"id": "NOTIF-901", "alertId": "ALT-1091", "seniorId": "PAT-101", "seniorName": "Ramesh Sharma", "username": "senior_ramesh", "contactName": "Rahul Sharma (Son)", "contactPhone": "+91 98711-20931", "predictedTier": "CRITICAL TIER", "channels": ["SMS", "WhatsApp", "Push Notification"], "severity": "CRITICAL", "timestamp": "Today, 08:31 AM", "smsMessage": "🚨 CareConnect CRITICAL ALERT: Ramesh Sharma (@senior_ramesh, 74y) classified in CRITICAL TIER by AI ML model (Risk Score 80/100). Resting HR spike 114 bpm + SpO2 94% + Missed check-in. Coordinator Sister Kavita dispatched. Dial: +91 98110-44912", "whatsappMessage": "🚨 *CareConnect CRITICAL TIER ALERT*\n*Patient:* Ramesh Sharma (@senior_ramesh, Age 74)\n*ML Model Predicted Tier:* CRITICAL (Score 80/100 • 64.3% Risk)\n*Drivers:* Tachycardia (114 bpm) + SpO2 94% + Missed check-in + 4hr immobility\n*Action:* Sister Kavita dispatched (ETA 12m)\n*Direct Dial Senior:* +91 98110-44912", "deliveryStatus": "Delivered", "readReceipt": true}, {"id": "NOTIF-902", "alertId": "ALT-1088", "seniorId": "PAT-102", "seniorName": "Savitri Devi", "username": "senior_savitri", "contactName": "Priya Verma (Daughter)", "contactPhone": "+91 99100-33421", "predictedTier": "CRITICAL TIER", "channels": ["SMS", "WhatsApp", "Push Notification"], "severity": "CRITICAL", "timestamp": "Today, 06:51 AM", "smsMessage": "🚨 CareConnect CRITICAL ALERT: Savitri Devi (@senior_savitri, 81y) classified in CRITICAL TIER. Fall sensor triggered + Acute pain 8/10 reported via voice note. Paramedic Amit dispatched. Dial: +91 98103-99210", "whatsappMessage": "🚨 *CareConnect CRITICAL TIER ALERT*\n*Patient:* Savitri Devi (@senior_savitri, Age 81)\n*ML Model Predicted Tier:* CRITICAL (Score 62/100)\n*Drivers:* Bathroom fall sensor trigger + Voice Note: 'चक्कर आ गए थे और कमर में तेज दर्द है'\n*Action:* Paramedic Amit dispatched (ETA 18m)", "deliveryStatus": "Delivered", "readReceipt": true}, {"id": "NOTIF-903", "alertId": "ALT-1074", "seniorId": "PAT-103", "seniorName": "Anand Verma", "username": "senior_anand", "contactName": "Deepak Verma (Son)", "contactPhone": "+91 98112-99881", "predictedTier": "CRITICAL TIER", "channels": ["SMS", "WhatsApp"], "severity": "CRITICAL", "timestamp": "Today, 07:20 AM", "smsMessage": "🚨 CareConnect CRITICAL ALERT: Anand Verma (@senior_anand, 78y) classified in CRITICAL TIER. Severe Hyperglycemia (228 mg/dL) + 2 missed insulin doses. Buddy Rajesh dispatched. Dial: +91 98734-11823", "whatsappMessage": "🚨 *CareConnect CRITICAL TIER ALERT*\n*Patient:* Anand Verma (@senior_anand, Age 78)\n*ML Model Predicted Tier:* CRITICAL (Score 53/100 • 68.6% Risk)\n*Drivers:* Blood Sugar 228 mg/dL + 2 Missed Insulin Doses\n*Action:* Buddy Rajesh dispatched for insulin verification", "deliveryStatus": "Delivered", "readReceipt": true}],
+  patients: [{"id": "PAT-101", "username": "senior_ramesh", "name": "Ramesh Sharma", "age": 74, "gender": "Male", "avatar": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80", "location": "South Delhi (Greater Kailash, C-42)", "phone": "+91 98110-44912", "assignedNurse": "Sister Kavita, RN", "predictedTier": "CRITICAL", "tierLabel": "🚨 CRITICAL TIER", "tierColor": "rose", "modelScore": 80, "predictedProbability": "64.3%", "modelRiskLevel": "High Risk", "alertRaised": true, "alertId": "ALT-1091", "modelDrivers": ["Borderline Oxygen Saturation: SpO2 94.0%", "Elevated Blood Pressure: 158/96 mmHg", "Tachycardia Spike: Resting Heart Rate 114 bpm", "Moderate Pain (Level 4/10) in Lower Back & Left Knee", "Mobility Dependence: Unable to walk independently (High fall hazard)", "Toileting Dependence: Requires grab bar / personal support", "Medication Adherence Gap: Missed morning check-in & dose"], "suggestedAction": "Step 1: Immediate 2-way emergency call. Step 2: Emergency family notification. Step 3: Dispatch Nurse Kavita (ETA 12m).", "emergencyContact": {"name": "Rahul Sharma", "relation": "Son (Primary Caregiver)", "phone": "+91 98711-20931", "altPhone": "+91 98110-55441 (Anita Sharma, Daughter-in-law)", "email": "rahul.sharma@example.com", "address": "C-42, Greater Kailash-1, New Delhi", "notificationStatus": "Dispatched & Delivered", "channels": ["SMS", "WhatsApp", "App Push"], "dispatchedAt": "Today, 08:31 AM", "smsDelivered": true, "whatsappDelivered": true}, "medicalHistory": {"chronicConditions": ["Type-2 Diabetes Mellitus (12 yrs)", "Stage-2 Essential Hypertension", "Mild Left Knee Osteoarthritis"], "allergies": ["Sulfa antibiotics (skin rash / allergic dermatitis)"], "surgeries": ["Appendectomy (1998)", "Right Eye Cataract (2021)"], "bloodGroup": "B +ve", "doctor": "Dr. V.K. Kapoor (Senior Cardiologist, Fortis Escorts)", "nextReview": "15 Nov 2026", "medications": [{"name": "Tab Metformin", "dosage": "500 mg", "schedule": "1-0-1 (After Meals)", "purpose": "Glycemic Control", "adherence": "89%"}, {"name": "Tab Telmisartan", "dosage": "40 mg", "schedule": "1-0-0 (Morning 8 AM)", "purpose": "Blood Pressure", "adherence": "94%"}, {"name": "Tab Atorvastatin", "dosage": "10 mg", "schedule": "0-0-1 (Night 9 PM)", "purpose": "Cardiovascular & Lipid", "adherence": "92%"}, {"name": "Tab Calcium + D3", "dosage": "500 mg", "schedule": "1-0-0 (Afternoon)", "purpose": "Bone Health", "adherence": "95%"}]}, "checkups": [{"date": "Today, 08:30 AM", "bp": "158/96 mmHg", "bpStatus": "Critical Spike", "hr": "114 bpm", "hrStatus": "Tachycardia Spike", "spo2": "94%", "spo2Status": "Borderline Low", "glucose": "138 mg/dL", "temp": "98.4 °F", "weight": "68 kg", "bmi": "24.8", "conductedBy": "Home Bluetooth IoT Hub & Sister Kavita", "notes": "Resting HR spiked suddenly from baseline 74 to 114 bpm with zero motion for 4 hours."}, {"date": "Yesterday, 06:00 PM", "bp": "134/86 mmHg", "bpStatus": "Pre-Hypertension", "hr": "78 bpm", "hrStatus": "Normal", "spo2": "97%", "spo2Status": "Healthy", "glucose": "128 mg/dL", "temp": "98.2 °F", "weight": "68 kg", "bmi": "24.8", "conductedBy": "Sister Kavita (Routine check)", "notes": "Evening post-tea reading stable. Advised light stretching."}], "assessments": {"adl": {"eating": {"score": "10/10", "status": "Fully Independent"}, "toileting": {"score": "7/10", "status": "Requires Grab Bar Support"}, "walking": {"score": "6/10", "status": "Walks with Cane / Mild Instability"}, "moving": {"score": "7/10", "status": "Slight Difficulty Rising from Bed"}}, "pain": {"score": 4, "location": "Lower Back & Left Knee", "duration": "Chronic (Aggravates on cold mornings)", "sensation": "Dull ache (धीमा दर्द व जकड़न)"}, "sleep": {"hours": 5.2, "quality": "Restless (2 nighttime awakenings)"}}, "userInputs": [{"type": "voice", "timestamp": "Today, 08:15 AM", "hindiText": "आज सुबह से चक्कर बहुत आ रहे हैं, छाती पर भारीपन महसूस हो रहा है और सीढ़ियां चढ़ने की हिम्मत नहीं हो रही...", "englishTranslation": "Feeling severe dizziness since morning, heaviness on chest, and lacking energy to climb stairs...", "sentiment": "Distressed / High Anxiety", "sentimentBadge": "bg-rose-100 text-rose-800", "duration": "18 sec"}, {"type": "one_tap", "timestamp": "Yesterday, 09:30 AM", "selection": "🤒 Tabiyat Theek Nahi (Feeling Unwell)", "recordedNote": "Morning medicine delayed by 2 hours due to dizziness", "badge": "bg-amber-100 text-amber-800"}, {"type": "missed_call", "timestamp": "2 Days Ago, 08:02 AM", "tollFree": "1800-202-CARE", "status": "Logged & Verified Safe"}]}, {"id": "PAT-102", "username": "senior_savitri", "name": "Savitri Devi", "age": 81, "gender": "Female", "avatar": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=150&auto=format&fit=crop&q=80", "location": "South Delhi (Greater Kailash, C-42)", "phone": "+91 98103-99210", "assignedNurse": "Sister Kavita, RN", "predictedTier": "CRITICAL", "tierLabel": "🚨 CRITICAL TIER", "tierColor": "rose", "modelScore": 62, "predictedProbability": "63.2%", "modelRiskLevel": "High Risk", "alertRaised": true, "alertId": "ALT-1088", "modelDrivers": ["Elevated Blood Pressure: 142/88 mmHg", "Severe Pain (Level 8/10) reported in Right Hip & Lumbar", "Mobility Dependence: Unable to walk independently (High fall hazard)", "Toileting Dependence: Supervised required post fall impact", "Impact shock sensor triggered in bathroom"], "suggestedAction": "Priority dispatch Paramedic Amit for fracture assessment & tele-radiology.", "emergencyContact": {"name": "Rahul Sharma", "relation": "Son (Primary Caregiver)", "phone": "+91 98711-20931", "altPhone": "+91 98110-55441 (Anita Sharma, Daughter-in-law)", "email": "rahul.sharma@example.com", "address": "C-42, Greater Kailash-1, New Delhi", "notificationStatus": "Dispatched & Delivered", "channels": ["SMS", "WhatsApp", "App Push"], "dispatchedAt": "Today, 06:51 AM", "smsDelivered": true, "whatsappDelivered": true}, "medicalHistory": {"chronicConditions": ["Severe Osteoporosis (T-score -3.1)", "Post-Fall Fragility", "Mild Cognitive Impairment", "Stage-1 Hypertension"], "allergies": ["Penicillin & Cephalosporins"], "surgeries": ["Left Wrist Colles Fracture Fixation (2022)"], "bloodGroup": "O +ve", "doctor": "Dr. Sunita Aggarwal (AIIMS)", "nextReview": "22 Nov 2026", "medications": [{"name": "Tab Amlodipine", "dosage": "5 mg", "schedule": "1-0-0 (Morning)", "purpose": "Blood Pressure", "adherence": "96%"}, {"name": "Tab Alendronate", "dosage": "70 mg", "schedule": "Once Weekly (Sunday)", "purpose": "Bone Mineral", "adherence": "90%"}, {"name": "Tab Donepezil", "dosage": "5 mg", "schedule": "0-0-1 (Night)", "purpose": "Cognitive Support", "adherence": "91%"}]}, "checkups": [{"date": "Today, 06:50 AM", "bp": "142/88 mmHg", "bpStatus": "Elevated", "hr": "88 bpm", "hrStatus": "Normal", "spo2": "97%", "spo2Status": "Healthy", "glucose": "110 mg/dL", "temp": "98.2 °F", "weight": "54 kg", "bmi": "21.6", "conductedBy": "Bathroom Sensor & Brother Amit", "notes": "Fall impact event detected at 06:45 AM. Senior immobilized on bathroom rug."}], "assessments": {"adl": {"eating": {"score": "9/10", "status": "Independent"}, "toileting": {"score": "4/10", "status": "Supervised Required / High Fall Risk"}, "walking": {"score": "4/10", "status": "Unsteady Gait / High Fall Hazard"}, "moving": {"score": "5/10", "status": "Needs Bedside Support"}}, "pain": {"score": 8, "location": "Right Hip & Lumbar Spine", "duration": "Acute post-fall impact", "sensation": "Sharp stabbing pain (तेज दर्द व चुभन)"}, "sleep": {"hours": 4.8, "quality": "Frequent waking, nocturia"}}, "userInputs": [{"type": "voice", "timestamp": "Today, 06:52 AM", "hindiText": "बाथरूम में फिसल गई थी, कमर में तेज दर्द है, उठा नहीं जा रहा...", "englishTranslation": "Slipped in the bathroom, sharp pain in lower back, unable to get up...", "sentiment": "Acute Physical Pain & Distress", "sentimentBadge": "bg-rose-100 text-rose-800", "duration": "14 sec"}]}, {"id": "PAT-103", "username": "senior_anand", "name": "Anand Verma", "age": 78, "gender": "Male", "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80", "location": "Saket (Sector 3, House 104)", "phone": "+91 98734-11823", "assignedNurse": "Rajesh Kumar (Buddy)", "predictedTier": "CRITICAL", "tierLabel": "🚨 CRITICAL TIER", "tierColor": "rose", "modelScore": 53, "predictedProbability": "68.6%", "modelRiskLevel": "High Risk", "alertRaised": true, "alertId": "ALT-1074", "modelDrivers": ["Severe Hyperglycemia: Fasting Blood Glucose 228 mg/dL", "Medication Adherence Gap: Missed 2 consecutive insulin doses", "Diabetic Neuropathy tingling in soles", "Risk of Diabetic Ketoacidosis / Hyperosmolar state"], "suggestedAction": "Doorstep visit by Buddy Rajesh to verify insulin cold chain & dose administration.", "emergencyContact": {"name": "Deepak Verma", "relation": "Son", "phone": "+91 98112-99881", "altPhone": "+91 98733-11223 (Ritu Verma, Daughter)", "email": "deepak.verma@example.com", "address": "Saket, Sector 3, New Delhi", "notificationStatus": "Dispatched & Delivered", "channels": ["SMS", "WhatsApp"], "dispatchedAt": "Today, 07:20 AM", "smsDelivered": true, "whatsappDelivered": true}, "medicalHistory": {"chronicConditions": ["Uncontrolled Type-2 Diabetes (HbA1c 9.2%)", "Chronic Kidney Disease Stage 2", "Diabetic Peripheral Neuropathy"], "allergies": ["None documented"], "surgeries": ["Coronary Angioplasty (2017)"], "bloodGroup": "A +ve", "doctor": "Dr. Pradeep Batra (Max Saket)", "nextReview": "10 Nov 2026", "medications": [{"name": "Inj Insulin Glargine", "dosage": "16 units", "schedule": "0-0-1 (Night 10 PM)", "purpose": "Basal Glycemic", "adherence": "72% (Missed 2 days)"}, {"name": "Tab Linagliptin", "dosage": "5 mg", "schedule": "1-0-0 (Morning)", "purpose": "Glucose Control", "adherence": "95%"}, {"name": "Tab Pregabalin", "dosage": "75 mg", "schedule": "0-0-1 (Night)", "purpose": "Neuropathy Pain", "adherence": "88%"}]}, "checkups": [{"date": "Today, 07:15 AM", "bp": "132/84 mmHg", "bpStatus": "Normal", "hr": "76 bpm", "hrStatus": "Normal", "spo2": "98%", "spo2Status": "Healthy", "glucose": "228 mg/dL", "glucoseStatus": "Severe Hyperglycemia", "temp": "98.6 °F", "weight": "72 kg", "bmi": "25.2", "conductedBy": "Bluetooth Glucometer Sync", "notes": "Fasting blood sugar 228 mg/dL. Consecutive 2-day missed evening insulin reminder."}], "assessments": {"adl": {"eating": {"score": "10/10", "status": "Independent"}, "toileting": {"score": "9/10", "status": "Independent"}, "walking": {"score": "8/10", "status": "Independent"}, "moving": {"score": "9/10", "status": "Independent"}}, "pain": {"score": 3, "location": "Bilateral Soles / Feet", "duration": "Nightly burning sensation", "sensation": "Burning neuropathy (पैरों में जलन)"}, "sleep": {"hours": 6.5, "quality": "Fair"}}, "userInputs": [{"type": "one_tap", "timestamp": "Today, 08:30 AM", "selection": "💊 Took Medicine (Dawa le li)", "recordedNote": "Oral tablets taken; insulin dose compliance pending confirmation", "badge": "bg-emerald-100 text-emerald-800"}, {"type": "voice", "timestamp": "Yesterday, 08:15 PM", "hindiText": "पैरों में बहुत झनझनाहट हो रही है और बहुत प्यास लग रही है...", "englishTranslation": "Feet are tingling severely and feeling unusually thirsty...", "sentiment": "Discomfort / Neuropathy Symptom", "sentimentBadge": "bg-amber-100 text-amber-800", "duration": "12 sec"}]}, {"id": "PAT-104", "username": "senior_meena", "name": "Meena Iyer", "age": 72, "gender": "Female", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80", "location": "Vasant Kunj (Pocket B, Apt 302)", "phone": "+91 98188-77219", "assignedNurse": "Sister Sunita, Counselor", "predictedTier": "MODERATE", "tierLabel": "🟡 MODERATE TIER", "tierColor": "amber", "modelScore": 25, "predictedProbability": "38.9%", "modelRiskLevel": "Medium Risk", "alertRaised": false, "modelDrivers": ["Severe Sleep Deficit: Only 4.1 hours of sleep", "Bereavement anniversary emotional distress voice note", "Cardiovascular parameters remain stable (BP 124/80, HR 72, SpO2 98%)"], "suggestedAction": "15-minute compassionate reassurance tele-consult with Buddy Sunita & family notification.", "emergencyContact": {"name": "Karthik Iyer", "relation": "Son (Bengaluru)", "phone": "+91 97400-55120", "altPhone": "+91 98188-99001", "email": "karthik.iyer@example.com", "address": "Indiranagar, Bengaluru (Outstation Family)", "notificationStatus": "Monitoring Only (No Alert Raised)", "channels": ["Routine Portal"], "dispatchedAt": null, "smsDelivered": false, "whatsappDelivered": false}, "medicalHistory": {"chronicConditions": ["Hypothyroidism", "Mild Depressive Episodes (Post-bereavement)", "Cervical Spondylosis"], "allergies": ["Dust mite & pollen"], "surgeries": ["None"], "bloodGroup": "B +ve", "doctor": "Dr. Rashmi Sen (Medanta)", "nextReview": "30 Nov 2026", "medications": [{"name": "Tab Thyronorm", "dosage": "50 mcg", "schedule": "1-0-0 (7 AM)", "purpose": "Thyroid", "adherence": "98%"}, {"name": "Tab Escitalopram", "dosage": "10 mg", "schedule": "1-0-0 (Morning)", "purpose": "Mood", "adherence": "93%"}]}, "checkups": [{"date": "Today, 08:00 AM", "bp": "124/80 mmHg", "bpStatus": "Optimal", "hr": "72 bpm", "hrStatus": "Normal", "spo2": "98%", "spo2Status": "Healthy", "glucose": "105 mg/dL", "temp": "98.1 °F", "weight": "58 kg", "bmi": "23.2", "conductedBy": "Self-Monitoring IoT Cuff", "notes": "Hemodynamic parameters stable. Mood assessment flagged low."}], "assessments": {"adl": {"eating": {"score": "9/10", "status": "Independent"}, "toileting": {"score": "9/10", "status": "Independent"}, "walking": {"score": "9/10", "status": "Independent"}, "moving": {"score": "9/10", "status": "Independent"}}, "pain": {"score": 2, "location": "Neck / Upper Shoulder", "duration": "Postural stiffness", "sensation": "Mild tightness (गर्दन में हल्की जकड़न)"}, "sleep": {"hours": 4.1, "quality": "Insomnia (Difficulty falling asleep)"}}, "userInputs": [{"type": "voice", "timestamp": "Today, 07:15 AM", "hindiText": "आज अकेलापन बहुत लग रहा है, किसी से बात करने का मन है...", "englishTranslation": "Feeling very lonely today, wish to speak with someone...", "sentiment": "Severe Sadness & Disorientation", "sentimentBadge": "bg-purple-100 text-purple-800", "duration": "16 sec"}]}, {"id": "PAT-105", "username": "senior_harish", "name": "Harish Patel", "age": 76, "gender": "Male", "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80", "location": "Malviya Nagar (Block E-12)", "phone": "+91 98199-33812", "assignedNurse": "Sister Kavita, RN", "predictedTier": "NORMAL", "tierLabel": "🟢 NORMAL TIER", "tierColor": "emerald", "modelScore": 9, "predictedProbability": "18.2%", "modelRiskLevel": "Low Risk", "alertRaised": false, "modelDrivers": ["All vital signs, mobility, sleep, and medication adherence are within healthy normal ranges.", "Blood pressure normal: 122/80 mmHg, Heart rate: 72 bpm, SpO2: 98%", "Functional ADLs 100% independent (Eating, Walking, Toileting, Moving)", "Zero missed medication doses in past 30 days"], "suggestedAction": "Routine monitoring & Bluetooth cuff weekly sync. No intervention required.", "emergencyContact": {"name": "Sneha Patel", "relation": "Daughter", "phone": "+91 98200-44910", "altPhone": "+91 98199-22110 (Manoj Patel, Son)", "email": "sneha.patel@example.com", "address": "Malviya Nagar, New Delhi", "notificationStatus": "Standby (No Alert Raised - Alarm Fatigue Averted)", "channels": ["Routine Portal"], "dispatchedAt": null, "smsDelivered": false, "whatsappDelivered": false}, "medicalHistory": {"chronicConditions": ["Well-Controlled Hypertension", "Benign Prostatic Hyperplasia (BPH)", "Mild Dyslipidemia"], "allergies": ["No known drug allergies"], "surgeries": ["None"], "bloodGroup": "AB +ve", "doctor": "Dr. R.K. Mehta (Max Smart Super)", "nextReview": "05 Dec 2026", "medications": [{"name": "Tab Telmisartan", "dosage": "40 mg", "schedule": "1-0-0 (Morning)", "purpose": "Blood Pressure", "adherence": "98%"}, {"name": "Tab Silodosin", "dosage": "8 mg", "schedule": "0-0-1 (Night)", "purpose": "Urinary Flow", "adherence": "96%"}, {"name": "Tab Rosuvastatin", "dosage": "10 mg", "schedule": "0-0-1 (Night)", "purpose": "Lipids", "adherence": "94%"}]}, "checkups": [{"date": "Today, 07:30 AM", "bp": "122/80 mmHg", "bpStatus": "Optimal Normal", "hr": "72 bpm", "hrStatus": "Normal", "spo2": "98%", "spo2Status": "Healthy", "glucose": "108 mg/dL", "temp": "98.2 °F", "weight": "70 kg", "bmi": "24.2", "conductedBy": "Home Bluetooth IoT Hub", "notes": "Morning checkup completed smoothly. Vitals in optimal green range."}], "assessments": {"adl": {"eating": {"score": "10/10", "status": "Independent"}, "toileting": {"score": "10/10", "status": "Independent"}, "walking": {"score": "10/10", "status": "Independent"}, "moving": {"score": "10/10", "status": "Independent"}}, "pain": {"score": 0, "location": "None", "duration": "None", "sensation": "No Pain (दर्द मुक्त)"}, "sleep": {"hours": 7.5, "quality": "Sound & Peaceful"}}, "userInputs": [{"type": "one_tap", "timestamp": "Today, 07:45 AM", "selection": "😊 Feeling Great (Sab Badhiya Hai)", "recordedNote": "Morning tea and walk completed without difficulty", "badge": "bg-emerald-100 text-emerald-800"}, {"type": "missed_call", "timestamp": "Today, 07:46 AM", "tollFree": "1800-202-CARE", "status": "Logged & Verified Safe"}]}],
   alerts: [
     {
       id: 'ALT-1091',
@@ -702,22 +699,49 @@ const soundEngine = {
   }
 };
 
-// =========================================================================
+// ==================================================================
 // APPLICATION INITIALIZATION
-// =========================================================================
+// ==================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize clean language state from saved preference or English default
   const savedLang = localStorage.getItem('careconnect_lang') || 'en';
   setAppLanguage(savedLang, false);
 
-  // Start on the Login / Role Selection Page
   navigateRole('login', false);
   renderCoordinatorAlerts();
   renderOpsTeamTable();
   populateOpsIncidentStream();
-  if (typeof renderFamilyCareCircle === 'function') renderFamilyCareCircle();
-  if (typeof autoFillSeniorProfileData === 'function') autoFillSeniorProfileData();
 });
+
+
+function populateOpsIncidentStream() {
+  const container = document.getElementById('ops-incident-stream');
+  if (!container) return;
+
+  const initialLogs = [
+    '14:44:12 [South Delhi] Nurse Kavita dispatched to Ramesh Sharma (BP spike alert)',
+    '14:41:05 [Hauz Khas] Paramedic Amit arrived at Savitri Devi residence (Fall assessment complete)',
+    '14:38:22 [Saket] Insulin intake verified for Anand Verma via Buddy Rajesh',
+    '14:32:19 [Indiranagar] Toll-free missed call safety check-in logged for 14 seniors',
+    '14:26:02 [Mumbai West] Alert #1072 marked resolved; Senior reported feeling well'
+  ];
+
+  container.innerHTML = initialLogs.map(log => `
+    <div class="flex items-center space-x-2 text-slate-300">
+      <span class="text-teal-400">&gt;</span>
+      <span>${log}</span>
+    </div>
+  `).join('');
+}
+
+function addOpsIncidentLog(message) {
+  const container = document.getElementById('ops-incident-stream');
+  if (!container) return;
+  const time = new Date().toTimeString().split(' ')[0];
+  const row = document.createElement('div');
+  row.className = 'flex items-center space-x-2 text-slate-300';
+  row.innerHTML = `<span class="text-teal-400">&gt;</span><span>${time} ${message}</span>`;
+  container.insertBefore(row, container.firstChild);
+}
 
 // Navigation between the 4 Stakeholder Views + Login
 function navigateRole(role) {
@@ -756,6 +780,7 @@ function navigateRole(role) {
     if (mobileNav) mobileNav.classList.add('hidden');
     document.title = "CareConnect Operations Manager Command Center";
     switchOpsTab('dashboard');
+    setTimeout(renderOpsDashboardEldersTable, 100);
     setTimeout(initOpsCharts, 120);
     setTimeout(renderOpsCasesTable, 150);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -766,11 +791,9 @@ function navigateRole(role) {
     updateNavPills(role);
     
     // View-specific initializations
-    if (role === 'coordinator') {
-      if (typeof renderCoordinatorAlerts === 'function') renderCoordinatorAlerts();
-      if (typeof renderCoordinatorPatients === 'function') renderCoordinatorPatients();
-      if (typeof updateCoordinatorCriticalBanner === 'function') updateCoordinatorCriticalBanner();
-    } else if (role === 'family') {
+        if (role === 'family') {
+      if (typeof changeFamilyLinkedSenior === 'function') changeFamilyLinkedSenior('PAT-101');
+      if (typeof switchFamilyTab === 'function') switchFamilyTab('summary');
       setTimeout(initFamilyVitalsChart, 100);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -889,94 +912,10 @@ function toggleAudioEffects() {
   }
 }
 
-// VIEW 1: CARE COORDINATOR LOGIC - AI ML TIER CLASSIFICATION ENGINE
-// Powered by Random Forest Model (ApnaSa 90,000 Records Dataset)
-// Evaluates: Patient Data + Medical History + Medical Assessment + Senior Inputs
-// Classifies into: CRITICAL TIER (Alert Raised + Family Notified) vs NORMAL TIER (Safe Baseline)
-
-let currentDossierPatient = null;
-let currentTierFilter = 'all';
-
-function setTierFilter(tier) {
-  currentTierFilter = tier;
-  const sel = document.getElementById('coord-patient-status-filter');
-  if (sel) sel.value = tier;
-
-  // Update pills visual state
-  const pills = ['all', 'CRITICAL', 'NORMAL', 'MODERATE'];
-  pills.forEach(p => {
-    const el = document.getElementById('tier-pill-' + p.toLowerCase());
-    if (el) {
-      if (p === tier) {
-        el.className = "px-3 py-1.5 rounded-xl text-xs font-extrabold bg-white text-slate-900 border border-white shadow-sm transition-all";
-      } else {
-        const color = p === 'CRITICAL' ? 'rose' : (p === 'NORMAL' ? 'emerald' : (p === 'MODERATE' ? 'amber' : 'slate'));
-        el.className = `px-3 py-1.5 rounded-xl text-xs font-extrabold bg-${color}-600/30 text-${color}-300 hover:bg-${color}-600 hover:text-white border border-${color}-500/50 transition-all flex items-center space-x-1`;
-      }
-    }
-  });
-
-  renderCoordinatorPatients();
-}
-
-function getPatientByNameOrId(identifier) {
-  if (!state.patients || state.patients.length === 0) return null;
-  const target = String(identifier || '').toLowerCase().trim();
-  return state.patients.find(p => 
-    p.id.toLowerCase() === target || 
-    p.username.toLowerCase() === target || 
-    target.includes(p.name.toLowerCase()) || 
-    p.name.toLowerCase().includes(target)
-  ) || state.patients[0];
-}
-
-// 1. Tab Switching: Priority Queue vs Patients vs Notifications Log
-function switchCoordinatorTab(tabName) {
-  state.currentCoordinatorTab = tabName;
-  const tabQueue = document.getElementById('coord-tab-content-queue');
-  const tabPatients = document.getElementById('coord-tab-content-patients');
-  const tabNotifs = document.getElementById('coord-tab-content-notifications');
-
-  const btnQueue = document.getElementById('coord-tab-btn-queue');
-  const btnPatients = document.getElementById('coord-tab-btn-patients');
-  const btnNotifs = document.getElementById('coord-tab-btn-notifications');
-
-  if (tabQueue) tabQueue.classList.add('hidden');
-  if (tabPatients) tabPatients.classList.add('hidden');
-  if (tabNotifs) tabNotifs.classList.add('hidden');
-
-  [btnQueue, btnPatients, btnNotifs].forEach(b => {
-    if (b) {
-      b.classList.remove('bg-teal-600', 'text-white', 'shadow-sm');
-      b.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
-    }
-  });
-
-  if (tabName === 'queue') {
-    if (tabQueue) tabQueue.classList.remove('hidden');
-    if (btnQueue) {
-      btnQueue.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
-      btnQueue.classList.add('bg-teal-600', 'text-white', 'shadow-sm');
-    }
-    renderCoordinatorAlerts();
-  } else if (tabName === 'patients') {
-    if (tabPatients) tabPatients.classList.remove('hidden');
-    if (btnPatients) {
-      btnPatients.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
-      btnPatients.classList.add('bg-teal-600', 'text-white', 'shadow-sm');
-    }
-    renderCoordinatorPatients();
-  } else if (tabName === 'notifications') {
-    if (tabNotifs) tabNotifs.classList.remove('hidden');
-    if (btnNotifs) {
-      btnNotifs.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
-      btnNotifs.classList.add('bg-teal-600', 'text-white', 'shadow-sm');
-    }
-    renderEmergencyNotificationsLog();
-  }
-}
-
-// 2. Render Ranked Priority Queue (Tab 1)
+// ==================================================================// VIEW 1: CARE COORDINATOR LOGIC
+// Requirement: A ranked daily list of seniors to prioritise, with the reason
+// for each alert and a suggested action.
+// ==================================================================
 function renderCoordinatorAlerts() {
   const container = document.getElementById('coordinator-alert-list');
   if (!container) return;
@@ -987,6 +926,7 @@ function renderCoordinatorAlerts() {
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
   const filter = priorityFilter ? priorityFilter.value : 'all';
 
+  // Filter alerts
   let list = state.alerts.filter(item => {
     if (item.status === 'resolved') return false;
     if (filter !== 'all' && item.priority !== filter) return false;
@@ -999,30 +939,19 @@ function renderCoordinatorAlerts() {
     return true;
   });
 
+  // Sort strictly by priority rank
   list.sort((a, b) => a.rank - b.rank);
 
+  // Update Summary Stats
   const critCount = state.alerts.filter(a => a.priority === 'critical' && a.status !== 'resolved').length;
   const highCount = state.alerts.filter(a => a.priority === 'high' && a.status !== 'resolved').length;
   const totalActive = state.alerts.filter(a => a.status !== 'resolved').length;
   const totalResolved = state.resolvedAlerts.length;
 
-  const elCrit = document.getElementById('stat-critical-count');
-  if (elCrit) elCrit.textContent = critCount;
-  const elHigh = document.getElementById('stat-high-count');
-  if (elHigh) elHigh.textContent = highCount;
-  const elActive = document.getElementById('stat-active-cases');
-  if (elActive) elActive.textContent = totalActive;
-  const elRes = document.getElementById('stat-resolved-count');
-  if (elRes) elRes.textContent = totalResolved;
-
-  const bQueue = document.getElementById('coord-badge-queue');
-  if (bQueue) bQueue.textContent = totalActive;
-  const bPatients = document.getElementById('coord-badge-patients');
-  if (bPatients) bPatients.textContent = state.patients ? state.patients.length : 5;
-  const bNotifs = document.getElementById('coord-badge-notifications');
-  if (bNotifs) bNotifs.textContent = state.emergencyNotifications ? state.emergencyNotifications.length : 3;
-
-  updateCoordinatorCriticalBanner();
+  document.getElementById('stat-critical-count').textContent = critCount;
+  document.getElementById('stat-high-count').textContent = highCount;
+  document.getElementById('stat-active-cases').textContent = totalActive;
+  document.getElementById('stat-resolved-count').textContent = totalResolved;
 
   if (list.length === 0) {
     container.innerHTML = `
@@ -1041,11 +970,7 @@ function renderCoordinatorAlerts() {
   }
 
   container.innerHTML = list.map(item => {
-    const matchedPatient = getPatientByNameOrId(item.patientId || item.seniorName);
-    const username = matchedPatient ? matchedPatient.username : (item.username || 'senior_' + item.seniorName.toLowerCase().replace(/[^a-z]/g, ''));
-    const patientId = matchedPatient ? matchedPatient.id : 'PAT-101';
-    const emergencyContactStr = matchedPatient ? `${matchedPatient.emergencyContact.name} (${matchedPatient.emergencyContact.relation}) • ${matchedPatient.emergencyContact.phone}` : item.familyContact;
-
+    // Style configurations based on priority
     let borderClass = 'border-slate-200';
     let badgeClass = 'bg-slate-100 text-slate-700';
     let rankBadgeClass = 'bg-slate-800 text-white';
@@ -1068,38 +993,34 @@ function renderCoordinatorAlerts() {
 
     return `
       <div class="bg-white rounded-2xl border-2 ${borderClass} p-5 sm:p-6 shadow-sm hover:shadow-md transition-all">
-        <!-- Top Row: ML Predicted Tier Banner & Senior Info -->
+        <!-- Top Row: Rank Badge, Senior Info, Priority Score -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div class="flex items-center space-x-3.5">
+            <!-- Priority Rank Number -->
             <div class="w-10 h-10 rounded-xl ${rankBadgeClass} flex items-center justify-center font-extrabold text-sm flex-shrink-0" title="Daily Priority Rank #${item.rank}">
               #${item.rank}
             </div>
 
             <div>
-              <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center space-x-2">
                 <h3 class="text-base sm:text-lg font-bold text-slate-900">${item.seniorName}</h3>
-                <span class="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200" title="Senior Username">
-                  @${username}
-                </span>
-                <span class="text-xs text-slate-500">(${item.age} Yrs • ${item.gender || 'Senior'})</span>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-600 text-white shadow-sm">
-                  ${pulseEffect} 🚨 ML PREDICTED: CRITICAL TIER
+                <span class="text-xs text-slate-500">(${item.age} Yrs • ${item.gender})</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${badgeClass}">
+                  ${pulseEffect} ${item.priority.toUpperCase()} PRIORITY
                 </span>
               </div>
-              <div class="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <div class="text-xs text-slate-500 mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span><i class="fa-solid fa-location-dot text-teal-600 mr-1"></i>${item.location}</span>
-                <span class="text-indigo-700 font-medium"><i class="fa-solid fa-shield-heart text-rose-500 mr-1"></i>${emergencyContactStr}</span>
+                <span><i class="fa-solid fa-user-group text-indigo-500 mr-1"></i>${item.familyContact}</span>
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i>${item.timeAgo}</span>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                  <i class="fa-solid fa-check-double mr-1 text-emerald-600"></i>SMS & WhatsApp Dispatched
-                </span>
               </div>
             </div>
           </div>
 
+          <!-- Risk Score & Care Specialist Pill -->
           <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100">
-            <div class="text-xs font-semibold text-slate-500">ML Risk Score:</div>
-            <div class="font-extrabold text-sm sm:text-base text-rose-600">
+            <div class="text-xs font-semibold text-slate-500">Triage Risk Score:</div>
+            <div class="font-extrabold text-sm sm:text-base ${item.priority === 'critical' ? 'text-rose-600' : 'text-slate-800'}">
               ${item.priorityScore} / 100
             </div>
           </div>
@@ -1107,23 +1028,26 @@ function renderCoordinatorAlerts() {
 
         <!-- Middle Row: ROOT CAUSE ALERT REASON & SUGGESTED ACTION -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          
+          <!-- 1. Reason for Alert -->
           <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
             <div class="flex items-center space-x-1.5 text-xs font-bold text-rose-700 uppercase tracking-wider mb-1.5">
               <i class="fa-solid fa-circle-exclamation"></i>
-              <span>ML Model Trigger & Root Cause:</span>
+              <span>Root Reason for Alert:</span>
             </div>
             <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
               ${item.reason}
             </p>
-            ${item.vitals ? `
-              <div class="mt-3 flex flex-wrap items-center gap-1.5 text-[11px]">
-                <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">BP: <strong class="text-slate-900">${item.vitals.bp}</strong></span>
-                <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">HR: <strong class="text-rose-600 font-bold">${item.vitals.hr}</strong></span>
-                <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">SpO2: <strong class="text-slate-900">${item.vitals.spo2}</strong></span>
-              </div>
-            ` : ''}
+            
+            <!-- Biometric telemetry tags -->
+            <div class="mt-3 flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">BP: <strong class="text-slate-900">${item.vitals.bp}</strong></span>
+              <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">HR: <strong class="${item.priority === 'critical' ? 'text-rose-600 font-bold' : 'text-slate-900'}">${item.vitals.hr}</strong></span>
+              <span class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-slate-600">SpO2: <strong class="text-slate-900">${item.vitals.spo2}</strong></span>
+            </div>
           </div>
 
+          <!-- 2. Suggested Clinical Action -->
           <div class="bg-teal-50/60 rounded-xl p-3.5 border border-teal-200/80 flex flex-col justify-between">
             <div>
               <div class="flex items-center space-x-1.5 text-xs font-bold text-teal-800 uppercase tracking-wider mb-1.5">
@@ -1139,22 +1063,19 @@ function renderCoordinatorAlerts() {
               <span class="font-bold text-teal-800">SLA Target: &lt;15 mins</span>
             </div>
           </div>
+
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Bottom Action Buttons: Call, Dispatch, Resolve -->
         <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openPatientDossier('${patientId}')" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
-              <i class="fa-solid fa-folder-open"></i>
-              <span>View Medical Record & Inputs</span>
-            </button>
+          <div class="flex items-center space-x-2">
             <button onclick="openCallModal('${item.id}', '${item.seniorName}', '${item.phone}')" class="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
               <i class="fa-solid fa-phone"></i>
-              <span>2-Way Call</span>
+              <span>2-Way Call Senior</span>
             </button>
-            <button onclick="openDispatchModal('${item.id}', '${item.seniorName}')" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5">
+            <button onclick="openDispatchModal('${item.id}', '${item.seniorName}')" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
               <i class="fa-solid fa-person-walking-arrow-right"></i>
-              <span>Dispatch</span>
+              <span>Dispatch Care Specialist</span>
             </button>
           </div>
 
@@ -1165,6 +1086,7 @@ function renderCoordinatorAlerts() {
             </button>
           </div>
         </div>
+
       </div>
     `;
   }).join('');
@@ -1175,975 +1097,178 @@ function filterCoordinatorAlerts() {
 }
 
 function refreshCoordinatorQueue() {
+  soundEngine.playSuccessChime();
   const searchInput = document.getElementById('coordinator-search-input');
   const priorityFilter = document.getElementById('coordinator-priority-filter');
   if (searchInput) searchInput.value = '';
   if (priorityFilter) priorityFilter.value = 'all';
   renderCoordinatorAlerts();
-  showToast('Priority Queue refreshed and synced with ML inference engine.', 'info');
+  showToast('Queue synced with real-time biometric feed', 'info');
 }
 
-// 3. Render Patient Directory & ML Predicted Tiers Cards (Tab 2)
-function renderCoordinatorPatients() {
-  const container = document.getElementById('coordinator-patients-grid');
-  if (!container) return;
+// Interactive Call Simulation
+let callInterval = null;
+function openCallModal(alertId, name, phone) {
+  soundEngine.playPhoneRing();
+  const modal = document.getElementById('modal-call');
+  const modalName = document.getElementById('modal-call-name');
+  const modalPhone = document.getElementById('modal-call-phone');
+  const modalStatus = document.getElementById('modal-call-status');
+  const modalTimer = document.getElementById('modal-call-timer');
 
-  const searchInput = document.getElementById('coord-patient-search');
-  const statusFilter = document.getElementById('coord-patient-status-filter');
-  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-  const filter = currentTierFilter !== 'all' ? currentTierFilter : (statusFilter ? statusFilter.value : 'all');
+  if (modalName) modalName.textContent = name;
+  if (modalPhone) modalPhone.textContent = `${phone} • Direct Line`;
+  if (modalStatus) modalStatus.textContent = "Connecting 2-Way Line...";
+  const isCoord = name.toLowerCase().includes('coordinator') || alertId === 'COORD-CALL';
+  if (modalTimer) modalTimer.textContent = isCoord ? "Dialing Care Coordinator desk..." : "Dialing senior home terminal...";
 
-  let list = (state.patients || []).filter(p => {
-    if (filter !== 'all' && p.predictedTier !== filter) return false;
-    if (query) {
-      const match = p.name.toLowerCase().includes(query) ||
-                    p.username.toLowerCase().includes(query) ||
-                    p.location.toLowerCase().includes(query) ||
-                    (p.medicalHistory && p.medicalHistory.chronicConditions.some(c => c.toLowerCase().includes(query)));
-      if (!match) return false;
-    }
-    return true;
-  });
+  modal.classList.remove('hidden');
 
-  if (list.length === 0) {
-    container.innerHTML = `
-      <div class="col-span-2 bg-white rounded-2xl p-12 text-center border border-slate-200">
-        <i class="fa-solid fa-users-slash text-slate-300 text-3xl mb-3"></i>
-        <h4 class="text-sm font-bold text-slate-800">No matching patients in this tier</h4>
-        <p class="text-xs text-slate-500 mt-1">Try selecting 'All Tiers' or changing search keyword.</p>
-        <button onclick="setTierFilter('all')" class="mt-4 px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-bold shadow-sm">
-          Show All Patients
-        </button>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = list.map(p => {
-    const isCritical = (p.predictedTier === 'CRITICAL');
-    const isNormal = (p.predictedTier === 'NORMAL');
-
-    // 1. TIER BANNER HTML
-    let tierBannerHtml = '';
-    if (isCritical) {
-      tierBannerHtml = `
-        <div class="bg-gradient-to-r from-rose-600 to-red-700 text-white rounded-2xl p-3.5 mb-4 shadow-md shadow-rose-600/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border border-rose-400">
-          <div class="flex items-center space-x-2.5">
-            <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-base flex-shrink-0">
-              <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
-            </span>
-            <div>
-              <div class="text-[10px] uppercase tracking-wider text-rose-200 font-extrabold">ML Model Predicted Tier:</div>
-              <div class="text-sm sm:text-base font-extrabold">🚨 CRITICAL TIER (गंभीर जोखिम)</div>
-            </div>
-          </div>
-          <div class="flex items-center space-x-2 sm:text-right">
-            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold bg-white text-rose-800 shadow-sm">
-              Score: ${p.modelScore}/100
-            </span>
-            <span class="text-xs text-rose-100 font-mono font-bold">${p.predictedProbability} Risk</span>
-          </div>
-        </div>
-      `;
-    } else if (isNormal) {
-      tierBannerHtml = `
-        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-3.5 mb-4 shadow-md shadow-emerald-600/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border border-emerald-400">
-          <div class="flex items-center space-x-2.5">
-            <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-base flex-shrink-0">
-              <i class="fa-solid fa-circle-check"></i>
-            </span>
-            <div>
-              <div class="text-[10px] uppercase tracking-wider text-emerald-200 font-extrabold">ML Model Predicted Tier:</div>
-              <div class="text-sm sm:text-base font-extrabold">🟢 NORMAL TIER (सामान्य / सुरक्षित)</div>
-            </div>
-          </div>
-          <div class="flex items-center space-x-2 sm:text-right">
-            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold bg-white text-emerald-800 shadow-sm">
-              Score: ${p.modelScore}/100
-            </span>
-            <span class="text-xs text-emerald-100 font-mono font-bold">Stable (${p.predictedProbability})</span>
-          </div>
-        </div>
-      `;
-    } else {
-      tierBannerHtml = `
-        <div class="bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl p-3.5 mb-4 shadow-md shadow-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border border-amber-400">
-          <div class="flex items-center space-x-2.5">
-            <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-base flex-shrink-0">
-              <i class="fa-solid fa-bell"></i>
-            </span>
-            <div>
-              <div class="text-[10px] uppercase tracking-wider text-amber-100 font-extrabold">ML Model Predicted Tier:</div>
-              <div class="text-sm sm:text-base font-extrabold">🟡 MODERATE TIER (मध्यम निगरानी)</div>
-            </div>
-          </div>
-          <div class="flex items-center space-x-2 sm:text-right">
-            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold bg-white text-amber-800 shadow-sm">
-              Score: ${p.modelScore}/100
-            </span>
-            <span class="text-xs text-amber-100 font-mono font-bold">${p.predictedProbability}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    const latestCheckup = (p.checkups && p.checkups.length > 0) ? p.checkups[0] : null;
-    const latestInput = (p.userInputs && p.userInputs.length > 0) ? p.userInputs[0] : null;
-    const conditionsList = (p.medicalHistory && p.medicalHistory.chronicConditions) || [];
-    const driversList = p.modelDrivers || [];
-
-    return `
-      <div class="bg-white rounded-3xl border-2 ${isCritical ? 'border-rose-300 ring-2 ring-rose-200' : (isNormal ? 'border-emerald-300' : 'border-slate-200')} p-5 sm:p-6 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
-        <div>
-          <!-- 1. Model Tier Header -->
-          ${tierBannerHtml}
-
-          <!-- 2. Patient Identity Row: Avatar, Username, Demographics -->
-          <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
-            <div class="flex items-center space-x-3">
-              <img src="${p.avatar}" alt="${p.name}" class="w-14 h-14 rounded-2xl object-cover border-2 border-slate-200 shadow-sm flex-shrink-0">
-              <div>
-                <div class="flex items-center space-x-2">
-                  <h4 class="text-base sm:text-lg font-extrabold text-[#0e294b]">${p.name}</h4>
-                  <span class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-extrabold bg-slate-100 text-slate-800 border border-slate-300 shadow-xs">
-                    @${p.username}
-                  </span>
-                </div>
-                <div class="text-xs text-slate-500 mt-0.5">
-                  ${p.age} Yrs • ${p.gender} • <i class="fa-solid fa-location-dot text-teal-600 mr-1"></i>${p.location}
-                </div>
-              </div>
-            </div>
-
-            <button onclick="evaluatePatientTierLive('${p.id}')"
-              class="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1" title="Re-run Random Forest ML inference on current vitals">
-              <i class="fa-solid fa-rotate text-[11px]"></i>
-              <span class="hidden sm:inline">Re-evaluate Tier</span>
-            </button>
-          </div>
-
-          <!-- 3. THE 4 INPUT PILLARS FED INTO THE MODEL -->
-          <div class="my-4 bg-slate-50/80 rounded-2xl p-3.5 border border-slate-200/80 text-xs space-y-2.5">
-            <div class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider flex items-center justify-between border-b border-slate-200 pb-1.5">
-              <span>Data Fed to Model (मॉडल इनपुट्स):</span>
-              <span class="font-mono text-indigo-600 font-bold">4 Key Dimensions</span>
-            </div>
-
-            <!-- Pillar A: Vitals -->
-            ${latestCheckup ? `
-              <div class="flex items-start space-x-2">
-                <span class="w-5 h-5 rounded-md bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">1</span>
-                <div class="flex-grow">
-                  <span class="font-bold text-slate-800">Checkup Vitals:</span>
-                  <div class="grid grid-cols-4 gap-1.5 text-center mt-1 font-mono text-[11px]">
-                    <span class="bg-white px-1.5 py-1 rounded border border-slate-200">BP: <strong class="${latestCheckup.bpStatus.includes('Critical') ? 'text-rose-600 font-bold' : 'text-slate-900'}">${latestCheckup.bp.split(' ')[0]}</strong></span>
-                    <span class="bg-white px-1.5 py-1 rounded border border-slate-200">HR: <strong class="${latestCheckup.hrStatus.includes('Spike') ? 'text-rose-600 font-bold' : 'text-slate-900'}">${latestCheckup.hr}</strong></span>
-                    <span class="bg-white px-1.5 py-1 rounded border border-slate-200">SpO2: <strong class="text-slate-900">${latestCheckup.spo2}</strong></span>
-                    <span class="bg-white px-1.5 py-1 rounded border border-slate-200">Sugar: <strong class="${parseInt(latestCheckup.glucose) > 180 ? 'text-rose-600 font-bold' : 'text-slate-900'}">${latestCheckup.glucose}</strong></span>
-                  </div>
-                </div>
-              </div>
-            ` : ''}
-
-            <!-- Pillar B: Medical History -->
-            <div class="flex items-start space-x-2">
-              <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">2</span>
-              <div class="flex-grow">
-                <span class="font-bold text-slate-800">Medical History:</span>
-                <div class="flex flex-wrap gap-1 mt-1">
-                  ${conditionsList.map(c => `<span class="px-2 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-semibold text-slate-700">${c}</span>`).join('')}
-                </div>
-              </div>
-            </div>
-
-            <!-- Pillar C: Medical Assessment -->
-            <div class="flex items-start space-x-2">
-              <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">3</span>
-              <div class="flex-grow text-[11px] text-slate-700">
-                <span class="font-bold text-slate-800">Medical Assessment:</span>
-                <span class="ml-1 font-medium">ADL: ${p.assessments.adl.walking.status} • Pain: <strong class="${p.assessments.pain.score >= 5 ? 'text-rose-600' : 'text-slate-900'}">${p.assessments.pain.score}/10</strong> (${p.assessments.pain.location}) • Sleep: ${p.assessments.sleep.hours}h</span>
-              </div>
-            </div>
-
-            <!-- Pillar D: User's Given Input -->
-            ${latestInput ? `
-              <div class="flex items-start space-x-2">
-                <span class="w-5 h-5 rounded-md bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">4</span>
-                <div class="flex-grow">
-                  <div class="flex items-center justify-between text-[11px]">
-                    <span class="font-bold text-purple-900">User's Given Input (${latestInput.type === 'voice' ? 'Voice Note' : 'One-Tap'}):</span>
-                    ${latestInput.type === 'voice' ? `
-                      <button onclick="playSeniorAudioNote('${latestInput.hindiText.replace(/'/g, "\\'")}')" class="text-purple-700 font-bold hover:underline flex items-center space-x-1">
-                        <i class="fa-solid fa-volume-high"></i>
-                        <span>Listen Voice</span>
-                      </button>
-                    ` : ''}
-                  </div>
-                  <p class="text-slate-800 font-medium italic mt-0.5 bg-white p-2 rounded-lg border border-purple-100">
-                    "${latestInput.hindiText || latestInput.selection}"
-                  </p>
-                </div>
-              </div>
-            ` : ''}
-          </div>
-
-          <!-- 4. ML MODEL DECISION DRIVERS (कारण) -->
-          <div class="my-3">
-            <div class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center space-x-1.5">
-              <i class="fa-solid fa-brain text-indigo-600"></i>
-              <span>ML Model Decision Drivers (मॉडल वर्गीकरण के कारण):</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs space-y-1">
-              ${driversList.slice(0, 3).map(d => `
-                <div class="flex items-start space-x-2 text-slate-700">
-                  <i class="fa-solid ${isCritical ? 'fa-triangle-exclamation text-rose-500' : 'fa-check text-emerald-500'} mt-0.5 flex-shrink-0 text-[11px]"></i>
-                  <span class="font-medium">${d}</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-
-          <!-- 5. EMERGENCY CONTACT & NOTIFICATION STATUS -->
-          ${isCritical ? `
-            <div class="bg-rose-50 p-3 rounded-2xl border-2 border-rose-300 text-xs text-rose-950 mt-3 space-y-1.5 animate-pulse">
-              <div class="flex items-center justify-between">
-                <span class="font-extrabold text-rose-900 flex items-center space-x-1.5">
-                  <i class="fa-solid fa-bell text-rose-600"></i>
-                  <span>CRITICAL ALERT RAISED — FAMILY NOTIFIED:</span>
-                </span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                  Delivered 🟢
-                </span>
-              </div>
-              <div class="flex items-center justify-between pt-1 border-t border-rose-200">
-                <div>
-                  <strong>${p.emergencyContact.name}</strong> (${p.emergencyContact.relation}) • <span class="font-mono">${p.emergencyContact.phone}</span>
-                </div>
-                <button onclick="dossierCallEmergencyContact('${p.id}')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[11px] font-bold shadow-xs">
-                  <i class="fa-solid fa-phone mr-1"></i> Call Contact
-                </button>
-              </div>
-            </div>
-          ` : `
-            <div class="bg-emerald-50/70 p-3 rounded-2xl border border-emerald-200 text-xs text-emerald-950 mt-3 flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-shield-check text-emerald-600 text-base"></i>
-                <div>
-                  <div class="font-extrabold text-emerald-900">Normal Baseline — No Emergency Alert Needed</div>
-                  <div class="text-[11px] text-emerald-700">Emergency contact (${p.emergencyContact.name}) on standby. Zero alarm fatigue.</div>
-                </div>
-              </div>
-              <span class="font-mono text-xs font-bold text-emerald-800">${p.emergencyContact.phone}</span>
-            </div>
-          `}
-        </div>
-
-        <!-- 6. Action Buttons -->
-        <div class="pt-4 mt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-          <button onclick="openPatientDossier('${p.id}')"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm transition-all flex items-center space-x-1.5">
-            <i class="fa-solid fa-folder-open"></i>
-            <span>View Medical History & Inputs</span>
-          </button>
-
-          <div class="flex items-center space-x-2">
-            ${isCritical ? `
-              <button onclick="showToast('Emergency SMS & WhatsApp re-dispatched to ${p.emergencyContact.name}', 'success')"
-                class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-xl text-xs font-bold transition-all flex items-center space-x-1">
-                <i class="fa-solid fa-paper-plane"></i>
-                <span>Resend Notice</span>
-              </button>
-            ` : `
-              <button onclick="simulateVitalSpike('${p.id}')"
-                class="px-3 py-2 bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1" title="Simulate a vital spike to test ML model re-classification to Critical Tier">
-                <i class="fa-solid fa-flask text-amber-500"></i>
-                <span>Simulate Vital Spike</span>
-              </button>
-            `}
-            <button onclick="openCallModal('CALL-${p.id}', '${p.name}', '${p.phone}')"
-              class="px-3.5 py-2 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 rounded-xl text-xs font-bold transition-all" title="Call Senior">
-              <i class="fa-solid fa-phone"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function filterCoordinatorPatients() {
-  renderCoordinatorPatients();
-}
-
-// 4. Live ML Model Tier Evaluation Function
-async function evaluatePatientTierLive(patientId) {
-  const patient = getPatientByNameOrId(patientId);
-  if (!patient) return;
-
-  showToast(`Running Random Forest ML inference on ${patient.name}'s data...`, 'info');
-
-  const checkup = (patient.checkups && patient.checkups.length > 0) ? patient.checkups[0] : {};
-  const asmt = patient.assessments || {};
-  const adl = asmt.adl || {};
-  const med = patient.medicalHistory || {};
-
-  const bp_str = checkup.bp || '120/80';
-  const bp_sys = parseFloat(bp_str.split('/')[0]) || 120;
-  const bp_dia = parseFloat(bp_str.split('/')[1]) || 80;
-  const hr = parseFloat((checkup.hr || '75').split(' ')[0]) || 75;
-  const spo2 = parseFloat((checkup.spo2 || '98').replace('%', '')) || 98;
-  const glucose = parseFloat((checkup.glucose || '110').split(' ')[0]) || 110;
-
-  const payload = {
-    patientId: patient.id,
-    age: patient.age,
-    gender: patient.gender,
-    weight_kg: parseFloat((checkup.weight || '65').split(' ')[0]) || 65,
-    height_cm: 165,
-    bp_systolic: bp_sys,
-    bp_diastolic: bp_dia,
-    heart_rate: hr,
-    spo2: spo2,
-    blood_glucose: glucose,
-    pain_level: asmt.pain ? asmt.pain.score : 0,
-    pain_present: (asmt.pain && asmt.pain.score > 0) ? 1 : 0,
-    sleep_hours: asmt.sleep ? asmt.sleep.hours : 7.0,
-    walking_independent: (adl.walking && adl.walking.status.toLowerCase().includes('independent')) ? 1 : 0,
-    eating_independent: (adl.eating && adl.eating.status.toLowerCase().includes('independent')) ? 1 : 0,
-    moving_independent: (adl.moving && adl.moving.status.toLowerCase().includes('independent')) ? 1 : 0,
-    toileting_independent: (adl.toileting && adl.toileting.status.toLowerCase().includes('independent')) ? 1 : 0,
-    medication_count: med.medications ? med.medications.length : 3,
-    missed_doses: (patient.name.includes('Anand') ? 2 : (patient.name.includes('Ramesh') ? 1 : 0)),
-    is_diabetic: (med.chronicConditions && med.chronicConditions.some(c => c.toLowerCase().includes('diabetes'))) ? 1 : 0,
-    has_hypertension: (med.chronicConditions && med.chronicConditions.some(c => c.toLowerCase().includes('hypertension'))) ? 1 : 0
-  };
-
-  try {
-    const resp = await fetch('/api/coordinator/evaluate-tier', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await resp.json();
-    if (data.success) {
-      patient.predictedTier = data.predictedTier;
-      patient.tierLabel = data.tierLabel;
-      patient.tierColor = data.tierColor;
-      patient.modelScore = data.modelScore;
-      patient.predictedProbability = data.predictedProbability;
-      patient.modelRiskLevel = data.modelRiskLevel;
-      patient.modelDrivers = data.modelDrivers;
-      patient.alertRaised = data.alertRaised;
-
-      if (data.alertRaised) {
-        soundEngine.playEmergencySiren();
-        if (data.alert) state.alerts.unshift(data.alert);
-        if (data.notification) state.emergencyNotifications.unshift(data.notification);
-        state.seniorStatus.isSerious = true;
-        updateFamilyAlertBanner();
-        showToast(`🚨 CRITICAL TIER CONFIRMED! Alert raised & SMS/WhatsApp dispatched to ${patient.emergencyContact.name}.`, 'danger');
-      } else {
-        soundEngine.playSuccessChime();
-        showToast(`🟢 Model Classified: ${patient.name} is in ${data.predictedTier} TIER (${data.modelScore}/100). Safe & sound!`, 'success');
+  let seconds = 0;
+  if (callInterval) clearInterval(callInterval);
+  setTimeout(() => {
+    if (modalStatus) modalStatus.textContent = "Call Connected • Audio Stream Active";
+    soundEngine.playTone(600, 'sine', 0.1);
+    callInterval = setInterval(() => {
+      seconds++;
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = (seconds % 60).toString().padStart(2, '0');
+      if (modalTimer) {
+        const isCoord = modalName && modalName.textContent.toLowerCase().includes('coordinator');
+        modalTimer.textContent = isCoord 
+          ? `Speaking with Care Coordinator: ${m}:${s} • Two-way audio active`
+          : `Call in progress: ${m}:${s} • Two-way audio active`;
       }
-
-      renderCoordinatorPatients();
-      renderCoordinatorAlerts();
-      renderEmergencyNotificationsLog();
-    }
-  } catch (err) {
-    console.warn('Live ML tier evaluate fetch error, falling back locally:', err);
-    showToast(`Model evaluated ${patient.name}: ${patient.predictedTier} TIER (${patient.modelScore}/100)`, 'info');
-  }
+    }, 1000);
+  }, 1500);
 }
 
-// 5. Simulate a Vital Spike to demonstrate Model re-classifying from Normal to Critical
-async function simulateVitalSpike(patientId) {
-  const patient = getPatientByNameOrId(patientId);
-  if (!patient) return;
-
-  showToast(`Simulating acute vital spike on ${patient.name} (BP 168/98, HR 118 bpm)...`, 'warning');
-  soundEngine.playTone(400, 'sawtooth', 0.3);
-
-  if (patient.checkups && patient.checkups.length > 0) {
-    patient.checkups[0].bp = '168/98 mmHg';
-    patient.checkups[0].bpStatus = 'Severe Spike Alert';
-    patient.checkups[0].hr = '118 bpm';
-    patient.checkups[0].hrStatus = 'Tachycardia Spike';
-    patient.checkups[0].spo2 = '93%';
-    patient.checkups[0].notes = 'Sudden acute hemodynamic spike simulated for AI Model triage demonstration.';
-  }
-
-  await evaluatePatientTierLive(patientId);
+function endSimulatedCall() {
+  if (callInterval) clearInterval(callInterval);
+  const modal = document.getElementById('modal-call');
+  if (modal) modal.classList.add('hidden');
+  soundEngine.playSuccessChime();
+  showToast('Simulated call concluded. Call log saved.', 'info');
 }
 
-// 6. Open Comprehensive Patient Dossier Modal
-function openPatientDossier(patientId) {
-  const patient = getPatientByNameOrId(patientId);
-  if (!patient) return;
-  currentDossierPatient = patient;
-
-  document.getElementById('dossier-avatar').src = patient.avatar;
-  document.getElementById('dossier-patient-name').textContent = patient.name;
-  document.getElementById('dossier-username-badge').textContent = '@' + patient.username;
-  document.getElementById('dossier-patient-sub').textContent = `${patient.age} Yrs • ${patient.gender} • ${patient.location} • Assigned: ${patient.assignedNurse}`;
-  document.getElementById('dossier-triage-score').textContent = `${patient.modelScore || 80} / 100`;
-
-  const statusPill = document.getElementById('dossier-status-pill');
-  if (patient.predictedTier === 'CRITICAL') {
-    statusPill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-600 text-white animate-pulse';
-    statusPill.textContent = '🚨 ML PREDICTED: CRITICAL TIER';
-  } else if (patient.predictedTier === 'MODERATE') {
-    statusPill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-white';
-    statusPill.textContent = '🟡 ML PREDICTED: MODERATE TIER';
-  } else {
-    statusPill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-600 text-white';
-    statusPill.textContent = '🟢 ML PREDICTED: NORMAL TIER';
-  }
-
-  document.getElementById('dossier-emergency-contact-text').textContent = 
-    `${patient.emergencyContact.name} (${patient.emergencyContact.relation}) • ${patient.emergencyContact.phone}`;
-
-  populateDossierHistory(patient);
-  populateDossierCheckups(patient);
-  populateDossierAssessments(patient);
-  populateDossierUserInputs(patient);
-
-  switchDossierSubtab(state.currentDossierSubtab || 'history');
-
-  const modal = document.getElementById('modal-patient-dossier');
+// Dispatch Modal
+let currentDispatchAlertId = null;
+function openDispatchModal(alertId, name) {
+  currentDispatchAlertId = alertId;
+  const modal = document.getElementById('modal-dispatch');
+  const nameLabel = document.getElementById('dispatch-modal-senior-name');
+  if (nameLabel) nameLabel.textContent = `For: ${name}`;
   if (modal) modal.classList.remove('hidden');
 }
 
-function openPatientDossierBySeniorName(seniorName) {
-  openPatientDossier(seniorName);
-}
-
-function closePatientDossier() {
-  const modal = document.getElementById('modal-patient-dossier');
+function closeDispatchModal() {
+  const modal = document.getElementById('modal-dispatch');
   if (modal) modal.classList.add('hidden');
 }
 
-// 7. Dossier Subtabs Navigation
-function switchDossierSubtab(subtabName) {
-  state.currentDossierSubtab = subtabName;
-  const subtabs = ['history', 'checkups', 'assessments', 'inputs'];
-
-  subtabs.forEach(st => {
-    const content = document.getElementById(`dossier-subcontent-${st}`);
-    const btn = document.getElementById(`dossier-subtab-btn-${st}`);
-    if (content) content.classList.add('hidden');
-    if (btn) {
-      btn.classList.remove('border-teal-600', 'text-teal-800');
-      btn.classList.add('border-transparent', 'text-slate-500');
-    }
-  });
-
-  const activeContent = document.getElementById(`dossier-subcontent-${subtabName}`);
-  const activeBtn = document.getElementById(`dossier-subtab-btn-${subtabName}`);
-  if (activeContent) activeContent.classList.remove('hidden');
-  if (activeBtn) {
-    activeBtn.classList.remove('border-transparent', 'text-slate-500');
-    activeBtn.classList.add('border-teal-600', 'text-teal-800');
-  }
-}
-
-// 8. Populate Subtab 1: Medical History
-function populateDossierHistory(patient) {
-  const med = patient.medicalHistory || {};
-
-  const condContainer = document.getElementById('dossier-conditions-container');
-  if (condContainer) {
-    condContainer.innerHTML = (med.chronicConditions || []).map(c => `
-      <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-900 border border-indigo-200 flex items-center space-x-1.5 shadow-sm">
-        <i class="fa-solid fa-heart-pulse text-indigo-500"></i>
-        <span>${c}</span>
-      </span>
-    `).join('');
-  }
-
-  const medTable = document.getElementById('dossier-medications-table');
-  if (medTable) {
-    medTable.innerHTML = (med.medications || []).map(m => `
-      <tr class="hover:bg-slate-50 transition-colors">
-        <td class="py-2 px-3 font-bold text-slate-900">${m.name}</td>
-        <td class="py-2 px-3 font-mono text-slate-700">${m.dosage}</td>
-        <td class="py-2 px-3 text-slate-600">${m.schedule}</td>
-        <td class="py-2 px-3 text-slate-600">${m.purpose}</td>
-        <td class="py-2 px-3 text-right">
-          <span class="px-2 py-0.5 rounded text-[11px] font-bold ${parseInt(m.adherence) > 85 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-            ${m.adherence}
-          </span>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  document.getElementById('dossier-allergies-text').textContent = (med.allergies || []).join(', ') || 'No known allergies.';
-  document.getElementById('dossier-surgeries-text').textContent = (med.surgeries || []).join(', ') || 'No previous surgeries documented.';
-  document.getElementById('dossier-doctor-text').textContent = med.doctor || 'Dr. V.K. Kapoor';
-  document.getElementById('dossier-review-text').textContent = med.nextReview || '15 Nov 2026';
-}
-
-// 9. Populate Subtab 2: Checkups & Vitals
-function populateDossierCheckups(patient) {
-  const checkups = patient.checkups || [];
-  const latestCards = document.getElementById('dossier-latest-vitals-cards');
-  const timeline = document.getElementById('dossier-checkup-timeline');
-
-  if (checkups.length > 0 && latestCards) {
-    const cur = checkups[0];
-    latestCards.innerHTML = `
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-        <div class="text-[11px] text-slate-400 font-bold uppercase">Blood Pressure</div>
-        <div class="text-base font-extrabold ${cur.bpStatus.includes('Critical') ? 'text-rose-600' : 'text-slate-900'} mt-0.5">${cur.bp}</div>
-        <div class="text-[10px] text-slate-500">${cur.bpStatus}</div>
-      </div>
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-        <div class="text-[11px] text-slate-400 font-bold uppercase">Heart Rate / Pulse</div>
-        <div class="text-base font-extrabold ${cur.hrStatus.includes('Spike') ? 'text-rose-600' : 'text-slate-900'} mt-0.5">${cur.hr}</div>
-        <div class="text-[10px] text-slate-500">${cur.hrStatus}</div>
-      </div>
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-        <div class="text-[11px] text-slate-400 font-bold uppercase">Blood Oxygen (SpO2)</div>
-        <div class="text-base font-extrabold text-slate-900 mt-0.5">${cur.spo2}</div>
-        <div class="text-[10px] text-slate-500">${cur.spo2Status}</div>
-      </div>
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-        <div class="text-[11px] text-slate-400 font-bold uppercase">Blood Glucose</div>
-        <div class="text-base font-extrabold ${parseInt(cur.glucose) > 180 ? 'text-amber-600' : 'text-slate-900'} mt-0.5">${cur.glucose}</div>
-        <div class="text-[10px] text-slate-500">${cur.temp} • BMI: ${cur.bmi}</div>
-      </div>
-    `;
-  }
-
-  if (timeline) {
-    timeline.innerHTML = checkups.map(c => `
-      <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-xs shadow-sm">
-        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-          <div class="flex items-center space-x-2">
-            <span class="font-bold text-slate-900">${c.date}</span>
-            <span class="text-slate-400">•</span>
-            <span class="text-slate-500">${c.conductedBy}</span>
-          </div>
-          <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">${c.temp}</span>
-        </div>
-        <div class="grid grid-cols-4 gap-2 my-2 font-mono text-center">
-          <div>BP: <strong class="${c.bpStatus.includes('Critical') ? 'text-rose-600 font-bold' : ''}">${c.bp}</strong></div>
-          <div>Pulse: <strong class="${c.hrStatus.includes('Spike') ? 'text-rose-600 font-bold' : ''}">${c.hr}</strong></div>
-          <div>SpO2: <strong>${c.spo2}</strong></div>
-          <div>Glucose: <strong>${c.glucose}</strong></div>
-        </div>
-        <p class="text-slate-600 italic bg-slate-50 p-2 rounded-lg mt-1 font-sans">${c.notes}</p>
-      </div>
-    `).join('');
-  }
-}
-
-// 10. Populate Subtab 3: Assessments
-function populateDossierAssessments(patient) {
-  const as = patient.assessments || {};
-
-  const adlGrid = document.getElementById('dossier-adl-grid');
-  if (adlGrid && as.adl) {
-    const domains = [
-      { key: 'eating', label: 'Eating (भोजन)', icon: 'fa-utensils' },
-      { key: 'walking', label: 'Walking (चलना)', icon: 'fa-person-walking' },
-      { key: 'toileting', label: 'Toileting (शौचालय)', icon: 'fa-restroom' },
-      { key: 'moving', label: 'Moving (स्थानांतरण)', icon: 'fa-arrows-up-down' }
-    ];
-    adlGrid.innerHTML = domains.map(d => {
-      const val = as.adl[d.key] || { score: '10/10', status: 'Independent' };
-      return `
-        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-          <i class="fa-solid ${d.icon} text-teal-600 text-lg mb-1"></i>
-          <div class="text-[11px] font-bold text-slate-700">${d.label}</div>
-          <div class="text-sm font-extrabold text-[#0e294b] my-0.5">${val.score}</div>
-          <div class="text-[10px] text-slate-500 line-clamp-1">${val.status}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  if (as.pain) {
-    document.getElementById('dossier-pain-score-badge').textContent = as.pain.score + '/10';
-    document.getElementById('dossier-pain-location').textContent = as.pain.location;
-    document.getElementById('dossier-pain-sensation').textContent = as.pain.sensation;
-  }
-  if (as.sleep) {
-    document.getElementById('dossier-sleep-badge').textContent = as.sleep.hours + 'h';
-    document.getElementById('dossier-sleep-quality').textContent = as.sleep.quality;
-  }
-
-  const badge = document.getElementById('dossier-ai-risk-badge');
-  badge.textContent = `${patient.predictedTier} TIER (${patient.predictedProbability || 'High'} Risk)`;
-  badge.className = `px-3 py-1 rounded-lg text-xs font-extrabold ${patient.predictedTier === 'CRITICAL' ? 'bg-rose-600 text-white animate-pulse' : (patient.predictedTier === 'NORMAL' ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white')}`;
-  document.getElementById('dossier-ai-risk-reasons').textContent = (patient.modelDrivers || []).join('; ') || 'All parameters evaluated by Random Forest model.';
-}
-
-// 11. Populate Subtab 4: User's Direct Inputs
-function populateDossierUserInputs(patient) {
-  const container = document.getElementById('dossier-user-inputs-list');
-  if (!container) return;
-  const inputs = patient.userInputs || [];
-
-  if (inputs.length === 0) {
-    container.innerHTML = `
-      <div class="bg-white p-8 rounded-2xl text-center border border-slate-200">
-        <i class="fa-solid fa-microphone-slash text-slate-300 text-2xl mb-2"></i>
-        <p class="text-xs text-slate-500">No self-reported inputs received yet from this senior.</p>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = inputs.map(inp => {
-    if (inp.type === 'voice') {
-      return `
-        <div class="bg-white p-4 rounded-2xl border-2 border-indigo-200/80 shadow-sm space-y-2">
-          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-            <div class="flex items-center space-x-2">
-              <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">
-                <i class="fa-solid fa-microphone-lines"></i>
-              </span>
-              <div>
-                <div class="text-xs font-bold text-slate-900">Audio Voice Note Submission</div>
-                <div class="text-[10px] text-slate-400 font-mono">${inp.timestamp} • Duration: ${inp.duration}</div>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${inp.sentimentBadge}">
-                ${inp.sentiment}
-              </span>
-              <button onclick="playSeniorAudioNote('${inp.hindiText.replace(/'/g, "\\'")}')"
-                class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all flex items-center space-x-1 shadow-sm">
-                <i class="fa-solid fa-play text-[10px]"></i>
-                <span>Listen Audio</span>
-              </button>
-            </div>
-          </div>
-          
-          <div class="bg-indigo-50/50 p-3 rounded-xl border border-indigo-100">
-            <div class="text-[10px] font-bold text-indigo-900 uppercase tracking-wider mb-1">Verbatim Hindi Speech Transcript:</div>
-            <p class="text-xs sm:text-sm font-semibold text-slate-900 font-sans leading-relaxed">"${inp.hindiText}"</p>
-          </div>
-
-          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs">
-            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Clinical English Translation:</div>
-            <p class="text-xs text-slate-700 font-medium">${inp.englishTranslation}</p>
-          </div>
-        </div>
-      `;
-    } else if (inp.type === 'one_tap') {
-      return `
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1.5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2 text-xs">
-              <span class="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center">
-                <i class="fa-solid fa-hand-pointer"></i>
-              </span>
-              <span class="font-bold text-slate-900">One-Tap Mood Check-in</span>
-              <span class="text-slate-400">•</span>
-              <span class="text-slate-500 font-mono text-[11px]">${inp.timestamp}</span>
-            </div>
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${inp.badge}">
-              ${inp.selection}
-            </span>
-          </div>
-          <p class="text-xs text-slate-600 italic bg-slate-50 p-2 rounded-lg mt-1 font-sans">
-            Note recorded: "${inp.recordedNote}"
-          </p>
-        </div>
-      `;
-    } else {
-      return `
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between text-xs">
-          <div class="flex items-center space-x-2.5">
-            <span class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
-              <i class="fa-solid fa-phone-volume"></i>
-            </span>
-            <div>
-              <div class="font-bold text-slate-900">Toll-Free Missed Call Logged (1800-202-CARE)</div>
-              <div class="text-[10px] text-slate-500">${inp.status}</div>
-            </div>
-          </div>
-          <span class="font-mono text-slate-400 text-[11px]">${inp.timestamp}</span>
-        </div>
-      `;
-    }
-  }).join('');
-}
-
-// 12. Audio Player for Senior Voice Note
-function playSeniorAudioNote(hindiText) {
-  if (!hindiText) return;
+function confirmDispatch() {
+  const select = document.getElementById('dispatch-nurse-select');
+  const nurse = select ? select.value : 'Sister Kavita, RN';
   soundEngine.playSuccessChime();
-  showToast('Playing Senior Voice Note Audio...', 'info');
-
-  try {
-    const audio = new Audio(`/api/tts?lang=hi&text=${encodeURIComponent(hindiText)}`);
-    audio.play().catch(e => {
-      if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance(hindiText);
-        u.lang = 'hi-IN';
-        window.speechSynthesis.speak(u);
-      }
-    });
-  } catch (err) {
-    if ('speechSynthesis' in window) {
-      const u = new SpeechSynthesisUtterance(hindiText);
-      u.lang = 'hi-IN';
-      window.speechSynthesis.speak(u);
-    }
-  }
+  closeDispatchModal();
+  showToast(`Specialist dispatched: ${nurse}! SMS sent to family.`, 'success');
+  
+  // Log incident in Ops stream
+  addOpsIncidentLog(`Dispatch initiated: ${nurse} en route to senior`);
 }
 
-// 13. Raise Critical Alert Modal Controls
-function openRaiseCriticalModal(preselectPatientId) {
-  const modal = document.getElementById('modal-raise-critical');
-  if (!modal) return;
-
-  const select = document.getElementById('raise-critical-patient-select');
-  if (select && state.patients) {
-    select.innerHTML = state.patients.map(p => `
-      <option value="${p.id}" ${preselectPatientId === p.id ? 'selected' : ''}>
-        ${p.name} (@${p.username}) - Current Tier: ${p.predictedTier}
-      </option>
-    `).join('');
-  }
-
-  onRaiseCriticalPatientChange();
-  modal.classList.remove('hidden');
+// Resolve Modal
+let currentResolveAlertId = null;
+function openResolveModal(alertId, name) {
+  currentResolveAlertId = alertId;
+  const modal = document.getElementById('modal-resolve');
+  const nameLabel = document.getElementById('resolve-modal-senior-name');
+  if (nameLabel) nameLabel.textContent = `For: ${name}`;
+  if (modal) modal.classList.remove('hidden');
 }
 
-function closeRaiseCriticalModal() {
-  const modal = document.getElementById('modal-raise-critical');
+function closeResolveModal() {
+  const modal = document.getElementById('modal-resolve');
   if (modal) modal.classList.add('hidden');
 }
 
-function onRaiseCriticalPatientChange() {
-  const select = document.getElementById('raise-critical-patient-select');
-  const patientId = select ? select.value : 'PAT-101';
-  const patient = getPatientByNameOrId(patientId);
-  if (!patient) return;
-
-  const contactDiv = document.getElementById('raise-critical-contact-info');
-  if (contactDiv) {
-    contactDiv.innerHTML = `<strong>${patient.emergencyContact.name} (${patient.emergencyContact.relation})</strong> • ${patient.emergencyContact.phone} (${patient.location})`;
-  }
-
-  updateCriticalPreviewText();
-}
-
-function onPredefinedReasonChange() {
-  const sel = document.getElementById('raise-critical-predefined-reason');
-  const textarea = document.getElementById('raise-critical-reason');
-  if (sel && textarea && sel.value !== 'custom') {
-    textarea.value = sel.value;
-  }
-  updateCriticalPreviewText();
-}
-
-function updateCriticalPreviewText() {
-  const select = document.getElementById('raise-critical-patient-select');
-  const textarea = document.getElementById('raise-critical-reason');
-  const preview = document.getElementById('raise-critical-preview-text');
-  const patient = getPatientByNameOrId(select ? select.value : 'PAT-101');
-  if (!preview || !patient) return;
-
-  const reason = (textarea && textarea.value.trim()) || 'Resting heart rate arrhythmia spike (114 bpm) & zero motion for 4 hrs';
-  preview.textContent = `🚨 CareConnect CRITICAL TIER ALERT: Emergency alert raised for ${patient.name} (@${patient.username}) at ${patient.location}. Reason: ${reason}. Care Coordinator Sister Kavita dispatched. Direct phone: ${patient.phone}`;
-}
-
-async function confirmRaiseCriticalAlert() {
-  const select = document.getElementById('raise-critical-patient-select');
-  const textarea = document.getElementById('raise-critical-reason');
-  const patientId = select ? select.value : 'PAT-101';
-  const patient = getPatientByNameOrId(patientId);
-  const reason = (textarea && textarea.value.trim()) || 'Acute clinical escalation: High resting HR spike + senior reported dizziness.';
-
-  soundEngine.playEmergencySiren();
-
-  try {
-    const resp = await fetch('/api/alerts/raise-critical', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        patientId: patientId,
-        seniorName: patient ? patient.name : 'Ramesh Sharma',
-        reason: reason
-      })
+function confirmResolveAlert() {
+  if (!currentResolveAlertId) return;
+  const idx = state.alerts.findIndex(a => a.id === currentResolveAlertId);
+  if (idx !== -1) {
+    const alertItem = state.alerts[idx];
+    alertItem.status = 'resolved';
+    state.resolvedAlerts.unshift({
+      id: alertItem.id,
+      seniorName: alertItem.seniorName,
+      reason: alertItem.reason,
+      resolvedBy: 'Nurse Kavita',
+      outcome: document.getElementById('resolve-outcome-category').value,
+      resolvedAt: 'Just now'
     });
-    const data = await resp.json();
-    if (data.success) {
-      if (data.alert) state.alerts.unshift(data.alert);
-      if (data.notification) state.emergencyNotifications.unshift(data.notification);
+
+    // If it was Ramesh Sharma, also clear the serious family alert!
+    if (alertItem.seniorName.includes('Ramesh')) {
+      state.seniorStatus.isSerious = false;
+      updateFamilyAlertBanner();
     }
-  } catch (err) {
-    console.warn('API error during raise-critical, using client state:', err);
+
+    // Update ops metrics
+    state.opsMetrics.activeAlerts = Math.max(0, state.opsMetrics.activeAlerts - 1);
+    state.opsMetrics.resolvedAlerts++;
+    updateOpsTelemetryDisplay();
+    addOpsIncidentLog(`Resolved: Alert ${alertItem.id} for ${alertItem.seniorName} verified safe`);
   }
 
-  if (patient) {
-    patient.predictedTier = 'CRITICAL';
-    patient.tierLabel = '🚨 CRITICAL TIER';
-    patient.modelScore = 95;
-    patient.predictedProbability = '89.4%';
-    patient.alertRaised = true;
-    if (patient.emergencyContact) {
-      patient.emergencyContact.notificationStatus = 'Dispatched & Delivered';
-      patient.emergencyContact.smsDelivered = true;
-      patient.emergencyContact.whatsappDelivered = true;
-    }
-  }
-
-  state.seniorStatus.isSerious = true;
-  updateFamilyAlertBanner();
-
-  closeRaiseCriticalModal();
+  closeResolveModal();
+  soundEngine.playSuccessChime();
   renderCoordinatorAlerts();
-  renderCoordinatorPatients();
-  renderEmergencyNotificationsLog();
-
-  const receiptDesc = document.getElementById('receipt-contact-desc');
-  if (receiptDesc && patient) {
-    receiptDesc.textContent = `SMS & WhatsApp dispatched to ${patient.emergencyContact.name} (${patient.emergencyContact.phone}).`;
-  }
-  const modalReceipt = document.getElementById('modal-notif-receipt');
-  if (modalReceipt) modalReceipt.classList.remove('hidden');
-
-  showToast(`🚨 CRITICAL TIER ALERT RAISED: Emergency contacts notified via SMS & WhatsApp for ${patient ? patient.name : 'Senior'}!`, 'danger');
+  updateNavPills('coordinator');
+  showToast('Alert successfully resolved & marked safe.', 'success');
 }
 
-function dossierRaiseCriticalAlert() {
-  if (currentDossierPatient) {
-    closePatientDossier();
-    openRaiseCriticalModal(currentDossierPatient.id);
-  }
-}
+// Simulate Incoming Emergency Live (Adds a high priority case on the fly)
+function simulateIncomingAlert() {
+  soundEngine.playEmergencySiren();
+  const newAlert = {
+    id: `ALT-${Math.floor(1100 + Math.random() * 100)}`,
+    rank: 1, // Becomes #1 rank immediately
+    priority: 'critical',
+    priorityScore: 99,
+    seniorName: 'Col. K.S. Rathore',
+    age: 82,
+    gender: 'M',
+    location: 'Defence Colony (Block A)',
+    phone: '+91 98111-77889',
+    familyContact: 'Varun Rathore (Son) • +91 99990-11223',
+    assignedNurse: 'Sister Kavita, RN',
+    timeAgo: 'Just now (LIVE TRIGGER)',
+    vitals: { bp: '168/104', hr: '122 bpm', spo2: '91%', glucose: '142 mg/dL' },
+    reason: '🚨 LIVE INCOMING: Sudden SOS trigger + Smartwatch recorded arrhythmia (122 bpm) & oxygen saturation dip to 91%.',
+    suggestedAction: 'Immediate triage dispatch to Quick-Response Emergency Squad + trigger nearest ambulance dispatch.',
+    status: 'pending'
+  };
 
-function dossierCallEmergencyContact(patientId) {
-  const p = patientId ? getPatientByNameOrId(patientId) : currentDossierPatient;
-  if (p && p.emergencyContact) {
-    openCallModal('CONTACT-CALL', p.emergencyContact.name, p.emergencyContact.phone);
-  }
-}
+  // Bump all other ranks by 1
+  state.alerts.forEach(a => { a.rank++; });
+  state.alerts.unshift(newAlert);
 
-function dossierSendNotificationToContact() {
-  if (currentDossierPatient) {
-    soundEngine.playSuccessChime();
-    showToast(`Dispatched emergency WhatsApp update to ${currentDossierPatient.emergencyContact.name}!`, 'success');
-  }
-}
+  state.opsMetrics.totalAlerts++;
+  state.opsMetrics.activeAlerts++;
+  state.opsMetrics.criticalAlerts++;
+  updateOpsTelemetryDisplay();
+  addOpsIncidentLog(`🚨 CRITICAL INCOMING: Col. K.S. Rathore SOS triggered in Defence Colony`);
 
-function closeNotifReceiptModal() {
-  const modal = document.getElementById('modal-notif-receipt');
-  if (modal) modal.classList.add('hidden');
-}
-
-// 14. Render Emergency Notifications Dispatch Log (Tab 3)
-function renderEmergencyNotificationsLog() {
-  const container = document.getElementById('coordinator-notifications-list');
-  if (!container) return;
-
-  const notifs = state.emergencyNotifications || [];
-  if (notifs.length === 0) {
-    container.innerHTML = `
-      <div class="bg-white p-8 rounded-xl text-center text-slate-400">
-        <i class="fa-solid fa-inbox text-2xl mb-2"></i>
-        <p class="text-xs">No emergency family notifications logged yet.</p>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = notifs.map(n => `
-    <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4 shadow-sm space-y-2 hover:bg-slate-100/60 transition-all">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
-        <div class="flex items-center space-x-2.5">
-          <span class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm">
-            <i class="fa-solid fa-bell"></i>
-          </span>
-          <div>
-            <div class="flex items-center space-x-2">
-              <h5 class="text-xs sm:text-sm font-extrabold text-slate-900">${n.seniorName} (@${n.username})</h5>
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-extrabold bg-rose-600 text-white">🚨 CRITICAL TIER NOTIFICATION</span>
-            </div>
-            <div class="text-[11px] text-slate-500 mt-0.5">
-              Recipient: <strong class="text-slate-800">${n.contactName}</strong> • Phone: <span class="font-mono text-indigo-700 font-bold">${n.contactPhone}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center space-x-2 text-right">
-          <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center space-x-1">
-            <i class="fa-solid fa-circle-check text-emerald-600"></i>
-            <span>${n.deliveryStatus} (Read Receipt Verified)</span>
-          </span>
-          <span class="text-[11px] text-slate-400 font-mono">${n.timestamp}</span>
-        </div>
-      </div>
-
-      <!-- SMS & WhatsApp Message Preview -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center space-x-1">
-            <i class="fa-solid fa-comment-sms text-teal-600"></i>
-            <span>SMS Message Dispatched:</span>
-          </div>
-          <p class="text-slate-700 font-mono text-[11px] leading-relaxed">${n.smsMessage}</p>
-        </div>
-
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-1 flex items-center space-x-1">
-            <i class="fa-brands fa-whatsapp text-emerald-600"></i>
-            <span>WhatsApp Emergency Payload:</span>
-          </div>
-          <p class="text-slate-700 font-sans text-[11px] whitespace-pre-line leading-relaxed">${n.whatsappMessage || n.smsMessage}</p>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-end space-x-2 pt-1 text-xs">
-        <button onclick="openCallModal('${n.id}', '${n.contactName}', '${n.contactPhone}')"
-          class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg font-bold">
-          <i class="fa-solid fa-phone mr-1"></i> Call Contact
-        </button>
-        <button onclick="showToast('Emergency notification resent to ' + '${n.contactName}', 'success')"
-          class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold">
-          <i class="fa-solid fa-arrows-rotate mr-1"></i> Resend Notice
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// 15. Update Top Critical Broadcast Banner
-function updateCoordinatorCriticalBanner() {
-  const banner = document.getElementById('coordinator-critical-emergency-banner');
-  if (!banner) return;
-
-  const criticalAlert = (state.alerts || []).find(a => a.priority === 'critical' && a.status !== 'resolved');
-  if (criticalAlert) {
-    banner.classList.remove('hidden');
-    const matchedPatient = getPatientByNameOrId(criticalAlert.seniorName);
-    const username = matchedPatient ? matchedPatient.username : 'senior_ramesh';
-    const patientName = criticalAlert.seniorName;
-
-    document.getElementById('banner-critical-title').textContent = `${patientName} (@${username}) • 🚨 CRITICAL TIER ACTIVE`;
-    document.getElementById('banner-critical-desc').textContent = `${criticalAlert.reason} — Emergency SMS & WhatsApp dispatched to ${matchedPatient ? matchedPatient.emergencyContact.name : 'family'}.`;
-    document.getElementById('banner-critical-time').textContent = criticalAlert.timeAgo || 'Live Incident';
-  } else {
-    banner.classList.add('hidden');
-  }
+  renderCoordinatorAlerts();
+  updateNavPills(state.currentRole);
+  showToast('🚨 NEW CRITICAL EMERGENCY DETECTED! Priority queue re-ranked.', 'danger');
 }
 
 
-
-// =========================================================================
-// VIEW 2: SENIOR LOGIC (बुज़ुर्ग व्यू)
+// ==================================================================// VIEW 2: SENIOR LOGIC (बुज़ुर्ग व्यू)
 // Requirement: Simple ways to share how they feel: a voice note, a missed-
 // call check-in or a one-tap reply, in Hindi or English.
-// =========================================================================
-
+// ==================================================================
 // Unified Global Language Switcher (Zero Parallel Slashes)
 function setAppLanguage(lang, notify = true) {
   if (!state) return;
@@ -2470,147 +1595,1623 @@ function triggerEmergencySOS() {
 }
 
 
-// =========================================================================
-// VIEW 3: FAMILY MEMBER LOGIC
-// Requirement: A short weekly wellbeing summary and an immediate alert only
-// when something is serious.
-// =========================================================================
-function updateFamilyAlertBanner() {
-  const alertCard = document.getElementById('family-serious-alert-card');
-  const calmBanner = document.getElementById('family-calm-status-banner');
-  const navDot = document.getElementById('nav-family-alert-dot');
+// ==================================================================// ==================================================================// VIEW 3: FAMILY MEMBER LOGIC (परिवार का वेलबीइंग व हेल्थ मॉनिटर)
+// Features: 
+// 1. AI Analyze Summary & Wellbeing Metrics
+// 2. Comprehensive Senior Health Report (Demographics, Vitals, History, Meds)
+// 3. Complete Assessment History (Chronological Timeline, ADL, Pain, Voice Notes)
+// 4. Download & Print Full Health Assessment PDF & Plain Text Reports
+// ==================================================================
+let familySelectedSeniorId = 'PAT-101'; // Default: Ramesh Sharma
+let currentFamilyTab = 'summary'; // 'summary' | 'report' | 'history'
+let currentFamilyHistoryFilter = 'all';
 
-  if (!alertCard || !calmBanner) return;
+// Helper 1: Formats brackets with Relation of user with patient, along with age and gender
+// e.g. [Father • 74 Yrs • Male]
+function getSeniorBracketInfo(p) {
+  if (!p) return '[Senior]';
+  const relationMap = {
+    'PAT-101': 'Father',
+    'PAT-102': 'Mother',
+    'PAT-103': 'Uncle',
+    'PAT-104': 'Aunt',
+    'PAT-105': 'Father'
+  };
+  const rel = relationMap[p.id] || (p.emergencyContact && p.emergencyContact.relation ? p.emergencyContact.relation.split(' ')[0] : 'Senior');
+  const age = p.age || 74;
+  const gender = p.gender || 'Male';
+  return `[${rel} • ${age} Yrs • ${gender}]`;
+}
 
-  if (state.seniorStatus.isSerious) {
-    alertCard.classList.remove('hidden');
-    calmBanner.classList.add('hidden');
-    if (navDot) navDot.classList.remove('hidden');
-  } else {
-    alertCard.classList.add('hidden');
-    calmBanner.classList.remove('hidden');
-    if (navDot) navDot.classList.add('hidden');
+// Helper 2: Formats second bracket under patient name containing name, gender and age of person related to patient
+// e.g. [Caregiver: Rahul Sharma • Male • 42 Yrs]
+function getCaregiverBracketInfo(p) {
+  if (!p) return '[Caregiver: Rahul Sharma • Male • 42 Yrs]';
+  const caregiverMap = {
+    'PAT-101': { name: 'Rahul Sharma', gender: 'Male', age: 42, role: 'Caregiver / Son', household: 'Sharma Family' },
+    'PAT-102': { name: 'Rahul Sharma', gender: 'Male', age: 42, role: 'Caregiver / Son', household: 'Sharma Family' }, // SAME CARETAKER FOR BOTH!
+    'PAT-103': { name: 'Vikas Verma', gender: 'Male', age: 45, role: 'Caregiver / Nephew' },
+    'PAT-104': { name: 'Deepa Iyer', gender: 'Female', age: 39, role: 'Caregiver / Niece' },
+    'PAT-105': { name: 'Ketan Patel', gender: 'Male', age: 44, role: 'Caregiver / Son' }
+  };
+  const c = caregiverMap[p.id] || { name: 'Rahul Sharma', gender: 'Male', age: 42, role: 'Caregiver' };
+  return `[Caregiver: ${c.name} • ${c.gender} • ${c.age} Yrs]`;
+}
+
+// 1. Switch between Family Portal Tabs
+function switchFamilyTab(tab) {
+  currentFamilyTab = tab;
+  const tabSummary = document.getElementById('family-tab-content-summary');
+  const tabReport = document.getElementById('family-tab-content-report');
+  const tabHistory = document.getElementById('family-tab-content-history');
+
+  const btnSummary = document.getElementById('family-tab-btn-summary');
+  const btnReport = document.getElementById('family-tab-btn-report');
+  const btnHistory = document.getElementById('family-tab-btn-history');
+
+  const activeBtnClass = "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 bg-purple-700 text-white shadow-sm";
+  const inactiveBtnClass = "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2";
+
+  if (tabSummary) tabSummary.classList.toggle('hidden', tab !== 'summary');
+  if (tabReport) tabReport.classList.toggle('hidden', tab !== 'report');
+  if (tabHistory) tabHistory.classList.toggle('hidden', tab !== 'history');
+
+  if (btnSummary) btnSummary.className = tab === 'summary' ? activeBtnClass : inactiveBtnClass;
+  if (btnReport) btnReport.className = tab === 'report' ? activeBtnClass : inactiveBtnClass;
+  if (btnHistory) btnHistory.className = tab === 'history' ? activeBtnClass : inactiveBtnClass;
+
+  const currentPatient = (state.patients || []).find(p => p.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
+  if (currentPatient) {
+    if (tab === 'summary') renderFamilyAnalyzeSummary(currentPatient);
+    if (tab === 'report') renderFamilySeniorReport(currentPatient);
+    if (tab === 'history') renderFamilyAssessmentHistory(currentPatient);
   }
 }
 
+// 2. Change Linked Senior from dropdown
+// ==================================================================// MULTI-PATIENT FAMILY CAROUSEL / SLIDER LOGIC
+// Supports 2 patients from the SAME family sharing the SAME caretaker (Rahul Sharma),
+// as well as all household elders!
+// ==================================================================
+let familyAutoSlideTimer = null;
+let onboardingSeniorIndex = 0;
+let currentFamilyCarouselFilter = 'household'; // 'household' (Same Caretaker: 2 Patients) | 'all' (All 5 Patients)
+
+// Helper: Returns active list of patients based on filter
+function getFamilyPatientsList() {
+  const all = state.patients || [];
+  if (currentFamilyCarouselFilter === 'household') {
+    // Return the 2 patients from the same family who share the SAME caretaker (Rahul Sharma):
+    // PAT-101 (Ramesh Sharma, Father) & PAT-102 (Savitri Devi, Mother)
+    const householdPatients = all.filter(p => p.id === 'PAT-101' || p.id === 'PAT-102');
+    return householdPatients.length ? householdPatients : all;
+  }
+  return all;
+}
+
+// Toggle between 'Same Caretaker (2 Patients)' and 'All Network Elders (5)'
+function setFamilyCarouselFilter(mode) {
+  currentFamilyCarouselFilter = mode;
+  const btnH = document.getElementById('btn-carousel-filter-household');
+  const btnA = document.getElementById('btn-carousel-filter-all');
+  const desc = document.getElementById('carousel-scope-desc');
+
+  if (btnH && btnA) {
+    if (mode === 'household') {
+      btnH.className = "px-2.5 py-1 rounded-lg font-bold transition-all bg-purple-700 text-white shadow-xs flex items-center space-x-1";
+      btnA.className = "px-2.5 py-1 rounded-lg font-bold transition-all text-purple-900 hover:bg-purple-200/60 flex items-center space-x-1";
+      if (desc) desc.innerHTML = `<i class="fa-solid fa-circle-info text-purple-600 mr-1"></i><strong class="text-purple-950">Same Caretaker Household:</strong> Rahul Sharma is primary caretaker for 2 elders in this family (Ramesh Sharma & Savitri Devi). Slide to switch between them!`;
+    } else {
+      btnA.className = "px-2.5 py-1 rounded-lg font-bold transition-all bg-purple-700 text-white shadow-xs flex items-center space-x-1";
+      btnH.className = "px-2.5 py-1 rounded-lg font-bold transition-all text-purple-900 hover:bg-purple-200/60 flex items-center space-x-1";
+      if (desc) desc.innerHTML = `<i class="fa-solid fa-circle-info text-purple-600 mr-1"></i><strong class="text-purple-950">Extended Care Network:</strong> Viewing all 5 registered elderly patients across partner households.`;
+    }
+  }
+
+  const list = getFamilyPatientsList();
+  if (!list.some(p => p.id === familySelectedSeniorId)) {
+    changeFamilyLinkedSenior(list[0].id);
+  } else {
+    renderFamilyCarouselStrip();
+  }
+
+  soundEngine.playTone(520, 'sine', 0.1);
+  showToast(mode === 'household' ? 'Viewing Same Caretaker Household (2 Patients: Father & Mother)' : 'Viewing All Network Elders (5 Patients)', 'info');
+}
+
+// Slide on Onboarding Page (Cycles between household patients under the same caretaker)
+function slideOnboardingPatient(step) {
+  // Use the 2 patients sharing the same caretaker: PAT-101 (Father) & PAT-102 (Mother)
+  const list = (state.patients || []).filter(p => p.id === 'PAT-101' || p.id === 'PAT-102');
+  if (!list.length) return;
+  onboardingSeniorIndex = (onboardingSeniorIndex + step + list.length) % list.length;
+  const p = list[onboardingSeniorIndex];
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p); // Same caretaker for both: [Caregiver: Rahul Sharma • Male • 42 Yrs]
+
+  const badge = document.getElementById('onboarding-slide-badge');
+  if (badge) badge.textContent = `Patient ${onboardingSeniorIndex + 1}/${list.length}`;
+
+  const signupVal = document.getElementById('signup-linked-senior');
+  if (signupVal) {
+    signupVal.value = `${p.name} ${bracketStr}\n${caregiverStr}`;
+  }
+
+  const cardPatientName = document.getElementById('onboarding-patient-name-display');
+  if (cardPatientName) cardPatientName.textContent = p.name;
+  const cardPatientBracket = document.getElementById('onboarding-patient-bracket-display');
+  if (cardPatientBracket) cardPatientBracket.textContent = bracketStr;
+  const cardCaregiverBracket = document.getElementById('onboarding-caregiver-bracket-display');
+  if (cardCaregiverBracket) cardCaregiverBracket.textContent = caregiverStr;
+
+  // Also update sign-in card if visible
+  const signinCard = document.getElementById('auth-family-signin-patient-card');
+  if (signinCard) {
+    signinCard.innerHTML = `
+      <div class="flex items-center justify-between mb-1 pb-1 border-b border-purple-200/50">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-purple-800">
+          <i class="fa-solid fa-house-chimney mr-1"></i> Same Caretaker Family
+        </span>
+        <div class="flex items-center space-x-1">
+          <button type="button" onclick="slideOnboardingPatient(-1)" class="w-5 h-5 rounded bg-white hover:bg-purple-600 hover:text-white text-slate-700 flex items-center justify-center text-[9px] font-bold shadow-xs">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <span class="text-[10px] font-bold font-mono text-purple-900 bg-purple-100 px-1.5 rounded">${onboardingSeniorIndex + 1}/${list.length}</span>
+          <button type="button" onclick="slideOnboardingPatient(1)" class="w-5 h-5 rounded bg-purple-700 hover:bg-purple-800 text-white flex items-center justify-center text-[9px] font-bold shadow-xs">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+      <div class="text-xs font-bold text-slate-800 flex flex-wrap items-center gap-1.5">
+        <span class="text-slate-500 font-semibold">Patient:</span>
+        <span class="text-purple-950 font-extrabold text-sm">${p.name}</span>
+        <span class="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">${bracketStr}</span>
+      </div>
+      <div class="text-xs font-medium text-slate-600 flex flex-wrap items-center gap-1 pt-1 border-t border-purple-200/60">
+        <span class="text-slate-500 font-semibold">Same Caregiver:</span>
+        <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">${caregiverStr}</span>
+      </div>
+    `;
+  }
+
+  soundEngine.playTone(520, 'sine', 0.08);
+  showToast(`Selected Household Patient ${onboardingSeniorIndex + 1} of ${list.length}: ${p.name} (Caretaker: Rahul Sharma)`, 'info');
+}
+
+// Slide Function: Slides across active list (in household mode: Father -> Mother -> Father!)
+function slideFamilyPatient(step) {
+  const list = getFamilyPatientsList();
+  if (!list.length) return;
+  let currentIdx = list.findIndex(p => p.id === familySelectedSeniorId);
+  if (currentIdx === -1) currentIdx = 0;
+
+  // Circular loop: 1st -> 2nd -> loops back to 1st (or 1st -> 2nd -> 3rd -> 1st in all mode)
+  let nextIdx = (currentIdx + step + list.length) % list.length;
+  const nextPatient = list[nextIdx];
+
+  // Trigger smooth CSS slide animation
+  const banner = document.getElementById('family-senior-name-heading')?.closest('.bg-gradient-to-r');
+  if (banner) {
+    banner.classList.remove('animate-slide-in-right', 'animate-slide-in-left');
+    void banner.offsetWidth; // trigger reflow
+    banner.classList.add(step > 0 ? 'animate-slide-in-right' : 'animate-slide-in-left');
+  }
+
+  const strip = document.getElementById('family-patients-carousel-strip');
+  if (strip) {
+    strip.classList.remove('animate-slide-in-right', 'animate-slide-in-left');
+    void strip.offsetWidth;
+    strip.classList.add(step > 0 ? 'animate-slide-in-right' : 'animate-slide-in-left');
+  }
+
+  changeFamilyLinkedSenior(nextPatient.id);
+  soundEngine.playTone(step > 0 ? 560 : 480, 'sine', 0.1);
+  showToast(`Slid to Patient ${nextIdx + 1} of ${list.length}: ${nextPatient.name} (Same Caretaker: Rahul Sharma)`, 'info');
+}
+
+function slideFamilyToPatient(patientId) {
+  const list = getFamilyPatientsList();
+  let currentIdx = list.findIndex(p => p.id === familySelectedSeniorId);
+  let targetIdx = list.findIndex(p => p.id === patientId);
+  const step = targetIdx >= currentIdx ? 1 : -1;
+
+  const strip = document.getElementById('family-patients-carousel-strip');
+  if (strip) {
+    strip.classList.remove('animate-slide-in-right', 'animate-slide-in-left');
+    void strip.offsetWidth;
+    strip.classList.add(step > 0 ? 'animate-slide-in-right' : 'animate-slide-in-left');
+  }
+
+  changeFamilyLinkedSenior(patientId);
+  soundEngine.playTone(520, 'sine', 0.1);
+}
+
+function toggleFamilyAutoSlide() {
+  const icon = document.getElementById('icon-family-autoslide');
+  const label = document.getElementById('label-family-autoslide');
+  const btn = document.getElementById('btn-family-autoslide');
+
+  if (familyAutoSlideTimer) {
+    clearInterval(familyAutoSlideTimer);
+    familyAutoSlideTimer = null;
+    if (icon) icon.className = 'fa-solid fa-play text-[10px]';
+    if (label) label.textContent = 'Auto Slide Tour';
+    if (btn) btn.className = 'px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold border border-purple-200 transition-all flex items-center space-x-1.5 shadow-sm';
+    showToast('Paused automatic slide tour.', 'info');
+  } else {
+    familyAutoSlideTimer = setInterval(() => {
+      slideFamilyPatient(1);
+    }, 4500);
+    if (icon) icon.className = 'fa-solid fa-pause text-[10px] text-white';
+    if (label) label.textContent = 'Pause Tour';
+    if (btn) btn.className = 'px-3 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold border border-purple-800 transition-all flex items-center space-x-1.5 shadow-md animate-pulse';
+    showToast('Auto slide tour active (sliding across household elders every 4.5s).', 'success');
+  }
+}
+
+// 2. Change Linked Senior from dropdown or slide
+function changeFamilyLinkedSenior(patientId) {
+  familySelectedSeniorId = patientId;
+  const p = (state.patients || []).find(pt => pt.id === patientId);
+  if (!p) return;
+
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p);
+
+  // Update Top Banner Senior Name with Dual Brackets
+  const heading = document.getElementById('family-senior-name-heading');
+  if (heading) {
+    heading.innerHTML = `${p.name} <span class="text-lg sm:text-xl font-bold text-purple-200">${bracketStr}</span>`;
+  }
+  const caregiverHeading = document.getElementById('family-caregiver-heading');
+  if (caregiverHeading) {
+    caregiverHeading.textContent = caregiverStr;
+  }
+  const selectorCaregiverSub = document.getElementById('family-selector-caregiver-sub');
+  if (selectorCaregiverSub) {
+    selectorCaregiverSub.textContent = caregiverStr;
+  }
+
+  // Update Avatar Initials Badge & Tier Badge
+  const initialsSpan = document.getElementById('family-senior-initials');
+  if (initialsSpan) {
+    const initials = (p.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SR';
+    initialsSpan.textContent = initials;
+  }
+  const avatar = document.getElementById('family-senior-avatar');
+  if (avatar && p.avatar) {
+    avatar.src = p.avatar;
+  }
+
+  const tierBadge = document.getElementById('family-senior-tier-badge');
+  if (tierBadge) {
+    const isCritical = p.predictedTier === 'CRITICAL';
+    tierBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-extrabold ${isCritical ? 'bg-rose-500/30 text-rose-300 border border-rose-400/40' : 'bg-emerald-500/30 text-emerald-300 border border-emerald-400/40'} flex items-center space-x-1`;
+    tierBadge.innerHTML = `<i class="fa-solid ${isCritical ? 'fa-triangle-exclamation' : 'fa-circle-check'} mr-1"></i><span>${isCritical ? `🚨 Critical Risk Tier (Score ${p.modelScore || 80}/100)` : `🟢 Stable Baseline (Score ${p.modelScore || 20}/100)`}</span>`;
+  }
+
+  const metaSub = document.getElementById('family-senior-meta-sub');
+  if (metaSub) {
+    metaSub.textContent = `@${p.username} • ${p.location} • Primary Nurse: ${p.assignedNurse || 'Sister Kavita, RN'}`;
+  }
+
+  // Update Dropdown value if needed
+  const selector = document.getElementById('family-senior-selector');
+  if (selector && selector.value !== patientId) {
+    selector.value = patientId;
+  }
+
+  // Re-render Carousel Strip & Dots
+  renderFamilyCarouselStrip();
+
+  // Re-render current active view tab
+  renderFamilyAnalyzeSummary(p);
+  renderFamilySeniorReport(p);
+  renderFamilyAssessmentHistory(p);
+
+  // If Simple Assessment Modal is currently open, dynamically update its content too!
+  const modal = document.getElementById('modal-simple-assessment');
+  if (modal && !modal.classList.contains('hidden')) {
+    const slip = document.getElementById('simple-assessment-slip-content');
+    if (slip) slip.innerHTML = buildSimpleAssessmentHtml(p);
+  }
+}
+
+// Render the 5 Interactive Senior Cards & Clickable Dots
+function renderFamilyCarouselStrip() {
+  const strip = document.getElementById('family-patients-carousel-strip');
+  const dotsContainer = document.getElementById('family-carousel-dots');
+  const counterText = document.getElementById('carousel-slide-counter-text');
+  const bannerPill = document.getElementById('banner-slide-pill');
+  const list = getFamilyPatientsList();
+  if (!list.length) return;
+
+  const currentIdx = list.findIndex(p => p.id === familySelectedSeniorId);
+  const activeIdx = currentIdx !== -1 ? currentIdx : 0;
+
+  if (counterText) counterText.textContent = `${activeIdx + 1} / ${list.length}`;
+  if (bannerPill) bannerPill.textContent = `${activeIdx + 1}/${list.length}`;
+
+  // Render interactive senior cards from list (in household mode: exactly 2 cards for Father & Mother)
+  if (strip) {
+    strip.className = list.length === 2
+      ? "grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
+      : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3";
+
+    strip.innerHTML = list.map((p, i) => {
+      const isActive = p.id === familySelectedSeniorId;
+      const isCritical = p.predictedTier === 'CRITICAL';
+      const bracket = getSeniorBracketInfo(p);
+      const caregiver = getCaregiverBracketInfo(p);
+      const v = (p.checkups && p.checkups[0]) ? p.checkups[0] : {};
+
+      const activeCardStyles = "relative p-4 rounded-2xl bg-gradient-to-b from-purple-50 via-white to-purple-50/50 border-2 border-purple-600 shadow-xl shadow-purple-500/15 ring-2 ring-purple-400/40 transform scale-[1.02] transition-all duration-300";
+      const inactiveCardStyles = "relative p-4 rounded-2xl bg-white hover:bg-purple-50/30 border border-slate-200 hover:border-purple-300 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md active:scale-98";
+
+      return `
+        <div onclick="slideFamilyToPatient('${p.id}')" class="${isActive ? activeCardStyles : inactiveCardStyles}">
+          <!-- Active Pill / Slide Number Indicator -->
+          ${isActive ? `
+            <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-purple-700 text-white text-[9px] font-black uppercase tracking-wider shadow-sm flex items-center space-x-1 whitespace-nowrap">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>Active Viewing (Patient ${i+1}/${list.length})</span>
+            </div>
+          ` : `
+            <div class="text-[9px] font-bold text-slate-400 font-mono mb-1">
+              Patient #${i+1} • Tap to Slide
+            </div>
+          `}
+
+          <div class="flex items-center space-x-3 ${isActive ? 'mt-1' : ''}">
+            <div class="w-12 h-12 rounded-2xl ${isActive ? 'bg-gradient-to-tr from-purple-700 to-indigo-800 text-white shadow-md border-2 border-purple-400' : 'bg-slate-100 text-slate-700 border border-slate-300'} font-black text-sm flex items-center justify-center flex-shrink-0">
+              ${(p.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SR'}
+            </div>
+            <div class="min-w-0 flex-1">
+              <h4 class="text-sm font-extrabold text-[#0e294b] truncate">${p.name}</h4>
+              <div class="text-[11px] font-bold ${isActive ? 'text-purple-700' : 'text-slate-600'} truncate">
+                ${bracket}
+              </div>
+            </div>
+          </div>
+
+          <!-- Same Caretaker Banner Tag -->
+          <div class="mt-2.5 pt-2 border-t border-slate-100 space-y-1.5">
+            <div class="flex items-center space-x-1 text-[10px] font-bold text-indigo-900 bg-indigo-50/90 px-2 py-0.5 rounded-md border border-indigo-200/80 truncate" title="${caregiver}">
+              <i class="fa-solid fa-hand-holding-heart text-indigo-600 text-[10px]"></i>
+              <span class="truncate">${caregiver}</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${isCritical ? 'bg-rose-100 text-rose-800 border border-rose-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'}">
+                ${isCritical ? '🚨 Critical' : '🟢 Stable'}
+              </span>
+              <span class="text-[11px] font-mono text-slate-700 font-extrabold">
+                BP ${v.bp || '120/80'}
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render clickable dots indicator
+  if (dotsContainer) {
+    dotsContainer.innerHTML = list.map((p, i) => {
+      const isActive = i === activeIdx;
+      return `
+        <button onclick="slideFamilyToPatient('${p.id}')"
+          class="${isActive ? 'w-8 h-2.5 rounded-full bg-purple-700 shadow-sm' : 'w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-purple-400'} transition-all duration-200"
+          title="Slide to Patient #${i+1}: ${p.name}">
+        </button>
+      `;
+    }).join('');
+  }
+}
+
+// Keyboard arrow key slider navigation
+document.addEventListener('keydown', (e) => {
+  const familyView = document.getElementById('view-family');
+  if (!familyView || familyView.classList.contains('hidden')) return;
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+  if (e.key === 'ArrowRight') {
+    slideFamilyPatient(1);
+  } else if (e.key === 'ArrowLeft') {
+    slideFamilyPatient(-1);
+  }
+});
+
+
+function renderFamilyAnalyzeSummary(p) {
+  if (!p) return;
+  const v = (p.checkups && p.checkups[0]) ? p.checkups[0] : {};
+  const isCritical = p.predictedTier === 'CRITICAL';
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p);
+
+  // Per-Patient Clinical Summary Profiles
+  const patientProfiles = {
+    'PAT-101': { // Ramesh Sharma (Father)
+      summaryHeading: 'Short Weekly Wellbeing Summary (Father: Ramesh Sharma)',
+      summaryParagraph: 'Concise 7-day overview for Ramesh Sharma [Father • 74 Yrs]: Monitored for acute morning tachycardia spike (114 bpm) and elevated blood pressure (158/96 mmHg). Prior 6 days remained stable with 93% medication adherence and consistent voice check-ins.',
+      healthScore: 80,
+      healthLabel: '🚨 Critical Risk Tier (Score 80/100)',
+      healthBadgeClass: 'border-4 border-rose-500 text-rose-700',
+      aiAnalysisText: 'Elevated blood pressure (158/96 mmHg) detected alongside resting heart rate spike (114 bpm). Oxygen saturation is at 94.0%. Functional mobility requires grab bar / cane assistance. Sister Kavita has adjusted monitoring protocol and dispatched home check.',
+      statMeds: '93%',
+      statMedsSub: 'Missed 1 morning dose on Sunday; refilled on Monday.',
+      statSleep: '5.2 hrs/night',
+      statSleepSub: 'Restless sleep cycle; 2 nighttime awakenings noted.',
+      statMood: '86% Positive',
+      statMoodSub: 'Voice transcript reported dizziness & chest heaviness.',
+      statHr: '114 bpm (Spike)',
+      statHrSub: '7-day baseline: 72 bpm. Monitored for arrhythmia.',
+      consistencyPercentage: '100% (7/7 days verified)',
+      consistencyDays: [
+        { day: 'Thu', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Fri', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sat', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sun', icon: 'fa-triangle-exclamation text-amber-600', text: 'Tired', bg: 'bg-amber-50 border-amber-200' },
+        { day: 'Mon', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Tue', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Today', icon: 'fa-heart-pulse text-rose-600 animate-pulse', text: 'Spike 114', bg: 'bg-rose-50 border-rose-300 ring-2 ring-rose-500/30' }
+      ],
+      coordinatorNote: `"Ramesh ji has been in wonderful spirits this week, but this morning his resting heart rate spiked to 114 bpm with elevated BP (158/96). We immediately called him, advised resting on the recliner, and dispatched field assistance. Rahul ji, don't worry — our medical team is actively managing his care!"`, 
+      messagePlaceholder: 'e.g. Papa, take rest, we are coming this evening!',
+      alertTitle: 'Ramesh Sharma: Resting HR Spiked to 114 bpm & BP 158/96 mmHg',
+      alertDesc: 'Suggested clinical response initiated: Care Coordinator Sister Kavita placed a 2-way call and Field Nurse has been dispatched to Greater Kailash. Automated SMS & WhatsApp notification delivered to Rahul Sharma (Son).',
+      alertTime: 'Today, 08:30 AM'
+    },
+    'PAT-102': { // Savitri Devi (Mother)
+      summaryHeading: 'Short Weekly Wellbeing Summary (Mother: Savitri Devi)',
+      summaryParagraph: 'Concise 7-day overview for Savitri Devi [Mother • 81 Yrs]: Acute post-fall incident in bathroom at 06:45 AM resulting in severe pain (8/10) and immobility. Medication adherence is 96%, but nighttime sleep has reduced to 4.8 hrs due to hip stiffness and fall recovery.',
+      healthScore: 62,
+      healthLabel: '🚨 Critical Risk Tier (Score 62/100)',
+      healthBadgeClass: 'border-4 border-rose-600 text-rose-800',
+      aiAnalysisText: 'Bathroom impact sensor triggered at 06:45 AM. Voice note confirms acute lumbar & right hip pain (Level 8/10). Severe osteoporosis history (T-score -3.1) creates acute fracture risk. Paramedic Amit dispatched with mobile splint & analgesics.',
+      statMeds: '96%',
+      statMedsSub: 'Amlodipine & weekly Alendronate taken consistently.',
+      statSleep: '4.8 hrs/night',
+      statSleepSub: 'Frequent sleep disruption; nocturia & lumbar stiffness noted.',
+      statMood: '72% Distressed',
+      statMoodSub: 'Voice transcript: "बाथरूम में फिसल गई थी, कमर में तेज दर्द है..."',
+      statHr: '88 bpm (Elevated)',
+      statHrSub: 'Post-fall acute pain tachycardia; rhythm sinus normal.',
+      consistencyPercentage: '100% (7/7 days verified)',
+      consistencyDays: [
+        { day: 'Thu', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Fri', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sat', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sun', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Mon', icon: 'fa-triangle-exclamation text-amber-600', text: 'Tired', bg: 'bg-amber-50 border-amber-200' },
+        { day: 'Tue', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Today', icon: 'fa-person-falling-burst text-rose-600 animate-pulse', text: 'Fall Impact', bg: 'bg-rose-50 border-rose-300 ring-2 ring-rose-500/30' }
+      ],
+      coordinatorNote: '"Savitri ji had an unfortunate bathroom slip this morning causing acute hip pain. We have dispatched Paramedic Brother Amit with mobile diagnostic equipment and notified Rahul ji. We advise keeping Maaji lying flat with cold pack support until Amit arrives!"',
+      messagePlaceholder: 'e.g. Maaji, relax completely on bed, doctor Amit is arriving in 10 mins!',
+      alertTitle: 'Savitri Devi: Bathroom Fall Impact Sensor Triggered & Acute Lumbar Pain (8/10)',
+      alertDesc: 'Immediate emergency response dispatched: Paramedic Brother Amit on the way with mobile x-ray & splint kit (ETA 18m). Primary Caregiver Rahul Sharma notified via SMS & WhatsApp.',
+      alertTime: 'Today, 06:50 AM'
+    },
+    'PAT-103': { // Anand Verma
+      summaryHeading: 'Short Weekly Wellbeing Summary (Uncle: Anand Verma)',
+      summaryParagraph: 'Concise 7-day overview for Anand Verma [Uncle • 78 Yrs]: Fasting blood sugar spike to 228 mg/dL following missed evening insulin doses. Daily check-in compliance is 86% with bilateral peripheral neuropathy tingling reported.',
+      healthScore: 53,
+      healthLabel: '🚨 Critical Risk Tier (Score 53/100)',
+      healthBadgeClass: 'border-4 border-rose-500 text-rose-700',
+      aiAnalysisText: 'Severe hyperglycemia flagged (228 mg/dL) with consecutive 2-day missed evening insulin reminder. Diabetic neuropathy symptoms active in soles. Buddy Rajesh dispatched to verify insulin pen storage and administer dose.',
+      statMeds: '72% (Missed 2d)',
+      statMedsSub: 'Missed evening Insulin Glargine doses on Sunday and Monday.',
+      statSleep: '6.5 hrs/night',
+      statSleepSub: 'Fair sleep; occasional foot burning sensations at midnight.',
+      statMood: '80% Fair',
+      statMoodSub: 'Voice note reported tingling in feet and dry mouth.',
+      statHr: '76 bpm (Normal)',
+      statHrSub: 'Cardiovascular parameters remain in stable range.',
+      consistencyPercentage: '86% (6/7 days logged)',
+      consistencyDays: [
+        { day: 'Thu', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Fri', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sat', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sun', icon: 'fa-pills text-amber-600', text: 'Missed', bg: 'bg-amber-50 border-amber-200' },
+        { day: 'Mon', icon: 'fa-triangle-exclamation text-rose-600', text: 'High Sugar', bg: 'bg-rose-50 border-rose-200' },
+        { day: 'Tue', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Today', icon: 'fa-droplet text-amber-600 animate-pulse', text: 'Sugar 228', bg: 'bg-amber-50 border-amber-300 ring-2 ring-amber-500/30' }
+      ],
+      coordinatorNote: '"Anand ji missed two evening insulin doses causing fasting sugar to reach 228 mg/dL. Buddy Rajesh is on his way to assist with injection administration and check refrigerator storage temperature. Son Deepak has been updated."',
+      messagePlaceholder: 'e.g. Chachaji, please take insulin on time, Rajesh is on his way!',
+      alertTitle: 'Anand Verma: Severe Hyperglycemia (Fasting Sugar 228 mg/dL) & Missed Insulin',
+      alertDesc: 'Clinical response initiated: Community Buddy Rajesh dispatched for doorstep insulin dose verification. Son Deepak Verma updated.',
+      alertTime: 'Today, 07:15 AM'
+    },
+    'PAT-104': { // Meena Iyer
+      summaryHeading: 'Short Weekly Wellbeing Summary (Aunt: Meena Iyer)',
+      summaryParagraph: 'Concise 7-day overview for Meena Iyer [Aunt • 72 Yrs]: Bereavement anniversary emotional distress and severe sleep deficit (4.1 hrs). Cardiovascular vitals remain within healthy normal boundaries (BP 124/80, HR 72, SpO2 98%).',
+      healthScore: 25,
+      healthLabel: '🟡 Moderate Tier (Score 25/100)',
+      healthBadgeClass: 'border-4 border-amber-500 text-amber-700',
+      aiAnalysisText: 'Insomnia deficit (4.1 hrs) and loneliness sentiment flagged in morning voice note. Blood pressure (124/80) and oxygen (98%) are fully healthy. Sister Sunita scheduled a 15-minute compassionate reassurance tele-consult.',
+      statMeds: '98%',
+      statMedsSub: 'Thyronorm & Escitalopram taken with consistent compliance.',
+      statSleep: '4.1 hrs/night',
+      statSleepSub: 'Difficulty falling asleep; grief-related insomnia.',
+      statMood: '64% Melancholic',
+      statMoodSub: 'Voice note: "आज अकेलापन बहुत लग रहा है, किसी से बात करने का मन है..."',
+      statHr: '72 bpm (Normal)',
+      statHrSub: 'Stable resting heart rate and normal blood pressure.',
+      consistencyPercentage: '100% (7/7 days verified)',
+      consistencyDays: [
+        { day: 'Thu', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Fri', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sat', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sun', icon: 'fa-bed text-amber-600', text: 'Insomnia', bg: 'bg-amber-50 border-amber-200' },
+        { day: 'Mon', icon: 'fa-face-frown text-purple-600', text: 'Lonely', bg: 'bg-purple-50 border-purple-200' },
+        { day: 'Tue', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Today', icon: 'fa-headset text-indigo-600', text: 'Counseling', bg: 'bg-indigo-50 border-indigo-300 ring-2 ring-indigo-500/30' }
+      ],
+      coordinatorNote: `"Meena ji felt emotional this morning due to her late husband's memorial week. Counselor Sunita had a 20-minute heartwarming conversation with her. Son Karthik in Bengaluru was advised to place an evening video call."`, 
+      messagePlaceholder: 'e.g. Amma, we love you, placing a video call at 7 PM tonight!',
+      alertTitle: 'Meena Iyer: Bereavement Anniversary Emotional Support Active',
+      alertDesc: 'Companion protocol active: Senior Buddy Sunita completing reassurance check-in. Vitals safe & normal.',
+      alertTime: 'Today, 08:00 AM'
+    },
+    'PAT-105': { // Harish Patel
+      summaryHeading: 'Short Weekly Wellbeing Summary (Father: Harish Patel)',
+      summaryParagraph: 'Concise 7-day overview for Harish Patel [Father • 76 Yrs]: Optimal health baseline with 100% vital signs stability, perfect medication adherence (98%), and peaceful 7.5 hrs sleep rest cycles. Zero interventions required.',
+      healthScore: 9,
+      healthLabel: '🟢 Optimal Baseline (Score 9/100)',
+      healthBadgeClass: 'border-4 border-emerald-500 text-emerald-700',
+      aiAnalysisText: 'All vital signs, functional ADLs, and emotional sentiments within ideal physiological bounds. Blood pressure 122/80 mmHg, SpO2 98%, HR 72 bpm. Routine weekly monitoring active with zero alerts raised.',
+      statMeds: '98%',
+      statMedsSub: 'All prescribed hypertension and lipid doses taken consistently.',
+      statSleep: '7.5 hrs/night',
+      statSleepSub: 'Sound & peaceful sleep with uninterrupted circadian rhythm.',
+      statMood: '98% Cheerful',
+      statMoodSub: 'Morning walk completed; voice check-in energetic & positive.',
+      statHr: '72 bpm (Optimal)',
+      statHrSub: 'Perfect resting pulse and regular sinus baseline.',
+      consistencyPercentage: '100% (7/7 days verified)',
+      consistencyDays: [
+        { day: 'Thu', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Fri', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sat', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Sun', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Mon', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Tue', icon: 'fa-circle-check text-emerald-600', text: 'Great', bg: 'bg-emerald-50 border-emerald-200' },
+        { day: 'Today', icon: 'fa-shield-heart text-emerald-600', text: 'Optimal', bg: 'bg-emerald-50 border-emerald-300 ring-2 ring-emerald-500/30' }
+      ],
+      coordinatorNote: '"Harish ji is in top physical and mental form. Morning checkup completed effortlessly. Keep up the daily morning strolls!"',
+      messagePlaceholder: 'e.g. Papa, wonderful to see your perfect health report today!',
+      alertTitle: 'Harish Patel: Routine Safe Baseline',
+      alertDesc: 'No emergency alerts. Vital signs and check-in timeline in healthy green zone.',
+      alertTime: 'Today, 07:45 AM'
+    }
+  };
+
+  const prof = patientProfiles[p.id] || patientProfiles['PAT-101'];
+
+  // 1. Update Heading & Description Paragraph
+  const summaryHead = document.getElementById('family-summary-heading');
+  if (summaryHead) summaryHead.textContent = prof.summaryHeading;
+
+  const summaryPara = document.getElementById('family-summary-paragraph');
+  if (summaryPara) summaryPara.textContent = prof.summaryParagraph;
+
+  // 2. Health Score Circle & Label
+  const scoreCircle = document.getElementById('family-health-score-circle');
+  if (scoreCircle) {
+    scoreCircle.textContent = prof.healthScore;
+    scoreCircle.className = `w-12 h-12 rounded-full ${prof.healthBadgeClass} flex items-center justify-center font-extrabold text-lg shadow-sm`;
+  }
+  const scoreLabel = document.getElementById('family-health-score-label');
+  if (scoreLabel) {
+    scoreLabel.textContent = prof.healthLabel;
+  }
+
+  // 3. AI Model Clinical Risk Explanation Banner
+  const aiText = document.getElementById('family-ai-analysis-text');
+  if (aiText) aiText.textContent = prof.aiAnalysisText;
+
+  // 4. 4 Core Wellness Pillars
+  const statMeds = document.getElementById('family-stat-meds');
+  if (statMeds) statMeds.textContent = prof.statMeds;
+  const statMedsSub = document.getElementById('family-stat-meds-sub');
+  if (statMedsSub) statMedsSub.textContent = prof.statMedsSub;
+
+  const statSleep = document.getElementById('family-stat-sleep');
+  if (statSleep) statSleep.textContent = prof.statSleep;
+  const statSleepSub = document.getElementById('family-stat-sleep-sub');
+  if (statSleepSub) statSleepSub.textContent = prof.statSleepSub;
+
+  const statMood = document.getElementById('family-stat-mood');
+  if (statMood) statMood.textContent = prof.statMood;
+  const statMoodSub = document.getElementById('family-stat-mood-sub');
+  if (statMoodSub) statMoodSub.textContent = prof.statMoodSub;
+
+  const statHr = document.getElementById('family-stat-hr');
+  if (statHr) statHr.textContent = prof.statHr;
+  const statHrSub = document.getElementById('family-stat-hr-sub');
+  if (statHrSub) statHrSub.textContent = prof.statHrSub;
+
+  // 5. 7-Day Consistency Strip
+  const stripContainer = document.getElementById('family-consistency-strip-container');
+  if (stripContainer && prof.consistencyDays) {
+    stripContainer.innerHTML = prof.consistencyDays.map(cd => `
+      <div class="${cd.bg} border rounded-xl p-2.5 transition-transform hover:scale-105">
+        <div class="text-[10px] font-bold text-slate-500 uppercase">${cd.day}</div>
+        <div class="text-sm mt-1"><i class="fa-solid ${cd.icon}"></i></div>
+        <div class="text-[10px] font-semibold text-slate-700 mt-1 truncate">${cd.text}</div>
+      </div>
+    `).join('');
+  }
+  const consistencyPct = document.getElementById('family-consistency-percentage');
+  if (consistencyPct) consistencyPct.textContent = prof.consistencyPercentage;
+
+  // 6. Coordinator's Personal Weekly Note
+  const coordNote = document.getElementById('family-coordinator-note-text');
+  if (coordNote) coordNote.textContent = prof.coordinatorNote;
+
+  // 7. Message Input Placeholder
+  const msgInput = document.getElementById('family-message-input');
+  if (msgInput) msgInput.placeholder = prof.messagePlaceholder;
+
+  // 8. Critical Alert Card vs Safe Banner
+  const alertCard = document.getElementById('family-serious-alert-card');
+  const calmBanner = document.getElementById('family-calm-status-banner');
+  if (isCritical) {
+    if (alertCard) {
+      alertCard.classList.remove('hidden');
+      const aTitle = document.getElementById('family-alert-title');
+      if (aTitle) aTitle.textContent = prof.alertTitle;
+      const aDesc = document.getElementById('family-alert-desc');
+      if (aDesc) aDesc.textContent = prof.alertDesc;
+      const aTime = document.getElementById('family-alert-time');
+      if (aTime) aTime.textContent = prof.alertTime;
+    }
+    if (calmBanner) calmBanner.classList.add('hidden');
+  } else {
+    if (alertCard) alertCard.classList.add('hidden');
+    if (calmBanner) {
+      calmBanner.classList.remove('hidden');
+      const calmText = document.getElementById('family-calm-status-text');
+      if (calmText) {
+        calmText.textContent = `${p.name} [${bracketStr}]: ${prof.aiAnalysisText}`;
+      }
+    }
+  }
+
+  // 9. Re-render dynamic 7-Day Vitals & Sentiment Trajectory Chart for active senior
+  renderFamilyVitalsChart(p);
+}
+
+// 4. Render Tab 2: Comprehensive Senior Health Report
+function renderFamilySeniorReport(p) {
+  if (!p) return;
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p);
+  const v = (p.checkups && p.checkups[0]) ? p.checkups[0] : {};
+  const medHistory = p.medicalHistory || {};
+
+  const titleEl = document.getElementById('report-senior-name-title');
+  if (titleEl) titleEl.textContent = `Medical & Vitals Report: ${p.name} ${bracketStr}`;
+
+  const reportCaregiverSub = document.getElementById('report-caregiver-sub');
+  if (reportCaregiverSub) reportCaregiverSub.textContent = caregiverStr;
+
+  // Demographics
+  const patName = document.getElementById('report-patient-name');
+  if (patName) patName.textContent = `${p.name} ${bracketStr}`;
+
+  const patCaregiver = document.getElementById('report-patient-caregiver');
+  if (patCaregiver) patCaregiver.textContent = caregiverStr;
+
+  const patUser = document.getElementById('report-patient-username');
+  if (patUser) patUser.textContent = `@${p.username}`;
+
+  const patAge = document.getElementById('report-patient-age-gender');
+  if (patAge) patAge.textContent = `${p.age} Yrs / ${p.gender}`;
+
+  const patBlood = document.getElementById('report-patient-blood');
+  if (patBlood) patBlood.textContent = medHistory.bloodGroup || 'B +ve';
+
+  const patContact = document.getElementById('report-patient-contact');
+  if (patContact) patContact.textContent = p.phone || '+91 98110-44912';
+
+  const patAddress = document.getElementById('report-patient-address');
+  if (patAddress) patAddress.textContent = p.location || 'South Delhi, New Delhi';
+
+  // Medical Team & Review
+  const patNurse = document.getElementById('report-patient-nurse');
+  if (patNurse) patNurse.textContent = p.assignedNurse || 'Sister Kavita, RN';
+
+  const patDoctor = document.getElementById('report-patient-doctor');
+  if (patDoctor) patDoctor.textContent = medHistory.doctor || 'Dr. V.K. Kapoor (Fortis Escorts)';
+
+  const patNextReview = document.getElementById('report-patient-next-review');
+  if (patNextReview) patNextReview.textContent = medHistory.nextReview || '15 Nov 2026';
+
+  // Chronic Conditions
+  const conditionsEl = document.getElementById('report-chronic-conditions');
+  if (conditionsEl && medHistory.chronicConditions) {
+    conditionsEl.innerHTML = medHistory.chronicConditions.map(c => `
+      <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 text-xs font-semibold">
+        <i class="fa-solid fa-notes-medical text-teal-600 mr-1"></i>${c}
+      </span>
+    `).join('');
+  }
+
+  // Medications Table
+  const medsTbody = document.getElementById('report-medications-tbody');
+  if (medsTbody && medHistory.medications) {
+    medsTbody.innerHTML = medHistory.medications.map(m => `
+      <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+        <td class="py-2.5 px-3 font-bold text-slate-800">${m.name}</td>
+        <td class="py-2.5 px-3 text-slate-600">${m.dosage}</td>
+        <td class="py-2.5 px-3 text-slate-600">${m.schedule}</td>
+        <td class="py-2.5 px-3 text-slate-500">${m.purpose}</td>
+        <td class="py-2.5 px-3 font-semibold text-emerald-700">${m.adherence || '95%'}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Checkup Vitals
+  const vBp = document.getElementById('report-vital-bp');
+  if (vBp) vBp.textContent = v.bp || '120/80 mmHg';
+
+  const vHr = document.getElementById('report-vital-hr');
+  if (vHr) vHr.textContent = v.hr || '72 bpm';
+
+  const vSpo2 = document.getElementById('report-vital-spo2');
+  if (vSpo2) vSpo2.textContent = v.spo2 || '98%';
+
+  const vGlucose = document.getElementById('report-vital-glucose');
+  if (vGlucose) vGlucose.textContent = v.glucose || '110 mg/dL';
+
+  const vTemp = document.getElementById('report-vital-temp');
+  if (vTemp) vTemp.textContent = v.temp || '98.4 °F';
+
+  const vBmi = document.getElementById('report-vital-bmi');
+  if (vBmi) vBmi.textContent = v.bmi ? `BMI ${v.bmi} (${v.weight || '68kg'})` : 'BMI 24.8 (Normal)';
+}
+
+// 5. Render Tab 3: Assessment History (Timeline)
+function renderFamilyAssessmentHistory(p) {
+  if (!p) return;
+  const container = document.getElementById('family-assessment-timeline-list');
+  if (!container) return;
+
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p);
+  const isCritical = p.predictedTier === 'CRITICAL';
+  const v = (p.checkups && p.checkups[0]) ? p.checkups[0] : {};
+  const adl = (p.assessments && p.assessments.adl) ? p.assessments.adl : {};
+  const pain = (p.assessments && p.assessments.pain) ? p.assessments.pain : {};
+  const sleep = (p.assessments && p.assessments.sleep) ? p.assessments.sleep : {};
+  const voice = (p.userInputs || []).find(u => u.type === 'voice') || {};
+
+  // Build assessment items matching filter
+  const items = [];
+
+  // Item 1: Vitals Assessment
+  if (currentFamilyHistoryFilter === 'all' || currentFamilyHistoryFilter === 'vitals') {
+    items.push(`
+      <div class="relative pl-8 pb-6 border-l-2 border-purple-200">
+        <div class="absolute -left-2.5 top-0 w-5 h-5 rounded-full ${isCritical ? 'bg-rose-500' : 'bg-emerald-500'} text-white flex items-center justify-center text-[10px] shadow-sm">
+          <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800">Physiological Vitals Assessment</span>
+            <span class="text-[11px] text-slate-400 font-mono">Today, 08:30 AM</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Blood Pressure</span>
+              <strong class="${parseInt(v.bp) >= 140 ? 'text-rose-600' : 'text-slate-800'}">${v.bp || '120/80'}</strong>
+              <span class="text-[10px] text-slate-500">(${v.bpStatus || 'Normal'})</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Heart Rate</span>
+              <strong class="${parseInt(v.hr) >= 100 ? 'text-rose-600' : 'text-slate-800'}">${v.hr || '72 bpm'}</strong>
+              <span class="text-[10px] text-slate-500">(${v.hrStatus || 'Normal'})</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">SpO2 Saturation</span>
+              <strong class="${parseInt(v.spo2) < 95 ? 'text-amber-600' : 'text-slate-800'}">${v.spo2 || '98%'}</strong>
+              <span class="text-[10px] text-slate-500">(${v.spo2Status || 'Healthy'})</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Blood Glucose</span>
+              <strong class="text-slate-800">${v.glucose || '110 mg/dL'}</strong>
+              <span class="text-[10px] text-slate-500">(Fasting)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  // Item 2: ADL Functional Independence Assessment
+  if (currentFamilyHistoryFilter === 'all' || currentFamilyHistoryFilter === 'adl') {
+    items.push(`
+      <div class="relative pl-8 pb-6 border-l-2 border-purple-200">
+        <div class="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] shadow-sm">
+          <i class="fa-solid fa-person-walking"></i>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800">Functional ADL Independence Assessment</span>
+            <span class="text-[11px] text-slate-400 font-mono">Today, 08:00 AM</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Eating</span>
+              <strong>${adl.eating ? adl.eating.score : '10/10'}</strong>
+              <span class="text-[10px] text-slate-500 block truncate">${adl.eating ? adl.eating.status : 'Independent'}</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Toileting</span>
+              <strong>${adl.toileting ? adl.toileting.score : '7/10'}</strong>
+              <span class="text-[10px] text-slate-500 block truncate">${adl.toileting ? adl.toileting.status : 'Grab Bar Aid'}</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Walking</span>
+              <strong>${adl.walking ? adl.walking.score : '6/10'}</strong>
+              <span class="text-[10px] text-slate-500 block truncate">${adl.walking ? adl.walking.status : 'With Cane'}</span>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Bed Transfer</span>
+              <strong>${adl.moving ? adl.moving.score : '7/10'}</strong>
+              <span class="text-[10px] text-slate-500 block truncate">${adl.moving ? adl.moving.status : 'Mild Stiffness'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  // Item 3: Pain & Sleep Checkup
+  if (currentFamilyHistoryFilter === 'all' || currentFamilyHistoryFilter === 'pain_sleep') {
+    items.push(`
+      <div class="relative pl-8 pb-6 border-l-2 border-purple-200">
+        <div class="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] shadow-sm">
+          <i class="fa-solid fa-moon"></i>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800">Pain & Sleep Quality Metrics</span>
+            <span class="text-[11px] text-slate-400 font-mono">Today, 07:45 AM</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-2.5 rounded-xl bg-amber-50/60 border border-amber-200/60">
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-bold text-amber-900">Pain Scale</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${pain.score >= 4 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                  ${pain.score ? `${pain.score}/10` : '0/10'}
+                </span>
+              </div>
+              <p class="text-slate-600 text-[11px]">Location: ${pain.location || 'None'} • ${pain.sensation || 'Dull ache'}</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-indigo-50/60 border border-indigo-200/60">
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-bold text-indigo-900">Sleep Duration</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-indigo-100 text-indigo-800">
+                  ${sleep.hours ? `${sleep.hours} hrs` : '7.0 hrs'}
+                </span>
+              </div>
+              <p class="text-slate-600 text-[11px]">Quality: ${sleep.quality || 'Normal uninterrupted rest'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  // Item 4: Voice Note & Hindi Transcript
+  if (currentFamilyHistoryFilter === 'all' || currentFamilyHistoryFilter === 'voice') {
+    items.push(`
+      <div class="relative pl-8 pb-2 border-l-2 border-purple-200">
+        <div class="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] shadow-sm">
+          <i class="fa-solid fa-microphone"></i>
+        </div>
+        <div class="bg-purple-50/80 rounded-2xl p-4 border border-purple-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-purple-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-volume-high text-purple-700"></i>
+              <span>Daily Senior Voice Note & AI Transcript</span>
+            </span>
+            <span class="text-[11px] text-purple-700 font-mono">Today, 08:15 AM</span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-purple-100 space-y-1.5">
+            <div class="text-xs font-hindi text-slate-800 leading-relaxed font-semibold">
+              "${voice.hindiText || 'नमस्ते बेटा, आज सुबह से थोड़ी बेचैनी लग रही है।'}"
+            </div>
+            <div class="text-[11px] text-slate-500 italic">
+              <strong>English Translation:</strong> "${voice.englishTranslation || 'Hello son, feeling a bit restless since this morning.'}"
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[10px] font-bold text-purple-700">
+              <i class="fa-solid fa-brain mr-1"></i> Sentiment: Anxiety & Distress Detected (Score: -0.68)
+            </span>
+            <button onclick="playFamilySeniorVoiceNote()" class="px-3 py-1 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-xs font-bold transition-all flex items-center space-x-1">
+              <i class="fa-solid fa-play"></i>
+              <span>Play Audio Note</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  container.innerHTML = items.join('');
+}
+
+// Filter Assessment History Tabs
+function filterFamilyAssessments(category) {
+  currentFamilyHistoryFilter = category;
+  const categories = ['all', 'vitals', 'adl', 'pain_sleep', 'voice'];
+  categories.forEach(cat => {
+    const btn = document.getElementById(`family-filter-btn-${cat}`);
+    if (btn) {
+      if (cat === category) {
+        btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-700 text-white shadow-sm transition-all";
+      } else {
+        btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all";
+      }
+    }
+  });
+
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
+  renderFamilyAssessmentHistory(p);
+}
+
+// Audio player simulation
+function playFamilySeniorVoiceNote() {
+  soundEngine.playTone(440, 'sine', 0.2);
+  setTimeout(() => soundEngine.playTone(550, 'sine', 0.3), 200);
+  showToast("Playing Ramesh Sharma's Hindi Voice Note...", 'info');
+}
+
+// ==================================================================// BUILD WHOLE HEALTH ASSESSMENT (ELEGANT CLINICAL SLIP & PDF FORMAT)
+// ==================================================================
+function buildSimpleAssessmentHtml(p) {
+  const v = (p.checkups && p.checkups[0]) ? p.checkups[0] : {};
+  const adl = (p.assessments && p.assessments.adl) ? p.assessments.adl : {};
+  const pain = (p.assessments && p.assessments.pain) ? p.assessments.pain : {};
+  const sleep = (p.assessments && p.assessments.sleep) ? p.assessments.sleep : {};
+  const voice = (p.userInputs || []).find(u => u.type === 'voice') || {};
+  const medHistory = p.medicalHistory || {};
+  const meds = medHistory.medications || [];
+  const drivers = p.modelDrivers || [];
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p);
+  const isCritical = p.predictedTier === 'CRITICAL';
+  const reportDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  return `
+    <div id="printable-assessment-document" style="font-family: 'Plus Jakarta Sans', Inter, -apple-system, sans-serif; color: #0f172a; background: #ffffff; padding: 20px; border-radius: 16px; border: 1.5px solid #cbd5e1; max-width: 760px; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      
+      <!-- Top Branding & Telemetry Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0e294b; padding-bottom: 12px; margin-bottom: 14px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h1 style="font-size: 18px; font-weight: 800; color: #0e294b; margin: 0; letter-spacing: -0.02em;">CareConnect AI</h1>
+            <span style="background: #f1f5f9; color: #475569; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">CLINICAL DOSSIER</span>
+            <span style="background: ${isCritical ? '#ffe4e6' : '#dcfce7'}; color: ${isCritical ? '#be123c' : '#15803d'}; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; border: 1px solid ${isCritical ? '#f43f5e' : '#22c55e'};">
+              ${isCritical ? '🚨 CRITICAL RISK TIER' : '🟢 STABLE TIER'}
+            </span>
+          </div>
+          <p style="font-size: 12px; color: #008779; font-weight: 700; margin: 3px 0 0 0;">Comprehensive Senior Health Assessment & Telemetry Summary</p>
+        </div>
+        <div style="text-align: right; font-family: monospace; font-size: 11px; color: #64748b;">
+          <div><strong>ID:</strong> CC-${p.id || 'PAT-101'}</div>
+          <div><strong>Date:</strong> ${reportDate}</div>
+          <div><strong>Status:</strong> Verified Telemetry</div>
+        </div>
+      </div>
+
+      <!-- 1. Patient & Caregiver Identification Banner -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px;">1. Patient & Connected Caregiver</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; font-size: 12px;">
+          <div>
+            <div style="color: #64748b; font-size: 11px;">Patient Name:</div>
+            <strong style="color: #0e294b; font-size: 13px;">${p.name}</strong> 
+            <span style="background: #f3e8ff; color: #6b21a8; font-weight: 700; font-size: 11px; padding: 1px 6px; border-radius: 4px; margin-left: 4px; border: 1px solid #d8b4fe;">${bracketStr}</span>
+          </div>
+          <div>
+            <div style="color: #64748b; font-size: 11px;">Connected Family Person:</div>
+            <span style="background: #e0e7ff; color: #3730a3; font-weight: 700; font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px solid #c7d2fe;">${caregiverStr}</span>
+          </div>
+          <div>
+            <span style="color: #64748b;">Location / Phone:</span> <strong>${p.location || 'South Delhi'} • ${p.phone || '+91 98110-44912'}</strong>
+          </div>
+          <div>
+            <span style="color: #64748b;">Assigned Clinical Team:</span> <strong>${p.assignedNurse || 'Sister Kavita, RN'} • ${medHistory.doctor || 'Dr. V.K. Kapoor'}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. AI Risk Triage & Clinical Drivers -->
+      <div style="border: 1px solid ${isCritical ? '#fecdd3' : '#bbf7d0'}; background: ${isCritical ? '#fff1f2' : '#f0fdf4'}; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: ${isCritical ? '#9f1239' : '#166534'};">2. AI Predictive Model Triage & Drivers</span>
+          <span style="font-size: 11px; font-weight: 800; color: ${isCritical ? '#be123c' : '#15803d'};">Model Risk Score: ${p.modelScore || 80}/100 (${p.predictedProbability || '64.3%'})</span>
+        </div>
+        <ul style="margin: 0; padding-left: 18px; font-size: 11.5px; color: #1e293b; line-height: 1.5;">
+          ${drivers.map(d => `<li style="margin-bottom: 2px;"><strong>${d}</strong></li>`).join('')}
+        </ul>
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed ${isCritical ? '#fda4af' : '#86efac'}; font-size: 11.5px; color: #0e294b;">
+          <strong>Suggested Clinical Action:</strong> ${p.suggestedAction || 'Immediate 2-way tele-call, notify family, and dispatch home nurse.'}
+        </div>
+      </div>
+
+      <!-- 3. Physiological Telemetry (All Core Vitals) -->
+      <div style="margin-bottom: 14px;">
+        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px;">3. Current Physiological Telemetry</div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; font-size: 11px;">
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px;">
+            <div style="color: #64748b; font-size: 10px; text-transform: uppercase;">Blood Pressure</div>
+            <div style="font-size: 15px; font-weight: 800; color: ${parseInt(v.bp) >= 140 ? '#e11d48' : '#0f172a'};">${v.bp || '120/80 mmHg'}</div>
+            <div style="color: #64748b; font-size: 10px;">Status: ${v.bpStatus || 'Normal'}</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px;">
+            <div style="color: #64748b; font-size: 10px; text-transform: uppercase;">Heart Rate</div>
+            <div style="font-size: 15px; font-weight: 800; color: ${parseInt(v.hr) >= 100 ? '#e11d48' : '#0f172a'};">${v.hr || '72 bpm'}</div>
+            <div style="color: #64748b; font-size: 10px;">Status: ${v.hrStatus || 'Normal'}</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px;">
+            <div style="color: #64748b; font-size: 10px; text-transform: uppercase;">Oxygen (SpO2)</div>
+            <div style="font-size: 15px; font-weight: 800; color: ${parseInt(v.spo2) < 95 ? '#d97706' : '#0f172a'};">${v.spo2 || '98%'}</div>
+            <div style="color: #64748b; font-size: 10px;">Status: ${v.spo2Status || 'Optimal'}</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px;">
+            <div style="color: #64748b; font-size: 10px; text-transform: uppercase;">Blood Glucose</div>
+            <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${v.glucose || '110 mg/dL'}</div>
+            <div style="color: #64748b; font-size: 10px;">Type: Fasting / Checkup</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px;">
+            <div style="color: #64748b; font-size: 10px; text-transform: uppercase;">Body Temperature</div>
+            <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${v.temp || '98.4 °F'}</div>
+            <div style="color: #64748b; font-size: 10px;">Status: Afebrile</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px;">
+            <div style="color: #64748b; font-size: 10px; text-transform: uppercase;">Weight & BMI</div>
+            <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${v.weight || '71.5 kg'}</div>
+            <div style="color: #64748b; font-size: 10px;">BMI: ${v.bmi || '25.1'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Functional ADL Independence & Pain / Sleep -->
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px;">
+          <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 6px;">4. Functional ADL Assessment</div>
+          <div style="font-size: 11.5px; line-height: 1.6; color: #1e293b;">
+            <div>🍽️ <strong>Eating:</strong> ${adl.eating ? adl.eating.score : '10/10'} (${adl.eating ? adl.eating.status : 'Independent'})</div>
+            <div>🚽 <strong>Toileting:</strong> ${adl.toileting ? adl.toileting.score : '7/10'} (${adl.toileting ? adl.toileting.status : 'Grab Bar Aid'})</div>
+            <div>🚶 <strong>Walking:</strong> ${adl.walking ? adl.walking.score : '6/10'} (${adl.walking ? adl.walking.status : 'With Cane / Unsteady'})</div>
+            <div>🛏️ <strong>Bed Transfer:</strong> ${adl.moving ? adl.moving.score : '7/10'} (${adl.moving ? adl.moving.status : 'Morning Stiffness'})</div>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px;">
+          <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 6px;">5. Pain & Sleep Assessment</div>
+          <div style="font-size: 11.5px; line-height: 1.6; color: #1e293b;">
+            <div>⚡ <strong>Pain Level:</strong> <span style="font-weight: 800; color: ${pain.score >= 4 ? '#e11d48' : '#0f172a'};">${pain.score ? `${pain.score}/10` : '0/10'}</span></div>
+            <div>📍 <strong>Location:</strong> ${pain.location || 'None'} (${pain.sensation || 'Dull ache'})</div>
+            <div>🌙 <strong>Sleep Rest:</strong> ${sleep.hours ? `${sleep.hours} hrs/night` : '7.0 hrs'}</div>
+            <div>💤 <strong>Quality:</strong> ${sleep.quality || 'Normal'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Senior Direct Voice Input (Hindi & Translation) -->
+      <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 12px; padding: 10px; margin-bottom: 14px;">
+        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #6b21a8; margin-bottom: 4px;">6. Senior Direct Check-in Voice Note & Transcript</div>
+        <div style="font-size: 12px; font-weight: 600; color: #3b0764; font-style: italic;">
+          "${voice.hindiText || 'नमस्ते बेटा, आज सुबह से थोड़ी बेचैनी लग रही है।'}"
+        </div>
+        <div style="font-size: 11px; color: #6b7280; margin-top: 3px;">
+          <strong>Clinical Translation:</strong> "${voice.englishTranslation || 'Hello son, feeling a bit restless since this morning.'}"
+        </div>
+      </div>
+
+      <!-- 6. Active Medications Table -->
+      <div style="margin-bottom: 14px;">
+        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px;">7. Active Prescriptions & Adherence</div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
+          <thead>
+            <tr style="background: #f1f5f9; border-bottom: 1.5px solid #cbd5e1; color: #475569;">
+              <th style="padding: 6px 8px;">Medicine</th>
+              <th style="padding: 6px 8px;">Dosage</th>
+              <th style="padding: 6px 8px;">Schedule</th>
+              <th style="padding: 6px 8px;">Purpose</th>
+              <th style="padding: 6px 8px;">Adherence</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${meds.length > 0 ? meds.map(m => `
+              <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 5px 8px; font-weight: 700; color: #0f172a;">${m.name}</td>
+                <td style="padding: 5px 8px; color: #475569;">${m.dosage}</td>
+                <td style="padding: 5px 8px; color: #475569;">${m.schedule}</td>
+                <td style="padding: 5px 8px; color: #64748b;">${m.purpose}</td>
+                <td style="padding: 5px 8px; font-weight: 700; color: #059669;">${m.adherence || '95%'}</td>
+              </tr>
+            `).join('') : `
+              <tr><td colspan="5" style="padding: 6px; text-align: center; color: #94a3b8;">No prescription recorded.</td></tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Document Footer & Sign-off -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid #e2e8f0; padding-top: 10px; font-size: 10px; color: #64748b;">
+        <div>
+          <span>CareConnect AI Telemetry Engine</span> • <span>ISO-27001 & HIPAA Compliant Data Flow</span>
+        </div>
+        <div style="text-align: right; font-weight: 700; color: #0f172a;">
+          Reviewed By: Sister Kavita, RN (Assigned Care Coordinator)
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+// Plain text assessment summary
+function buildSimpleAssessmentText(p) {
+  const v = (p.checkups && p.checkups[0]) ? p.checkups[0] : {};
+  const adl = (p.assessments && p.assessments.adl) ? p.assessments.adl : {};
+  const pain = (p.assessments && p.assessments.pain) ? p.assessments.pain : {};
+  const sleep = (p.assessments && p.assessments.sleep) ? p.assessments.sleep : {};
+  const voice = (p.userInputs || []).find(u => u.type === 'voice') || {};
+  const bracketStr = getSeniorBracketInfo(p);
+  const caregiverStr = getCaregiverBracketInfo(p);
+  const isCritical = p.predictedTier === 'CRITICAL';
+  const reportDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  return `=================================================================CARECONNECT AI - PATIENT HEALTH ASSESSMENT REPORT
+=================================================================Date: ${reportDate}
+Patient ID: ${p.id || 'PAT-101'}
+Patient Name: ${p.name} ${bracketStr}
+Connected Person: ${caregiverStr}
+Contact: ${p.phone || '+91 98110-44912'}
+Location: ${p.location || 'South Delhi, New Delhi'}
+Assigned Nurse: ${p.assignedNurse || 'Sister Kavita, RN'}
+Consulting Doctor: ${p.medicalHistory ? p.medicalHistory.doctor || 'Dr. V.K. Kapoor' : 'Dr. V.K. Kapoor'}
+Blood Group: ${p.medicalHistory ? p.medicalHistory.bloodGroup || 'B +ve' : 'B +ve'}
+
+------------------------------------------------------------------------
+1. AI RISK CLASSIFICATION & CLINICAL DRIVERS
+------------------------------------------------------------------------
+Risk Tier: ${isCritical ? 'CRITICAL RISK TIER (🚨 IMMEDIATE ATTENTION)' : 'STABLE TIER (🟢 ROUTINE SUPERVISION)'}
+Model Risk Score: ${p.modelScore || 80}/100 (${p.predictedProbability || '64.3%'})
+Key AI Drivers Detected:
+${(p.modelDrivers || []).map((d, i) => `  ${i+1}. ${d}`).join('\n')}
+
+Clinical Action Protocol:
+  ${p.suggestedAction || 'Proactive biometric monitoring and assigned nurse dispatch.'}
+
+------------------------------------------------------------------------
+2. PHYSIOLOGICAL VITALS TELEMETRY
+------------------------------------------------------------------------
+- Blood Pressure: ${v.bp || '120/80 mmHg'} (${v.bpStatus || 'Normal'})
+- Heart Rate: ${v.hr || '72 bpm'} (${v.hrStatus || 'Normal'})
+- SpO2 Oxygen Saturation: ${v.spo2 || '98%'} (${v.spo2Status || 'Optimal'})
+- Blood Glucose: ${v.glucose || '110 mg/dL'} (Fasting)
+- Body Temperature: ${v.temp || '98.4 °F'} (Afebrile)
+- Weight & BMI: ${v.weight || '71.5 kg'} (BMI ${v.bmi || '25.1'})
+
+------------------------------------------------------------------------
+3. FUNCTIONAL ADL INDEPENDENCE ASSESSMENT
+------------------------------------------------------------------------
+- Eating / Nutrition: ${adl.eating ? adl.eating.score : '10/10'} (${adl.eating ? adl.eating.status : 'Fully Independent'})
+- Toileting: ${adl.toileting ? adl.toileting.score : '7/10'} (${adl.toileting ? adl.toileting.status : 'Requires Grab Bar Support'})
+- Walking / Ambulation: ${adl.walking ? adl.walking.score : '6/10'} (${adl.walking ? adl.walking.status : 'Walks with Cane / Mild Instability'})
+- Bed Transfer & Moving: ${adl.moving ? adl.moving.score : '7/10'} (${adl.moving ? adl.moving.status : 'Morning Stiffness'})
+
+------------------------------------------------------------------------
+4. PAIN & SLEEP ASSESSMENT
+------------------------------------------------------------------------
+- Pain Scale: ${pain.score ? `${pain.score}/10` : '0/10'}
+- Pain Location & Sensation: ${pain.location || 'None'} (${pain.sensation || 'Dull ache'})
+- Night Sleep Rest: ${sleep.hours ? `${sleep.hours} hrs/night` : '7.0 hrs'}
+- Sleep Quality: ${sleep.quality || 'Normal'}
+
+------------------------------------------------------------------------
+5. SENIOR DIRECT VOICE INPUT & TRANSCRIPT
+------------------------------------------------------------------------
+Hindi Voice Input: "${voice.hindiText || 'Sab theek hai, regular routine chal raha hai.'}"
+English Clinical Translation: "${voice.englishTranslation || 'Everything is fine, regular routine is going on.'}"
+
+------------------------------------------------------------------------
+6. ACTIVE PRESCRIPTIONS & ADHERENCE
+------------------------------------------------------------------------
+${(p.medicalHistory && p.medicalHistory.medications ? p.medicalHistory.medications : []).map(m => `- ${m.name} (${m.dosage}) | Schedule: ${m.schedule} | Purpose: ${m.purpose} | Adherence: ${m.adherence || '95%'}`).join('\n')}
+
+=================================================================Verified by: Sister Kavita, RN • CareConnect AI Clinical Protocol
+=================================================================`;
+}
+
+// ==================================================================// ACTION: DOWNLOAD WHOLE HEALTH ASSESSMENT AS PDF & OPEN PREVIEW
+// ==================================================================
+function downloadPatientAssessmentPdf() {
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
+  if (!p) {
+    showToast('No patient data found to generate assessment.', 'error');
+    return;
+  }
+
+  soundEngine.playTone(600, 'sine', 0.15);
+  showToast(`Preparing Full Health Assessment PDF for ${p.name}...`, 'info');
+
+  // 1. Populate the modal content so user has instant visual preview
+  const modalContainer = document.getElementById('simple-assessment-slip-content');
+  if (modalContainer) {
+    modalContainer.innerHTML = buildSimpleAssessmentHtml(p);
+  }
+
+  // 2. Open modal so user sees assessment document right away
+  const modal = document.getElementById('modal-simple-assessment');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+
+  const safeName = p.name.replace(/[^a-zA-Z0-9]/g, '_');
+  const filename = `${safeName}_Full_Health_Assessment.pdf`;
+
+  // 3. If html2pdf library is available, trigger direct PDF download
+  if (typeof html2pdf !== 'undefined') {
+    const element = document.getElementById('printable-assessment-document') || modalContainer;
+    const opt = {
+      margin: [8, 8, 8, 8],
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      showToast(`Downloaded: ${filename}`, 'success');
+    }).catch(err => {
+      console.warn('html2pdf direct save error, triggering print/save fallback:', err);
+      fallbackDownloadClinicalHtml(p);
+    });
+  } else {
+    // Elegant fallback: Download complete self-contained printable HTML dossier file
+    fallbackDownloadClinicalHtml(p);
+  }
+}
+
+// Self-contained printable HTML dossier file fallback
+function fallbackDownloadClinicalHtml(p) {
+  const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${p.name} - Full Health Assessment</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; padding: 20px; }
+    @media print { body { background: #ffffff; padding: 0; } }
+  </style>
+</head>
+<body>
+  ${buildSimpleAssessmentHtml(p)}
+  <script>
+    window.onload = function() {
+      // Auto prompt print to save as PDF if desired
+      setTimeout(function() { window.print(); }, 400);
+    };
+  </script>
+</body>
+</html>`;
+
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = p.name.replace(/[^a-zA-Z0-9]/g, '_');
+  a.href = url;
+  a.download = `${safeName}_Full_Health_Assessment_Printable.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(`Assessment downloaded as printable dossier file.`, 'success');
+}
+
+// Open Simple Assessment Modal
+function openSimpleAssessmentModal() {
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
+  if (!p) return;
+
+  const content = document.getElementById('simple-assessment-slip-content');
+  if (content) {
+    content.innerHTML = buildSimpleAssessmentHtml(p);
+  }
+
+  const modal = document.getElementById('modal-simple-assessment');
+  if (modal) {
+    modal.classList.remove('hidden');
+    soundEngine.playTone(500, 'sine', 0.1);
+  }
+}
+
+// Close Simple Assessment Modal
+function closeSimpleAssessmentModal() {
+  const modal = document.getElementById('modal-simple-assessment');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+// Print Clean Assessment Slip Only
+function printSimpleAssessmentSlipOnly() {
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
+  if (!p) return;
+
+  const content = document.getElementById('simple-assessment-slip-content');
+  if (content) {
+    content.innerHTML = buildSimpleAssessmentHtml(p);
+  }
+
+  const modal = document.getElementById('modal-simple-assessment');
+  if (modal) modal.classList.remove('hidden');
+
+  showToast('Opening clean print / PDF save dialog...', 'info');
+  setTimeout(() => {
+    window.print();
+  }, 250);
+}
+
+// Download Simple Assessment Report (.txt file)
+function downloadSimpleAssessmentReport() {
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId) || (state.patients ? state.patients[0] : null);
+  if (!p) return;
+
+  const textContent = buildSimpleAssessmentText(p);
+  const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = p.name.replace(/[^a-zA-Z0-9]/g, '_');
+  a.href = url;
+  a.download = `${safeName}_Health_Assessment_Report.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showToast(`Downloaded: ${safeName}_Health_Assessment_Report.txt`, 'success');
+}
+
+// Print full senior report
+function printSeniorReport() {
+  openSimpleAssessmentModal();
+}
+
+// Emergency alert actions
+function updateFamilyAlertBanner() {
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId);
+  const isCritical = p && p.predictedTier === 'CRITICAL';
+  const alertBanner = document.getElementById('family-serious-alert-banner');
+  if (alertBanner) alertBanner.classList.toggle('hidden', !isCritical);
+}
+
 function dismissFamilyAlert() {
-  soundEngine.playSuccessChime();
-  state.seniorStatus.isSerious = false;
-  updateFamilyAlertBanner();
-  showToast('Alert acknowledged. Switching to calm monitoring view.', 'info');
+  const banner = document.getElementById('family-serious-alert-banner');
+  if (banner) banner.classList.add('hidden');
+  showToast('Alert banner minimized for current session.', 'info');
 }
 
 function simulateSeriousEmergencyForFamily() {
-  soundEngine.playEmergencySiren();
-  state.seniorStatus.isSerious = true;
-  updateFamilyAlertBanner();
-  showToast('🚨 Serious alert simulated for Family View demonstration.', 'danger');
+  changeFamilyLinkedSenior('PAT-101');
+  const banner = document.getElementById('family-serious-alert-banner');
+  if (banner) banner.classList.remove('hidden');
+  soundEngine.playTone(800, 'triangle', 0.4);
+  showToast('Simulated Critical Health Alert for Ramesh Sharma!', 'warning');
 }
 
 function simulateFamilyCallDad() {
-  openCallModal('DAD-CALL', 'Dad (Ramesh Sharma)', '+91 98110-44912');
+  soundEngine.playTone(500, 'sine', 0.2);
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId);
+  const name = p ? p.name : 'Dad';
+  const phone = p ? p.phone : '+91 98110-44912';
+  showToast(`Initiating direct call to ${name} (${phone})...`, 'info');
 }
 
 function simulateFamilyCallCoordinator() {
-  openCallModal('COORD-CALL', 'Nurse Kavita (Care Coordinator)', '+91 98711-00122');
+  soundEngine.playPhoneRing();
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId);
+  const nurse = p ? (p.assignedNurse || 'Sister Kavita, RN') : 'Sister Kavita, RN';
+  openCallModal('COORD-CALL', `${nurse} (Care Coordinator)`, '+91 98100-CARE-1');
+  showToast(`Connecting direct 2-way line to Care Coordinator (${nurse})...`, 'info');
 }
 
 function sendFamilyMessageToDad() {
+  soundEngine.playTone(700, 'sine', 0.15);
   const input = document.getElementById('family-message-input');
-  if (!input || !input.value.trim()) return;
-  const msg = input.value.trim();
-  soundEngine.playSuccessChime();
-  input.value = '';
-  showToast(`Message sent to Dad: "${msg}" (Will be read aloud to him)`, 'success');
+  const msg = input ? input.value.trim() : '';
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId);
+  const name = p ? p.name : 'Dad';
+  if (!msg) {
+    showToast('Please type a message first.', 'warning');
+    return;
+  }
+  showToast(`Sent message to ${name}: "${msg}"`, 'success');
+  if (input) input.value = '';
 }
 
-// 7-Day Vitals & Sentiment Trajectory Chart (Chart.js)
-function initFamilyVitalsChart() {
-  const canvas = document.getElementById('familyVitalsChart');
-  if (!canvas) return;
 
+// 7-DAY VITALS & SENTIMENT TRAJECTORY CHART (Chart.js Engine)
+function renderFamilyVitalsChart(p) {
+  const canvas = document.getElementById('familyVitalsChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const patientWeeklyTrajectories = {
+    'PAT-101': { // Ramesh Sharma (Father)
+      labels: ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Today'],
+      bpSys: [126, 128, 130, 134, 132, 134, 158],
+      mood: [4.6, 4.8, 4.5, 3.2, 4.4, 4.5, 2.4],
+      hr: [72, 74, 75, 78, 73, 76, 114],
+      bpColor: '#7c3aed',
+      moodColor: '#00a896'
+    },
+    'PAT-102': { // Savitri Devi (Mother)
+      labels: ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Today'],
+      bpSys: [130, 128, 132, 130, 134, 132, 142],
+      mood: [4.2, 4.4, 4.5, 4.3, 3.8, 4.0, 1.8],
+      hr: [76, 75, 78, 74, 80, 78, 88],
+      bpColor: '#e11d48',
+      moodColor: '#00a896'
+    },
+    'PAT-103': { // Anand Verma
+      labels: ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Today'],
+      bpSys: [128, 130, 132, 134, 138, 136, 132],
+      mood: [4.2, 4.3, 4.1, 3.2, 2.9, 3.5, 3.8],
+      hr: [74, 76, 75, 78, 79, 78, 76],
+      bpColor: '#d97706',
+      moodColor: '#00a896'
+    },
+    'PAT-104': { // Meena Iyer
+      labels: ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Today'],
+      bpSys: [122, 120, 124, 122, 125, 124, 124],
+      mood: [4.2, 4.0, 3.8, 2.4, 2.1, 2.8, 3.5],
+      hr: [70, 72, 71, 74, 76, 73, 72],
+      bpColor: '#6366f1',
+      moodColor: '#00a896'
+    },
+    'PAT-105': { // Harish Patel
+      labels: ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Today'],
+      bpSys: [120, 122, 121, 120, 124, 122, 122],
+      mood: [4.8, 4.9, 4.8, 4.7, 4.9, 4.8, 5.0],
+      hr: [72, 70, 72, 73, 71, 72, 72],
+      bpColor: '#059669',
+      moodColor: '#00a896'
+    }
+  };
+
+  const traj = patientWeeklyTrajectories[p.id] || patientWeeklyTrajectories['PAT-101'];
+
+  // Destroy previous chart instance if exists
   if (state.charts.familyVitals) {
-    state.charts.familyVitals.destroy();
+    try {
+      state.charts.familyVitals.destroy();
+    } catch (e) {
+      console.warn('Chart destroy error:', e);
+    }
+    state.charts.familyVitals = null;
   }
 
   const ctx = canvas.getContext('2d');
   state.charts.familyVitals = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['Thu (Oct 22)', 'Fri (Oct 23)', 'Sat (Oct 24)', 'Sun (Oct 25)', 'Mon (Oct 26)', 'Tue (Oct 27)', 'Today (Oct 28)'],
+      labels: traj.labels,
       datasets: [
         {
-          label: 'Systolic BP (mmHg)',
-          data: [126, 128, 125, 142, 130, 128, 158],
-          borderColor: '#f43f5e',
-          backgroundColor: 'rgba(244, 63, 94, 0.08)',
-          tension: 0.35,
+          label: `${p.name} - Systolic BP (mmHg)`,
+          data: traj.bpSys,
+          borderColor: traj.bpColor,
+          backgroundColor: 'rgba(124, 58, 237, 0.08)',
+          borderWidth: 3,
           fill: true,
+          tension: 0.35,
+          yAxisID: 'yBP',
           pointRadius: 4,
-          pointBackgroundColor: '#f43f5e',
-          yAxisID: 'y'
+          pointHoverRadius: 6,
+          pointBackgroundColor: traj.bpColor
         },
         {
-          label: 'Mood & Energy (1 to 5)',
-          data: [4.5, 4.8, 4.6, 2.5, 4.2, 4.4, 3.0],
-          borderColor: '#14b8a6',
-          backgroundColor: 'transparent',
-          borderDash: [4, 4],
-          tension: 0.3,
+          label: `${p.name} - Mood & Voice Sentiment (1-5 Scale)`,
+          data: traj.mood,
+          borderColor: traj.moodColor,
+          backgroundColor: 'rgba(0, 168, 150, 0.08)',
+          borderWidth: 2.5,
+          borderDash: [5, 4],
+          fill: false,
+          tension: 0.35,
+          yAxisID: 'yMood',
           pointRadius: 4,
-          pointBackgroundColor: '#14b8a6',
-          yAxisID: 'y1'
+          pointHoverRadius: 6,
+          pointBackgroundColor: traj.moodColor
         }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
       plugins: {
         legend: {
           display: true,
           position: 'top',
-          labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } }
+          labels: {
+            boxWidth: 12,
+            font: { size: 11, family: 'Plus Jakarta Sans', weight: '700' }
+          }
         },
         tooltip: {
-          padding: 8,
-          bodyFont: { size: 11 }
+          callbacks: {
+            afterBody: function(items) {
+              const idx = items[0].dataIndex;
+              return `Heart Rate: ${traj.hr[idx]} bpm`;
+            }
+          }
         }
       },
       scales: {
-        y: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10, weight: '700' } }
+        },
+        yBP: {
           type: 'linear',
           display: true,
           position: 'left',
-          min: 100,
-          max: 180,
-          title: { display: true, text: 'BP (mmHg)', font: { size: 9 } },
-          grid: { color: 'rgba(226, 232, 240, 0.6)' }
+          title: {
+            display: true,
+            text: 'Systolic BP (mmHg)',
+            font: { size: 10, weight: 'bold' }
+          },
+          suggestedMin: 100,
+          suggestedMax: 170,
+          grid: { color: 'rgba(203, 213, 225, 0.4)' },
+          ticks: { font: { size: 10 } }
         },
-        y1: {
+        yMood: {
           type: 'linear',
           display: true,
           position: 'right',
-          min: 1,
-          max: 5,
-          title: { display: true, text: 'Mood (1-5)', font: { size: 9 } },
-          grid: { drawOnChartArea: false }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { font: { size: 10 } }
+          title: {
+            display: true,
+            text: 'Mood Rating (1-5)',
+            font: { size: 10, weight: 'bold' }
+          },
+          suggestedMin: 1,
+          suggestedMax: 5,
+          grid: { drawOnChartArea: false },
+          ticks: { stepSize: 1, font: { size: 10 } }
         }
       }
     }
   });
 }
 
+function initFamilyVitalsChart() {
+  const p = (state.patients || []).find(pt => pt.id === familySelectedSeniorId) || state.patients[0];
+  if (p) renderFamilyVitalsChart(p);
+}
 
-// =========================================================================
+
+
 // VIEW 4: OPERATIONS MANAGER LOGIC
 // Requirement: A view of alert volumes, response times and outcomes
 // across a city or team.
-// =========================================================================
+// ==================================================================
 function updateOpsTelemetryDisplay() {
   const m = state.opsMetrics;
   
@@ -2643,10 +3244,8 @@ function updateOpsTelemetryDisplay() {
   if (elHospEsc) elHospEsc.textContent = `${m.erEscalatedPercent}%`;
 }
 
-// ============================================================================
-// OPERATIONS DASHBOARD CITY & DAY CALENDAR TELEMETRY ENGINE
-// ============================================================================
-
+// =====================================================================// OPERATIONS DASHBOARD CITY & DAY CALENDAR TELEMETRY ENGINE
+// =====================================================================
 const OPS_CITY_METRICS = {
   delhi: {
     cityName: 'Delhi NCR',
@@ -2810,9 +3409,8 @@ function updateOpsDashboard() {
   showToast(`Dashboard updated: ${metrics.cityName} • ${dayLabel}`, 'info');
 }
 
-// ============================================================================
-// INTERACTIVE OPERATIONS CALENDAR & DAY ENGINE
-// ============================================================================
+// =====================================================================// INTERACTIVE OPERATIONS CALENDAR & DAY ENGINE
+// =====================================================================
 let currentCalYear = 2026;
 let currentCalMonth = 9; // 0-indexed: 9 = October
 let selectedCalDate = 30; // 30 Oct 2026
@@ -3016,10 +3614,8 @@ function renderOpsTeamTable() {
   renderOpsTeamTableForCity(metrics.coords);
 }
 
-// =============================================================================
-// OPERATIONS MANAGER COMMAND CENTER LOGIC (7-VIEW DASHBOARD & CONTROLS)
-// =============================================================================
-
+// ======================================================================// OPERATIONS MANAGER COMMAND CENTER LOGIC (7-VIEW DASHBOARD & CONTROLS)
+// ======================================================================
 let currentAssignTargetSenior = null;
 
 // 1. Switch between Sidebar Tabs (Dashboard, Risk, Alerts, Team, Area, Reports, Audit, Profile)
@@ -3030,7 +3626,10 @@ function switchOpsTab(tabId) {
     switchOpsProfileTab('settings');
     return;
   }
-
+// Trigger cases table rendering when entering alerts tab
+if (tabId === 'alerts') {
+  setTimeout(renderOpsCasesTable, 50);
+}
   // Hide all subviews
   const allSubviews = document.querySelectorAll('.ops-subview');
   allSubviews.forEach(view => view.classList.add('hidden'));
@@ -3058,6 +3657,9 @@ function switchOpsTab(tabId) {
   }
 
   // Trigger Leaflet interactive map rendering when entering area monitoring
+  if (tabId === 'dashboard') {
+    setTimeout(renderOpsDashboardEldersTable, 50);
+  }
   if (tabId === 'area') {
     setTimeout(initOpsRealMap, 100);
   }
@@ -3121,9 +3723,1275 @@ function toggleOpsNotificationPopup() {
 }
 
 // 4. Global Search Handler
-// ============================================================================
-// COMPLETE 32 ALERTS DATASET & MULTI-CRITERIA FILTERING ENGINE
-// ============================================================================
+// =====================================================================// COMPLETE 32 ALERTS DATASET & MULTI-CRITERIA FILTERING ENGINE
+// =====================================================================
+// =====================================================================// COMPREHENSIVE 32-ELDER CLINICAL REPORTS & AI RISK PREDICTION ENGINE
+// =====================================================================
+const OPS_ELDERS_REPORTS_DATA = [
+  // --- 8 CRITICAL / HIGH RISK ELDERS (P1 - IMMEDIATE INTERVENTION) ---
+  {
+    id: "ELD-101",
+    senior: "Ramesh Sharma",
+    age: 74,
+    gender: "Male",
+    area: "Greater Kailash",
+    phone: "+91 98110-44912",
+    vitals: { hr: 114, hrSpike: true, bp: "158/96", bpSpike: true, spo2: "94.0%", spo2Low: true, glucose: "138 mg/dL", temp: "98.4 °F", mobility: "Walks with Cane / Mild Instability", adherence: "68% (Missed 1 Check-in)" },
+    issue: "Tachycardia spike (114 bpm) & missed morning medication check-in",
+    predictedRisk: "High",
+    riskProbability: "94.6%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "96.4%",
+    modelDrivers: ["Resting HR 114 bpm (Arrhythmia risk)", "BP 158/96 mmHg Spike", "Borderline SpO2 94%"],
+    recommendedTask: "🚨 Emergency Nurse Dispatch",
+    recommendedCoord: "Sister Kavita, RN",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Today, 10:24 AM"
+  },
+  {
+    id: "ELD-102",
+    senior: "Savitri Devi",
+    age: 81,
+    gender: "Female",
+    area: "Hauz Khas",
+    phone: "+91 98110-33418",
+    vitals: { hr: 98, hrSpike: false, bp: "162/98", bpSpike: true, spo2: "93.5%", spo2Low: true, glucose: "142 mg/dL", temp: "98.6 °F", mobility: "Acute Hip Pain (8/10) • Fall Sensor Triggered", adherence: "85%" },
+    issue: "Fall sensor triggered in bathroom & acute hip mobility limitation",
+    predictedRisk: "High",
+    riskProbability: "97.2%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "98.1%",
+    modelDrivers: ["IoT Accelerometer Fall Event", "Acute Hip Pain 8/10", "Hypertensive Stage-2 BP 162/98"],
+    recommendedTask: "🚨 Emergency Nurse Dispatch",
+    recommendedCoord: "Brother Amit",
+    status: "In Progress",
+    assignedCoordinator: "Brother Amit",
+    assignedTask: "🚨 Emergency Nurse Dispatch",
+    lastReportDate: "Today, 09:15 AM"
+  },
+  {
+    id: "ELD-103",
+    senior: "Anand Verma",
+    age: 78,
+    gender: "Male",
+    area: "Saket",
+    phone: "+91 98110-77621",
+    vitals: { hr: 92, hrSpike: false, bp: "148/92", bpSpike: true, spo2: "95.5%", spo2Low: false, glucose: "228 mg/dL", temp: "98.8 °F", mobility: "Weak gait & fatigue", adherence: "42% (Missed 2 Insulin Doses)" },
+    issue: "Missed 2 consecutive insulin doses with acute glucose spike (228 mg/dL)",
+    predictedRisk: "High",
+    riskProbability: "93.8%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "95.2%",
+    modelDrivers: ["Severe Hyperglycemia (228 mg/dL)", "Insulin Non-Adherence (42%)", "Ketoacidosis Risk"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Rajesh Kumar",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Today, 08:40 AM"
+  },
+  {
+    id: "ELD-106",
+    senior: "Devi Lal Kapoor",
+    age: 83,
+    gender: "Male",
+    area: "Greater Kailash",
+    phone: "+91 98110-11223",
+    vitals: { hr: 88, hrSpike: false, bp: "154/92", bpSpike: true, spo2: "95.0%", spo2Low: false, glucose: "132 mg/dL", temp: "98.2 °F", mobility: "High Fall Risk • Requires Walker", adherence: "72%" },
+    issue: "Stage-2 BP elevation (154/92) with severe mobility decline and dizziness",
+    predictedRisk: "High",
+    riskProbability: "91.4%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "93.9%",
+    modelDrivers: ["Orthostatic Dizziness", "Stage-2 Hypertension", "Severe Gait Instability"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Dr. V.K. Kapoor",
+    status: "In Progress",
+    assignedCoordinator: "Dr. V.K. Kapoor",
+    assignedTask: "🏠 Home Nursing Visit & Triage",
+    lastReportDate: "Today, 07:30 AM"
+  },
+  {
+    id: "ELD-112",
+    senior: "Suman Lata",
+    age: 80,
+    gender: "Female",
+    area: "Hauz Khas",
+    phone: "+91 98110-33221",
+    vitals: { hr: 96, hrSpike: false, bp: "165/102", bpSpike: true, spo2: "92.8%", spo2Low: true, glucose: "160 mg/dL", temp: "98.6 °F", mobility: "Orthostatic dizziness on standing", adherence: "65%" },
+    issue: "Orthostatic hypotension drop with compensatory tachycardia & fall hazard",
+    predictedRisk: "High",
+    riskProbability: "95.5%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "97.0%",
+    modelDrivers: ["SpO2 92.8% (Hypoxia threat)", "BP 165/102 Severe", "Postural Instability"],
+    recommendedTask: "🚨 Emergency Nurse Dispatch",
+    recommendedCoord: "Brother Amit",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Today, 05:15 AM"
+  },
+  {
+    id: "ELD-115",
+    senior: "Om Prakash",
+    age: 76,
+    gender: "Male",
+    area: "Saket",
+    phone: "+91 98110-44112",
+    vitals: { hr: 112, hrSpike: true, bp: "152/94", bpSpike: true, spo2: "93.8%", spo2Low: true, glucose: "148 mg/dL", temp: "98.4 °F", mobility: "Chest discomfort upon moving", adherence: "80%" },
+    issue: "Acute substernal chest tightness with resting pulse 112 bpm",
+    predictedRisk: "High",
+    riskProbability: "96.8%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "98.5%",
+    modelDrivers: ["Cardiac Strain Indicator (112 bpm)", "Substernal Chest Pressure", "SpO2 93.8%"],
+    recommendedTask: "🚨 Emergency Nurse Dispatch",
+    recommendedCoord: "Dr. V.K. Kapoor",
+    status: "In Progress",
+    assignedCoordinator: "Dr. V.K. Kapoor",
+    assignedTask: "🚨 Emergency Nurse Dispatch",
+    lastReportDate: "Today, 04:10 AM"
+  },
+  {
+    id: "ELD-116",
+    senior: "Kamala Nehru",
+    age: 84,
+    gender: "Female",
+    area: "Vasant Kunj",
+    phone: "+91 98110-88339",
+    vitals: { hr: 90, hrSpike: false, bp: "146/90", bpSpike: true, spo2: "94.5%", spo2Low: true, glucose: "124 mg/dL", temp: "99.1 °F", mobility: "Severe Lumbar Joint Pain (8/10) • Bedbound", adherence: "70%" },
+    issue: "Acute lumbar spine flare-up, unable to rise from bed for 8 hours",
+    predictedRisk: "High",
+    riskProbability: "92.0%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "94.2%",
+    modelDrivers: ["Prolonged Bedbound Immobility", "Severe Pain Level 8/10", "Low Grade Pyrexia 99.1°F"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Sister Sunita",
+    status: "In Progress",
+    assignedCoordinator: "Sister Sunita",
+    assignedTask: "🏠 Home Nursing Visit & Triage",
+    lastReportDate: "Today, 03:45 AM"
+  },
+  {
+    id: "ELD-117",
+    senior: "Jagdish Prasad",
+    age: 79,
+    gender: "Male",
+    area: "Greater Kailash",
+    phone: "+91 98110-99441",
+    vitals: { hr: 104, hrSpike: false, bp: "170/105", bpSpike: true, spo2: "94.0%", spo2Low: true, glucose: "155 mg/dL", temp: "98.4 °F", mobility: "Severe headache and unsteady walking", adherence: "50%" },
+    issue: "Hypertensive crisis (170/105 mmHg) with visual aura and headache",
+    predictedRisk: "High",
+    riskProbability: "98.0%",
+    predictedPriority: "P1 - Critical",
+    priorityCode: "P1",
+    modelConfidence: "99.1%",
+    modelDrivers: ["Hypertensive Crisis BP 170/105", "Neurological Visual Aura", "High Stroke Hazard"],
+    recommendedTask: "🚨 Emergency Nurse Dispatch",
+    recommendedCoord: "Sister Kavita, RN",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Today, 02:20 AM"
+  },
+
+  // --- 14 MODERATE RISK ELDERS (P2 - HIGH PRIORITY / 2H SLA) ---
+  {
+    id: "ELD-104",
+    senior: "Meena Iyer",
+    age: 71,
+    gender: "Female",
+    area: "Connaught Place",
+    phone: "+91 98110-55829",
+    vitals: { hr: 84, hrSpike: false, bp: "138/88", bpSpike: false, spo2: "96.5%", spo2Low: false, glucose: "115 mg/dL", temp: "98.4 °F", mobility: "Slow walking, fatigue", adherence: "82%" },
+    issue: "Sleep deficit (3.5 hrs) & bereavement emotional fatigue check-in",
+    predictedRisk: "Moderate",
+    riskProbability: "74.5%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "84.2%",
+    modelDrivers: ["Severe Sleep Fragmentation", "Elevated Baseline Stress", "Mild BP Variation"],
+    recommendedTask: "📞 Tele-Consultation Call",
+    recommendedCoord: "Sister Sunita",
+    status: "In Progress",
+    assignedCoordinator: "Sister Sunita",
+    assignedTask: "📞 Tele-Consultation Call",
+    lastReportDate: "Today, 08:15 AM"
+  },
+  {
+    id: "ELD-107",
+    senior: "Suman Singh",
+    age: 73,
+    gender: "Female",
+    area: "Hauz Khas",
+    phone: "+91 98110-66228",
+    vitals: { hr: 80, hrSpike: false, bp: "135/85", bpSpike: false, spo2: "97.0%", spo2Low: false, glucose: "122 mg/dL", temp: "98.2 °F", mobility: "Knee pain (5/10), reduced daily steps", adherence: "90%" },
+    issue: "Knee pain exacerbation (Level 5/10) with 60% reduction in daily steps",
+    predictedRisk: "Moderate",
+    riskProbability: "71.2%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "81.5%",
+    modelDrivers: ["Activity Decline > 50%", "Osteoarthritis Pain Flare", "Mild Morning Stiffness"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Brother Amit",
+    status: "In Progress",
+    assignedCoordinator: "Brother Amit",
+    assignedTask: "🏠 Home Nursing Visit & Triage",
+    lastReportDate: "Today, 06:45 AM"
+  },
+  {
+    id: "ELD-108",
+    senior: "Bala Rao",
+    age: 77,
+    gender: "Male",
+    area: "Saket",
+    phone: "+91 98110-88912",
+    vitals: { hr: 94, hrSpike: false, bp: "142/88", bpSpike: false, spo2: "95.8%", spo2Low: false, glucose: "130 mg/dL", temp: "98.6 °F", mobility: "Mild instability", adherence: "78%" },
+    issue: "Irregular pulse rhythm noted on wearable ECG with mild insomnia",
+    predictedRisk: "Moderate",
+    riskProbability: "76.0%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "83.9%",
+    modelDrivers: ["Wearable ECG Irregularity", "Mild Pre-Hypertension", "Insomnia Deficit"],
+    recommendedTask: "💊 Medication Adherence Audit",
+    recommendedCoord: "Rajesh Kumar",
+    status: "In Progress",
+    assignedCoordinator: "Rajesh Kumar",
+    assignedTask: "💊 Medication Adherence Audit",
+    lastReportDate: "Today, 06:00 AM"
+  },
+  {
+    id: "ELD-113",
+    senior: "Sheila Dixit",
+    age: 75,
+    gender: "Female",
+    area: "Greater Kailash",
+    phone: "+91 98110-44771",
+    vitals: { hr: 82, hrSpike: false, bp: "136/84", bpSpike: false, spo2: "96.2%", spo2Low: false, glucose: "118 mg/dL", temp: "98.2 °F", mobility: "Mild gait imbalance when getting up", adherence: "88%" },
+    issue: "Mild gait stumble detected by motion sensors in hallway; no floor impact",
+    predictedRisk: "Moderate",
+    riskProbability: "68.5%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "80.4%",
+    modelDrivers: ["Hallway Motion Stumble", "Sensory Neuropathy Check", "Fall Risk Escalation"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Sister Kavita, RN",
+    status: "In Progress",
+    assignedCoordinator: "Sister Kavita, RN",
+    assignedTask: "🏠 Home Nursing Visit & Triage",
+    lastReportDate: "Yesterday, 11:30 PM"
+  },
+  {
+    id: "ELD-114",
+    senior: "Pushpa Rani",
+    age: 79,
+    gender: "Female",
+    area: "Vasant Kunj",
+    phone: "+91 98110-77334",
+    vitals: { hr: 86, hrSpike: false, bp: "140/88", bpSpike: false, spo2: "95.5%", spo2Low: false, glucose: "145 mg/dL", temp: "98.4 °F", mobility: "Slow transfers from bed", adherence: "84%" },
+    issue: "Slow sit-to-stand transitions taking > 45 seconds; mobility audit recommended",
+    predictedRisk: "Moderate",
+    riskProbability: "69.8%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "79.2%",
+    modelDrivers: ["Impaired Sit-to-Stand Speed", "Frailty Index Elevation", "Mild Sarcopenia"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Sister Sunita",
+    status: "In Progress",
+    assignedCoordinator: "Sister Sunita",
+    assignedTask: "🏠 Home Nursing Visit & Triage",
+    lastReportDate: "Yesterday, 10:15 PM"
+  },
+  {
+    id: "ELD-118",
+    senior: "Satish Chandra",
+    age: 72,
+    gender: "Male",
+    area: "Connaught Place",
+    phone: "+91 98110-22119",
+    vitals: { hr: 76, hrSpike: false, bp: "132/84", bpSpike: false, spo2: "96.8%", spo2Low: false, glucose: "128 mg/dL", temp: "98.2 °F", mobility: "Normal indoors", adherence: "74%" },
+    issue: "Missed evening anti-hypertensive pill; flagged by smart dispenser",
+    predictedRisk: "Moderate",
+    riskProbability: "62.4%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "78.0%",
+    modelDrivers: ["Smart Dispenser Non-Dispense", "Blood Pressure Medication Gap"],
+    recommendedTask: "💊 Medication Adherence Audit",
+    recommendedCoord: "Rajesh Kumar",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Yesterday, 09:30 PM"
+  },
+  {
+    id: "ELD-119",
+    senior: "Lalita Devi",
+    age: 76,
+    gender: "Female",
+    area: "Hauz Khas",
+    phone: "+91 98110-33882",
+    vitals: { hr: 82, hrSpike: false, bp: "138/86", bpSpike: false, spo2: "96.0%", spo2Low: false, glucose: "119 mg/dL", temp: "98.4 °F", mobility: "Slight hesitation stairs", adherence: "86%" },
+    issue: "Zero outdoor activity recorded for 72 consecutive hours",
+    predictedRisk: "Moderate",
+    riskProbability: "64.1%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "77.5%",
+    modelDrivers: ["Prolonged In-Home Isolation", "Sedentary Behavior Warning", "Mood Monitoring"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Brother Amit",
+    status: "In Progress",
+    assignedCoordinator: "Brother Amit",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 08:20 PM"
+  },
+  {
+    id: "ELD-120",
+    senior: "Brij Mohan",
+    age: 82,
+    gender: "Male",
+    area: "Saket",
+    phone: "+91 98110-55112",
+    vitals: { hr: 88, hrSpike: false, bp: "144/88", bpSpike: false, spo2: "95.2%", spo2Low: false, glucose: "152 mg/dL", temp: "98.6 °F", mobility: "Walks with stick", adherence: "80%" },
+    issue: "Mild swelling (peripheral edema) reported in ankles during morning check",
+    predictedRisk: "Moderate",
+    riskProbability: "73.0%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "82.6%",
+    modelDrivers: ["Bilateral Ankle Edema", "Fluid Retention Risk", "Hypertension Hx"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Dr. V.K. Kapoor",
+    status: "In Progress",
+    assignedCoordinator: "Dr. V.K. Kapoor",
+    assignedTask: "🏠 Home Nursing Visit & Triage",
+    lastReportDate: "Yesterday, 07:15 PM"
+  },
+  {
+    id: "ELD-121",
+    senior: "Urmila Gupta",
+    age: 70,
+    gender: "Female",
+    area: "Greater Kailash",
+    phone: "+91 98110-66778",
+    vitals: { hr: 78, hrSpike: false, bp: "130/82", bpSpike: false, spo2: "97.2%", spo2Low: false, glucose: "112 mg/dL", temp: "98.2 °F", mobility: "Normal", adherence: "85%" },
+    issue: "Persistent night awakenings (4-5 times/night) recorded over 4 nights",
+    predictedRisk: "Moderate",
+    riskProbability: "61.5%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "76.4%",
+    modelDrivers: ["Nocturnal Restlessness", "Frequent Urination Suspicion", "Sleep Efficiency < 60%"],
+    recommendedTask: "📞 Tele-Consultation Call",
+    recommendedCoord: "Sister Kavita, RN",
+    status: "In Progress",
+    assignedCoordinator: "Sister Kavita, RN",
+    assignedTask: "📞 Tele-Consultation Call",
+    lastReportDate: "Yesterday, 06:10 PM"
+  },
+  {
+    id: "ELD-122",
+    senior: "Kailash Nath",
+    age: 85,
+    gender: "Male",
+    area: "Vasant Kunj",
+    phone: "+91 98110-88442",
+    vitals: { hr: 84, hrSpike: false, bp: "142/86", bpSpike: false, spo2: "95.0%", spo2Low: false, glucose: "135 mg/dL", temp: "98.4 °F", mobility: "Slow shuffling gait", adherence: "76%" },
+    issue: "Shuffling gait detected; sensor suggests early Parkinsonian tendency",
+    predictedRisk: "Moderate",
+    riskProbability: "75.2%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "83.1%",
+    modelDrivers: ["Gait Velocity Drop (< 0.6 m/s)", "Cadence Asymmetry", "Fall Risk Tier 2"],
+    recommendedTask: "🏠 Home Nursing Visit & Triage",
+    recommendedCoord: "Sister Sunita",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Yesterday, 05:00 PM"
+  },
+  {
+    id: "ELD-123",
+    senior: "Shakuntala",
+    age: 77,
+    gender: "Female",
+    area: "Connaught Place",
+    phone: "+91 98110-99221",
+    vitals: { hr: 80, hrSpike: false, bp: "134/84", bpSpike: false, spo2: "96.5%", spo2Low: false, glucose: "125 mg/dL", temp: "98.2 °F", mobility: "Normal", adherence: "79%" },
+    issue: "Missed scheduled morning blood pressure self-measurement",
+    predictedRisk: "Moderate",
+    riskProbability: "58.0%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "74.8%",
+    modelDrivers: ["Monitoring Protocol Non-Compliance", "Hypertension Follow-up Due"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Rajesh Kumar",
+    status: "In Progress",
+    assignedCoordinator: "Rajesh Kumar",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 03:45 PM"
+  },
+  {
+    id: "ELD-124",
+    senior: "Narayan Swamy",
+    age: 80,
+    gender: "Male",
+    area: "Hauz Khas",
+    phone: "+91 98110-11773",
+    vitals: { hr: 82, hrSpike: false, bp: "136/85", bpSpike: false, spo2: "96.0%", spo2Low: false, glucose: "130 mg/dL", temp: "98.4 °F", mobility: "Canes support", adherence: "88%" },
+    issue: "Slight cognitive disorientation reported during voice bot check-in",
+    predictedRisk: "Moderate",
+    riskProbability: "72.4%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "81.0%",
+    modelDrivers: ["Speech Latency Spike (Voice AI)", "Mild Confusion Indicator", "Caregiver Alert Needed"],
+    recommendedTask: "📞 Tele-Consultation Call",
+    recommendedCoord: "Brother Amit",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Yesterday, 02:30 PM"
+  },
+  {
+    id: "ELD-125",
+    senior: "Vimla Bhatia",
+    age: 74,
+    gender: "Female",
+    area: "Saket",
+    phone: "+91 98110-44883",
+    vitals: { hr: 85, hrSpike: false, bp: "140/88", bpSpike: false, spo2: "95.8%", spo2Low: false, glucose: "140 mg/dL", temp: "98.6 °F", mobility: "Good", adherence: "81%" },
+    issue: "Mild dizziness after taking afternoon beta-blocker",
+    predictedRisk: "Moderate",
+    riskProbability: "67.9%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "77.9%",
+    modelDrivers: ["Adverse Drug Reaction Suspicion", "Transient Post-Dose Dizziness"],
+    recommendedTask: "💊 Medication Adherence Audit",
+    recommendedCoord: "Dr. V.K. Kapoor",
+    status: "In Progress",
+    assignedCoordinator: "Dr. V.K. Kapoor",
+    assignedTask: "💊 Medication Adherence Audit",
+    lastReportDate: "Yesterday, 01:15 PM"
+  },
+  {
+    id: "ELD-126",
+    senior: "Prem Nath",
+    age: 82,
+    gender: "Male",
+    area: "Greater Kailash",
+    phone: "+91 98110-55994",
+    vitals: { hr: 86, hrSpike: false, bp: "142/86", bpSpike: false, spo2: "95.4%", spo2Low: false, glucose: "146 mg/dL", temp: "98.5 °F", mobility: "Moderate stiffness", adherence: "83%" },
+    issue: "Hydration intake below 1.0 Liter over 24 hours in hot weather",
+    predictedRisk: "Moderate",
+    riskProbability: "65.3%",
+    predictedPriority: "P2 - High Priority",
+    priorityCode: "P2",
+    modelConfidence: "78.4%",
+    modelDrivers: ["Sub-Optimal Fluid Intake", "Electrolyte Imbalance Risk"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Sister Kavita, RN",
+    status: "Pending Assignment",
+    assignedCoordinator: "Unassigned",
+    assignedTask: "None",
+    lastReportDate: "Yesterday, 12:00 PM"
+  },
+
+  // --- 10 LOW RISK / STABLE ELDERS (P3 - ROUTINE CARE) ---
+  {
+    id: "ELD-105",
+    senior: "Harish Patel",
+    age: 69,
+    gender: "Male",
+    area: "Dwarka",
+    phone: "+91 98110-22341",
+    vitals: { hr: 72, hrSpike: false, bp: "122/78", bpSpike: false, spo2: "98.5%", spo2Low: false, glucose: "108 mg/dL", temp: "98.4 °F", mobility: "Fully Independent • 4,500 Steps/Day", adherence: "98%" },
+    issue: "All vitals stable; completed routine wellness walking check-in",
+    predictedRisk: "Low",
+    riskProbability: "8.2%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "98.2%",
+    modelDrivers: ["Optimal Resting HR 72 bpm", "Normotensive BP 122/78", "Excellent Adherence (98%)"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Rajesh Kumar",
+    status: "Completed",
+    assignedCoordinator: "Rajesh Kumar",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Today, 07:45 AM"
+  },
+  {
+    id: "ELD-109",
+    senior: "Krishna Murthy",
+    age: 78,
+    gender: "Male",
+    area: "Defence Colony",
+    phone: "+91 98110-33771",
+    vitals: { hr: 74, hrSpike: false, bp: "126/80", bpSpike: false, spo2: "97.8%", spo2Low: false, glucose: "114 mg/dL", temp: "98.2 °F", mobility: "Independent with cane", adherence: "96%" },
+    issue: "Routine fall prevention grab-bar assessment completed; all clear",
+    predictedRisk: "Low",
+    riskProbability: "11.4%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "96.5%",
+    modelDrivers: ["Bathroom Safety Verified", "Stable Balance Metrics"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Sister Sunita",
+    status: "Completed",
+    assignedCoordinator: "Sister Sunita",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 04:30 PM"
+  },
+  {
+    id: "ELD-110",
+    senior: "Tara Devi",
+    age: 72,
+    gender: "Female",
+    area: "Dwarka",
+    phone: "+91 98110-44229",
+    vitals: { hr: 70, hrSpike: false, bp: "120/78", bpSpike: false, spo2: "98.2%", spo2Low: false, glucose: "105 mg/dL", temp: "98.4 °F", mobility: "Independent", adherence: "95%" },
+    issue: "Fall safety checklist submitted by family; rug removed from hallway",
+    predictedRisk: "Low",
+    riskProbability: "9.5%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "97.4%",
+    modelDrivers: ["Environmental Hazard Cleared", "Stable Gait"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Rajesh Kumar",
+    status: "Completed",
+    assignedCoordinator: "Rajesh Kumar",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 03:00 PM"
+  },
+  {
+    id: "ELD-111",
+    senior: "Sita Ram",
+    age: 80,
+    gender: "Male",
+    area: "Defence Colony",
+    phone: "+91 98110-55663",
+    vitals: { hr: 76, hrSpike: false, bp: "128/82", bpSpike: false, spo2: "97.5%", spo2Low: false, glucose: "118 mg/dL", temp: "98.2 °F", mobility: "Walks independently", adherence: "94%" },
+    issue: "Fall risk baseline test passed with 10/10 score on mobility survey",
+    predictedRisk: "Low",
+    riskProbability: "10.1%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "96.8%",
+    modelDrivers: ["ADL Independence 10/10", "Stable Neuromuscular Response"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Brother Amit",
+    status: "Completed",
+    assignedCoordinator: "Brother Amit",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 01:45 PM"
+  },
+  {
+    id: "ELD-127",
+    senior: "Gayatri Devi",
+    age: 71,
+    gender: "Female",
+    area: "Dwarka",
+    phone: "+91 98110-66441",
+    vitals: { hr: 73, hrSpike: false, bp: "124/80", bpSpike: false, spo2: "98.0%", spo2Low: false, glucose: "110 mg/dL", temp: "98.4 °F", mobility: "Independent", adherence: "97%" },
+    issue: "Morning wellness call: elder reported excellent mood and cooked breakfast",
+    predictedRisk: "Low",
+    riskProbability: "7.8%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "98.9%",
+    modelDrivers: ["Positive Psychological Tone", "Normal Vitals Range"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Sister Sunita",
+    status: "Completed",
+    assignedCoordinator: "Sister Sunita",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 11:15 AM"
+  },
+  {
+    id: "ELD-128",
+    senior: "Ved Prakash",
+    age: 75,
+    gender: "Male",
+    area: "Defence Colony",
+    phone: "+91 98110-77119",
+    vitals: { hr: 75, hrSpike: false, bp: "126/82", bpSpike: false, spo2: "97.6%", spo2Low: false, glucose: "116 mg/dL", temp: "98.3 °F", mobility: "Independent", adherence: "95%" },
+    issue: "Weekly vitals telemetry upload completed automatically via Bluetooth hub",
+    predictedRisk: "Low",
+    riskProbability: "8.9%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "98.1%",
+    modelDrivers: ["Seamless IoT Data Stream", "Zero Aberrations 7-Days"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Rajesh Kumar",
+    status: "Completed",
+    assignedCoordinator: "Rajesh Kumar",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 10:00 AM"
+  },
+  {
+    id: "ELD-129",
+    senior: "Bhagwan Das",
+    age: 81,
+    gender: "Male",
+    area: "Dwarka",
+    phone: "+91 98110-88225",
+    vitals: { hr: 71, hrSpike: false, bp: "125/79", bpSpike: false, spo2: "98.4%", spo2Low: false, glucose: "112 mg/dL", temp: "98.2 °F", mobility: "Walks in society park", adherence: "99%" },
+    issue: "Prescription refill confirmation received from Apollo Pharmacy",
+    predictedRisk: "Low",
+    riskProbability: "6.5%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "99.2%",
+    modelDrivers: ["Full Medication Supply On Hand", "High Adherence"],
+    recommendedTask: "💊 Medication Adherence Audit",
+    recommendedCoord: "Sister Kavita, RN",
+    status: "Completed",
+    assignedCoordinator: "Sister Kavita, RN",
+    assignedTask: "💊 Medication Adherence Audit",
+    lastReportDate: "Yesterday, 09:30 AM"
+  },
+  {
+    id: "ELD-130",
+    senior: "Maya Wati",
+    age: 73,
+    gender: "Female",
+    area: "Defence Colony",
+    phone: "+91 98110-99118",
+    vitals: { hr: 74, hrSpike: false, bp: "122/78", bpSpike: false, spo2: "98.0%", spo2Low: false, glucose: "109 mg/dL", temp: "98.4 °F", mobility: "Independent", adherence: "96%" },
+    issue: "Sleep tracking shows 7.5 hours uninterrupted restorative rest",
+    predictedRisk: "Low",
+    riskProbability: "7.1%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "98.6%",
+    modelDrivers: ["Optimal Deep Sleep Ratio", "Low Daytime Fatigue"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Brother Amit",
+    status: "Completed",
+    assignedCoordinator: "Brother Amit",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 08:45 AM"
+  },
+  {
+    id: "ELD-131",
+    senior: "Ram Avatar",
+    age: 76,
+    gender: "Male",
+    area: "Dwarka",
+    phone: "+91 98110-33556",
+    vitals: { hr: 72, hrSpike: false, bp: "124/80", bpSpike: false, spo2: "98.1%", spo2Low: false, glucose: "115 mg/dL", temp: "98.2 °F", mobility: "Independent", adherence: "94%" },
+    issue: "Completed daily breathing & yoga stretch routine on schedule",
+    predictedRisk: "Low",
+    riskProbability: "9.0%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "97.8%",
+    modelDrivers: ["Active Lifestyle Adherence", "Stable SpO2"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Dr. V.K. Kapoor",
+    status: "Completed",
+    assignedCoordinator: "Dr. V.K. Kapoor",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 08:00 AM"
+  },
+  {
+    id: "ELD-132",
+    senior: "Sarojini",
+    age: 79,
+    gender: "Female",
+    area: "Defence Colony",
+    phone: "+91 98110-44667",
+    vitals: { hr: 75, hrSpike: false, bp: "126/82", bpSpike: false, spo2: "97.9%", spo2Low: false, glucose: "118 mg/dL", temp: "98.4 °F", mobility: "Independent with cane", adherence: "97%" },
+    issue: "Monthly geriatric consultation confirmed stable chronic condition management",
+    predictedRisk: "Low",
+    riskProbability: "10.5%",
+    predictedPriority: "P3 - Routine Care",
+    priorityCode: "P3",
+    modelConfidence: "96.9%",
+    modelDrivers: ["Stable 30-Day Biomarkers", "Good Family Support"],
+    recommendedTask: "🤝 Daily Routine Voice Check",
+    recommendedCoord: "Sister Sunita",
+    status: "Completed",
+    assignedCoordinator: "Sister Sunita",
+    assignedTask: "🤝 Daily Routine Voice Check",
+    lastReportDate: "Yesterday, 07:30 AM"
+  }
+];
+
+let opsDashEldersFilterState = {
+  tab: 'all',
+  risk: 'all',
+  priority: 'all',
+  area: 'all',
+  search: '',
+  currentPage: 1,
+  pageSize: 8
+};
+
+function getFilteredOpsDashboardElders() {
+  const { tab, risk, priority, area, search } = opsDashEldersFilterState;
+  return OPS_ELDERS_REPORTS_DATA.filter(item => {
+    // 1. Tab filter
+    if (tab === 'high' && item.predictedRisk !== 'High') return false;
+    if (tab === 'moderate' && item.predictedRisk !== 'Moderate') return false;
+    if (tab === 'low' && item.predictedRisk !== 'Low') return false;
+    if (tab === 'pending' && !item.status.includes('Pending')) return false;
+
+    // 2. Risk filter
+    if (risk !== 'all' && item.predictedRisk !== risk) return false;
+
+    // 3. Priority filter
+    if (priority !== 'all' && item.priorityCode !== priority) return false;
+
+    // 4. Area filter
+    if (area !== 'all' && item.area !== area) return false;
+
+    // 5. Search filter
+    if (search) {
+      const q = search.toLowerCase();
+      const match = (
+        item.senior.toLowerCase().includes(q) ||
+        item.area.toLowerCase().includes(q) ||
+        item.issue.toLowerCase().includes(q) ||
+        item.vitals.bp.includes(q) ||
+        String(item.vitals.hr).includes(q) ||
+        item.assignedCoordinator.toLowerCase().includes(q)
+      );
+      if (!match) return false;
+    }
+
+    return true;
+  });
+}
+
+function renderOpsDashboardEldersTable() {
+  const tbody = document.getElementById('ops-dashboard-elders-tbody');
+  if (!tbody) return;
+
+  const filtered = getFilteredOpsDashboardElders();
+  const { currentPage, pageSize } = opsDashEldersFilterState;
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / pageSize) || 1;
+  const validPage = Math.min(Math.max(1, currentPage), totalPages);
+  opsDashEldersFilterState.currentPage = validPage;
+
+  const startIdx = (validPage - 1) * pageSize;
+  const pageItems = filtered.slice(startIdx, startIdx + pageSize);
+
+  if (pageItems.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-10 text-center text-slate-500 bg-slate-50/50">
+          <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center mx-auto mb-3 text-lg shadow-sm">
+            <i class="fa-solid fa-filter-circle-xmark text-teal-600"></i>
+          </div>
+          <div class="font-extrabold text-slate-800 text-sm">No elder records match current filters</div>
+          <div class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Try resetting filters to view all 32 registered elders and clinical telemetry.</div>
+          <button type="button" onclick="resetOpsDashboardEldersFilters()" class="mt-4 px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer">
+            Reset Filters (Show All 32)
+          </button>
+        </td>
+      </tr>
+    `;
+  } else {
+    tbody.innerHTML = pageItems.map(item => {
+      // Risk badge
+      const riskBadge = item.predictedRisk === 'High'
+        ? `<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200 shadow-2xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span><span>High (${item.riskProbability})</span></span>`
+        : item.predictedRisk === 'Moderate'
+        ? `<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 border border-amber-200 shadow-2xs"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>Moderate (${item.riskProbability})</span></span>`
+        : `<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-2xs"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>Low (${item.riskProbability})</span></span>`;
+
+      // Priority badge
+      const priorityBadge = item.priorityCode === 'P1'
+        ? `<div class="inline-flex flex-col"><span class="px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-2xs">P1 • CRITICAL</span><span class="text-[9px] text-rose-600 font-bold mt-0.5">⚡ 15m Response SLA</span></div>`
+        : item.priorityCode === 'P2'
+        ? `<div class="inline-flex flex-col"><span class="px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300">P2 • HIGH</span><span class="text-[9px] text-amber-600 font-bold mt-0.5">🕒 2h Response SLA</span></div>`
+        : `<div class="inline-flex flex-col"><span class="px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold bg-slate-100 text-slate-700 border border-slate-200">P3 • ROUTINE</span><span class="text-[9px] text-slate-400 font-semibold mt-0.5">📅 Daily Wellbeing</span></div>`;
+
+      // Status badge
+      const statusBadge = item.status.includes('Dispatched')
+        ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700 border border-blue-200 animate-pulse flex items-center space-x-1"><i class="fa-solid fa-truck-medical text-[9px]"></i><span>${item.status}</span></span>`
+        : item.status.includes('In Progress') || item.status.includes('Assigned')
+        ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-sky-50 text-sky-700 border border-sky-200 flex items-center space-x-1"><i class="fa-solid fa-user-check text-[9px]"></i><span>In Progress</span></span>`
+        : item.status.includes('Completed') || item.status.includes('Resolved')
+        ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center space-x-1"><i class="fa-solid fa-check text-[9px]"></i><span>Resolved</span></span>`
+        : `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200 flex items-center space-x-1"><i class="fa-solid fa-clock text-[9px]"></i><span>Needs Assignment</span></span>`;
+
+      // Drivers snippet
+      const driversHtml = (item.modelDrivers || []).map(d => `<span class="inline-block bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[9px] mr-1 mt-0.5">${d}</span>`).join('');
+
+      return `
+        <tr class="hover:bg-teal-50/20 transition-colors ops-dash-elder-row" data-id="${item.id}" data-senior="${item.senior}" data-risk="${item.predictedRisk}" data-priority="${item.priorityCode}">
+          <td class="p-3.5 pl-4 align-top">
+            <input type="checkbox" class="ops-dash-elder-checkbox rounded text-teal-600 cursor-pointer mt-1" data-id="${item.id}" onchange="handleOpsDashElderCheckboxChange()">
+          </td>
+          
+          <!-- Elder & Biometrics -->
+          <td class="p-3.5 align-top">
+            <div class="flex items-start space-x-2.5">
+              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs flex-shrink-0 border border-slate-200">
+                ${item.senior.split(' ').map(w => w[0]).join('').substring(0, 2)}
+              </div>
+              <div>
+                <div class="font-extrabold text-slate-900 text-xs flex items-center space-x-1.5">
+                  <span>${item.senior}</span>
+                  <span class="text-[11px] font-normal text-slate-400">(${item.age}y • ${item.gender})</span>
+                </div>
+                <div class="text-[11px] text-slate-500 font-medium">${item.area} • <span class="text-slate-400 font-mono text-[10px]">${item.phone}</span></div>
+                
+                <!-- Telemetry Vitals Chips -->
+                <div class="flex flex-wrap items-center gap-1 mt-1 text-[10px] font-mono">
+                  <span class="px-1.5 py-0.5 rounded ${item.vitals.hrSpike ? 'bg-rose-100 text-rose-800 font-bold ring-1 ring-rose-300' : 'bg-slate-100 text-slate-600'}">
+                    <i class="fa-solid fa-heart-pulse mr-0.5 text-[9px]"></i>${item.vitals.hr} bpm
+                  </span>
+                  <span class="px-1.5 py-0.5 rounded ${item.vitals.bpSpike ? 'bg-rose-100 text-rose-800 font-bold ring-1 ring-rose-300' : 'bg-slate-100 text-slate-600'}">
+                    <i class="fa-solid fa-gauge-high mr-0.5 text-[9px]"></i>${item.vitals.bp}
+                  </span>
+                  <span class="px-1.5 py-0.5 rounded ${item.vitals.spo2Low ? 'bg-amber-100 text-amber-800 font-bold ring-1 ring-amber-300' : 'bg-emerald-50 text-emerald-700'}">
+                    <i class="fa-solid fa-lungs mr-0.5 text-[9px]"></i>${item.vitals.spo2}
+                  </span>
+                  <span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
+                    <i class="fa-solid fa-droplet mr-0.5 text-[9px]"></i>${item.vitals.glucose}
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-600 font-medium mt-1">${item.issue}</div>
+              </div>
+            </div>
+          </td>
+
+          <!-- AI Predicted Risk -->
+          <td class="p-3.5 align-top">
+            ${riskBadge}
+            <div class="mt-1">${driversHtml}</div>
+            <div class="text-[9px] text-slate-400 mt-1 font-mono">Confidence: ${item.modelConfidence}</div>
+          </td>
+
+          <!-- AI Priority Tier -->
+          <td class="p-3.5 align-top">
+            ${priorityBadge}
+            <div class="text-[10px] text-slate-500 font-medium mt-1">Rec: ${item.recommendedTask.replace(/🚨|🏠|💊|📞|🤝/g, '')}</div>
+          </td>
+
+          <!-- Current Status -->
+          <td class="p-3.5 align-top">
+            ${statusBadge}
+            ${item.assignedCoordinator !== 'Unassigned' ? `<div class="text-[10px] text-slate-500 font-bold mt-1">👤 ${item.assignedCoordinator}</div>` : ''}
+          </td>
+
+          <!-- ASSIGN TASK ON THIS POSITION (Inline Quick Assignment Engine!) -->
+          <td class="p-3.5 align-top">
+            <div class="bg-slate-50/90 p-2.5 rounded-2xl border border-slate-200 shadow-2xs space-y-1.5">
+              <div class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-user-nurse text-teal-600 text-xs"></i>
+                <select id="ops-dash-coord-${item.id}" class="w-full bg-white border border-slate-200 rounded-lg text-[11px] font-semibold px-2 py-1 focus:outline-none cursor-pointer">
+                  <option value="Sister Kavita, RN" ${item.recommendedCoord.includes('Kavita') ? 'selected' : ''}>Sister Kavita, RN (Critical)</option>
+                  <option value="Brother Amit" ${item.recommendedCoord.includes('Amit') ? 'selected' : ''}>Brother Amit (Mobility & Falls)</option>
+                  <option value="Sister Sunita" ${item.recommendedCoord.includes('Sunita') ? 'selected' : ''}>Sister Sunita (Geriatric)</option>
+                  <option value="Rajesh Kumar" ${item.recommendedCoord.includes('Rajesh') ? 'selected' : ''}>Rajesh Kumar (Care Officer)</option>
+                  <option value="Dr. V.K. Kapoor" ${item.recommendedCoord.includes('Kapoor') ? 'selected' : ''}>Dr. V.K. Kapoor (Physician)</option>
+                </select>
+              </div>
+
+              <div class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-list-check text-indigo-600 text-xs"></i>
+                <select id="ops-dash-task-${item.id}" class="w-full bg-white border border-slate-200 rounded-lg text-[11px] font-semibold px-2 py-1 focus:outline-none cursor-pointer">
+                  <option value="🚨 Emergency Nurse Dispatch" ${item.recommendedTask.includes('Emergency') ? 'selected' : ''}>🚨 Emergency Dispatch (ETA 12m)</option>
+                  <option value="🏠 Home Nursing Visit & Triage" ${item.recommendedTask.includes('Home') ? 'selected' : ''}>🏠 Home Visit & Triage</option>
+                  <option value="💊 Medication Adherence Audit" ${item.recommendedTask.includes('Medication') ? 'selected' : ''}>💊 Med Adherence Audit</option>
+                  <option value="📞 Tele-Consultation Call" ${item.recommendedTask.includes('Tele') ? 'selected' : ''}>📞 Tele-Consultation Call</option>
+                  <option value="🤝 Daily Routine Voice Check" ${item.recommendedTask.includes('Voice') ? 'selected' : ''}>🤝 Daily Voice Check-in</option>
+                </select>
+              </div>
+
+              <button type="button" onclick="executeInlineTaskAssign('${item.id}')"
+                class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-extrabold text-[11px] shadow-sm transition-all active:scale-95 flex items-center justify-center space-x-1.5 cursor-pointer">
+                <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                <span>Assign Task on This Elder</span>
+              </button>
+            </div>
+          </td>
+
+          <!-- Diagnostic Report Button -->
+          <td class="p-3.5 align-top text-center">
+            <button type="button" onclick="openOpsElderClinicalReport('${item.id}')"
+              class="px-3 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/90 font-bold text-xs transition-all shadow-2xs hover:shadow active:scale-95 flex items-center justify-center space-x-1.5 mx-auto cursor-pointer">
+              <i class="fa-solid fa-file-waveform text-teal-600"></i>
+              <span>Report Sheet</span>
+            </button>
+            <div class="text-[9px] text-slate-400 mt-1 font-mono">${item.lastReportDate}</div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Update Pagination Info & Buttons
+  const infoEl = document.getElementById('ops-dash-elders-pagination-info');
+  if (infoEl) {
+    infoEl.textContent = `Showing ${Math.min(startIdx + 1, total)}–${Math.min(startIdx + pageSize, total)} of ${total} elders (Page ${validPage} of ${totalPages})`;
+  }
+
+  const controlsEl = document.getElementById('ops-dash-elders-pagination-controls');
+  if (controlsEl) {
+    let btnsHtml = '';
+    btnsHtml += `<button type="button" onclick="changeOpsDashboardEldersPage(${validPage - 1})" ${validPage <= 1 ? 'disabled class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed flex items-center justify-center"' : 'class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center shadow-2xs cursor-pointer"'}><i class="fa-solid fa-chevron-left text-[10px]"></i></button>`;
+
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === validPage) {
+        btnsHtml += `<button type="button" class="w-8 h-8 rounded-lg bg-[#00a896] text-white flex items-center justify-center shadow-xs font-black">${p}</button>`;
+      } else {
+        btnsHtml += `<button type="button" onclick="changeOpsDashboardEldersPage(${p})" class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center shadow-2xs font-semibold cursor-pointer">${p}</button>`;
+      }
+    }
+
+    btnsHtml += `<button type="button" onclick="changeOpsDashboardEldersPage(${validPage + 1})" ${validPage >= totalPages ? 'disabled class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed flex items-center justify-center"' : 'class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center shadow-2xs cursor-pointer"'}><i class="fa-solid fa-chevron-right text-[10px]"></i></button>`;
+
+    controlsEl.innerHTML = btnsHtml;
+  }
+}
+
+// Inline Task Assignment on That Exact Position
+function executeInlineTaskAssign(elderId) {
+  const item = OPS_ELDERS_REPORTS_DATA.find(e => e.id === elderId);
+  if (!item) return;
+
+  const coordSelect = document.getElementById('ops-dash-coord-' + elderId);
+  const taskSelect = document.getElementById('ops-dash-task-' + elderId);
+
+  const chosenCoord = coordSelect ? coordSelect.value : 'Sister Kavita, RN';
+  const chosenTask = taskSelect ? taskSelect.value : '🚨 Emergency Nurse Dispatch';
+
+  item.assignedCoordinator = chosenCoord;
+  item.assignedTask = chosenTask;
+  item.status = chosenTask.includes('Emergency') ? 'Dispatched (12m)' : 'Assigned: In Progress';
+
+  // Also synchronize with OPS_ALL_32_ALERTS if matching
+  const alertItem = OPS_ALL_32_ALERTS.find(a => a.senior === item.senior);
+  if (alertItem) {
+    alertItem.coordinator = chosenCoord;
+    alertItem.status = chosenTask.includes('Emergency') ? 'Dispatched (12m)' : 'In Progress';
+  }
+
+  if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
+    soundEngine.playSuccessChime();
+  }
+
+  renderOpsDashboardEldersTable();
+  if (typeof renderOpsCasesTable === 'function') {
+    renderOpsCasesTable();
+  }
+
+  showToast(`Task Assigned: "${chosenTask}" assigned to ${chosenCoord} for ${item.senior} (Priority: ${item.priorityCode})!`, 'success');
+}
+
+// Re-run AI Risk & Priority Prediction Model
+function runOpsAiModelPredictor() {
+  const btn = document.getElementById('ops-rerun-model-btn');
+  if (btn) {
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i><span>Scoring 32 Elders...</span>';
+    btn.disabled = true;
+  }
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(600, 'sine', 0.1);
+    setTimeout(() => soundEngine.playTone(750, 'sine', 0.12), 120);
+    setTimeout(() => soundEngine.playTone(900, 'sine', 0.18), 240);
+  }
+
+  setTimeout(() => {
+    let highCount = 0, modCount = 0, lowCount = 0;
+
+    OPS_ELDERS_REPORTS_DATA.forEach(elder => {
+      // Feature weights for predictive triage
+      let score = 0;
+      if (elder.vitals.hr > 100 || elder.vitals.hr < 55) score += 35;
+      const bpParts = elder.vitals.bp.split('/');
+      if (parseInt(bpParts[0], 10) >= 150) score += 30;
+      if (parseFloat(elder.vitals.spo2) < 94.0) score += 30;
+      if (elder.issue.toLowerCase().includes('fall')) score += 25;
+      if (elder.issue.toLowerCase().includes('chest')) score += 35;
+
+      if (score >= 50) {
+        elder.predictedRisk = 'High';
+        elder.priorityCode = 'P1';
+        elder.predictedPriority = 'P1 - Critical';
+        elder.riskProbability = (90 + Math.random() * 8).toFixed(1) + '%';
+        highCount++;
+      } else if (score >= 25) {
+        elder.predictedRisk = 'Moderate';
+        elder.priorityCode = 'P2';
+        elder.predictedPriority = 'P2 - High Priority';
+        elder.riskProbability = (65 + Math.random() * 15).toFixed(1) + '%';
+        modCount++;
+      } else {
+        elder.predictedRisk = 'Low';
+        elder.priorityCode = 'P3';
+        elder.predictedPriority = 'P3 - Routine Care';
+        elder.riskProbability = (5 + Math.random() * 10).toFixed(1) + '%';
+        lowCount++;
+      }
+    });
+
+    if (btn) {
+      btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles text-xs"></i><span>Re-evaluate AI Risk</span>';
+      btn.disabled = false;
+    }
+
+    renderOpsDashboardEldersTable();
+    showToast(`AI Model Evaluated: ${highCount} Critical (P1), ${modCount} Moderate (P2), ${lowCount} Stable (P3) with 94.8% AUC!`, 'success');
+  }, 400);
+}
+
+// Open Diagnostic Report Sheet Modal for an Elder
+function openOpsElderClinicalReport(elderId) {
+  const item = OPS_ELDERS_REPORTS_DATA.find(e => e.id === elderId);
+  if (!item) return;
+
+  const modal = document.getElementById('modal-clinical-report-sheet');
+  const container = document.getElementById('clinical-report-sheet-content');
+  if (!modal || !container) {
+    openOpsAlertDetail(item.senior, item.predictedRisk, item.issue, item.status, item.assignedCoordinator);
+    return;
+  }
+
+  const prof = {
+    name: item.senior,
+    age: item.age,
+    gender: item.gender,
+    phone: item.phone,
+    area: item.area,
+    emergency_contact_phone: "+91 98765-43210 (Family Primary)"
+  };
+
+  const payload = {
+    systolic_bp: parseInt(item.vitals.bp.split('/')[0], 10),
+    diastolic_bp: parseInt(item.vitals.bp.split('/')[1], 10),
+    heart_rate_bpm: item.vitals.hr,
+    spo2_percent: parseFloat(item.vitals.spo2),
+    blood_glucose_mg_dl: parseInt(item.vitals.glucose, 10),
+    body_temp_f: parseFloat(item.vitals.temp),
+    weight_kg: 68,
+    height_cm: 165,
+    adl_eating: "Independent",
+    adl_walking: item.vitals.mobility,
+    adl_toileting: "Independent",
+    medication_adherence_percent: item.vitals.adherence,
+    reported_symptoms: item.issue
+  };
+
+  const res = {
+    predicted_risk_level: item.predictedRisk,
+    predicted_risk_level_hi: item.predictedRisk === 'High' ? 'उच्च जोखिम (High Risk)' : item.predictedRisk === 'Moderate' ? 'मध्यम जोखिम (Moderate)' : 'कम जोखिम (Low Risk)',
+    risk_score: item.predictedRisk === 'High' ? 88 : item.predictedRisk === 'Moderate' ? 62 : 22,
+    predicted_probability: parseFloat(item.riskProbability) / 100,
+    status_tag_en: item.predictedPriority,
+    status_tag_hi: item.predictedPriority,
+    alert_reason_summary: `AI Clinical Prediction: ${item.modelDrivers.join(' • ')}`,
+    alert_reason_summary_hi: `एआई क्लिनिकल पूर्वानुमान: ${item.modelDrivers.join(' • ')}`,
+    suggested_action_summary: item.recommendedTask + ' • Assigned Coordinator: ' + item.assignedCoordinator,
+    contact_method: 'Immediate Clinical Telemetry & Care Coordinator Dispatch'
+  };
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(550, 'sine', 0.1);
+  }
+
+  container.innerHTML = generateClinicalReportSheetHtml(res, payload, prof);
+  modal.classList.remove('hidden');
+}
+
+function closeOpsElderClinicalReport() {
+  const modal = document.getElementById('modal-clinical-report-sheet');
+  if (modal) modal.classList.add('hidden');
+}
+
+// Filter handlers for Dashboard Elders
+function filterOpsDashboardEldersTab(tabName) {
+  opsDashEldersFilterState.tab = tabName;
+  opsDashEldersFilterState.currentPage = 1;
+
+  const tabs = ['all', 'high', 'moderate', 'low', 'pending'];
+  tabs.forEach(t => {
+    const btn = document.getElementById('tab-ops-elders-' + (t === 'moderate' ? 'mod' : t));
+    if (btn) {
+      if (t === tabName) {
+        btn.classList.add('border-b-2', 'border-teal-600', 'text-teal-800');
+        btn.classList.remove('border-transparent');
+      } else {
+        btn.classList.remove('border-b-2', 'border-teal-600', 'text-teal-800');
+        btn.classList.add('border-transparent');
+      }
+    }
+  });
+
+  renderOpsDashboardEldersTable();
+}
+
+function filterOpsDashboardEldersSearch(query) {
+  opsDashEldersFilterState.search = (query || '').trim();
+  opsDashEldersFilterState.currentPage = 1;
+  renderOpsDashboardEldersTable();
+}
+
+function filterOpsDashboardEldersSelect() {
+  const riskSelect = document.getElementById('ops-dash-elders-filter-risk');
+  const prioSelect = document.getElementById('ops-dash-elders-filter-priority');
+  const areaSelect = document.getElementById('ops-dash-elders-filter-area');
+
+  opsDashEldersFilterState.risk = riskSelect ? riskSelect.value : 'all';
+  opsDashEldersFilterState.priority = prioSelect ? prioSelect.value : 'all';
+  opsDashEldersFilterState.area = areaSelect ? areaSelect.value : 'all';
+  opsDashEldersFilterState.currentPage = 1;
+
+  renderOpsDashboardEldersTable();
+}
+
+function resetOpsDashboardEldersFilters() {
+  opsDashEldersFilterState.tab = 'all';
+  opsDashEldersFilterState.risk = 'all';
+  opsDashEldersFilterState.priority = 'all';
+  opsDashEldersFilterState.area = 'all';
+  opsDashEldersFilterState.search = '';
+  opsDashEldersFilterState.currentPage = 1;
+
+  const searchInp = document.getElementById('ops-dash-elders-search');
+  const riskSelect = document.getElementById('ops-dash-elders-filter-risk');
+  const prioSelect = document.getElementById('ops-dash-elders-filter-priority');
+  const areaSelect = document.getElementById('ops-dash-elders-filter-area');
+
+  if (searchInp) searchInp.value = '';
+  if (riskSelect) riskSelect.value = 'all';
+  if (prioSelect) prioSelect.value = 'all';
+  if (areaSelect) areaSelect.value = 'all';
+
+  filterOpsDashboardEldersTab('all');
+}
+
+function changeOpsDashboardEldersPage(page) {
+  opsDashEldersFilterState.currentPage = page;
+  renderOpsDashboardEldersTable();
+}
+
+// Bulk Actions for Dashboard Elders
+function toggleOpsSelectAllDashboardElders(checked) {
+  const checkboxes = document.querySelectorAll('.ops-dash-elder-checkbox');
+  checkboxes.forEach(cb => { cb.checked = checked; });
+  handleOpsDashElderCheckboxChange();
+}
+
+function handleOpsDashElderCheckboxChange() {
+  const checked = document.querySelectorAll('.ops-dash-elder-checkbox:checked');
+  const toolbar = document.getElementById('ops-dash-elders-bulk-toolbar');
+  const countEl = document.getElementById('ops-dash-bulk-count');
+
+  if (countEl) countEl.textContent = checked.length;
+  if (toolbar) {
+    if (checked.length > 0) {
+      toolbar.classList.remove('hidden');
+    } else {
+      toolbar.classList.add('hidden');
+    }
+  }
+
+  const all = document.querySelectorAll('.ops-dash-elder-checkbox');
+  const selectAll = document.getElementById('ops-dash-elders-select-all');
+  if (selectAll && all.length > 0) {
+    selectAll.checked = (checked.length === all.length);
+    selectAll.indeterminate = (checked.length > 0 && checked.length < all.length);
+  }
+}
+
+function clearOpsDashBulkSelection() {
+  const selectAll = document.getElementById('ops-dash-elders-select-all');
+  if (selectAll) {
+    selectAll.checked = false;
+    selectAll.indeterminate = false;
+  }
+  const checkboxes = document.querySelectorAll('.ops-dash-elder-checkbox');
+  checkboxes.forEach(cb => { cb.checked = false; });
+  handleOpsDashElderCheckboxChange();
+}
+
+function executeOpsDashBulkAssign() {
+  const checked = document.querySelectorAll('.ops-dash-elder-checkbox:checked');
+  if (checked.length === 0) {
+    showToast('Please select at least one elder to assign task.', 'warning');
+    return;
+  }
+
+  const coordSelect = document.getElementById('ops-dash-bulk-coord');
+  const taskSelect = document.getElementById('ops-dash-bulk-task');
+
+  const chosenCoord = coordSelect ? coordSelect.value : 'Sister Kavita, RN';
+  const chosenTask = taskSelect ? taskSelect.value : '🚨 Emergency Nurse Dispatch';
+
+  checked.forEach(cb => {
+    const id = cb.getAttribute('data-id');
+    const elder = OPS_ELDERS_REPORTS_DATA.find(e => e.id === id);
+    if (elder) {
+      elder.assignedCoordinator = chosenCoord;
+      elder.assignedTask = chosenTask;
+      elder.status = chosenTask.includes('Emergency') ? 'Dispatched (12m)' : 'In Progress';
+    }
+  });
+
+  if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
+    soundEngine.playSuccessChime();
+  }
+
+  renderOpsDashboardEldersTable();
+  clearOpsDashBulkSelection();
+  showToast(`Successfully batch assigned ${chosenTask} to ${chosenCoord} for ${checked.length} elders!`, 'success');
+}
+
+function executeOpsDashBulkDispatch() {
+  const checked = document.querySelectorAll('.ops-dash-elder-checkbox:checked');
+  if (checked.length === 0) {
+    showToast('Please select at least one elder for emergency dispatch.', 'warning');
+    return;
+  }
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(784, 'sine', 0.15);
+    setTimeout(() => soundEngine.playTone(880, 'sine', 0.18), 180);
+    setTimeout(() => soundEngine.playTone(1046, 'sine', 0.25), 380);
+  }
+
+  checked.forEach(cb => {
+    const id = cb.getAttribute('data-id');
+    const elder = OPS_ELDERS_REPORTS_DATA.find(e => e.id === id);
+    if (elder) {
+      elder.assignedTask = '🚨 Emergency Nurse Dispatch (ETA 12m)';
+      elder.status = 'Dispatched (12m)';
+    }
+  });
+
+  renderOpsDashboardEldersTable();
+  clearOpsDashBulkSelection();
+  showToast(`Emergency Medical Teams Dispatched for ${checked.length} seniors!`, 'success');
+}
 
 const OPS_ALL_32_ALERTS = [
   // --- 8 HIGH RISK ALERTS (3 Pending, 4 In Progress, 1 Resolved) ---
@@ -4086,10 +5954,8 @@ function toggleMapMode(mode) {
 
 // 12. Export Functions
 
-// ============================================================================
-// OPERATIONS MANAGER: FULLY CONNECTED CLINICAL & REALISTIC DATASET ENGINE
-// ============================================================================
-
+// =====================================================================// OPERATIONS MANAGER: FULLY CONNECTED CLINICAL & REALISTIC DATASET ENGINE
+// =====================================================================
 // 1. Audit Log Recorder Helper
 function addOpsAuditRecord(senior, actionText, user) {
   const table = document.getElementById('ops-audit-table-body');
@@ -4565,7 +6431,360 @@ function exportOpsReports() {
 }
 
 
+// 8. Add Coordinator Controls
+function openOpsAddCoordinatorModal() {
+  const m = document.getElementById('modal-ops-add-coordinator');
+  if (m) m.classList.remove('hidden');
+}
 
+function closeOpsAddCoordinatorModal() {
+  const m = document.getElementById('modal-ops-add-coordinator');
+  if (m) m.classList.add('hidden');
+}
+
+function submitOpsAddCoordinator(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const name = document.getElementById('ops-coord-name').value;
+  closeOpsAddCoordinatorModal();
+  showToast(`Coordinator ${name} added to care team!`, 'success');
+}
+
+// 9. Alert Diagnostics & Detail Modal
+function openOpsAlertDetail(senior, risk, issue, status, assignee) {
+  const modal = document.getElementById('modal-ops-alert-detail');
+  if (!modal) return;
+
+  const nameEl = document.getElementById('ops-detail-senior');
+  const avatarEl = document.getElementById('ops-detail-avatar');
+  const statusEl = document.getElementById('ops-detail-status-bar');
+  const riskEl = document.getElementById('ops-detail-risk-badge');
+  const issueEl = document.getElementById('ops-detail-issue');
+
+  if (nameEl) nameEl.textContent = senior;
+  if (avatarEl) {
+    const initials = senior.split(' ').map(w => w[0]).join('').substring(0, 2);
+    avatarEl.textContent = initials || 'RS';
+  }
+  if (statusEl) statusEl.textContent = `Status: ${status} • Assigned: ${assignee}`;
+  if (issueEl) issueEl.textContent = issue;
+
+  if (riskEl) {
+    riskEl.textContent = `${risk} Risk`;
+    if (risk === 'High') {
+      riskEl.className = 'px-2.5 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-700';
+    } else if (risk === 'Moderate') {
+      riskEl.className = 'px-2.5 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-700';
+    } else {
+      riskEl.className = 'px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-700';
+    }
+  }
+
+  // Live Dataset binding:
+  const patient = typeof getPatientByNameOrId === 'function' ? getPatientByNameOrId(senior) : null;
+  const bpEl = document.getElementById('ops-detail-bp');
+  const hrEl = document.getElementById('ops-detail-hr');
+  const glucoseEl = document.getElementById('ops-detail-glucose');
+  const spo2El = document.getElementById('ops-detail-spo2');
+  const probBadgeEl = document.getElementById('ops-detail-prob-badge');
+  const driversListEl = document.getElementById('ops-detail-drivers-list');
+
+  if (patient) {
+    const latestCheckup = (patient.checkups && patient.checkups.length > 0) ? patient.checkups[0] : {};
+    if (bpEl) bpEl.textContent = (latestCheckup.bp || '120/80 mmHg').replace(' mmHg', '');
+    if (hrEl) hrEl.textContent = latestCheckup.hr || '72 bpm';
+    if (glucoseEl) glucoseEl.textContent = latestCheckup.glucose || '110 mg/dL';
+    if (spo2El) spo2El.textContent = latestCheckup.spo2 || '98%';
+
+    if (probBadgeEl) {
+      const prob = patient.predictedProbability || (risk === 'High' ? '64.3%' : risk === 'Moderate' ? '38.9%' : '18.2%');
+      probBadgeEl.textContent = `${prob} ML Probability`;
+      if (risk === 'High') {
+        probBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700';
+      } else if (risk === 'Moderate') {
+        probBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700';
+      } else {
+        probBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700';
+      }
+    }
+
+    if (driversListEl) {
+      if (patient.modelDrivers && patient.modelDrivers.length > 0) {
+        driversListEl.innerHTML = patient.modelDrivers.slice(0, 3).map(d => `<li>${d}</li>`).join('');
+      } else {
+        driversListEl.innerHTML = `<li>Primary symptom: ${issue}</li><li>Monitored under standard clinical protocols</li>`;
+      }
+    }
+
+    state.currentOpsAlertSenior = patient;
+  } else {
+    // Fallback for cohort seniors
+    if (bpEl) bpEl.textContent = risk === 'High' ? '154/92' : risk === 'Moderate' ? '136/86' : '120/80';
+    if (hrEl) hrEl.textContent = risk === 'High' ? '106 bpm' : '74 bpm';
+    if (glucoseEl) glucoseEl.textContent = risk === 'High' ? '180 mg/dL' : '110 mg/dL';
+    if (spo2El) spo2El.textContent = risk === 'High' ? '94%' : '98%';
+    if (probBadgeEl) {
+      probBadgeEl.textContent = risk === 'High' ? '62.0% ML Probability' : risk === 'Moderate' ? '35.0% ML Probability' : '18.0% ML Probability';
+      probBadgeEl.className = risk === 'High' ? 'px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700' : 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700';
+    }
+    if (driversListEl) {
+      driversListEl.innerHTML = `<li>Reported symptom: ${issue}</li><li>Zone telemetry flagged by triage algorithms</li>`;
+    }
+    state.currentOpsAlertSenior = { name: senior, phone: '+91 98110-44912', assignedNurse: assignee };
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function triggerOpsCallSenior() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const phone = p.phone || '+91 98110-44912';
+  if (typeof triggerSimulatedCall === 'function') {
+    triggerSimulatedCall(name, phone);
+  } else {
+    showToast(`Initiating emergency 2-way call to ${name} (${phone})...`, 'info');
+  }
+}
+
+function triggerOpsDispatchNurse() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const nurse = p.assignedNurse || 'Sister Kavita, RN';
+  showToast(`Emergency Nurse ${nurse} dispatched for ${name}! ETA: 12 mins.`, 'success');
+}
+
+function closeOpsAlertDetail() {
+  const modal = document.getElementById('modal-ops-alert-detail');
+  if (modal) modal.classList.add('hidden');
+}
+
+// 10. Help Modal Controls
+function showHelpModal() {
+  const m = document.getElementById('modal-ops-help');
+  if (m) m.classList.remove('hidden');
+}
+
+function closeHelpModal() {
+  const m = document.getElementById('modal-ops-help');
+  if (m) m.classList.add('hidden');
+}
+
+// 11. Map Mode Toggle (Map vs Satellite)
+function toggleMapMode(mode) {
+  const mapContainer = document.getElementById('ops-city-map');
+  const btnStreet = document.getElementById('map-mode-street');
+  const btnSat = document.getElementById('map-mode-sat');
+
+  if (mode === 'sat') {
+    if (mapContainer) {
+      mapContainer.className = 'relative w-full h-80 sm:h-96 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-900 border border-slate-700 overflow-hidden flex items-center justify-center';
+    }
+    if (btnSat) btnSat.className = 'px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm';
+    if (btnStreet) btnStreet.className = 'px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+  } else {
+    if (mapContainer) {
+      mapContainer.className = 'relative w-full h-80 sm:h-96 rounded-2xl bg-gradient-to-tr from-[#eef7f6] via-[#f4faf9] to-[#e8f4f2] border border-teal-100 overflow-hidden flex items-center justify-center';
+    }
+    if (btnStreet) btnStreet.className = 'px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm';
+    if (btnSat) btnSat.className = 'px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+  }
+}
+
+// 12. Export Functions
+
+// =====================================================================// OPERATIONS MANAGER: FULLY CONNECTED CLINICAL & REALISTIC DATASET ENGINE
+// =====================================================================
+// 1. Audit Log Recorder Helper
+function addOpsAuditRecord(senior, actionText, user) {
+  const table = document.getElementById('ops-audit-table-body');
+  if (!table) return;
+
+  const now = new Date();
+  const timeStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+  const tr = document.createElement('tr');
+  tr.className = 'hover:bg-slate-50 transition-colors bg-teal-50/20';
+  tr.innerHTML = `
+    <td class="p-3.5 pl-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">${timeStr}</td>
+    <td class="p-3.5 font-bold text-slate-900">${user || 'OM (You)'}</td>
+    <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">Operations</span></td>
+    <td class="p-3.5 text-slate-700 font-medium">${actionText}</td>
+    <td class="p-3.5 font-mono text-[11px] text-slate-500">Live Telemetry</td>
+    <td class="p-3.5 font-bold text-slate-800">${senior}</td>
+    <td class="p-3.5 font-mono text-[11px] text-slate-400">192.168.1.15</td>
+  `;
+  table.prepend(tr);
+}
+
+// 2. Call Senior Directly from Alerts & Cases
+function triggerOpsCallSeniorFor(seniorName, phone) {
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(440, 'sine', 0.25);
+    setTimeout(() => soundEngine.playTone(480, 'sine', 0.35), 300);
+  }
+
+  const patient = typeof getPatientByNameOrId === 'function' ? getPatientByNameOrId(seniorName) : null;
+  const targetPhone = phone || (patient ? patient.phone : '+91 98110-44912');
+
+  addOpsAuditRecord(seniorName, `Initiated 2-way clinical phone check-in (${targetPhone})`, 'Operations Manager');
+
+  if (typeof triggerSimulatedCall === 'function') {
+    triggerSimulatedCall(seniorName, targetPhone);
+  } else {
+    showToast(`Emergency 2-way call connected to ${seniorName} (${targetPhone}). Telemetry audio streaming.`, 'info');
+  }
+}
+
+// 3. Dispatch Emergency Nurse Directly from Alerts & Cases
+function triggerOpsDispatchNurseFor(seniorName, assignedNurse) {
+  const patient = typeof getPatientByNameOrId === 'function' ? getPatientByNameOrId(seniorName) : null;
+  const nurse = assignedNurse || (patient ? patient.assignedNurse : 'Sister Kavita, RN');
+
+  if (soundEngine && typeof soundEngine.playTone === 'function') {
+    soundEngine.playTone(784, 'sine', 0.15);
+    setTimeout(() => soundEngine.playTone(880, 'sine', 0.18), 180);
+    setTimeout(() => soundEngine.playTone(1046, 'sine', 0.22), 380);
+  }
+
+  // Update rows in both Alerts & Cases table and Recent Alerts table
+  const rows = document.querySelectorAll('#ops-alerts-table-body tr, #ops-recent-alerts-body tr');
+  rows.forEach(r => {
+    if (r.getAttribute('data-senior') === seniorName) {
+      r.setAttribute('data-status', 'In Progress');
+      const cells = r.querySelectorAll('td');
+      // Tab 3 table has 8 columns: [checkbox, name, risk, issue, time, status, coord, action]
+      if (cells.length >= 8) {
+        cells[5].innerHTML = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700 animate-pulse">Dispatched (12m)</span>';
+        cells[6].textContent = nurse;
+      } else if (cells.length >= 6) {
+        // Tab 1 table has 6 columns: [time, senior, risk, issue, status, action]
+        cells[4].innerHTML = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700 animate-pulse">Dispatched</span>';
+      }
+    }
+  });
+
+  addOpsAuditRecord(seniorName, `Emergency nurse ${nurse} dispatched to senior residence (ETA 12m)`, 'Operations Manager');
+
+  showToast(`Emergency Nurse ${nurse} dispatched for ${seniorName}! ETA: 12 mins. GPS dispatch tracker active.`, 'success');
+}
+
+// 4. Modal Diagnostic Triggers
+function triggerOpsCallSenior() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const phone = p.phone || '+91 98110-44912';
+  triggerOpsCallSeniorFor(name, phone);
+}
+
+function triggerOpsDispatchNurse() {
+  const p = state.currentOpsAlertSenior || {};
+  const name = p.name || 'Ramesh Sharma';
+  const nurse = p.assignedNurse || 'Sister Kavita, RN';
+  triggerOpsDispatchNurseFor(name, nurse);
+}
+
+// 5. Risk Analytics Sub-Tab Switcher
+function switchOpsRiskTab(tabName) {
+  // Hide all risk subpanes
+  document.querySelectorAll('.ops-risk-subpane').forEach(el => el.classList.add('hidden'));
+
+  // Reset tab button styles
+  document.querySelectorAll('.ops-risk-tab-btn').forEach(btn => {
+    btn.classList.remove('border-teal-600', 'text-teal-800');
+    btn.classList.add('border-transparent', 'text-slate-500');
+  });
+
+  // Activate selected subpane
+  const targetPane = document.getElementById(`ops-risk-pane-${tabName}`);
+  if (targetPane) targetPane.classList.remove('hidden');
+
+  const targetBtn = document.getElementById(`btn-ops-risk-tab-${tabName}`);
+  if (targetBtn) {
+    targetBtn.classList.remove('border-transparent', 'text-slate-500');
+    targetBtn.classList.add('border-teal-600', 'text-teal-800');
+  }
+
+  // Trigger chart re-render / resize if overview or trend
+  if (tabName === 'overview' || tabName === 'trend') {
+    setTimeout(() => {
+      initOpsCharts();
+    }, 50);
+  }
+}
+
+// 6. Add Coordinator with Real DOM & State Persistence
+function submitOpsAddCoordinator(e) {
+  if (e && e.preventDefault) e.preventDefault();
+
+  const nameInput = document.getElementById('ops-coord-name');
+  const roleInput = document.getElementById('ops-coord-role');
+  const areaInput = document.getElementById('ops-coord-area');
+  const phoneInput = document.getElementById('ops-coord-phone');
+  const emailInput = document.getElementById('ops-coord-email');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const role = roleInput ? roleInput.value : 'Care Nurse';
+  const area = areaInput ? areaInput.value : 'Greater Kailash';
+  const phone = phoneInput ? phoneInput.value.trim() : '+91 98765 00000';
+  const email = emailInput ? emailInput.value.trim() : 'coordinator@careconnect.com';
+
+  if (!name) {
+    showToast('Please enter coordinator name', 'warning');
+    return;
+  }
+
+  const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'CC';
+
+  // Append new coordinator row to #ops-team-table-body
+  const tableBody = document.getElementById('ops-team-table-body');
+  if (tableBody) {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-slate-50/80 transition-colors bg-teal-50/40 border-l-4 border-teal-500';
+    tr.innerHTML = `
+      <td class="p-3.5 pl-4 flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 font-black flex items-center justify-center text-xs flex-shrink-0">
+          ${initials}
+        </div>
+        <div>
+          <div class="font-black text-slate-900">${name}</div>
+          <div class="text-[10px] text-slate-400 font-semibold">${role} &bull; ${area}</div>
+        </div>
+      </td>
+      <td class="p-3.5 text-center font-bold text-slate-800">0</td>
+      <td class="p-3.5 text-center font-bold text-slate-400">0</td>
+      <td class="p-3.5 text-center font-bold text-emerald-600">0</td>
+      <td class="p-3.5 text-center font-mono text-slate-500 text-[11px]">New</td>
+      <td class="p-3.5 text-center">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Active</span>
+      </td>
+    `;
+    tableBody.prepend(tr);
+  }
+
+  // Increment active coordinator count
+  const countEl = document.getElementById('ops-active-coord-count');
+  if (countEl) {
+    const cur = parseInt(countEl.textContent) || 8;
+    countEl.textContent = cur + 1;
+  }
+
+  // Add coordinator to all relevant dropdowns
+  const newOption = `<option value="${name}" selected>${name} (${role} &bull; ${area})</option>`;
+  ['task-coordinator', 'ops-assign-coordinator-select', 'ops-new-alert-coord'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (sel) sel.insertAdjacentHTML('beforeend', newOption);
+  });
+
+  addOpsAuditRecord(name, `New care coordinator ${name} (${role}) enrolled for sector ${area}`, 'Operations Manager');
+
+  // Reset & close
+  const form = document.getElementById('ops-add-coordinator-form');
+  if (form) form.reset();
+  closeOpsAddCoordinatorModal();
+
+  showToast(`Coordinator ${name} added successfully to ${area}!`, 'success');
+}
 
 function handleOpsAssignTaskSubmit(e) {
   if (e && e.preventDefault) e.preventDefault();
@@ -4890,10 +7109,8 @@ function showToast(message, type = 'info') {
 
 
 
-// =========================================================================
-// ELDER COMPREHENSIVE HEALTH & RISK ASSESSMENT (AI ML PREDICTION ENGINE)
-// =========================================================================
-
+// ==================================================================// ELDER COMPREHENSIVE HEALTH & RISK ASSESSMENT (AI ML PREDICTION ENGINE)
+// ==================================================================
 // Live Assessment State
 const assessmentState = {
   painPresent: false,
@@ -5205,10 +7422,8 @@ async function predictElderRiskAssessment() {
 
 // 8. Render Assessment Result Card
 
-// =========================================================================
-// DOB & AGE COMPUTATION UTILITIES
-// =========================================================================
-
+// ==================================================================// DOB & AGE COMPUTATION UTILITIES
+// ==================================================================
 function calculateAgeFromDob(dobStr) {
   if (!dobStr) return null;
   const birthDate = new Date(dobStr);
@@ -5320,10 +7535,8 @@ function dismissProfilePrompt(permanent = false) {
   }
 }
 
-// =========================================================================
-// UNIVERSAL PROFILE MANAGEMENT ENGINE (FOR ALL 4 STAKEHOLDER PORTALS)
-// =========================================================================
-
+// ==================================================================// UNIVERSAL PROFILE MANAGEMENT ENGINE (FOR ALL 4 STAKEHOLDER PORTALS)
+// ==================================================================
 const defaultRoleProfiles = {
   senior: {
     role: 'senior',
@@ -5727,10 +7940,8 @@ function saveUserProfile() {
 }
 
 
-// =========================================================================
-// FAMILY CARE CIRCLE & CAREGIVER MANAGEMENT (ELDER PORTAL)
-// =========================================================================
-
+// ==================================================================// FAMILY CARE CIRCLE & CAREGIVER MANAGEMENT (ELDER PORTAL)
+// ==================================================================
 const defaultFamilyMembers = [
   {
     id: 'fam-1',
@@ -5952,10 +8163,8 @@ function submitAddFamilyMember() {
   submitInlineAddFamilyMember();
 }
 
-// =========================================================================
-// AI PRESCRIPTION & DAILY HEALTH IMPROVEMENT TASKS ENGINE
-// =========================================================================
-
+// ==================================================================// AI PRESCRIPTION & DAILY HEALTH IMPROVEMENT TASKS ENGINE
+// ==================================================================
 function getTodayDateString() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -6181,10 +8390,8 @@ function restoreDailyTasks() {
 }
 
 
-// =========================================================================
-// ENHANCED CLINICAL DIAGNOSIS REPORT & MULTI-PERSPECTIVE VISUALIZER
-// =========================================================================
-
+// ==================================================================// ENHANCED CLINICAL DIAGNOSIS REPORT & MULTI-PERSPECTIVE VISUALIZER
+// ==================================================================
 function renderAssessmentResult(res, inputData, alertCreated) {
   const box = document.getElementById('assessment-result-box');
   if (!box) return;
@@ -6678,10 +8885,8 @@ function escalateAssessmentToCoordinator() {
 }
 
 
-// =========================================================================
-// ROLE-BASED ACCESS CONTROL & DEDICATED AUTHENTICATION ENGINE
-// =========================================================================
-
+// ==================================================================// ROLE-BASED ACCESS CONTROL & DEDICATED AUTHENTICATION ENGINE
+// ==================================================================
 let selectedAuthRole = 'senior';
 let activeOtpCode = '4826';
 let otpTimerInterval = null;
@@ -6807,37 +9012,71 @@ const authRoleConfigs = {
     defaultEmail: 'rahul.family@gmail.com',
     defaultPass: 'password123',
     defaultName: 'Rahul Sharma',
-    defaultBadge: { en: 'Son / Family Member', hi: 'पुत्र / परिवारजन' },
+    defaultBadge: { en: '[Caregiver: Rahul Sharma • Male • 42 Yrs]', hi: '[देखभालकर्ता: राहुल शर्मा • पुरुष • ४२ वर्ष]' },
     avatarInitials: 'RS',
     signupFieldsHtml: {
       en: `
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Relationship to Senior</label>
-          <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-            <option value="Son">Son</option>
-            <option value="Daughter">Daughter</option>
-            <option value="Spouse">Spouse</option>
-            <option value="Guardian">Primary Guardian</option>
+          <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white font-semibold">
+            <option value="Son">Son (पुत्र)</option>
+            <option value="Daughter">Daughter (पुत्री)</option>
+            <option value="Spouse">Spouse (पति / पत्नी)</option>
+            <option value="Guardian">Primary Guardian (अभिभावक)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Linked Senior's Name</label>
-          <input id="signup-linked-senior" type="text" value="Ramesh Sharma (Father)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-bold text-slate-700">Linked Patient & Caregiver</label>
+            <!-- Onboarding Slider Controls -->
+            <div class="flex items-center space-x-1.5 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+              <button type="button" onclick="slideOnboardingPatient(-1)" class="w-5 h-5 rounded bg-white hover:bg-purple-700 hover:text-white text-slate-700 flex items-center justify-center text-[10px] font-bold shadow-xs transition-colors" title="Slide to Previous Elder">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <span id="onboarding-slide-badge" class="text-[10px] font-bold text-purple-900 font-mono">Elder 1/5</span>
+              <button type="button" onclick="slideOnboardingPatient(1)" class="w-5 h-5 rounded bg-purple-700 hover:bg-purple-800 text-white flex items-center justify-center text-[10px] font-bold shadow-xs transition-colors" title="Slide to Next Elder (1st -> 2nd -> 3rd -> 1st)">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+          <div class="p-3 bg-purple-50/90 border border-purple-200 rounded-xl space-y-1.5 shadow-sm">
+            <div class="text-xs font-bold text-slate-800 flex flex-wrap items-center gap-1.5">
+              <span class="text-slate-500 font-semibold">Patient:</span>
+              <span id="onboarding-patient-name-display" class="text-purple-950 font-extrabold text-sm">Ramesh Sharma</span>
+              <span id="onboarding-patient-bracket-display" class="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">[Father • 74 Yrs • Male]</span>
+            </div>
+            <div class="text-xs font-medium text-slate-600 flex flex-wrap items-center gap-1 pt-1 border-t border-purple-200/60">
+              <span class="text-slate-500 font-semibold">Caregiver:</span>
+              <span id="onboarding-caregiver-bracket-display" class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">[Rahul Sharma • Male • 42 Yrs]</span>
+            </div>
+          </div>
+          <textarea id="signup-linked-senior" rows="2" readonly class="mt-1.5 w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold bg-slate-50 text-slate-800 leading-snug cursor-not-allowed">Ramesh Sharma [Father • 74 Yrs • Male]&#10;[Caregiver: Rahul Sharma • Male • 42 Yrs]</textarea>
         </div>
       `,
       hi: `
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">बुज़ुर्ग से संबंध</label>
-          <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-            <option value="Son">पुत्र</option>
-            <option value="Daughter">पुत्री</option>
-            <option value="Spouse">पति / पत्नी</option>
-            <option value="Guardian">अभिभावक</option>
+          <select id="signup-relation" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white font-semibold">
+            <option value="Son">पुत्र (Son)</option>
+            <option value="Daughter">पुत्री (Daughter)</option>
+            <option value="Spouse">पति / पत्नी (Spouse)</option>
+            <option value="Guardian">अभिभावक (Guardian)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">जुड़े हुए बुज़ुर्ग परिजन का नाम</label>
-          <input id="signup-linked-senior" type="text" value="Ramesh Sharma (Father)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-slate-50">
+          <label class="block text-xs font-bold text-slate-700 mb-1">जुड़े हुए मरीज़ व संबंधित देखभालकर्ता</label>
+          <div class="p-3 bg-purple-50/90 border border-purple-200 rounded-xl space-y-1.5 shadow-sm">
+            <div class="text-xs font-bold text-slate-800 flex flex-wrap items-center gap-1.5">
+              <span class="text-slate-500 font-semibold">मरीज़:</span>
+              <span class="text-purple-950 font-extrabold text-sm">रमेश शर्मा</span>
+              <span class="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">[पिता • ७४ वर्ष • पुरुष]</span>
+            </div>
+            <div class="text-xs font-medium text-slate-600 flex flex-wrap items-center gap-1 pt-1 border-t border-purple-200/60">
+              <span class="text-slate-500 font-semibold">संबंधित परिजन:</span>
+              <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">[राहुल शर्मा • पुरुष • ४२ वर्ष]</span>
+            </div>
+          </div>
+          <textarea id="signup-linked-senior" rows="2" readonly class="mt-1.5 w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold bg-slate-50 text-slate-800 leading-snug cursor-not-allowed">रमेश शर्मा [पिता • ७४ वर्ष • पुरुष]&#10;[राहुल शर्मा • पुरुष • ४२ वर्ष]</textarea>
         </div>
       `
     }
@@ -6915,12 +9154,8 @@ function updateAuthBannerForLanguage(lang = (state && state.currentLanguage) || 
 
 
 // 1. User selects role card -> open dedicated authentication portal
-function selectRoleForAuth(role, showAuthStep = false) {
+function selectRoleForAuth(role) {
   selectedAuthRole = role;
-  if (!showAuthStep) {
-    enterDashboard(role);
-    return;
-  }
   soundEngine.playTone(550, 'sine', 0.1);
 
   const cfg = authRoleConfigs[role] || authRoleConfigs.senior;
@@ -6944,9 +9179,61 @@ function selectRoleForAuth(role, showAuthStep = false) {
   updateAuthBannerForLanguage(state.currentLanguage || "en");
   if (demoBtnLabel) demoBtnLabel.textContent = `1-Click Quick Demo Sign In (${getRoleDisplayName(role)})`;
 
-  // Render role-specific signup fields
+  // Onboarding Page: Dual Brackets for Family Portal
+  const existingFamilyBrackets = document.getElementById('auth-family-onboarding-brackets');
+  if (existingFamilyBrackets) existingFamilyBrackets.remove();
+
+  if (role === 'family') {
+    const titleParent = document.getElementById('auth-portal-title')?.parentElement;
+    if (titleParent) {
+      const infoDiv = document.createElement('div');
+      infoDiv.id = 'auth-family-onboarding-brackets';
+      infoDiv.className = 'mt-1.5 pt-1.5 border-t border-purple-200/70 text-xs space-y-0.5';
+      infoDiv.innerHTML = `
+        <div class="flex flex-wrap items-center gap-1 font-bold text-purple-950">
+          <span class="text-slate-600 font-medium">Patient:</span>
+          <span>Ramesh Sharma</span>
+          <span class="text-[11px] font-bold text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded border border-purple-300">[Father • 74 Yrs • Male]</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1 font-semibold text-slate-700">
+          <span class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">[Caregiver: Rahul Sharma • Male • 42 Yrs]</span>
+        </div>
+      `;
+      titleParent.appendChild(infoDiv);
+    }
+  }
+
+  // Render role-specific signup fields with language resolution
   if (roleFieldsContainer) {
-    roleFieldsContainer.innerHTML = cfg.signupFieldsHtml;
+    const lang = state.currentLanguage || 'en';
+    roleFieldsContainer.innerHTML = typeof cfg.signupFieldsHtml === 'object'
+      ? (cfg.signupFieldsHtml[lang] || cfg.signupFieldsHtml.en)
+      : cfg.signupFieldsHtml;
+  }
+
+  // Onboarding Signin Tab: Add patient and caregiver dual brackets card if Family role
+  const existingSigninCard = document.getElementById('auth-family-signin-patient-card');
+  if (existingSigninCard) existingSigninCard.remove();
+
+  if (role === 'family') {
+    const formSignin = document.getElementById('auth-form-signin');
+    if (formSignin) {
+      const card = document.createElement('div');
+      card.id = 'auth-family-signin-patient-card';
+      card.className = 'p-3 bg-purple-50/90 border border-purple-200 rounded-2xl space-y-1.5 mb-2 shadow-sm';
+      card.innerHTML = `
+        <div class="text-xs font-bold text-slate-800 flex flex-wrap items-center gap-1.5">
+          <span class="text-slate-500 font-semibold">Linked Patient:</span>
+          <span class="text-purple-950 font-extrabold text-sm">Ramesh Sharma</span>
+          <span class="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">[Father • 74 Yrs • Male]</span>
+        </div>
+        <div class="text-xs font-medium text-slate-600 flex flex-wrap items-center gap-1 pt-1 border-t border-purple-200/60">
+          <span class="text-slate-500 font-semibold">Connected Person:</span>
+          <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">[Caregiver: Rahul Sharma • Male • 42 Yrs]</span>
+        </div>
+      `;
+      formSignin.insertBefore(card, formSignin.firstChild);
+    }
   }
 
   // Switch to signin tab
@@ -7248,23 +9535,34 @@ function enterDashboard(role, userObj) {
   if (nameLabel) nameLabel.textContent = user.name;
   if (roleLabel) {
     let bText = user.badge;
+
     if (typeof bText === 'object' && bText !== null) {
-      const curLang = (typeof state !== 'undefined' && state.seniorLanguage) ? state.seniorLanguage : 'en';
+      const curLang =
+        (typeof state !== 'undefined' && state.seniorLanguage)
+          ? state.seniorLanguage
+          : 'en';
+
       bText = bText[curLang] || bText.en || bText.hi || '';
     }
-    roleLabel.textContent = bText || (cfg.defaultBadge ? (cfg.defaultBadge.en || cfg.defaultBadge) : '');
+
+    roleLabel.textContent = bText ||
+      (cfg.defaultBadge ? (cfg.defaultBadge.en || cfg.defaultBadge) : '');
   }
 
   // Role specific view initializations
   if (role === 'family') {
+    if (typeof changeFamilyLinkedSenior === 'function') {
+      changeFamilyLinkedSenior('PAT-101');
+    }
+    if (typeof switchFamilyTab === 'function') {
+      switchFamilyTab('summary');
+    }
     setTimeout(initFamilyVitalsChart, 100);
   } else if (role === 'operations') {
     switchOpsTab('dashboard');
     setTimeout(initOpsCharts, 120);
   } else if (role === 'coordinator') {
-    if (typeof renderCoordinatorAlerts === 'function') renderCoordinatorAlerts();
-    if (typeof renderCoordinatorPatients === 'function') renderCoordinatorPatients();
-    if (typeof updateCoordinatorCriticalBanner === 'function') updateCoordinatorCriticalBanner();
+    renderCoordinatorAlerts();
   } else if (role === 'senior') {
     setTimeout(() => {
       if (typeof restoreAssessmentDraft === 'function') {
@@ -7333,10 +9631,8 @@ function loginAs(role) {
 }
 
 
-// =========================================================================
-// VOICE HEALTH INPUT ASSISTANT, MANDATORY VALIDATION & PERSISTENT AUTO-SAVE
-// =========================================================================
-
+// ==================================================================// VOICE HEALTH INPUT ASSISTANT, MANDATORY VALIDATION & PERSISTENT AUTO-SAVE
+// ==================================================================
 const STORAGE_KEY_ASSESSMENT_DRAFT = 'careconnect_elder_assessment_draft';
 
 // 1. Auto-Save Assessment Draft to LocalStorage
@@ -7634,10 +9930,8 @@ function highlightInputModification(inputId, label = 'Voice Updated') {
   }
 }
 
-// =========================================================================
-// HIGH-FIDELITY BILINGUAL AI VOICE ENGINE & NEURAL SPEECH SYNTHESIS
-// =========================================================================
-
+// ==================================================================// HIGH-FIDELITY BILINGUAL AI VOICE ENGINE & NEURAL SPEECH SYNTHESIS
+// ==================================================================
 let activeSpeechAudio = null;
 let cumulativeExtracted = {};
 let currentChecklist = null;
@@ -7822,10 +10116,8 @@ function playElderSpeech(text, requestedLang, options = {}) {
   }
 }
 
-// =========================================================================
-// VOICE ASSISTANT UI CONTROLLER (DOM BINDINGS & AUDIT BADGES)
-// =========================================================================
-
+// ==================================================================// VOICE ASSISTANT UI CONTROLLER (DOM BINDINGS & AUDIT BADGES)
+// ==================================================================
 function initElderVoiceAssistant() {
   const btnHindi = document.getElementById('btn-lang-hindi');
   const btnEnglish = document.getElementById('btn-lang-english');
@@ -8460,10 +10752,8 @@ if (document.readyState === 'loading') {
 }
 
 
-// =========================================================================
-// OFFICIAL CLINICAL DIAGNOSTIC REPORT SHEET ENGINE (PROPER MEDICAL REPORT)
-// =========================================================================
-
+// ==================================================================// OFFICIAL CLINICAL DIAGNOSTIC REPORT SHEET ENGINE (PROPER MEDICAL REPORT)
+// ==================================================================
 function getCurrentAssessmentData() {
   const prof = getUserProfile('senior');
   return {
@@ -9024,10 +11314,8 @@ function downloadClinicalReportSheet() {
 }
 
 
-// =========================================================================
-// DAILY CARE REMINDERS & DEVICE ALARM ENGINE (पानी, भोजन, दवा रिमाइंडर)
-// =========================================================================
-
+// ==================================================================// DAILY CARE REMINDERS & DEVICE ALARM ENGINE (पानी, भोजन, दवा रिमाइंडर)
+// ==================================================================
 const defaultSeniorReminders = [
   {
     id: 'rem-water-1',
@@ -9517,10 +11805,8 @@ function scrollToRemindersSection() {
   }
 }
 
-// =========================================================================
-// DEVICE ALARM TRIGGER, AUDITORY CHIME, NOTIFICATION & ACTIONS
-// =========================================================================
-
+// ==================================================================// DEVICE ALARM TRIGGER, AUDITORY CHIME, NOTIFICATION & ACTIONS
+// ==================================================================
 function triggerDeviceReminderAlarm(reminder) {
   if (!reminder) return;
   activeAlarmReminder = reminder;
@@ -9714,10 +12000,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ============================================================================
-// CHECKBOX MULTI-SELECT & BULK ACTIONS ENGINE
-// ============================================================================
-
+// =====================================================================// CHECKBOX MULTI-SELECT & BULK ACTIONS ENGINE
+// =====================================================================
 function handleOpsCaseCheckboxChange() {
   const checkboxes = document.querySelectorAll('.ops-case-checkbox:checked');
   const totalCheckboxes = document.querySelectorAll('.ops-case-checkbox');

@@ -703,34 +703,13 @@ const soundEngine = {
 // APPLICATION INITIALIZATION
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize clean language state from saved preference or English default
   const savedLang = localStorage.getItem('careconnect_lang') || 'en';
   setAppLanguage(savedLang);
 
-  // Start on the Login / Role Selection Page
   navigateRole('login');
   renderCoordinatorAlerts();
   renderOpsTeamTable();
   populateOpsIncidentStream();
-<<<<<<< HEAD
-  if (typeof renderFamilyCareCircle === 'function') renderFamilyCareCircle();
-  if (typeof autoFillSeniorProfileData === 'function') autoFillSeniorProfileData();
-=======
-
-  // URL Hash Navigation (#family, #coordinator, #senior, #operations)
-  if (window.location.hash) {
-    const targetHash = window.location.hash.replace('#', '').toLowerCase();
-    if (['coordinator', 'senior', 'family', 'operations'].includes(targetHash)) {
-      enterDashboard(targetHash);
-    } else if (targetHash === 'family-report') {
-      enterDashboard('family');
-      switchFamilyTab('report');
-    } else if (targetHash === 'family-history') {
-      enterDashboard('family');
-      switchFamilyTab('history');
-    }
-  }
->>>>>>> f33f462 (Your changes)
 });
 
 // Navigation between the 4 Stakeholder Views + Login
@@ -771,6 +750,7 @@ function navigateRole(role) {
     document.title = "CareConnect Operations Manager Command Center";
     switchOpsTab('dashboard');
     setTimeout(initOpsCharts, 120);
+    setTimeout(renderOpsCasesTable, 150);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     if (header) header.classList.remove('hidden');
@@ -3312,7 +3292,10 @@ function switchOpsTab(tabId) {
     switchOpsProfileTab('settings');
     return;
   }
-
+// Trigger cases table rendering when entering alerts tab
+if (tabId === 'alerts') {
+  setTimeout(renderOpsCasesTable, 50);
+}
   // Hide all subviews
   const allSubviews = document.querySelectorAll('.ops-subview');
   allSubviews.forEach(view => view.classList.add('hidden'));
@@ -3342,6 +3325,11 @@ function switchOpsTab(tabId) {
   // Trigger Leaflet interactive map rendering when entering area monitoring
   if (tabId === 'area') {
     setTimeout(initOpsRealMap, 100);
+  }
+
+  // Trigger cases table rendering when entering alerts tab
+  if (tabId === 'alerts') {
+    setTimeout(renderOpsCasesTable, 50);
   }
 
   // Close any popups
@@ -3398,22 +3386,449 @@ function toggleOpsNotificationPopup() {
 }
 
 // 4. Global Search Handler
-function handleOpsGlobalSearch(query) {
-  const q = (query || '').toLowerCase().trim();
-  // Filter case rows if search is typed
-  const rows = document.querySelectorAll('#ops-alerts-table-body tr.ops-case-row');
-  rows.forEach(r => {
-    const text = r.textContent.toLowerCase();
-    if (!q || text.includes(q)) {
-      r.style.display = '';
-    } else {
-      r.style.display = 'none';
-    }
-  });
-}
 
-// 5. Alerts & Cases Filtering
+// ============================================================================
+// COMPLETE 32 ALERTS DATASET & MULTI-CRITERIA FILTERING ENGINE
+// ============================================================================
+
+const OPS_ALL_32_ALERTS = [
+  // --- 8 HIGH RISK ALERTS (3 Pending, 4 In Progress, 1 Resolved) ---
+  {
+    id: "ALT-101",
+    senior: "Ramesh Sharma",
+    age: 74,
+    area: "Greater Kailash",
+    risk: "High",
+    issueCategory: "Missed medication",
+    issue: "Missed check-in & HR spike (114 bpm)",
+    time: "10:24 AM",
+    status: "Pending",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-44912"
+  },
+  {
+    id: "ALT-102",
+    senior: "Savitri Devi",
+    age: 81,
+    area: "Hauz Khas",
+    risk: "High",
+    issueCategory: "Fall risk",
+    issue: "Fall risk sensor & acute hip pain (8/10)",
+    time: "09:15 AM",
+    status: "In Progress",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-33418"
+  },
+  {
+    id: "ALT-103",
+    senior: "Anand Verma",
+    age: 78,
+    area: "Saket",
+    risk: "High",
+    issueCategory: "Missed medication",
+    issue: "Missed 2 insulin doses & Sugar spike (228 mg/dL)",
+    time: "08:40 AM",
+    status: "Pending",
+    coordinator: "Rajesh Kumar",
+    phone: "+91 98110-77621"
+  },
+  {
+    id: "ALT-106",
+    senior: "Devi Lal Kapoor",
+    age: 83,
+    area: "Greater Kailash",
+    risk: "High",
+    issueCategory: "Reduced activity",
+    issue: "Stage-2 BP elevation (154/92) & reduced mobility",
+    time: "07:30 AM",
+    status: "In Progress",
+    coordinator: "Dr. V.K. Kapoor",
+    phone: "+91 98110-11223"
+  },
+  {
+    id: "ALT-112",
+    senior: "Suman Lata",
+    age: 80,
+    area: "Hauz Khas",
+    risk: "High",
+    issueCategory: "Fall risk",
+    issue: "Fall risk & orthostatic dizziness upon standing",
+    time: "05:15 AM",
+    status: "Pending",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-33221"
+  },
+  {
+    id: "ALT-115",
+    senior: "Om Prakash",
+    age: 76,
+    area: "Saket",
+    risk: "High",
+    issueCategory: "Pain reported",
+    issue: "Acute chest tightness & resting tachycardia (112 bpm)",
+    time: "04:10 AM",
+    status: "In Progress",
+    coordinator: "Dr. V.K. Kapoor",
+    phone: "+91 98110-44112"
+  },
+  {
+    id: "ALT-116",
+    senior: "Kamala Nehru",
+    age: 84,
+    area: "Vasant Kunj",
+    risk: "High",
+    issueCategory: "Pain reported",
+    issue: "Severe lumbar joint pain & immobility (Level 8/10)",
+    time: "03:45 AM",
+    status: "In Progress",
+    coordinator: "Sister Sunita",
+    phone: "+91 98110-88339"
+  },
+  {
+    id: "ALT-117",
+    senior: "Jagdish Prasad",
+    age: 79,
+    area: "Greater Kailash",
+    risk: "High",
+    issueCategory: "Missed medication",
+    issue: "Severe hyperglycemia (240 mg/dL) & missed dose",
+    time: "03:20 AM",
+    status: "Resolved",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-55667"
+  },
+
+  // --- 14 MODERATE RISK ALERTS (4 Pending, 7 In Progress, 3 Resolved) ---
+  {
+    id: "ALT-104",
+    senior: "Meena Iyer",
+    age: 72,
+    area: "Vasant Kunj",
+    risk: "Moderate",
+    issueCategory: "Sleep issues",
+    issue: "Sleep deficit (4.1h) & emotional grief distress",
+    time: "08:10 AM",
+    status: "In Progress",
+    coordinator: "Sister Sunita",
+    phone: "+91 98110-55129"
+  },
+  {
+    id: "ALT-107",
+    senior: "Suman Singh",
+    age: 79,
+    area: "Hauz Khas",
+    risk: "Moderate",
+    issueCategory: "Pain reported",
+    issue: "Osteoarthritis knee pain & slow walking cadence",
+    time: "07:10 AM",
+    status: "In Progress",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-99887"
+  },
+  {
+    id: "ALT-108",
+    senior: "Bala Rao",
+    age: 75,
+    area: "Saket",
+    risk: "Moderate",
+    issueCategory: "Sleep issues",
+    issue: "Insomnia & irregular resting pulse fluctuations",
+    time: "06:45 AM",
+    status: "In Progress",
+    coordinator: "Rajesh Kumar",
+    phone: "+91 98110-44332"
+  },
+  {
+    id: "ALT-113",
+    senior: "Sheila Dixit",
+    age: 77,
+    area: "Vasant Kunj",
+    risk: "Moderate",
+    issueCategory: "Fall risk",
+    issue: "Fall risk slip sensor triggered near corridor rug",
+    time: "04:50 AM",
+    status: "In Progress",
+    coordinator: "Sister Sunita",
+    phone: "+91 98110-99443"
+  },
+  {
+    id: "ALT-114",
+    senior: "Pushpa Rani",
+    age: 74,
+    area: "Saket",
+    risk: "Moderate",
+    issueCategory: "Fall risk",
+    issue: "Slip recovery sensor flagged in kitchen",
+    time: "04:30 AM",
+    status: "In Progress",
+    coordinator: "Rajesh Kumar",
+    phone: "+91 98110-12984"
+  },
+  {
+    id: "ALT-118",
+    senior: "Prem Chand",
+    age: 76,
+    area: "Malviya Nagar",
+    risk: "Moderate",
+    issueCategory: "Reduced activity",
+    issue: "Reduced daily activity (<150 steps) & sudden fatigue",
+    time: "03:00 AM",
+    status: "Pending",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-66112"
+  },
+  {
+    id: "ALT-119",
+    senior: "Nirmala Devi",
+    age: 78,
+    area: "Hauz Khas",
+    risk: "Moderate",
+    issueCategory: "Missed medication",
+    issue: "Missed morning anti-hypertensive dose",
+    time: "02:40 AM",
+    status: "Resolved",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-77334"
+  },
+  {
+    id: "ALT-120",
+    senior: "Ratan Lal",
+    age: 82,
+    area: "Greater Kailash",
+    risk: "Moderate",
+    issueCategory: "Pain reported",
+    issue: "Persistent pain reported in right shoulder joint",
+    time: "02:15 AM",
+    status: "Pending",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-22445"
+  },
+  {
+    id: "ALT-121",
+    senior: "Vidya Sagar",
+    age: 73,
+    area: "Saket",
+    risk: "Moderate",
+    issueCategory: "Reduced activity",
+    issue: "Prolonged inactivity in bed for 6+ hours",
+    time: "01:50 AM",
+    status: "Pending",
+    coordinator: "Rajesh Kumar",
+    phone: "+91 98110-99118"
+  },
+  {
+    id: "ALT-122",
+    senior: "Shakuntala",
+    age: 75,
+    area: "Malviya Nagar",
+    risk: "Moderate",
+    issueCategory: "Sleep issues",
+    issue: "Sleep fragmentation & only 3.8h recorded rest",
+    time: "01:30 AM",
+    status: "Resolved",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-33778"
+  },
+  {
+    id: "ALT-123",
+    senior: "Balwant Rai",
+    age: 81,
+    area: "Hauz Khas",
+    risk: "Moderate",
+    issueCategory: "Pain reported",
+    issue: "Lower back lumbar spasms during morning movement",
+    time: "01:10 AM",
+    status: "In Progress",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-88441"
+  },
+  {
+    id: "ALT-124",
+    senior: "Sushila Devi",
+    age: 71,
+    area: "Greater Kailash",
+    risk: "Moderate",
+    issueCategory: "Missed medication",
+    issue: "Missed afternoon diabetic capsule dose",
+    time: "12:45 AM",
+    status: "Pending",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-55223"
+  },
+  {
+    id: "ALT-125",
+    senior: "Mohan Lal",
+    age: 77,
+    area: "Vasant Kunj",
+    risk: "Moderate",
+    issueCategory: "Reduced activity",
+    issue: "Mood changes & lethargy reported on morning check",
+    time: "12:20 AM",
+    status: "Resolved",
+    coordinator: "Sister Sunita",
+    phone: "+91 98110-66339"
+  },
+  {
+    id: "ALT-126",
+    senior: "Kailash Nath",
+    age: 79,
+    area: "Malviya Nagar",
+    risk: "Moderate",
+    issueCategory: "Reduced activity",
+    issue: "Inactive motion telemetry post minor muscle strain",
+    time: "11:55 PM",
+    status: "In Progress",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-77551"
+  },
+
+  // --- 10 LOW RISK ALERTS (3 Pending, 3 In Progress, 4 Resolved) ---
+  {
+    id: "ALT-105",
+    senior: "Harish Patel",
+    age: 76,
+    area: "Malviya Nagar",
+    risk: "Low",
+    issueCategory: "Reduced activity",
+    issue: "Routine telemetry check-in & vitals stable (Normal)",
+    time: "07:55 AM",
+    status: "Resolved",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-88231"
+  },
+  {
+    id: "ALT-109",
+    senior: "Krishna Murthy",
+    age: 70,
+    area: "Hauz Khas",
+    risk: "Low",
+    issueCategory: "Fall risk",
+    issue: "Fall risk precaution & balance grab bar request",
+    time: "06:20 AM",
+    status: "In Progress",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-22119"
+  },
+  {
+    id: "ALT-110",
+    senior: "Tara Devi",
+    age: 69,
+    area: "Vasant Kunj",
+    risk: "Low",
+    issueCategory: "Fall risk",
+    issue: "Fall risk alert & minor rug tripping hazard reported",
+    time: "06:05 AM",
+    status: "Pending",
+    coordinator: "Sister Sunita",
+    phone: "+91 98110-66554"
+  },
+  {
+    id: "ALT-111",
+    senior: "Sita Ram",
+    age: 72,
+    area: "Greater Kailash",
+    risk: "Low",
+    issueCategory: "Fall risk",
+    issue: "Fall risk safety audit & non-skid bathroom mat verified",
+    time: "05:40 AM",
+    status: "Resolved",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-77881"
+  },
+  {
+    id: "ALT-127",
+    senior: "Gayatri Devi",
+    age: 73,
+    area: "Malviya Nagar",
+    risk: "Low",
+    issueCategory: "Missed medication",
+    issue: "Medication adherence reminder confirmation pending",
+    time: "11:30 PM",
+    status: "Pending",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-22998"
+  },
+  {
+    id: "ALT-128",
+    senior: "Ved Prakash",
+    age: 71,
+    area: "Saket",
+    risk: "Low",
+    issueCategory: "Reduced activity",
+    issue: "Routine post-walk wellness review & check-in",
+    time: "11:10 PM",
+    status: "Resolved",
+    coordinator: "Rajesh Kumar",
+    phone: "+91 98110-44882"
+  },
+  {
+    id: "ALT-129",
+    senior: "Bhagwan Das",
+    age: 78,
+    area: "Greater Kailash",
+    risk: "Low",
+    issueCategory: "Missed medication",
+    issue: "Weekly refill delivery verification & scheduled check",
+    time: "10:45 PM",
+    status: "Pending",
+    coordinator: "Sister Kavita, RN",
+    phone: "+91 98110-99221"
+  },
+  {
+    id: "ALT-130",
+    senior: "Maya Wati",
+    age: 74,
+    area: "Hauz Khas",
+    risk: "Low",
+    issueCategory: "Sleep issues",
+    issue: "Sleep baseline logged at healthy 7.2 hours",
+    time: "10:20 PM",
+    status: "In Progress",
+    coordinator: "Brother Amit",
+    phone: "+91 98110-33556"
+  },
+  {
+    id: "ALT-131",
+    senior: "Ram Avatar",
+    age: 75,
+    area: "Saket",
+    risk: "Low",
+    issueCategory: "Reduced activity",
+    issue: "Low step count routine follow-up call scheduled",
+    time: "09:55 PM",
+    status: "In Progress",
+    coordinator: "Rajesh Kumar",
+    phone: "+91 98110-88117"
+  },
+  {
+    id: "ALT-132",
+    senior: "Sarojini",
+    age: 72,
+    area: "Vasant Kunj",
+    risk: "Low",
+    issueCategory: "Missed medication",
+    issue: "Monthly adherence score 100% verified normal",
+    time: "09:30 PM",
+    status: "Resolved",
+    coordinator: "Sister Sunita",
+    phone: "+91 98110-55883"
+  }
+];
+
+// Active Ops Cases Filter State
+const opsCasesFilterState = {
+  status: 'all',
+  risk: 'all',
+  issue: 'all',
+  search: '',
+  currentPage: 1,
+  pageSize: 8
+};
+
 function filterOpsAlertsTable(status) {
+  opsCasesFilterState.status = status;
+  opsCasesFilterState.currentPage = 1;
+
   const tabs = {
     'all': document.getElementById('tab-ops-filter-all'),
     'Pending': document.getElementById('tab-ops-filter-pending'),
@@ -3431,41 +3846,228 @@ function filterOpsAlertsTable(status) {
     }
   });
 
-  const rows = document.querySelectorAll('#ops-alerts-table-body tr.ops-case-row');
-  rows.forEach(r => {
-    const rowStatus = r.getAttribute('data-status');
-    if (status === 'all' || rowStatus === status) {
-      r.style.display = '';
-    } else {
-      r.style.display = 'none';
-    }
-  });
-}
-
-function filterOpsCasesSearch(query) {
-  handleOpsGlobalSearch(query);
+  renderOpsCasesTable();
 }
 
 function filterOpsAlertsBySelect() {
   const riskSelect = document.getElementById('ops-filter-risk');
   const issueSelect = document.getElementById('ops-filter-issue');
-  const risk = riskSelect ? riskSelect.value : 'all';
-  const issue = issueSelect ? issueSelect.value : 'all';
+  opsCasesFilterState.risk = riskSelect ? riskSelect.value : 'all';
+  opsCasesFilterState.issue = issueSelect ? issueSelect.value : 'all';
+  opsCasesFilterState.currentPage = 1;
 
-  const rows = document.querySelectorAll('#ops-alerts-table-body tr.ops-case-row');
-  rows.forEach(r => {
-    const rRisk = r.getAttribute('data-risk');
-    const rIssue = r.getAttribute('data-issue');
+  renderOpsCasesTable();
+}
 
-    const matchRisk = (risk === 'all' || rRisk === risk);
-    const matchIssue = (issue === 'all' || (rIssue && rIssue.includes(issue)));
+function filterOpsCasesSearch(query) {
+  opsCasesFilterState.search = (query || '').toLowerCase().trim();
+  opsCasesFilterState.currentPage = 1;
 
-    if (matchRisk && matchIssue) {
-      r.style.display = '';
-    } else {
-      r.style.display = 'none';
-    }
+  renderOpsCasesTable();
+}
+
+function handleOpsGlobalSearch(query) {
+  filterOpsCasesSearch(query);
+}
+
+function resetOpsAlertsFilters() {
+  opsCasesFilterState.status = 'all';
+  opsCasesFilterState.risk = 'all';
+  opsCasesFilterState.issue = 'all';
+  opsCasesFilterState.search = '';
+  opsCasesFilterState.currentPage = 1;
+
+  const riskSelect = document.getElementById('ops-filter-risk');
+  const issueSelect = document.getElementById('ops-filter-issue');
+  const searchInput = document.getElementById('ops-cases-search');
+
+  if (riskSelect) riskSelect.value = 'all';
+  if (issueSelect) issueSelect.value = 'all';
+  if (searchInput) searchInput.value = '';
+
+  filterOpsAlertsTable('all');
+}
+
+function gotoOpsCasesPage(page) {
+  const filtered = getFilteredOpsCases();
+  const totalPages = Math.ceil(filtered.length / opsCasesFilterState.pageSize) || 1;
+
+  if (page === 'prev') {
+    opsCasesFilterState.currentPage = Math.max(1, opsCasesFilterState.currentPage - 1);
+  } else if (page === 'next') {
+    opsCasesFilterState.currentPage = Math.min(totalPages, opsCasesFilterState.currentPage + 1);
+  } else {
+    opsCasesFilterState.currentPage = parseInt(page) || 1;
+  }
+
+  renderOpsCasesTable();
+}
+
+function getFilteredOpsCases() {
+  const { status, risk, issue, search } = opsCasesFilterState;
+  return OPS_ALL_32_ALERTS.filter(item => {
+    // 1. Status match
+    const matchStatus = (status === 'all' ||
+      item.status.toLowerCase() === status.toLowerCase() ||
+      (status === 'In Progress' && item.status.includes('Dispatched'))
+    );
+
+    // 2. Risk match
+    const matchRisk = (risk === 'all' || item.risk.toLowerCase() === risk.toLowerCase());
+
+    // 3. Issue category match
+    const matchIssue = (issue === 'all' ||
+      item.issueCategory.toLowerCase() === issue.toLowerCase() ||
+      item.issue.toLowerCase().includes(issue.toLowerCase())
+    );
+
+    // 4. Search query match
+    const matchSearch = (!search ||
+      item.senior.toLowerCase().includes(search) ||
+      item.issue.toLowerCase().includes(search) ||
+      item.coordinator.toLowerCase().includes(search) ||
+      item.area.toLowerCase().includes(search)
+    );
+
+    return matchStatus && matchRisk && matchIssue && matchSearch;
   });
+}
+
+function renderOpsCasesTable() {
+  const tableBody = document.getElementById('ops-alerts-table-body');
+  if (!tableBody) return;
+
+  const filtered = getFilteredOpsCases();
+  const { currentPage, pageSize } = opsCasesFilterState;
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / pageSize) || 1;
+  const validPage = Math.min(Math.max(1, currentPage), totalPages);
+  opsCasesFilterState.currentPage = validPage;
+
+  const startIdx = (validPage - 1) * pageSize;
+  const pageItems = filtered.slice(startIdx, startIdx + pageSize);
+
+  // Render Rows
+  if (pageItems.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" class="p-10 text-center text-slate-500 bg-slate-50/50">
+          <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center mx-auto mb-3 text-lg shadow-sm">
+            <i class="fa-solid fa-filter-circle-xmark text-teal-600"></i>
+          </div>
+          <div class="font-extrabold text-slate-800 text-sm">No alerts match the selected filters</div>
+          <div class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">No records found for current combination. Try choosing "All Risk Levels" or "All Issues".</div>
+          <button type="button" onclick="resetOpsAlertsFilters()" class="mt-4 px-4 py-2 rounded-xl bg-[#00a896] hover:bg-[#008779] text-white font-bold text-xs shadow-md transition-all active:scale-95">
+            Reset Filters (Show All 32)
+          </button>
+        </td>
+      </tr>
+    `;
+  } else {
+    tableBody.innerHTML = pageItems.map(item => {
+      const riskBadge = item.risk === 'High'
+        ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700">High</span>'
+        : item.risk === 'Moderate'
+        ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700">Moderate</span>'
+        : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Low</span>';
+
+      const statusBadge = item.status === 'Pending'
+        ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-700">Pending</span>'
+        : item.status.includes('Dispatched')
+        ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700 animate-pulse">Dispatched (12m)</span>'
+        : item.status === 'In Progress'
+        ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">In Progress</span>'
+        : '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700">Resolved</span>';
+
+      return `
+        <tr class="hover:bg-slate-50/80 transition-colors ops-case-row" data-senior="${item.senior}" data-risk="${item.risk}" data-issue="${item.issueCategory}" data-status="${item.status}" data-coord="${item.coordinator}">
+          <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
+          <td class="p-3.5 font-bold text-slate-900">${item.senior}</td>
+          <td class="p-3.5">${riskBadge}</td>
+          <td class="p-3.5 text-slate-600 font-medium">${item.issue}</td>
+          <td class="p-3.5 text-slate-500 font-mono text-[11px]">${item.time}</td>
+          <td class="p-3.5">${statusBadge}</td>
+          <td class="p-3.5 font-bold text-slate-800">${item.coordinator}</td>
+          <td class="p-3.5 text-center">
+            <div class="flex items-center justify-center space-x-1.5">
+              <button type="button" onclick="openOpsAlertDetailById('${item.id}')" title="View Clinical Telemetry & Triage" class="p-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-eye"></i></button>
+              <button type="button" onclick="triggerOpsCallSeniorById('${item.id}')" title="Call Senior Directly" class="p-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-phone"></i></button>
+              <button type="button" onclick="triggerOpsDispatchNurseById('${item.id}')" title="Dispatch Emergency Nurse" class="p-1.5 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-truck-medical"></i></button>
+              <button type="button" onclick="openOpsAssignModalById('${item.id}')" class="px-2.5 py-1 bg-[#00a896] hover:bg-[#008779] text-white rounded-lg text-xs font-bold transition-all shadow-sm">Assign</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Update Pagination Info
+  const infoEl = document.getElementById('ops-cases-pagination-info');
+  if (infoEl) {
+    if (total === 0) {
+      infoEl.textContent = 'Showing 0 of 0 alerts';
+    } else {
+      const start = startIdx + 1;
+      const end = Math.min(startIdx + pageSize, total);
+      infoEl.textContent = total === OPS_ALL_32_ALERTS.length
+        ? `Showing ${start}-${end} of ${total}`
+        : `Showing ${start}-${end} of ${total} (Filtered from ${OPS_ALL_32_ALERTS.length})`;
+    }
+  }
+
+  // Update Pagination Controls Buttons
+  const controlsEl = document.getElementById('ops-cases-pagination-controls');
+  if (controlsEl) {
+    if (totalPages <= 1) {
+      controlsEl.innerHTML = '';
+    } else {
+      let btnsHtml = `
+        <button type="button" onclick="gotoOpsCasesPage('prev')" class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 ${validPage === 1 ? 'opacity-40 pointer-events-none' : ''}">
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+        </button>
+      `;
+
+      for (let p = 1; p <= totalPages; p++) {
+        if (p === validPage) {
+          btnsHtml += `<button type="button" class="w-7 h-7 rounded-lg bg-[#00a896] text-white flex items-center justify-center font-bold shadow-sm">${p}</button>`;
+        } else {
+          btnsHtml += `<button type="button" onclick="gotoOpsCasesPage(${p})" class="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-600 flex items-center justify-center font-bold">${p}</button>`;
+        }
+      }
+
+      btnsHtml += `
+        <button type="button" onclick="gotoOpsCasesPage('next')" class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 ${validPage === totalPages ? 'opacity-40 pointer-events-none' : ''}">
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+
+      controlsEl.innerHTML = btnsHtml;
+    }
+  }
+}
+
+function openOpsAlertDetailById(id) {
+  const item = OPS_ALL_32_ALERTS.find(a => a.id === id);
+  if (!item) return;
+  openOpsAlertDetail(item.senior, item.risk, item.issue, item.status, item.coordinator);
+}
+
+function openOpsAssignModalById(id) {
+  const item = OPS_ALL_32_ALERTS.find(a => a.id === id);
+  if (!item) return;
+  openOpsAssignModal(item.senior, item.risk, item.issue, item.coordinator);
+}
+
+function triggerOpsCallSeniorById(id) {
+  const item = OPS_ALL_32_ALERTS.find(a => a.id === id);
+  if (!item) return;
+  triggerOpsCallSeniorFor(item.senior, item.phone);
+}
+
+function triggerOpsDispatchNurseById(id) {
+  const item = OPS_ALL_32_ALERTS.find(a => a.id === id);
+  if (!item) return;
+  triggerOpsDispatchNurseFor(item.senior, item.coordinator);
 }
 
 // 6. Manual Assign Modal Controls
@@ -3507,18 +4109,19 @@ function confirmOpsAssignModal() {
   const chosenCoord = coordSelect ? coordSelect.value : 'Sister Kavita, RN';
 
   if (currentAssignTargetSenior) {
+    const alertItem = OPS_ALL_32_ALERTS.find(a => a.senior === currentAssignTargetSenior);
+    if (alertItem) {
+      alertItem.status = 'In Progress';
+      alertItem.coordinator = chosenCoord;
+    }
     const rows = document.querySelectorAll('#ops-alerts-table-body tr');
     rows.forEach(r => {
       if (r.getAttribute('data-senior') === currentAssignTargetSenior) {
         r.setAttribute('data-status', 'In Progress');
         r.setAttribute('data-coord', chosenCoord);
-        const cells = r.querySelectorAll('td');
-        if (cells.length >= 7) {
-          cells[5].innerHTML = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">In Progress</span>';
-          cells[6].textContent = chosenCoord;
-        }
       }
     });
+    renderOpsCasesTable();
   }
 
   closeOpsAssignModal();
@@ -3543,40 +4146,32 @@ function submitOpsNewAlert(e) {
   const issue = document.getElementById('ops-new-alert-issue').value;
   const coord = document.getElementById('ops-new-alert-coord').value;
 
-  const tbody = document.getElementById('ops-alerts-table-body');
-  if (tbody) {
-    const tr = document.createElement('tr');
-    tr.className = 'hover:bg-slate-50/80 transition-colors ops-case-row';
-    tr.setAttribute('data-senior', senior);
-    tr.setAttribute('data-risk', risk);
-    tr.setAttribute('data-issue', issue);
-    tr.setAttribute('data-status', 'Pending');
-    tr.setAttribute('data-coord', coord);
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    const riskBadge = risk === 'High'
-      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700">High</span>'
-      : risk === 'Moderate'
-      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700">Moderate</span>'
-      : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Low</span>';
-
-    tr.innerHTML = `
-      <td class="p-3.5 pl-4"><input type="checkbox" class="rounded text-teal-600"></td>
-      <td class="p-3.5 font-bold text-slate-900">${senior}</td>
-      <td class="p-3.5">${riskBadge}</td>
-      <td class="p-3.5 text-slate-600 font-medium">${issue}</td>
-      <td class="p-3.5 text-slate-500 font-mono text-[11px]">Just now</td>
-      <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-700">Pending</span></td>
-      <td class="p-3.5 font-bold text-slate-800">${coord}</td>
-      <td class="p-3.5 text-center">
-        <button type="button" onclick="openOpsAssignModal('${senior}', '${risk}', '${issue}', '${coord}')" class="px-3 py-1 bg-[#00a896] hover:bg-[#008779] text-white rounded-lg text-xs font-bold transition-all shadow-sm">Assign</button>
-      </td>
-    `;
-    tbody.prepend(tr);
+  if (typeof OPS_ALL_32_ALERTS !== 'undefined') {
+    OPS_ALL_32_ALERTS.unshift({
+      id: 'ALT-' + Date.now().toString().slice(-3),
+      senior: senior,
+      age: 75,
+      area: 'Delhi NCR',
+      risk: risk,
+      issueCategory: issue,
+      issue: issue,
+      time: timeStr,
+      status: 'Pending',
+      coordinator: coord,
+      phone: '+91 98110-12345'
+    });
+    if (typeof renderOpsCasesTable === 'function') {
+      renderOpsCasesTable();
+    }
   }
 
   closeOpsNewAlertModal();
-  showToast(`New alert logged for ${senior} & assigned to ${coord}`, 'success');
+  showToast('New priority alert logged for ' + senior, 'success');
 }
+
 
 // 8. Add Coordinator Controls
 function openOpsAddCoordinatorModal() {
@@ -6973,33 +7568,34 @@ function enterDashboard(role, userObj) {
     avatar.className = `w-8 h-8 rounded-full ${cfg.avatarBg} text-white flex items-center justify-center font-bold text-xs shadow-sm`;
   }
   if (nameLabel) nameLabel.textContent = user.name;
-<<<<<<< HEAD
   if (roleLabel) {
     let bText = user.badge;
+
     if (typeof bText === 'object' && bText !== null) {
-      const curLang = (typeof state !== 'undefined' && state.seniorLanguage) ? state.seniorLanguage : 'en';
+      const curLang =
+        (typeof state !== 'undefined' && state.seniorLanguage)
+          ? state.seniorLanguage
+          : 'en';
+
       bText = bText[curLang] || bText.en || bText.hi || '';
     }
-    roleLabel.textContent = bText || (cfg.defaultBadge ? (cfg.defaultBadge.en || cfg.defaultBadge) : '');
+
+    roleLabel.textContent = bText ||
+      (cfg.defaultBadge ? (cfg.defaultBadge.en || cfg.defaultBadge) : '');
   }
 
   // Role specific view initializations
   if (role === 'family') {
+    if (typeof changeFamilyLinkedSenior === 'function') {
+      changeFamilyLinkedSenior('PAT-101');
+    }
+    if (typeof switchFamilyTab === 'function') {
+      switchFamilyTab('summary');
+    }
     setTimeout(initFamilyVitalsChart, 100);
   } else if (role === 'operations') {
     switchOpsTab('dashboard');
     setTimeout(initOpsCharts, 120);
-=======
-  if (roleLabel) roleLabel.textContent = typeof user.badge === "object" ? (user.badge.en || "Family Member") : (user.badge || "Family Member");
-
-  // Role specific view initializations
-      if (role === 'family') {
-      if (typeof changeFamilyLinkedSenior === 'function') changeFamilyLinkedSenior('PAT-101');
-      if (typeof switchFamilyTab === 'function') switchFamilyTab('summary');
-      setTimeout(initFamilyVitalsChart, 100);
-    } else if (role === 'operations') {
-    setTimeout(initOpsCharts, 100);
->>>>>>> f33f462 (Your changes)
   } else if (role === 'coordinator') {
     renderCoordinatorAlerts();
   } else if (role === 'senior') {
@@ -9437,11 +10033,4 @@ function initSeniorRemindersHub() {
   }
 }
 
-// Start ticker on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    if (typeof initSeniorRemindersHub === 'function') {
-      initSeniorRemindersHub();
-    }
-  }, 300);
-});
+

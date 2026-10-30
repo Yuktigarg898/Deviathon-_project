@@ -836,7 +836,9 @@ function navigateRole(role) {
     updateNavPills(role);
     
     // View-specific initializations
-        if (role === 'family') {
+        if (role === 'senior') {
+      setTimeout(initSeniorView, 80);
+    } else if (role === 'family') {
       if (typeof changeFamilyLinkedSenior === 'function') changeFamilyLinkedSenior('PAT-101');
       if (typeof switchFamilyTab === 'function') switchFamilyTab('summary');
       setTimeout(initFamilyVitalsChart, 100);
@@ -1337,6 +1339,305 @@ function simulateIncomingAlert() {
 // Requirement: Simple ways to share how they feel: a voice note, a missed-
 // call check-in or a one-tap reply, in Hindi or English.
 // ==================================================================
+
+// =========================================================================
+// SLIDE-OUT DRAWER / SIDEBAR LOGIC (साइड बार मेनू)
+// =========================================================================
+function toggleSlideDrawer(forceOpen) {
+  const backdrop = document.getElementById('slide-drawer-backdrop');
+  const menu = document.getElementById('slide-drawer-menu');
+  if (!menu) return;
+
+  const isCurrentlyOpen = !menu.classList.contains('-translate-x-full');
+  const shouldOpen = (typeof forceOpen === 'boolean') ? forceOpen : !isCurrentlyOpen;
+
+  if (shouldOpen) {
+    if (backdrop) backdrop.classList.remove('hidden');
+    menu.classList.remove('-translate-x-full');
+    menu.classList.add('translate-x-0');
+    updateDrawerUserInfo();
+    if (soundEngine && typeof soundEngine.playTone === 'function') {
+      soundEngine.playTone(520, 'sine', 0.08);
+    }
+  } else {
+    menu.classList.remove('translate-x-0');
+    menu.classList.add('-translate-x-full');
+    if (backdrop) backdrop.classList.add('hidden');
+  }
+}
+
+function updateDrawerUserInfo() {
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { name: 'Ramesh Sharma', age: 74, gender: 'Male', location: 'New Delhi' };
+  const avatar = document.getElementById('drawer-user-avatar');
+  const name = document.getElementById('drawer-user-name');
+  const meta = document.getElementById('drawer-user-meta');
+  if (avatar) avatar.textContent = prof.name ? prof.name.split(' ').map(w => w[0]).join('').substring(0, 2) : 'RS';
+  if (name) name.textContent = prof.name || 'Ramesh Sharma';
+  if (meta) meta.textContent = `${prof.age || 74} Yrs • ${prof.gender || 'Male'} • ${prof.location || 'New Delhi'}`;
+
+  // Update language buttons active state in drawer
+  const curLang = (typeof state !== 'undefined' && state.seniorLanguage) || localStorage.getItem('careconnect_lang') || 'en';
+  const enBtn = document.getElementById('drawer-lang-en');
+  const hiBtn = document.getElementById('drawer-lang-hi');
+  if (enBtn && hiBtn) {
+    if (curLang === 'hi') {
+      hiBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs';
+      enBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+    } else {
+      enBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs';
+      hiBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+    }
+  }
+}
+
+window.toggleSlideDrawer = toggleSlideDrawer;
+window.updateDrawerUserInfo = updateDrawerUserInfo;
+
+// =========================================================================
+// EMERGENCY VOICE SOS & LIVE GPS / CALLING HUB
+// =========================================================================
+let sosCountdownInterval = null;
+let sosCountdownVal = 6;
+let sosCallTimerInterval = null;
+let sosCallSeconds = 0;
+let isEmergencyRecording = false;
+
+function openVoiceEmergencySOSModal() {
+  const modal = document.getElementById('modal-emergency-voice-sos');
+  if (!modal) return;
+
+  if (soundEngine && typeof soundEngine.playEmergencySiren === 'function') {
+    soundEngine.playEmergencySiren();
+  }
+
+  modal.classList.remove('hidden');
+
+  // Populate Live GPS
+  const addressEl = document.getElementById('sos-gps-address');
+  const coordsEl = document.getElementById('sos-gps-coords');
+  const badgeEl = document.getElementById('sos-gps-badge');
+  const spinner = document.getElementById('sos-gps-spinner');
+
+  if (spinner) spinner.classList.remove('animate-spin');
+  if (badgeEl) {
+    badgeEl.textContent = 'Active Lock ✓';
+    badgeEl.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800';
+  }
+  if (addressEl) {
+    addressEl.textContent = 'C-42, Greater Kailash-1, South Delhi, 110048';
+  }
+  if (coordsEl) {
+    coordsEl.textContent = '28.5355° N, 77.2410° E • Accuracy: ±3m';
+  }
+
+  // Start 6s Countdown
+  sosCountdownVal = 6;
+  const countEl = document.getElementById('sos-countdown-seconds');
+  if (countEl) countEl.textContent = `${sosCountdownVal}s`;
+
+  if (sosCountdownInterval) clearInterval(sosCountdownInterval);
+  sosCountdownInterval = setInterval(() => {
+    sosCountdownVal--;
+    if (countEl) countEl.textContent = `${sosCountdownVal}s`;
+    if (sosCountdownVal <= 0) {
+      clearInterval(sosCountdownInterval);
+      confirmAndDispatchEmergencySOS();
+    }
+  }, 1000);
+}
+
+function closeVoiceEmergencySOSModal() {
+  if (sosCountdownInterval) {
+    clearInterval(sosCountdownInterval);
+    sosCountdownInterval = null;
+  }
+  const modal = document.getElementById('modal-emergency-voice-sos');
+  if (modal) modal.classList.add('hidden');
+}
+
+function toggleEmergencyVoiceRecording() {
+  const icon = document.getElementById('sos-mic-icon');
+  const wave = document.getElementById('sos-wave-animation');
+  const status = document.getElementById('sos-mic-status-label');
+  const textEl = document.getElementById('sos-recorded-voice-text');
+
+  if (!isEmergencyRecording) {
+    isEmergencyRecording = true;
+    if (icon) icon.className = 'fa-solid fa-stop text-3xl text-white';
+    if (wave) wave.classList.remove('hidden');
+    if (status) status.textContent = 'Listening & Transcribing... (सुन रहे हैं)';
+    if (soundEngine && typeof soundEngine.playTone === 'function') soundEngine.playTone(700, 'sine', 0.2);
+
+    setTimeout(() => {
+      if (isEmergencyRecording) {
+        toggleEmergencyVoiceRecording();
+        if (textEl) {
+          textEl.value = 'चक्कर आ गए थे और उठ नहीं पा रहा हूँ / Severe dizziness, unable to stand up';
+        }
+      }
+    }, 3500);
+  } else {
+    isEmergencyRecording = false;
+    if (icon) icon.className = 'fa-solid fa-microphone text-3xl text-white';
+    if (wave) wave.classList.add('hidden');
+    if (status) status.textContent = 'Transcribed ✓ (Tap to record again)';
+    if (soundEngine && typeof soundEngine.playSuccessChime === 'function') soundEngine.playSuccessChime();
+  }
+}
+
+function selectSosDistressPreset(presetText) {
+  const textEl = document.getElementById('sos-recorded-voice-text');
+  if (textEl) textEl.value = presetText;
+  if (soundEngine && typeof soundEngine.playTone === 'function') soundEngine.playTone(600, 'sine', 0.1);
+  showToast(`Selected emergency reason: ${presetText.split('/')[0]}`, 'info');
+}
+
+function confirmAndDispatchEmergencySOS() {
+  closeVoiceEmergencySOSModal();
+
+  const hubModal = document.getElementById('modal-emergency-calling-hub');
+  if (!hubModal) return;
+
+  hubModal.classList.remove('hidden');
+
+  if (soundEngine && typeof soundEngine.playPhoneRing === 'function') {
+    soundEngine.playPhoneRing();
+  }
+
+  // Update transcribed text in calling hub
+  const distressText = document.getElementById('sos-recorded-voice-text')?.value || 'Sudden Fall & Severe Distress Alert';
+  const hubVoice = document.getElementById('sos-hub-voice-text');
+  if (hubVoice) hubVoice.textContent = distressText;
+
+  // Start call timer
+  sosCallSeconds = 0;
+  const timerEl = document.getElementById('sos-call-duration-timer');
+  if (timerEl) timerEl.textContent = '00:01';
+
+  if (sosCallTimerInterval) clearInterval(sosCallTimerInterval);
+  sosCallTimerInterval = setInterval(() => {
+    sosCallSeconds++;
+    const mins = String(Math.floor(sosCallSeconds / 60)).padStart(2, '0');
+    const secs = String(sosCallSeconds % 60).padStart(2, '0');
+    if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+  }, 1000);
+
+  // Auto connect simulation
+  setTimeout(() => {
+    const coordStatus = document.getElementById('sos-call-status-coordinator');
+    if (coordStatus) {
+      coordStatus.className = 'px-3 py-1.5 rounded-xl text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center space-x-1.5';
+      coordStatus.innerHTML = '<i class="fa-solid fa-phone text-xs"></i><span>CONNECTED • SISTER KAVITA TALKING</span>';
+    }
+    if (soundEngine && typeof soundEngine.playSuccessChime === 'function') {
+      soundEngine.playSuccessChime();
+    }
+  }, 2000);
+
+  addOpsIncidentLog(`🚨 SOS EMERGENCY TRIGGERED by Ramesh Sharma: "${distressText}"`);
+  showToast('Emergency response activated! Hospital lead & family connected.', 'danger');
+}
+
+function toggleEmergencySpeaker() {
+  const text = document.getElementById('sos-speaker-text');
+  const btn = document.getElementById('sos-btn-speaker');
+  if (!text) return;
+  if (text.textContent.includes('ON')) {
+    text.textContent = 'Speaker (OFF)';
+    if (btn) btn.className = 'flex-1 py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 border border-slate-300 text-xs font-black flex items-center justify-center space-x-1.5 shadow-xs transition-all';
+  } else {
+    text.textContent = 'Speaker (ON)';
+    if (btn) btn.className = 'flex-1 py-3 px-3 rounded-2xl bg-teal-50 text-teal-800 border border-teal-300 text-xs font-black flex items-center justify-center space-x-1.5 shadow-xs transition-all';
+  }
+}
+
+function toggleEmergencyMicMute() {
+  const text = document.getElementById('sos-mute-text');
+  const icon = document.getElementById('sos-mute-icon');
+  const btn = document.getElementById('sos-btn-mute');
+  if (!text) return;
+  if (text.textContent === 'Mute') {
+    text.textContent = 'Muted';
+    if (icon) icon.className = 'fa-solid fa-microphone-slash text-sm text-rose-600';
+    if (btn) btn.className = 'flex-1 py-3 px-3 rounded-2xl bg-rose-50 text-rose-800 border border-rose-300 text-xs font-black flex items-center justify-center space-x-1.5 shadow-xs transition-all';
+  } else {
+    text.textContent = 'Mute';
+    if (icon) icon.className = 'fa-solid fa-microphone text-sm';
+    if (btn) btn.className = 'flex-1 py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 border border-slate-300 text-xs font-black flex items-center justify-center space-x-1.5 shadow-xs transition-all';
+  }
+}
+
+function endEmergencyCalls() {
+  if (sosCallTimerInterval) {
+    clearInterval(sosCallTimerInterval);
+    sosCallTimerInterval = null;
+  }
+  const hubModal = document.getElementById('modal-emergency-calling-hub');
+  if (hubModal) hubModal.classList.add('hidden');
+  showToast('Emergency call ended. Live dispatch remains logged in CareConnect Hub.', 'info');
+}
+
+window.openVoiceEmergencySOSModal = openVoiceEmergencySOSModal;
+window.closeVoiceEmergencySOSModal = closeVoiceEmergencySOSModal;
+window.toggleEmergencyVoiceRecording = toggleEmergencyVoiceRecording;
+window.selectSosDistressPreset = selectSosDistressPreset;
+window.confirmAndDispatchEmergencySOS = confirmAndDispatchEmergencySOS;
+window.toggleEmergencySpeaker = toggleEmergencySpeaker;
+window.toggleEmergencyMicMute = toggleEmergencyMicMute;
+window.endEmergencyCalls = endEmergencyCalls;
+
+// =========================================================================
+// SENIOR VIEW COMPREHENSIVE INITIALIZER
+// =========================================================================
+function initSeniorView() {
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile('senior') : { name: 'Ramesh Sharma', age: 74, gender: 'Male', location: 'South Delhi' };
+  
+  // Set profile display
+  const profNameEl = document.getElementById('senior-profile-name');
+  if (profNameEl) profNameEl.textContent = prof.name || 'Ramesh Sharma';
+
+  // Ensure age and gender fields are filled
+  const ageEl = document.getElementById('assess-age');
+  if (ageEl && !ageEl.value) ageEl.value = prof.age || 74;
+  const genderEl = document.getElementById('assess-gender');
+  if (genderEl && !genderEl.value) genderEl.value = prof.gender || 'Male';
+
+  // Prefill baseline if all vitals are empty
+  const hEl = document.getElementById('assess-height');
+  if (hEl && !hEl.value) {
+    fillAssessmentPreset('healthy');
+  } else {
+    if (typeof restoreAssessmentDraft === 'function') restoreAssessmentDraft();
+  }
+
+  // Update progress bar
+  if (typeof updateAssessmentProgressMeter === 'function') {
+    updateAssessmentProgressMeter();
+  }
+
+  // Update drawer user info
+  if (typeof updateDrawerUserInfo === 'function') {
+    updateDrawerUserInfo();
+  }
+
+  // Initialize Reminders
+  if (typeof initSeniorRemindersHub === 'function') {
+    initSeniorRemindersHub();
+  }
+
+  // Restore daily tasks
+  if (typeof restoreDailyTasks === 'function') {
+    restoreDailyTasks();
+  }
+
+  // Render family care circle
+  if (typeof renderFamilyCareCircle === 'function') {
+    renderFamilyCareCircle();
+  }
+}
+window.initSeniorView = initSeniorView;
+
+
 // Unified Global Language Switcher (Zero Parallel Slashes)
 function setAppLanguage(lang, notify = true) {
   if (!state) return;
@@ -7209,6 +7510,11 @@ function fillAssessmentPreset(type) {
     setPainPresent(false);
     updatePainSlider(0);
     showToast('Loaded Sample 1: Healthy Senior Profile 🟢', 'success');
+    toggleSugarInput('0');
+    updateCalculatedBMI();
+    updateADLScore();
+    saveAssessmentDraft();
+    updateAssessmentProgressMeter();
   } else if (type === 'moderate') {
     document.getElementById('assess-age').value = 76;
     document.getElementById('assess-gender').value = 'Male';
@@ -7236,6 +7542,11 @@ function fillAssessmentPreset(type) {
     setPainPresent(true);
     updatePainSlider(4);
     showToast('Loaded Sample 2: Moderate Risk Profile 🟡', 'warning');
+    toggleSugarInput('1');
+    updateCalculatedBMI();
+    updateADLScore();
+    saveAssessmentDraft();
+    updateAssessmentProgressMeter();
   } else if (type === 'critical') {
     document.getElementById('assess-age').value = 82;
     document.getElementById('assess-gender').value = 'Male';
@@ -7329,6 +7640,21 @@ function updatePainSlider(val) {
 
   if (slider) slider.value = val;
   if (sliderVal) sliderVal.textContent = val;
+
+  // Sync Pain Yes/No buttons
+  const btnNo = document.getElementById('btn-pain-no');
+  const btnYes = document.getElementById('btn-pain-yes');
+  if (val > 0) {
+    assessmentState.painPresent = true;
+    if (btnYes) btnYes.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-amber-500 bg-amber-500 text-white transition-all text-center';
+    if (btnNo) btnNo.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:border-emerald-400 transition-all text-center';
+  } else {
+    assessmentState.painPresent = false;
+    if (btnNo) btnNo.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-emerald-500 bg-emerald-500 text-white transition-all text-center';
+    if (btnYes) btnYes.className = 'px-3 py-2 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:border-amber-400 transition-all text-center';
+  }
+  if (typeof saveAssessmentDraft === 'function') saveAssessmentDraft();
+  if (typeof updateAssessmentProgressMeter === 'function') updateAssessmentProgressMeter();
 
   if (val === 0) {
     if (displayBadge) {

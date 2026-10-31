@@ -10353,11 +10353,8 @@ function enterDashboard(role, userObj) {
   } else if (role === 'coordinator') {
     if (typeof initMedcareCoordinatorDashboard === 'function') {
       initMedcareCoordinatorDashboard();
-    } else if (typeof renderCoordinatorAssignedTasks === 'function') {
-      renderCoordinatorAssignedTasks();
-    } else if (typeof renderCoordinatorHub === 'function') {
-      renderCoordinatorHub();
-    } else {
+    }
+    if (typeof renderCoordinatorAlerts === 'function') {
       renderCoordinatorAlerts();
     }
   } else if (role === 'senior') {
@@ -15430,3 +15427,555 @@ async function checkAndRenderFamilyWatchSOSBanner() {
     }
   } catch(e) {}
 }
+
+
+// ============================================================================
+// MEDCARE COORDINATOR DASHBOARD ENGINE (PATIENTS DIRECTORY & ASSIGNED TASKS)
+// ============================================================================
+
+const coordinatorPatients = [
+  {
+    id: "PAT-101",
+    name: "Ramesh Sharma",
+    age: 74,
+    gender: "Male",
+    initials: "RS",
+    avatarBg: "bg-gradient-to-tr from-amber-500 to-orange-500",
+    location: "South Delhi (GK C-42)",
+    phone: "+91 98711 23456",
+    assignedNurse: "Sister Kavita, RN (Primary)",
+    nurseInitials: "SK",
+    riskTier: "critical",
+    riskScore: 88,
+    riskLabel: "Critical Risk (Tier 1)",
+    riskColor: "bg-rose-100 text-rose-800 border-rose-300",
+    vitals: { bp: "158/96 mmHg", hr: "114 bpm", spo2: "94%", sleep: "5.2 hrs" },
+    conditions: "Severe Hypertension, Arrhythmia Spike, T2DM",
+    familyContact: "Rahul Sharma (Son) • +91 98711 23456"
+  },
+  {
+    id: "PAT-102",
+    name: "Savitri Devi",
+    age: 81,
+    gender: "Female",
+    initials: "SD",
+    avatarBg: "bg-gradient-to-tr from-purple-500 to-indigo-600",
+    location: "CR Park, New Delhi",
+    phone: "+91 98102 34567",
+    assignedNurse: "Brother Amit (Paramedic)",
+    nurseInitials: "BA",
+    riskTier: "critical",
+    riskScore: 82,
+    riskLabel: "Critical Risk (Tier 1)",
+    riskColor: "bg-rose-100 text-rose-800 border-rose-300",
+    vitals: { bp: "142/88 mmHg", hr: "88 bpm", spo2: "95%", sleep: "4.8 hrs" },
+    conditions: "Severe Osteoporosis (T -3.1), Post-Fall Splint",
+    familyContact: "Pooja Devi (Daughter) • +91 98102 34567"
+  },
+  {
+    id: "PAT-103",
+    name: "Anand Verma",
+    age: 78,
+    gender: "Male",
+    initials: "AV",
+    avatarBg: "bg-gradient-to-tr from-teal-500 to-emerald-600",
+    location: "Vasant Vihar, New Delhi",
+    phone: "+91 98991 45678",
+    assignedNurse: "Sister Kavita, RN",
+    nurseInitials: "SK",
+    riskTier: "critical",
+    riskScore: 78,
+    riskLabel: "Critical Risk (Tier 1)",
+    riskColor: "bg-rose-100 text-rose-800 border-rose-300",
+    vitals: { bp: "150/92 mmHg", hr: "96 bpm", spo2: "93%", sleep: "6.0 hrs" },
+    conditions: "Post-CABG Cardiac Rehab, COPD Stage 2",
+    familyContact: "Rajesh Kumar (Caregiver) • +91 98991 45678"
+  },
+  {
+    id: "PAT-104",
+    name: "Meena Iyer",
+    age: 72,
+    gender: "Female",
+    initials: "MI",
+    avatarBg: "bg-gradient-to-tr from-sky-500 to-blue-600",
+    location: "Saket D-Block, New Delhi",
+    phone: "+91 99112 56789",
+    assignedNurse: "Sister Sunita (Counselor)",
+    nurseInitials: "SS",
+    riskTier: "med",
+    riskScore: 54,
+    riskLabel: "Moderate Risk (Tier 2)",
+    riskColor: "bg-amber-100 text-amber-800 border-amber-300",
+    vitals: { bp: "132/84 mmHg", hr: "76 bpm", spo2: "97%", sleep: "6.5 hrs" },
+    conditions: "Mild Osteoarthritis, Nutritional Deficiency",
+    familyContact: "Karthik Iyer (Son) • +91 99112 56789"
+  },
+  {
+    id: "PAT-105",
+    name: "Harish Patel",
+    age: 76,
+    gender: "Male",
+    initials: "HP",
+    avatarBg: "bg-gradient-to-tr from-emerald-500 to-teal-600",
+    location: "Hauz Khas, New Delhi",
+    phone: "+91 98113 67890",
+    assignedNurse: "Sister Kavita, RN",
+    nurseInitials: "SK",
+    riskTier: "low",
+    riskScore: 28,
+    riskLabel: "Stable / Normal (Tier 3)",
+    riskColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    vitals: { bp: "124/80 mmHg", hr: "72 bpm", spo2: "98%", sleep: "7.2 hrs" },
+    conditions: "Mild Pre-Hypertension (Diet Controlled)",
+    familyContact: "Sunita Patel (Wife) • +91 98113 67890"
+  }
+];
+
+const coordinatorDuties = [
+  {
+    id: "DUTY-101",
+    taskId: "TASK-101",
+    patientId: "PAT-101",
+    patientName: "Ramesh Sharma",
+    patientAge: 74,
+    patientInitials: "RS",
+    avatarBg: "bg-gradient-to-tr from-amber-500 to-orange-500",
+    taskTitle: "Morning BP Medication (Telmisartan 40mg)",
+    type: "visit",
+    typeLabel: "Home Verification",
+    time: "08:30 AM",
+    date: "Today",
+    assignedTo: "Sister Kavita, RN",
+    diagnosis: "Hypertension Telemetry Review",
+    status: "fulfilled",
+    statusLabel: "Verified with Proof ✅",
+    proofHash: "CC-PRF-88491"
+  },
+  {
+    id: "DUTY-102",
+    taskId: "TASK-103",
+    patientId: "PAT-101",
+    patientName: "Ramesh Sharma",
+    patientAge: 74,
+    patientInitials: "RS",
+    avatarBg: "bg-gradient-to-tr from-amber-500 to-orange-500",
+    taskTitle: "15-Min Garden Walk & Telemetry Audit",
+    type: "visit",
+    typeLabel: "Mobility Audit",
+    time: "09:30 AM",
+    date: "Today",
+    assignedTo: "Sister Kavita, RN",
+    diagnosis: "Cardiovascular Rehab Protocol",
+    status: "pending",
+    statusLabel: "Awaiting Senior ⏳"
+  },
+  {
+    id: "DUTY-103",
+    patientId: "PAT-102",
+    patientName: "Savitri Devi",
+    patientAge: 81,
+    patientInitials: "SD",
+    avatarBg: "bg-gradient-to-tr from-purple-500 to-indigo-600",
+    taskTitle: "Post-Fall Bedside Splint & Orthopedic Check",
+    type: "visit",
+    typeLabel: "Emergency Dispatch",
+    time: "10:30 AM",
+    date: "Today",
+    assignedTo: "Brother Amit (Paramedic)",
+    diagnosis: "Severe Osteoporosis (T-score -3.1)",
+    status: "critical",
+    statusLabel: "Priority Attention 🚨"
+  },
+  {
+    id: "DUTY-104",
+    patientId: "PAT-103",
+    patientName: "Anand Verma",
+    patientAge: 78,
+    patientInitials: "AV",
+    avatarBg: "bg-gradient-to-tr from-teal-500 to-emerald-600",
+    taskTitle: "Post-CABG Pulse Oximeter & SpO2 Audit",
+    type: "call",
+    typeLabel: "Tele-Consult",
+    time: "11:45 AM",
+    date: "Today",
+    assignedTo: "Sister Kavita, RN",
+    diagnosis: "COPD Stage 2 & Hypoxia Watch",
+    status: "fulfilled",
+    statusLabel: "Verified Call ✅"
+  },
+  {
+    id: "DUTY-105",
+    patientId: "PAT-104",
+    patientName: "Meena Iyer",
+    patientAge: 72,
+    patientInitials: "MI",
+    avatarBg: "bg-gradient-to-tr from-sky-500 to-blue-600",
+    taskTitle: "Nutritional Protein Therapy & Hydration Review",
+    type: "call",
+    typeLabel: "Tele-Consult",
+    time: "01:15 PM",
+    date: "Today",
+    assignedTo: "Sister Sunita (Counselor)",
+    diagnosis: "Dietary Compliance / Osteoarthritis",
+    status: "scheduled",
+    statusLabel: "Scheduled 📅"
+  },
+  {
+    id: "DUTY-106",
+    patientId: "PAT-105",
+    patientName: "Harish Patel",
+    patientAge: 76,
+    patientInitials: "HP",
+    avatarBg: "bg-gradient-to-tr from-emerald-500 to-teal-600",
+    taskTitle: "Evening Blood Glucose Reading Audit",
+    type: "visit",
+    typeLabel: "Routine Check",
+    time: "04:30 PM",
+    date: "Today",
+    assignedTo: "Sister Kavita, RN",
+    diagnosis: "Pre-Diabetes Glucose Screening",
+    status: "scheduled",
+    statusLabel: "Scheduled 📅"
+  }
+];
+
+let activeMedcareSubView = 'appointments';
+let currentApptFilter = 'all';
+let currentPatFilter = 'all';
+let currentCoordSearch = '';
+
+function initMedcareCoordinatorDashboard() {
+  // Update KPI counters
+  const totalPat = coordinatorPatients.length;
+  const totalDuties = coordinatorDuties.length;
+  const fulfilledCount = coordinatorDuties.filter(d => d.status === 'fulfilled').length;
+  const criticalCount = coordinatorDuties.filter(d => d.status === 'critical').length;
+  const pct = Math.round((fulfilledCount / totalDuties) * 100);
+
+  const elTotalPat = document.getElementById('medcare-stat-total-patients');
+  if (elTotalPat) elTotalPat.textContent = `${totalPat} Active`;
+
+  const elApptToday = document.getElementById('medcare-stat-appointments-today');
+  if (elApptToday) elApptToday.textContent = `${totalDuties} Duties`;
+
+  const elPendingReports = document.getElementById('medcare-stat-pending-reports');
+  if (elPendingReports) elPendingReports.textContent = `${criticalCount} Urgent`;
+
+  const elFulfillRate = document.getElementById('medcare-stat-fulfillment-rate');
+  if (elFulfillRate) elFulfillRate.textContent = `${pct}% Verified`;
+
+  const elVerifiedPct = document.getElementById('medcare-kpi-verified-percent');
+  if (elVerifiedPct) elVerifiedPct.textContent = `${pct}%`;
+
+  const elVerifiedBar = document.getElementById('medcare-kpi-verified-bar');
+  if (elVerifiedBar) elVerifiedBar.style.width = `${pct}%`;
+
+  const elPendingBar = document.getElementById('medcare-kpi-pending-bar');
+  if (elPendingBar) elPendingBar.style.width = `${100 - pct}%`;
+
+  // Update nav badge counts
+  const badgePat = document.getElementById('badge-nav-patients-count');
+  if (badgePat) badgePat.textContent = totalPat;
+
+  const badgeAppt = document.getElementById('badge-nav-appointments-count');
+  if (badgeAppt) badgeAppt.textContent = totalDuties;
+
+  // Render both sections
+  renderMedcareAppointmentsTable(currentApptFilter);
+  renderMedcarePatientsDirectory(currentPatFilter);
+
+  // Set default view
+  switchCoordinatorSubView(activeMedcareSubView);
+}
+
+function switchCoordinatorSubView(subView) {
+  activeMedcareSubView = subView;
+  const secAppt = document.getElementById('coord-section-appointments');
+  const secPat = document.getElementById('coord-section-patients');
+  const btnAppt = document.getElementById('tab-btn-appointments');
+  const btnPat = document.getElementById('tab-btn-patients');
+
+  if (subView === 'appointments') {
+    if (secAppt) secAppt.classList.remove('hidden');
+    if (secPat) secPat.classList.add('hidden');
+    if (btnAppt) btnAppt.className = "px-4 py-2 rounded-lg bg-white text-blue-600 font-black shadow-xs transition-all flex items-center space-x-2 active:scale-95";
+    if (btnPat) btnPat.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 font-bold transition-all flex items-center space-x-2 active:scale-95";
+  } else {
+    if (secAppt) secAppt.classList.add('hidden');
+    if (secPat) secPat.classList.remove('hidden');
+    if (btnAppt) btnAppt.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 font-bold transition-all flex items-center space-x-2 active:scale-95";
+    if (btnPat) btnPat.className = "px-4 py-2 rounded-lg bg-white text-blue-600 font-black shadow-xs transition-all flex items-center space-x-2 active:scale-95";
+  }
+}
+
+function switchCoordinatorMedcareTab(tab) {
+  const tabs = ['dashboard', 'patients', 'appointments', 'staff'];
+  tabs.forEach(t => {
+    const el = document.getElementById(`nav-item-${t}`);
+    if (el) {
+      if (t === tab || (tab === 'team' && t === 'staff')) {
+        el.className = "flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-blue-50 text-blue-600 font-extrabold transition-all shadow-xs group";
+      } else {
+        el.className = "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all font-bold group";
+      }
+    }
+  });
+
+  if (tab === 'patients') {
+    switchCoordinatorSubView('patients');
+  } else {
+    switchCoordinatorSubView('appointments');
+  }
+}
+
+function filterAppointmentsTable(filter) {
+  currentApptFilter = filter;
+  const pills = ['all', 'visits', 'calls', 'fulfilled'];
+  pills.forEach(p => {
+    const btn = document.getElementById(`pill-filter-${p}`);
+    if (btn) {
+      if (p === filter) {
+        btn.className = "px-3 py-1.5 rounded-lg bg-white text-blue-600 font-extrabold shadow-xs transition-all";
+      } else {
+        btn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-bold transition-all";
+      }
+    }
+  });
+  renderMedcareAppointmentsTable(filter);
+}
+
+function filterPatientsDirectory(filter) {
+  currentPatFilter = filter;
+  const pills = ['all', 'high', 'med', 'low'];
+  pills.forEach(p => {
+    const btn = document.getElementById(`pill-pat-${p}`);
+    if (btn) {
+      if (p === filter) {
+        btn.className = "px-3 py-1.5 rounded-lg bg-white text-emerald-700 font-extrabold shadow-xs transition-all";
+      } else {
+        btn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-bold transition-all";
+      }
+    }
+  });
+  renderMedcarePatientsDirectory(filter);
+}
+
+function filterAppointmentsTableSearch(query) {
+  currentCoordSearch = (query || '').toLowerCase().trim();
+  renderMedcareAppointmentsTable(currentApptFilter);
+  renderMedcarePatientsDirectory(currentPatFilter);
+}
+
+function renderMedcareAppointmentsTable(filter = 'all') {
+  const tbody = document.getElementById('medcare-appointments-tbody');
+  if (!tbody) return;
+
+  let list = coordinatorDuties.filter(d => {
+    if (filter === 'visits' && d.type !== 'visit') return false;
+    if (filter === 'calls' && d.type !== 'call') return false;
+    if (filter === 'fulfilled' && d.status !== 'fulfilled') return false;
+    if (currentCoordSearch) {
+      const match = d.patientName.toLowerCase().includes(currentCoordSearch) ||
+                    d.taskTitle.toLowerCase().includes(currentCoordSearch) ||
+                    d.assignedTo.toLowerCase().includes(currentCoordSearch) ||
+                    d.diagnosis.toLowerCase().includes(currentCoordSearch);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  if (list.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-8 text-center text-slate-400 text-xs font-bold">
+          No appointments or assigned duties found for this filter.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(item => {
+    let statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-200">Upcoming 📅</span>`;
+    let actionBtn = `<button type="button" onclick="markCoordinatorDutyFulfilled('${item.id}')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs transition-all shadow-xs">Complete Duty</button>`;
+
+    if (item.status === 'fulfilled') {
+      statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">Verified with Proof ✅</span>`;
+      actionBtn = `<button type="button" onclick="openViewTaskProofModal('${item.taskId || 'TASK-101'}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all shadow-xs flex items-center gap-1"><i class="fa-solid fa-shield-halved text-[10px]"></i> View Proof</button>`;
+    } else if (item.status === 'critical') {
+      statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300 animate-pulse">Critical Action 🚨</span>`;
+      actionBtn = `<button type="button" onclick="openFamilyCareCircleModal()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition-all shadow-xs">Dispatch Assistance 🚑</button>`;
+    } else if (item.status === 'pending') {
+      statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-300">Awaiting Senior ⏳</span>`;
+      actionBtn = `<button type="button" onclick="openSubmitTaskProofModal('${item.taskId || 'TASK-103'}')" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-all shadow-xs">Verify Proof 📋</button>`;
+    }
+
+    return `
+      <tr class="hover:bg-slate-50/70 transition-colors text-xs">
+        
+        <!-- Patient Profile -->
+        <td class="py-3.5 px-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-9 h-9 rounded-xl ${item.avatarBg} text-white flex items-center justify-center font-black text-xs shadow-xs flex-shrink-0">
+              ${item.patientInitials}
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-900 text-xs">${item.patientName}</div>
+              <div class="text-[10px] font-mono text-slate-400 font-bold">${item.patientId} • ${item.patientAge} Yrs</div>
+            </div>
+          </div>
+        </td>
+
+        <!-- Assigned Doctor/Coordinator & Task -->
+        <td class="py-3.5 px-3">
+          <div class="font-bold text-slate-800 text-xs">${item.taskTitle}</div>
+          <div class="text-[11px] text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+            <i class="fa-solid fa-user-nurse text-blue-500 text-[10px]"></i>
+            <span>${item.assignedTo}</span>
+          </div>
+        </td>
+
+        <!-- Date & Time -->
+        <td class="py-3.5 px-3 whitespace-nowrap">
+          <div class="font-mono font-bold text-slate-800 text-xs">${item.time}</div>
+          <div class="text-[10px] text-slate-400 font-medium">${item.date}</div>
+        </td>
+
+        <!-- Diagnosis / Diseases -->
+        <td class="py-3.5 px-3">
+          <div class="font-semibold text-slate-700 text-xs max-w-xs truncate">${item.diagnosis}</div>
+          <div class="mt-1">${statusBadge}</div>
+        </td>
+
+        <!-- Actions -->
+        <td class="py-3.5 px-3 text-right whitespace-nowrap">
+          <div class="flex items-center justify-end space-x-1.5">
+            ${actionBtn}
+          </div>
+        </td>
+
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderMedcarePatientsDirectory(filter = 'all') {
+  const tbody = document.getElementById('medcare-patients-tbody');
+  if (!tbody) return;
+
+  let list = coordinatorPatients.filter(p => {
+    if (filter === 'high' && p.riskTier !== 'critical') return false;
+    if (filter === 'med' && p.riskTier !== 'med') return false;
+    if (filter === 'low' && p.riskTier !== 'low') return false;
+    if (currentCoordSearch) {
+      const match = p.name.toLowerCase().includes(currentCoordSearch) ||
+                    p.location.toLowerCase().includes(currentCoordSearch) ||
+                    p.assignedNurse.toLowerCase().includes(currentCoordSearch) ||
+                    p.conditions.toLowerCase().includes(currentCoordSearch);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  if (list.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="py-8 text-center text-slate-400 text-xs font-bold">
+          No patients found under this filter.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(p => {
+    return `
+      <tr class="hover:bg-slate-50/70 transition-colors text-xs">
+        
+        <!-- Profile -->
+        <td class="py-3.5 px-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-10 h-10 rounded-xl ${p.avatarBg} text-white flex items-center justify-center font-black text-sm shadow-xs flex-shrink-0">
+              ${p.initials}
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-900 text-xs">${p.name}</div>
+              <div class="text-[10px] text-slate-500 font-medium">${p.age} Yrs • ${p.gender}</div>
+              <div class="text-[10px] text-slate-400 truncate max-w-[150px]"><i class="fa-solid fa-location-dot text-[9px] mr-0.5"></i>${p.location}</div>
+            </div>
+          </div>
+        </td>
+
+        <!-- ML Risk Tier -->
+        <td class="py-3.5 px-3 whitespace-nowrap">
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-black border ${p.riskColor}">
+            ${p.riskLabel}
+          </span>
+          <div class="text-[10px] text-slate-400 font-mono mt-1">Score: ${p.riskScore}/100</div>
+        </td>
+
+        <!-- Vitals Snapshot -->
+        <td class="py-3.5 px-3 font-mono text-[11px]">
+          <div class="font-bold text-slate-800">BP: <span class="${p.riskTier === 'critical' ? 'text-rose-600 font-black' : 'text-slate-700'}">${p.vitals.bp}</span></div>
+          <div class="text-slate-500">HR: ${p.vitals.hr} • SpO2: ${p.vitals.spo2}</div>
+        </td>
+
+        <!-- Chronic Conditions -->
+        <td class="py-3.5 px-3">
+          <div class="font-medium text-slate-700 text-xs max-w-xs leading-snug">${p.conditions}</div>
+          <div class="text-[10px] text-blue-600 font-bold mt-0.5">Nurse: ${p.assignedNurse}</div>
+        </td>
+
+        <!-- Family Contact -->
+        <td class="py-3.5 px-3">
+          <div class="font-bold text-slate-800 text-xs">${p.familyContact.split('•')[0]}</div>
+          <a href="tel:${p.phone}" class="text-[11px] font-mono text-blue-600 hover:underline flex items-center gap-1 mt-0.5">
+            <i class="fa-solid fa-phone text-[9px]"></i>${p.phone}
+          </a>
+        </td>
+
+        <!-- Actions -->
+        <td class="py-3.5 px-3 text-right whitespace-nowrap">
+          <div class="flex items-center justify-end space-x-1.5">
+            <button type="button" onclick="openCoordinatorDossierModal('${p.id}')"
+              class="px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-[11px] transition-all border border-blue-200">
+              Dossier / प्रोफाइल
+            </button>
+            <button type="button" onclick="openAddTaskModal()"
+              class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-blue-600 text-white font-bold text-[11px] transition-all">
+              + Task
+            </button>
+          </div>
+        </td>
+
+      </tr>
+    `;
+  }).join('');
+}
+
+function markCoordinatorDutyFulfilled(dutyId) {
+  const item = coordinatorDuties.find(d => d.id === dutyId);
+  if (item) {
+    item.status = 'fulfilled';
+    item.statusLabel = 'Verified Duty ✅';
+    renderMedcareAppointmentsTable(currentApptFilter);
+    initMedcareCoordinatorDashboard();
+    if (typeof showToast === 'function') {
+      showToast(`Duty ${dutyId} marked completed & verified! ✅`, 'success');
+    }
+  }
+}
+
+function openCoordinatorDossierModal(patientId) {
+  const p = coordinatorPatients.find(x => x.id === patientId);
+  if (!p) return;
+  if (typeof showToast === 'function') {
+    showToast(`Opening clinical dossier for ${p.name}...`, 'info');
+  }
+  // If specific patient detail modal exists, open it or switch family view to this patient
+  if (typeof changeFamilyLinkedSenior === 'function') {
+    changeFamilyLinkedSenior(patientId);
+  }
+}
+
+function openAddScheduleModal() { openAddTaskModal(); }
